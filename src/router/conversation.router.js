@@ -5,7 +5,7 @@ import rateLimitServce from "#services/rateLimit.servce.js";
 
 const router = express.Router();
 
-router.post("/", authMeRequired, conversationControlle.create);
+router.post("/create", authMeRequired, conversationControlle.create);
 router.post("/rename", authMeRequired, conversationControlle.rename);
 router.get("/", authMeRequired, conversationControlle.getAll);
 router.get("/:conversationId", authMeRequired, conversationControlle.getOne);
