@@ -1,0 +1,131 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model User {
+  id                   BigInt    @id @default(autoincrement())
+  email                String    @unique
+  name                 String?
+  password             String
+  emailVerifiedAt      DateTime? @map("email_verified_at")
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
+  activeConversationId BigInt?   @map("active_conversation_id")
+
+  refreshTokens            RefreshToken[]
+  conversationParticipants ConversationParticipant[]
+  activeConversation       Conversation?             @relation("ActiveConversation", fields: [activeConversationId], references: [id], onDelete: SetNull)
+  messages                 Message[]
+  passwordResetTokens      PasswordResetToken[]
+
+  @@map("users")
+}
+
+model RefreshToken {
+  id             BigInt   @id @default(autoincrement())
+  token          String   @unique
+  tokenExpiresAt DateTime @map("token_expires_at")
+  userId         BigInt   @map("user_id")
+  isRevoked      Boolean  @default(false) @map("is_revoked")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([tokenExpiresAt])
+  @@map("refresh_token")
+}
+
+model Conversation {
+  id           BigInt           @id @default(autoincrement())
+  title        String?
+  systemPrompt String?          @map("system_prompt") @db.Text
+  type         ConversationType @default(DIRECT)
+  deletedAt    DateTime?        @map("deleted_at")
+  createdAt    DateTime         @default(now()) @map("created_at")
+  updatedAt    DateTime         @updatedAt @map("updated_at")
+
+  participants ConversationParticipant[]
+  activeUsers  User[]                    @relation("ActiveConversation")
+  messages     Message[]
+
+  @@index([deletedAt])
+  @@map("conversation")
+}
+
+enum ConversationType {
+  DIRECT
+  GROUP
+  BOT
+}
+
+model ConversationParticipant {
+  id             BigInt          @id @default(autoincrement())
+  conversationId BigInt          @map("conversation_id")
+  userId         BigInt          @map("user_id")
+  role           ParticipantRole @default(MEMBER)
+  joinedAt       DateTime        @default(now()) @map("joined_at")
+  leftAt         DateTime?       @map("left_at")
+  lastReadAt     DateTime?       @map("last_read_at")
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([conversationId, userId])
+  @@index([userId])
+  @@index([conversationId])
+  @@map("conversation_participant")
+}
+
+enum ParticipantRole {
+  MEMBER
+  OWNER
+  BOT
+}
+
+model Message {
+  id             BigInt      @id @default(autoincrement())
+  conversationId BigInt      @map("conversation_id")
+  userId         BigInt?     @map("user_id")
+  role           MessageRole
+  content        String      @db.LongText
+  isEdited       Boolean     @default(false) @map("is_edited")
+  deletedAt      DateTime?   @map("deleted_at")
+  createdAt      DateTime    @default(now()) @map("created_at")
+  updatedAt      DateTime    @updatedAt @map("updated_at")
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user         User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([deletedAt])
+  @@index([conversationId, createdAt])
+  @@index([userId])
+  @@map("message")
+}
+
+enum MessageRole {
+  user
+  bot
+}
+
+model PasswordResetToken {
+  id        BigInt    @id @default(autoincrement())
+  userId    BigInt    @map("user_id")
+  tokenHash String    @map("token_hash")
+  expiresAt DateTime  @map("expires_at")
+  usedAt    DateTime? @map("used_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([tokenHash])
+  @@map("password_reset_tokens")
+}

@@ -1,0 +1,11 @@
+# Default: dùng LF cho mọi file
+* text=auto eol=lf
+
+# Prisma
+*.prisma text eol=lf
+*.sql text eol=lf
+
+# JS / TS
+*.js text eol=lf
+*.ts text eol=lf
+*.json text eol=lf
