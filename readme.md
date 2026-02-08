@@ -1,5 +1,20 @@
 # Chat Bot Backend API Documentation
 
+## Architecture Overview
+
+- REST API cho CRUD
+- SSE dùng cho streaming response (thay vì WebSocket để đơn giản hoá backend)
+- Access token ngắn hạn + refresh token dài hạn
+- Redis dùng cho:
+    - Rate limiting
+    - Refresh token management
+
+## Token Strategy
+
+- Access token: short-lived, dùng cho API & SSE
+- Refresh token: lưu trong database gắn với user
+- Khi logout, refresh token được đưa vào bảng revoked để chặn tái sử dụng
+
 ## 1. Giới thiệu
 
 Đây là backend cho một hệ thống **chat bot / chat conversation** tương tự ChatGPT, được xây dựng bằng **Node.js + Express + Prisma**.
@@ -294,8 +309,8 @@ src/
 - Input validation (Zod)
 - Centralized error handler
 - Unit / integration test
-- Swagger / OpenAPI
 - Docker + CI/CD
+- tách luồng gửi email
 
 ---
 

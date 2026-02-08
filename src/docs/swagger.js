@@ -7,6 +7,6 @@ const filePath = path.resolve("src/docs/openapi.yaml");
 const swaggerDocument = yaml.load(fs.readFileSync(filePath, "utf8"));
 
 export const swaggerSetup = {
-    serve: swaggerUi.serve,
-    setup: swaggerUi.setup(swaggerDocument),
+  serve: swaggerUi.serve,
+  setup: swaggerUi.setup(swaggerDocument),
 };

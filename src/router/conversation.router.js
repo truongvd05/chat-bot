@@ -10,31 +10,15 @@ router.post("/rename", authMeRequired, conversationControlle.rename);
 router.get("/", authMeRequired, conversationControlle.getAll);
 router.get("/:conversationId", authMeRequired, conversationControlle.getOne);
 router.delete("/:conversationId", authMeRequired, conversationControlle.del);
-router.get(
-    "/:conversationId/messages",
-    authMeRequired,
-    conversationControlle.getMessage,
-);
+router.get("/:conversationId/messages", authMeRequired, conversationControlle.getMessage);
 router.post(
-    "/:conversationId/message",
-    rateLimitServce.message(),
-    authMeRequired,
-    conversationControlle.createMessage,
+  "/:conversationId/message",
+  rateLimitServce.message(),
+  authMeRequired,
+  conversationControlle.createMessage,
 );
-router.put(
-    "/:conversationId/message",
-    authMeRequired,
-    conversationControlle.editMessage,
-);
-router.delete(
-    "/:conversationId/message",
-    authMeRequired,
-    conversationControlle.deleteMessage,
-);
-router.get(
-    "/stream/:conversationId",
-    authMeRequired,
-    conversationControlle.stream,
-);
+router.put("/:conversationId/message", authMeRequired, conversationControlle.editMessage);
+router.delete("/:conversationId/message", authMeRequired, conversationControlle.deleteMessage);
+router.get("/stream/:conversationId", authMeRequired, conversationControlle.stream);
 
 export default router;

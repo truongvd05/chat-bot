@@ -4,7 +4,9 @@
     "type": "module",
     "scripts": {
         "start": "node server.js",
-        "dev": "node --watch server.js"
+        "dev": "node --watch server.js",
+        "lint": "eslint src/**/*.{js,cjs,mjs}",
+        "lint:fix": "eslint src/**/*.{js,cjs,mjs} --fix"
     },
     "dependencies": {
         "@prisma/adapter-mariadb": "^7.3.0",
@@ -15,6 +17,7 @@
         "cors": "^2.8.6",
         "cron": "^4.4.0",
         "dotenv": "^17.2.3",
+        "eslint": "^10.0.0",
         "express": "^5.2.1",
         "express-rate-limit": "^8.2.1",
         "js-yaml": "^4.1.1",

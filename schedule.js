@@ -3,9 +3,9 @@ import cleanupExpiredTokensPassword from "#schedules/cleanupExpiredTokensPasswor
 import { CronJob } from "cron";
 
 const job = new CronJob(
-    "*/5 * * * * *",
-    cleanupExpiredTokensPassword,
-    null,
-    true,
-    "Asia/Ho_Chi_Minh",
+  "*/5 * * * * *",
+  cleanupExpiredTokensPassword,
+  null,
+  true,
+  "Asia/Ho_Chi_Minh",
 );
