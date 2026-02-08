@@ -1,205 +1,707 @@
 openapi: 3.0.0
 info:
-  title: Chat Bot API
-  version: 1.0.0
-  description: Backend API cho hệ thống chat bot
+    title: Chat Bot API
+    version: 1.0.0
+    description: Backend API cho hệ thống chat bot tương tự ChatGPT
+    contact:
+        name: thanh090800@gmail.com
 
 servers:
-  - url: http://localhost:3000
+    - url: http://localhost:3000
+      description: Local development
+    - url: https://your-app.railway.app
+      description: Production
 
 components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
+    securitySchemes:
+        bearerAuth:
+            type: http
+            scheme: bearer
+            bearerFormat: JWT
+            description: JWT access token
+
+    schemas:
+        User:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    example: 1
+                email:
+                    type: string
+                    format: email
+                    example: user@gmail.com
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+
+        Conversation:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    example: 1
+                title:
+                    type: string
+                    example: "Chat về AI"
+                userId:
+                    type: integer
+                    example: 1
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+
+        Message:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    example: 1
+                content:
+                    type: string
+                    example: "Xin chào, tôi cần giúp đỡ về AI"
+                role:
+                    type: string
+                    enum: [user, bot]
+                    example: user
+                conversationId:
+                    type: integer
+                    example: 1
+                createdAt:
+                    type: string
+                    format: date-time
+
+        AuthResponse:
+            type: object
+            properties:
+                accessToken:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                refreshToken:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                user:
+                    $ref: "#/components/schemas/User"
+
+        Error:
+            type: object
+            properties:
+                error:
+                    type: string
+                    example: Invalid credentials
+                message:
+                    type: string
+                    example: Email hoặc password không đúng
+                statusCode:
+                    type: integer
+                    example: 401
+
+    responses:
+        Unauthorized:
+            description: Unauthorized - Token không hợp lệ hoặc hết hạn
+            content:
+                application/json:
+                    schema:
+                        $ref: "#/components/schemas/Error"
+                    example:
+                        error: Unauthorized
+                        message: Token không hợp lệ
+                        statusCode: 401
+
+        BadRequest:
+            description: Bad Request - Dữ liệu đầu vào không hợp lệ
+            content:
+                application/json:
+                    schema:
+                        $ref: "#/components/schemas/Error"
+                    example:
+                        error: Bad Request
+                        message: Email không đúng định dạng
+                        statusCode: 400
+
+        NotFound:
+            description: Not Found - Resource không tồn tại
+            content:
+                application/json:
+                    schema:
+                        $ref: "#/components/schemas/Error"
+                    example:
+                        error: Not Found
+                        message: Conversation không tồn tại
+                        statusCode: 404
+
+        TooManyRequests:
+            description: Too Many Requests - Rate limit exceeded
+            content:
+                application/json:
+                    schema:
+                        $ref: "#/components/schemas/Error"
+                    example:
+                        error: Too Many Requests
+                        message: Bạn đã gửi quá nhiều request, vui lòng thử lại sau
+                        statusCode: 429
+
+        InternalServerError:
+            description: Internal Server Error
+            content:
+                application/json:
+                    schema:
+                        $ref: "#/components/schemas/Error"
+                    example:
+                        error: Internal Server Error
+                        message: Đã có lỗi xảy ra, vui lòng thử lại
+                        statusCode: 500
 
 paths:
-  /auth/login:
-    post:
-      tags: [Auth]
-      summary: Login user
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [email, password]
-              properties:
-                email:
-                  type: string
-                  example: user@gmail.com
-                password:
-                  type: string
-                  example: 123456
-      responses:
-        200:
-          description: Login thành công
-  /auth/register:
-    post:
-      tags: [Auth]
-      summary: Register user
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [email, password]
-              properties:
-                email:
-                  type: string
-                password:
-                  type: string
-      responses:
-        201:
-          description: Đăng ký thành công
-
-  /auth/me:
-    get:
-      tags: [Auth]
-      summary: Get current user
-      security:
-        - bearerAuth: []
-      responses:
-        200:
-          description: Thông tin user
-
-  /conversation:
-    get:
-      tags: [Conversation]
-      summary: Get all conversations
-      security:
-        - bearerAuth: []
-      responses:
-        200:
-          description: Danh sách conversation
-  /conversation/{conversationId}:
-    get:
-      tags: [Conversation]
-      summary: Get one conversation
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: conversationId
-          in: path
-          required: true
-          schema:
-            type: integer
-      responses:
-        200:
-          description: Thông tin conversation
-
-    delete:
-      tags: [Conversation]
-      summary: Delete conversation
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: conversationId
-          in: path
-          required: true
-          schema:
-            type: integer
-      responses:
-        200:
-          description: Xóa thành công
-
-  /conversation/{conversationId}/messages:
-    get:
-      tags: [Conversation]
-      summary: Get messages in conversation
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: conversationId
-          in: path
-          required: true
-          schema:
-            type: integer
-      responses:
-        200:
-          description: Danh sách message
-
-  /conversation/{conversationId}/message:
-    post:
-      tags: [Conversation]
-      summary: Create message
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: conversationId
-          in: path
-          required: true
-          schema:
-            type: integer
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
+    /auth/register:
+        post:
+            tags: [Auth]
+            summary: Đăng ký tài khoản mới
+            description: Tạo tài khoản người dùng mới
+            requestBody:
+                required: true
                 content:
-                  type: string
-                  example: Hello
-      responses:
-        200:
-          description: Message vừa tạo
+                    application/json:
+                        schema:
+                            type: object
+                            required: [email, password]
+                            properties:
+                                email:
+                                    type: string
+                                    format: email
+                                    example: user@gmail.com
+                                password:
+                                    type: string
+                                    minLength: 6
+                                    example: "123456"
+            responses:
+                201:
+                    description: Đăng ký thành công
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/AuthResponse"
+                400:
+                    $ref: "#/components/responses/BadRequest"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
 
-    put:
-      tags: [Conversation]
-      summary: Edit message
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: conversationId
-          in: path
-          required: true
-          schema:
-            type: integer
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
+    /auth/login:
+        post:
+            tags: [Auth]
+            summary: Đăng nhập
+            description: Đăng nhập và nhận access token + refresh token
+            requestBody:
+                required: true
                 content:
-                  type: string
-                  example: Hello edited
-      responses:
-        200:
-          description: Message đã sửa
+                    application/json:
+                        schema:
+                            type: object
+                            required: [email, password]
+                            properties:
+                                email:
+                                    type: string
+                                    format: email
+                                    example: user@gmail.com
+                                password:
+                                    type: string
+                                    example: "123456"
+            responses:
+                200:
+                    description: Đăng nhập thành công
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/AuthResponse"
+                400:
+                    $ref: "#/components/responses/BadRequest"
+                401:
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                            example:
+                                error: Invalid credentials
+                                message: Email hoặc password không đúng
+                                statusCode: 401
+                500:
+                    $ref: "#/components/responses/InternalServerError"
 
-    delete:
-      tags: [Conversation]
-      summary: Delete message
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: conversationId
-          in: path
-          required: true
-          schema:
-            type: integer
-      responses:
-        200:
-          description: Xóa message
+    /auth/refresh:
+        post:
+            tags: [Auth]
+            summary: Refresh access token
+            description: Lấy access token mới bằng refresh token
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required: [refreshToken]
+                            properties:
+                                refreshToken:
+                                    type: string
+                                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+            responses:
+                200:
+                    description: Token mới
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    accessToken:
+                                        type: string
+                                    refreshToken:
+                                        type: string
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
 
-  /conversation/stream/{conversationId}:
-    get:
-      tags: [Conversation]
-      summary: Stream message (SSE)
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: conversationId
-          in: path
-          required: true
-          schema:
-            type: integer
-      responses:
-        200:
-          description: Stream dữ liệu
+    /auth/logout:
+        post:
+            tags: [Auth]
+            summary: Đăng xuất
+            description: Đăng xuất và vô hiệu hóa token
+            security:
+                - bearerAuth: []
+            responses:
+                200:
+                    description: Đăng xuất thành công
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: Logout thành công
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /auth/me:
+        get:
+            tags: [Auth]
+            summary: Lấy thông tin user hiện tại
+            description: Lấy thông tin user từ access token
+            security:
+                - bearerAuth: []
+            responses:
+                200:
+                    description: Thông tin user
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/User"
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /conversation:
+        get:
+            tags: [Conversation]
+            summary: Lấy tất cả conversations
+            description: Lấy danh sách conversation của user hiện tại
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                      type: integer
+                      default: 1
+                - name: limit
+                  in: query
+                  schema:
+                      type: integer
+                      default: 20
+            responses:
+                200:
+                    description: Danh sách conversation
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    conversations:
+                                        type: array
+                                        items:
+                                            $ref: "#/components/schemas/Conversation"
+                                    total:
+                                        type: integer
+                                    page:
+                                        type: integer
+                                    limit:
+                                        type: integer
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /conversation/create:
+        post:
+            tags: [Conversation]
+            summary: Tạo conversation mới
+            security:
+                - bearerAuth: []
+            requestBody:
+                required: false
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                title:
+                                    type: string
+                                    example: "Chat về AI"
+            responses:
+                201:
+                    description: Conversation mới
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Conversation"
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /conversation/rename:
+        post:
+            tags: [Conversation]
+            summary: Đổi tên conversation
+            security:
+                - bearerAuth: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required: [id, title]
+                            properties:
+                                id:
+                                    type: integer
+                                    example: 1
+                                title:
+                                    type: string
+                                    example: "Chat mới về Machine Learning"
+            responses:
+                200:
+                    description: Conversation đã đổi tên
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Conversation"
+                400:
+                    $ref: "#/components/responses/BadRequest"
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                404:
+                    $ref: "#/components/responses/NotFound"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /conversation/{conversationId}:
+        get:
+            tags: [Conversation]
+            summary: Lấy một conversation
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: conversationId
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+                  example: 1
+            responses:
+                200:
+                    description: Thông tin conversation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Conversation"
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                404:
+                    $ref: "#/components/responses/NotFound"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+        delete:
+            tags: [Conversation]
+            summary: Xóa conversation
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: conversationId
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+            responses:
+                200:
+                    description: Xóa thành công
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: Conversation đã được xóa
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                404:
+                    $ref: "#/components/responses/NotFound"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /conversation/{conversationId}/messages:
+        get:
+            tags: [Message]
+            summary: Lấy messages trong conversation
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: conversationId
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+                - name: page
+                  in: query
+                  schema:
+                      type: integer
+                      default: 1
+                - name: limit
+                  in: query
+                  schema:
+                      type: integer
+                      default: 50
+            responses:
+                200:
+                    description: Danh sách message
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    messages:
+                                        type: array
+                                        items:
+                                            $ref: "#/components/schemas/Message"
+                                    total:
+                                        type: integer
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                404:
+                    $ref: "#/components/responses/NotFound"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /conversation/{conversationId}/message:
+        post:
+            tags: [Message]
+            summary: Tạo message mới
+            description: Gửi message và nhận response từ AI (không streaming)
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: conversationId
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required: [content]
+                            properties:
+                                content:
+                                    type: string
+                                    example: "Giải thích về AI cho tôi"
+            responses:
+                200:
+                    description: Message vừa tạo và AI response
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    userMessage:
+                                        $ref: "#/components/schemas/Message"
+                                    aiMessage:
+                                        $ref: "#/components/schemas/Message"
+                400:
+                    $ref: "#/components/responses/BadRequest"
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                404:
+                    $ref: "#/components/responses/NotFound"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+        put:
+            tags: [Message]
+            summary: Sửa message
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: conversationId
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required: [messageId, content]
+                            properties:
+                                messageId:
+                                    type: integer
+                                    example: 10
+                                content:
+                                    type: string
+                                    example: "Nội dung đã chỉnh sửa"
+            responses:
+                200:
+                    description: Message đã sửa
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Message"
+                400:
+                    $ref: "#/components/responses/BadRequest"
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                404:
+                    $ref: "#/components/responses/NotFound"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+        delete:
+            tags: [Message]
+            summary: Xóa message
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: conversationId
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required: [messageId]
+                            properties:
+                                messageId:
+                                    type: integer
+                                    example: 10
+            responses:
+                200:
+                    description: Xóa message thành công
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: Message đã được xóa
+                400:
+                    $ref: "#/components/responses/BadRequest"
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                404:
+                    $ref: "#/components/responses/NotFound"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /conversation/stream/{conversationId}:
+        get:
+            tags: [Message]
+            summary: Stream AI response (SSE)
+            description: |
+                Server-Sent Events endpoint để stream AI response real-time.
+                Client cần:
+                1. Tạo EventSource với Authorization header
+                2. Listen vào events
+                3. Parse JSON data từ mỗi event
+                4. Khi nhận event [DONE], đóng connection
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: conversationId
+                  in: path
+                  required: true
+                  schema:
+                      type: integer
+                  example: 1
+                - name: message
+                  in: query
+                  required: true
+                  description: User message to send to AI
+                  schema:
+                      type: string
+                  example: "Giải thích về machine learning"
+            responses:
+                200:
+                    description: Event stream
+                    content:
+                        text/event-stream:
+                            schema:
+                                type: string
+                            example: |
+                                data: {"content": "Machine learning"}
+
+                                data: {"content": " là"}
+
+                                data: {"content": " một nhánh"}
+
+                                data: {"content": " của AI..."}
+
+                                data: [DONE]
+                400:
+                    $ref: "#/components/responses/BadRequest"
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                404:
+                    $ref: "#/components/responses/NotFound"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+tags:
+    - name: Auth
+      description: Authentication endpoints
+    - name: Conversation
+      description: Conversation management
+    - name: Message
+      description: Message operations and streaming
