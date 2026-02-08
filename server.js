@@ -36,6 +36,6 @@ app.use(notFoundHandler);
 app.use(errorHandle);
 app.use(exceptionHandler);
 
-app.listen(port, "0.0.0.0", () => {
+app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 });

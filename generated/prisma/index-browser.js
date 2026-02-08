@@ -182,9 +182,25 @@ exports.Prisma.PasswordResetTokenScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.QueuesScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  payload: 'payload',
+  status: 'status',
+  attempts: 'attempts',
+  maxAttempt: 'maxAttempt',
+  lastError: 'lastError',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.NullsOrder = {
@@ -214,6 +230,22 @@ exports.Prisma.MessageOrderByRelevanceFieldEnum = {
 exports.Prisma.PasswordResetTokenOrderByRelevanceFieldEnum = {
   tokenHash: 'tokenHash'
 };
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
+
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+};
+
+exports.Prisma.QueuesOrderByRelevanceFieldEnum = {
+  type: 'type',
+  lastError: 'lastError'
+};
 exports.ConversationType = exports.$Enums.ConversationType = {
   DIRECT: 'DIRECT',
   GROUP: 'GROUP',
@@ -231,13 +263,21 @@ exports.MessageRole = exports.$Enums.MessageRole = {
   bot: 'bot'
 };
 
+exports.QueueStatus = exports.$Enums.QueueStatus = {
+  pending: 'pending',
+  inprogress: 'inprogress',
+  completed: 'completed',
+  failed: 'failed'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   RefreshToken: 'RefreshToken',
   Conversation: 'Conversation',
   ConversationParticipant: 'ConversationParticipant',
   Message: 'Message',
-  PasswordResetToken: 'PasswordResetToken'
+  PasswordResetToken: 'PasswordResetToken',
+  Queues: 'Queues'
 };
 
 /**
