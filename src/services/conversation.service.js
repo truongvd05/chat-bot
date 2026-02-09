@@ -35,6 +35,7 @@ class ConversationService {
             data: {
                 ownerId: user.id,
                 title: "New Conversation",
+                type: "BOT",
             },
         });
         return serializeBigInt(conversation);
@@ -200,6 +201,20 @@ class ConversationService {
             },
         });
         return result.map(serializeBigInt);
+    }
+    async getMyBotConversation(userId, conversationId) {
+        const conversation = await prisma.conversation.findFirst({
+            where: {
+                id: conversationId,
+                ownerId: userId,
+                deletedAt: null,
+                type: "BOT",
+            },
+        });
+        if (!conversation) {
+            throw new Error("CONVERSATION_NOT_FOUND");
+        }
+        return conversation;
     }
 
     async deleteConversation(userId, conversationId) {

@@ -15,7 +15,6 @@ router.post(
 router.post(
     "/bot",
     authMeRequired,
-    rateLimitServce.defaultPerMinuteRateLimit(),
     conversationController.createBotConversation,
 );
 
@@ -31,6 +30,12 @@ router.get(
     authMeRequired,
     rateLimitServce.defaultPerMinuteRateLimit(),
     conversationController.getMyBotConversations,
+);
+router.get(
+    "/bots/:conversationId",
+    authMeRequired,
+    rateLimitServce.defaultPerMinuteRateLimit(),
+    conversationController.getMyBotConversation,
 );
 
 router.get(

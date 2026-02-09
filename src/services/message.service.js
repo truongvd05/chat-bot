@@ -80,7 +80,7 @@ class MessageService {
         });
         return serializeBigInt(updated);
     }
-    async sendDirectMessage(
+    async sendMessage(
         conversationId,
         user,
         content,
@@ -160,7 +160,51 @@ class MessageService {
             take: limit,
             skip: offset,
         });
+        sendMessage;
         return messages.reverse().map(serializeBigInt);
+    }
+    async sendBotMessage(userId, conversationId, content, role = "user") {
+        const conversation = await prisma.conversation.findFirst({
+            where: {
+                id: conversationId,
+                ownerId: userId,
+                type: "BOT",
+                deletedAt: null,
+            },
+        });
+        if (!conversation) {
+            throw new Error("CONVERSATION_NOT_FOUND");
+        }
+        const message = await prisma.message.create({
+            data: {
+                conversationId,
+                userId,
+                content,
+                role,
+            },
+        });
+        return serializeBigInt(message);
+    }
+    async createBotMessage(conversationId, userId, content, role) {
+        const conversation = await prisma.conversation.findFirst({
+            where: {
+                id: conversationId,
+                type: "BOT",
+                deletedAt: null,
+            },
+        });
+        if (!conversation) {
+            throw new Error("CONVERSATION_NOT_FOUND");
+        }
+        const message = await prisma.message.create({
+            data: {
+                conversationId,
+                userId,
+                content,
+                role,
+            },
+        });
+        return serializeBigInt(message);
     }
 }
 

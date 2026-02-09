@@ -1,3 +1,4 @@
+import chatBotService from "#services/chatBot.service.js";
 import messageService from "#services/message.service.js";
 
 class BotMessage {
@@ -13,18 +14,13 @@ class BotMessage {
             return res.error("invalid or misssing message");
         }
         try {
-            const userMessage = await messageService.createMessage(
+            const userMessage = await messageService.sendBotMessage(
+                user.id,
                 conversationId,
-                user,
                 message,
-                "user",
             );
-            chatBotService
-                .reply(conversationId, message)
-                .then((botMessage) => {
-                    emit(conversationId, botMessage);
-                })
-                .catch((err) => console.error(err));
+            chatBotService.reply(conversationId, message);
+
             return res.success(userMessage, 200);
         } catch (err) {
             console.log(err);

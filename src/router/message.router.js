@@ -9,7 +9,14 @@ router.post(
     "/conversations/:conversationId/messages",
     authMeRequired,
     rateLimitServce.message(),
-    messageController.sendDirectMessage,
+    messageController.sendMessage,
+);
+
+router.post(
+    "/bot/conversations/:conversationId/messages",
+    authMeRequired,
+    rateLimitServce.message(),
+    messageController.sendBotMessage,
 );
 
 router.get(

@@ -1,15 +1,22 @@
+import chatBotService from "#services/chatBot.service.js";
 import messageService from "#services/message.service.js";
-function isValidPositiveBigInt(value) {
-    return typeof value === "bigint" && value > 0n;
-}
+
 class MessageController {
-    async sendDirectMessage(req, res) {
-        const targetUserId = BigInt(req.body.targetUserId);
-        const conversationId = BigInt(req.params.conversationId) || null;
+    async sendMessage(req, res) {
+        const rawTargetId = req.body.targetUserId;
+        const rawConversationId = req.params.conversationId || null;
         const content = req.body.content?.trim();
         const user = req.user;
 
-        if (!user) return res.unauthorized();
+        if (!rawTargetId || !/^\d+$/.test(rawTargetId)) {
+            return res.error("INVALID_USER_ID", 400);
+        }
+        const targetUserId = BigInt(rawTargetId);
+
+        if (!rawConversationId || !/^\d+$/.test(rawConversationId)) {
+            return res.error("INVALID_USER_ID", 400);
+        }
+        const conversationId = BigInt(rawConversationId);
         if (
             !content ||
             typeof content !== "string" ||
@@ -17,21 +24,9 @@ class MessageController {
         ) {
             return res.error("Message content is required", 400);
         }
-        if (!conversationId && !targetUserId) {
-            return res.error(
-                "Either conversationId or targetUserId is required",
-                400,
-            );
-        }
-        if (targetUserId && !isValidPositiveBigInt(targetUserId)) {
-            return res.error("Invalid targetUser id", 400);
-        }
 
-        if (conversationId && !isValidPositiveBigInt(conversationId)) {
-            return res.error("Invalid conversation id", 400);
-        }
         try {
-            const result = await messageService.sendDirectMessage(
+            const result = await messageService.sendMessage(
                 conversationId,
                 user,
                 content,
@@ -43,15 +38,43 @@ class MessageController {
             return res.error(err);
         }
     }
+    async sendBotMessage(req, res) {
+        const user = req.user;
+        const content = req.body.content?.trim();
 
+        const rawConversationId = req.params.conversationI;
+        if (!rawConversationId || !/^\d+$/.test(rawConversationId)) {
+            return res.error("INVALID_USER_ID", 400);
+        }
+        if (
+            !content ||
+            typeof content !== "string" ||
+            content.trim().length === 0
+        ) {
+            return res.error("Message content is required", 400);
+        }
+        const conversationId = BigInt(rawConversationId);
+        try {
+            await messageService.sendBotMessage(
+                user.id,
+                conversationId,
+                content,
+            );
+            chatBotService.reply(conversationId, content);
+            return res.success(result);
+        } catch (err) {
+            console.log(err);
+            return res.error(err);
+        }
+    }
     async getMessages(req, res) {
         const user = req.user;
-        const conversationId = Number(req.params.conversationId);
-        if (!user) return res.unauthorized();
+        const rawConversationId = req.params.conversationI;
 
-        if (!Number.isInteger(conversationId) || conversationId <= 0) {
-            return res.error("Invalid or missing conversation id");
+        if (!rawConversationId || !/^\d+$/.test(rawConversationId)) {
+            return res.error("INVALID_USER_ID", 400);
         }
+        const conversationId = BigInt(rawConversationId);
 
         const limit = Math.min(Number(req.query.limit) || 5, 50);
         const offset = Math.max(Number(req.query.offset) || 0, 0);
@@ -77,11 +100,12 @@ class MessageController {
     async editMessage(req, res) {
         const user = req.user;
         const content = req.body.content;
-        const messageId = BigInt(req.params.messageId);
-        if (!user) return res.unauthorized();
-        if (messageId && !isValidPositiveBigInt(messageId)) {
-            return res.error("Invalid conversation id", 400);
+        const rawMessageId = req.params.messageId;
+        if (!rawMessageId || !/^\d+$/.test(rawMessageId)) {
+            return res.error("INVALID_USER_ID", 400);
         }
+        const messageId = BigInt(rawMessageId);
+
         if (typeof content !== "string" || !content.trim()) {
             return res.error("invalid or missing message");
         }
@@ -101,11 +125,11 @@ class MessageController {
     }
     async deleteMessage(req, res) {
         const user = req.user;
-        const messageId = BigInt(req.params.messageId);
-        if (!user) return res.unauthorized();
-        if (messageId && !isValidPositiveBigInt(messageId)) {
-            return res.error("Invalid conversation id", 400);
+        const rawMessageId = req.params.messageId;
+        if (!rawMessageId || !/^\d+$/.test(rawMessageId)) {
+            return res.error("INVALID_USER_ID", 400);
         }
+        const messageId = BigInt(rawMessageId);
         try {
             await messageService.deleteMessage(user.id, messageId);
             return res.success("ok", 200);

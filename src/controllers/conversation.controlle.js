@@ -5,8 +5,6 @@ class ConversationController {
     async createBotConversation(req, res) {
         const user = req.user;
 
-        if (!user) return res.unauthorized();
-
         try {
             const newConversation =
                 await conversationService.createBotConversation(user);
@@ -18,7 +16,6 @@ class ConversationController {
     }
     async getConversations(req, res) {
         const user = req.user;
-        if (!user) return res.unauthorized();
         try {
             const conversations = await conversationService.getConversations(
                 user.id,
@@ -32,8 +29,6 @@ class ConversationController {
     async getMyBotConversations(req, res) {
         const user = req.user;
 
-        if (!user) return res.unauthorized();
-
         try {
             const conversations =
                 await conversationService.getMyBotConversations(user);
@@ -43,9 +38,29 @@ class ConversationController {
             return res.error(err);
         }
     }
+    async getMyBotConversation(req, res) {
+        const user = req.user;
+
+        const rawId = req.body.conversationId;
+        if (!rawId || !/^\d+$/.test(rawId)) {
+            return res.error("INVALID_USER_ID", 400);
+        }
+        const conversationId = BigInt(rawId);
+        try {
+            const botConversation =
+                await conversationService.getMyBotConversation(
+                    user.id,
+                    conversationId,
+                );
+            return res.success(botConversation);
+        } catch (err) {
+            console.log(err);
+            return res.error(err);
+        }
+    }
+
     async createDirectConversation(req, res) {
         const user = req.user;
-        if (!user) return res.unauthorized();
 
         const rawId = req.body.targetUserId;
         if (!rawId || !/^\d+$/.test(rawId)) {
@@ -76,7 +91,6 @@ class ConversationController {
     }
     async getConversation(req, res) {
         const user = req.user;
-        if (!user) return res.unauthorized();
 
         const rawId = req.params.conversationId;
         if (!rawId || !/^\d+$/.test(rawId)) {
@@ -104,7 +118,6 @@ class ConversationController {
     async renameConversation(req, res) {
         const title = req.body?.title?.trim();
         const user = req.user;
-        if (!user) return res.unauthorized();
 
         const rawId = req.params.id;
         if (!rawId || !/^\d+$/.test(rawId)) {
@@ -135,7 +148,6 @@ class ConversationController {
     }
     async deleteConversation(req, res) {
         const user = req.user;
-        if (!user) return res.unauthorized();
 
         const rawId = req.params.conversationId;
         if (!rawId || !/^\d+$/.test(rawId)) {
@@ -160,7 +172,6 @@ class ConversationController {
 
     async stream(req, res) {
         const user = req.user;
-        if (!user) return res.unauthorized();
 
         const rawId = req.params.id;
         if (!rawId || !/^\d+$/.test(rawId)) {
@@ -185,7 +196,6 @@ class ConversationController {
     }
     async addParticipant(req, res) {
         const user = req.user;
-        if (!user) return res.unauthorized();
 
         const rawConversationId = req.params.id;
         const rawTargetId = req.body.user_id;

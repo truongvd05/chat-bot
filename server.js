@@ -7,6 +7,8 @@ import notFoundHandler from "#middlewares/notFoundHandler.js";
 import exceptionHandler from "#middlewares/exceptionHandler.js";
 import router from "#router/index.js";
 import { swaggerSetup } from "./src/docs/swagger.js";
+import helmet from "helmet";
+
 var app = express();
 
 const port = process.env.PORT || 3000;
@@ -28,6 +30,7 @@ const corsOptions = {
     optionsSuccessStatus: 200,
 };
 app.use("/docs", swaggerSetup.serve, swaggerSetup.setup);
+app.use(helmet());
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(responseFormat);

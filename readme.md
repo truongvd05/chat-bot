@@ -179,17 +179,19 @@ Authorization: Bearer <access_token>
 
 ### 5.1 Create conversation
 
-`POST /create`
+`POST /direct` tạo chat user-user
+`POST /bot` tạo chat user-bot
 
 ---
 
 ### 5.2 Rename conversation
 
-`POST /rename`
+<!-- đổi tên conversation với bot -->
+
+`put /:conversationId`
 
 ```json
 {
-    "id": 1,
     "title": "Chat with AI"
 }
 ```
@@ -198,13 +200,25 @@ Authorization: Bearer <access_token>
 
 ### 5.3 Get all conversations
 
+<!-- lấy conversation type DIRECT, GOURP -->
+
 `GET /`
+
+<!-- lấy conversation với type = BOT -->
+
+`GET /bots`
 
 ---
 
 ### 5.4 Get one conversation
 
+<!-- lấy 1 conversation với type DIRECT, GROUP -->
+
 `GET /:conversationId`
+
+<!-- lấy 1 conversation với type BOT -->
+
+`GET /bot/:conversationId`
 
 ---
 
@@ -216,6 +230,20 @@ Authorization: Bearer <access_token>
 
 ## 6. Message API
 
+Base path:
+
+```
+/api/message
+```
+
+> Tất cả endpoint yêu cầu header:
+
+```
+Authorization: Bearer <access_token>
+```
+
+---
+
 ### 6.1 Get messages
 
 `GET /:conversationId/messages`
@@ -224,11 +252,22 @@ Authorization: Bearer <access_token>
 
 ### 6.2 Send message
 
-`POST /:conversationId/message`
+`POST /conversations/:conversationId/message`
+
+<!-- send với bot -->
 
 ```json
 {
     "message": "Hello AI"
+}
+```
+
+<!-- send với user -->
+
+```json
+{
+    "message": "Hello AI",
+    "targetUserId": "1"
 }
 ```
 
@@ -295,6 +334,9 @@ src/
  ├─ routes/
  ├─ utils/
  └─ schedules/
+ └─ service/
+ └─ utils/
+
 ```
 
 - **controllers**: nhận request / response
@@ -311,7 +353,6 @@ src/
 - Centralized error handler
 - Unit / integration test
 - Docker + CI/CD
-- tách luồng gửi email
 
 ---
 
