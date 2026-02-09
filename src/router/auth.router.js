@@ -6,26 +6,48 @@ import { limitRefreshAccessToken } from "#middlewares/limitRefreshAccessToken.js
 
 const router = express.Router();
 
-router.post("/refresh", limitRefreshAccessToken, authController.refreshAccessToken);
+router.post(
+    "/refresh",
+    limitRefreshAccessToken,
+    authController.refreshAccessToken,
+);
 router.post("/register", rateLimitServce.login(), authController.register);
 router.post("/login", rateLimitServce.login(), authController.login);
-router.post("/forgot-password", authController.forgotPassword);
-router.post("/reset-password", authController.resetPassword);
-
-router.post("/logout", authMeRequired, authController.logout);
-router.post("/change-password", authMeRequired, authController.changePassword);
 router.post(
-  "/verify-email",
-  rateLimitServce.verifyEmailPerMinute(),
-  rateLimitServce.verifyEmailPreDay(),
-  authController.verifyEmail,
+    "/forgot-password",
+    rateLimitServce.defaultAuthRateLimit(),
+    authController.forgotPassword,
 );
 router.post(
-  "/resen-verify-email",
-  rateLimitServce.senVerifyEmailPerMinute(),
-  rateLimitServce.senVerifyEmailPerDay(),
-  authMeRequired,
-  authController.resenVerifyEmail,
+    "/reset-password",
+    rateLimitServce.defaultAuthRateLimit(),
+    authController.resetPassword,
+);
+
+router.post(
+    "/logout",
+    authMeRequired,
+    rateLimitServce.defaultAuthRateLimit(),
+    authController.logout,
+);
+router.post(
+    "/change-password",
+    authMeRequired,
+    rateLimitServce.defaultAuthRateLimit(),
+    authController.changePassword,
+);
+router.post(
+    "/verify-email",
+    rateLimitServce.verifyEmailPerMinute(),
+    rateLimitServce.verifyEmailPreDay(),
+    authController.verifyEmail,
+);
+router.post(
+    "/resen-verify-email",
+    rateLimitServce.senVerifyEmailPerMinute(),
+    rateLimitServce.senVerifyEmailPerDay(),
+    authMeRequired,
+    authController.resenVerifyEmail,
 );
 router.get("/me", authMeRequired, authController.getMe);
 

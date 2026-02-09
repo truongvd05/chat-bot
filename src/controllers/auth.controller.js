@@ -260,8 +260,6 @@ class AuthController {
                 .update(token)
                 .digest("hex");
 
-            console.log(tokenHash);
-
             const resetToken =
                 await authService.findValidPasswordResetToken(tokenHash);
             if (!resetToken) {

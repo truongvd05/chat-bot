@@ -11,7 +11,7 @@ model User {
   id                   BigInt    @id @default(autoincrement())
   email                String    @unique
   name                 String?
-  password             String
+  password             String // @note: Hashed password using bcrypt
   emailVerifiedAt      DateTime? @map("email_verified_at")
   createdAt            DateTime  @default(now()) @map("created_at")
   updatedAt            DateTime  @updatedAt @map("updated_at")
@@ -22,6 +22,9 @@ model User {
   activeConversation       Conversation?             @relation("ActiveConversation", fields: [activeConversationId], references: [id], onDelete: SetNull)
   messages                 Message[]
   passwordResetTokens      PasswordResetToken[]
+  blockedUsers             UserBlock[]               @relation("Blocker")
+  blockedBy                UserBlock[]               @relation("Blocked")
+  conversations            Conversation[]
 
   @@map("users")
 }
@@ -43,19 +46,24 @@ model RefreshToken {
 }
 
 model Conversation {
-  id           BigInt           @id @default(autoincrement())
-  title        String?
-  systemPrompt String?          @map("system_prompt") @db.Text
-  type         ConversationType @default(DIRECT)
-  deletedAt    DateTime?        @map("deleted_at")
-  createdAt    DateTime         @default(now()) @map("created_at")
-  updatedAt    DateTime         @updatedAt @map("updated_at")
+  id            BigInt           @id @default(autoincrement())
+  title         String?
+  systemPrompt  String?          @map("system_prompt") @db.Text //dùng với bot
+  type          ConversationType @default(DIRECT)
+  ownerId       BigInt? //dùng với chat bot
+  lastMessageAt DateTime?        @map("last_message_at")
+  deletedAt     DateTime?        @map("deleted_at")
+  createdAt     DateTime         @default(now()) @map("created_at")
+  updatedAt     DateTime         @updatedAt @map("updated_at")
 
   participants ConversationParticipant[]
   activeUsers  User[]                    @relation("ActiveConversation")
   messages     Message[]
+  owner        User?                     @relation(fields: [ownerId], references: [id])
 
+  @@index([ownerId])
   @@index([deletedAt])
+  @@index([lastMessageAt])
   @@map("conversation")
 }
 
@@ -73,6 +81,7 @@ model ConversationParticipant {
   joinedAt       DateTime        @default(now()) @map("joined_at")
   leftAt         DateTime?       @map("left_at")
   lastReadAt     DateTime?       @map("last_read_at")
+  deletedAt      DateTime?       @map("deleted_at")
 
   conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -90,28 +99,48 @@ enum ParticipantRole {
 }
 
 model Message {
-  id             BigInt      @id @default(autoincrement())
-  conversationId BigInt      @map("conversation_id")
-  userId         BigInt?     @map("user_id")
-  role           MessageRole
-  content        String      @db.LongText
-  isEdited       Boolean     @default(false) @map("is_edited")
-  deletedAt      DateTime?   @map("deleted_at")
-  createdAt      DateTime    @default(now()) @map("created_at")
-  updatedAt      DateTime    @updatedAt @map("updated_at")
+  id              BigInt      @id @default(autoincrement())
+  conversationId  BigInt      @map("conversation_id")
+  parentMessageId BigInt?     @map("parent_message_id")
+  userId          BigInt?     @map("user_id")
+  role            MessageRole // dùng với chat bot 
+  content         String      @db.LongText
+  isEdited        Boolean     @default(false) @map("is_edited")
+  deletedAt       DateTime?   @map("deleted_at")
+  createdAt       DateTime    @default(now()) @map("created_at")
+  updatedAt       DateTime    @updatedAt @map("updated_at")
 
   conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   user         User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
 
+  parentMessage Message?            @relation("MessageReplies", fields: [parentMessageId], references: [id], onDelete: Cascade)
+  replies       Message[]           @relation("MessageReplies")
+  attachments   MessageAttachment[]
+
   @@index([deletedAt])
   @@index([conversationId, createdAt])
   @@index([userId])
+  @@index([parentMessageId])
   @@map("message")
 }
 
 enum MessageRole {
   user
   bot
+}
+
+model MessageAttachment {
+  id        BigInt   @id @default(autoincrement())
+  messageId BigInt   @map("message_id")
+  fileName  String   @map("file_name")
+  fileUrl   String   @map("file_url")
+  fileType  String   @map("file_type")
+  fileSize  Int      @map("file_size")
+  createdAt DateTime @default(now()) @map("created_at")
+  message   Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@index([messageId])
+  @@map("message_attachments")
 }
 
 model PasswordResetToken {
@@ -137,10 +166,11 @@ model Queues {
   status     QueueStatus @default(pending)
   attempts   Int         @default(0)
   maxAttempt Int         @default(3)
-  lastError  String?
+  lastError  String?     @map("last_error") @db.Text
   createdAt  DateTime    @default(now()) @map("created_at")
   updatedAt  DateTime    @updatedAt @map("updated_at")
 
+  @@index([type, status])
   @@index([status])
   @@map("queues")
 }
@@ -150,4 +180,21 @@ enum QueueStatus {
   inprogress
   completed
   failed
+}
+
+model UserBlock {
+  id        BigInt @id @default(autoincrement())
+  blockerId BigInt @map("blocker_id")
+  blockedId BigInt @map("blocked_id")
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  deletedAt DateTime? @map("deleted_at")
+
+  blocker User @relation("Blocker", fields: [blockerId], references: [id], onDelete: Cascade)
+  blocked User @relation("Blocked", fields: [blockedId], references: [id], onDelete: Cascade)
+
+  @@unique([blockerId, blockedId])
+  @@index([blockerId])
+  @@index([blockedId])
+  @@map("user_blocks")
 }

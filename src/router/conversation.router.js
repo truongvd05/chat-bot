@@ -1,24 +1,64 @@
 import express from "express";
-import conversationControlle from "#controllers/conversation.controlle.js";
+import conversationController from "#controllers/conversation.controlle.js";
 import authMeRequired from "#middlewares/authRequired.js";
 import rateLimitServce from "#services/rateLimit.servce.js";
 
 const router = express.Router();
 
-router.post("/create", authMeRequired, conversationControlle.create);
-router.post("/rename", authMeRequired, conversationControlle.rename);
-router.get("/", authMeRequired, conversationControlle.getAll);
-router.get("/:conversationId", authMeRequired, conversationControlle.getOne);
-router.delete("/:conversationId", authMeRequired, conversationControlle.del);
-router.get("/:conversationId/messages", authMeRequired, conversationControlle.getMessage);
 router.post(
-  "/:conversationId/message",
-  rateLimitServce.message(),
-  authMeRequired,
-  conversationControlle.createMessage,
+    "/direct",
+    authMeRequired,
+    rateLimitServce.defaultPerMinuteRateLimit(),
+    conversationController.createDirectConversation,
 );
-router.put("/:conversationId/message", authMeRequired, conversationControlle.editMessage);
-router.delete("/:conversationId/message", authMeRequired, conversationControlle.deleteMessage);
-router.get("/stream/:conversationId", authMeRequired, conversationControlle.stream);
+
+router.post(
+    "/bot",
+    authMeRequired,
+    rateLimitServce.defaultPerMinuteRateLimit(),
+    conversationController.createBotConversation,
+);
+
+router.get(
+    "/",
+    authMeRequired,
+    rateLimitServce.defaultPerMinuteRateLimit(),
+    conversationController.getConversations,
+);
+
+router.get(
+    "/bots",
+    authMeRequired,
+    rateLimitServce.defaultPerMinuteRateLimit(),
+    conversationController.getMyBotConversations,
+);
+
+router.get(
+    "/:conversationId",
+    authMeRequired,
+    rateLimitServce.defaultPerMinuteRateLimit(),
+    conversationController.getConversation,
+);
+
+router.put(
+    "/:conversationId",
+    authMeRequired,
+    rateLimitServce.defaultPerMinuteRateLimit(),
+    conversationController.renameConversation,
+);
+
+router.delete(
+    "/:conversationId",
+    authMeRequired,
+    rateLimitServce.defaultPerMinuteRateLimit(),
+    conversationController.deleteConversation,
+);
+
+router.get(
+    "/:conversationId/stream",
+    authMeRequired,
+    rateLimitServce.defaultPerMinuteRateLimit(),
+    conversationController.stream,
+);
 
 export default router;

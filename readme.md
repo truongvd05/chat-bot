@@ -306,6 +306,7 @@ src/
 
 ## 9. Định hướng nâng cấp
 
+- gửi được anh, emoji
 - Input validation (Zod)
 - Centralized error handler
 - Unit / integration test

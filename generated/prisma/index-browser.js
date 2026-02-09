@@ -146,6 +146,8 @@ exports.Prisma.ConversationScalarFieldEnum = {
   title: 'title',
   systemPrompt: 'systemPrompt',
   type: 'type',
+  ownerId: 'ownerId',
+  lastMessageAt: 'lastMessageAt',
   deletedAt: 'deletedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -165,12 +167,23 @@ exports.Prisma.MessageScalarFieldEnum = {
   id: 'id',
   conversationId: 'conversationId',
   userId: 'userId',
+  parentMessageId: 'parentMessageId',
   role: 'role',
   content: 'content',
   isEdited: 'isEdited',
   deletedAt: 'deletedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.MessageAttachmentScalarFieldEnum = {
+  id: 'id',
+  messageId: 'messageId',
+  fileName: 'fileName',
+  fileUrl: 'fileUrl',
+  fileType: 'fileType',
+  fileSize: 'fileSize',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.PasswordResetTokenScalarFieldEnum = {
@@ -192,6 +205,14 @@ exports.Prisma.QueuesScalarFieldEnum = {
   lastError: 'lastError',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.UserBlockScalarFieldEnum = {
+  id: 'id',
+  blockerId: 'blockerId',
+  blockedId: 'blockedId',
+  createdAt: 'createdAt',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -225,6 +246,12 @@ exports.Prisma.ConversationOrderByRelevanceFieldEnum = {
 
 exports.Prisma.MessageOrderByRelevanceFieldEnum = {
   content: 'content'
+};
+
+exports.Prisma.MessageAttachmentOrderByRelevanceFieldEnum = {
+  fileName: 'fileName',
+  fileUrl: 'fileUrl',
+  fileType: 'fileType'
 };
 
 exports.Prisma.PasswordResetTokenOrderByRelevanceFieldEnum = {
@@ -276,8 +303,10 @@ exports.Prisma.ModelName = {
   Conversation: 'Conversation',
   ConversationParticipant: 'ConversationParticipant',
   Message: 'Message',
+  MessageAttachment: 'MessageAttachment',
   PasswordResetToken: 'PasswordResetToken',
-  Queues: 'Queues'
+  Queues: 'Queues',
+  UserBlock: 'UserBlock'
 };
 
 /**

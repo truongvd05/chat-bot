@@ -39,6 +39,11 @@ export type ConversationParticipant = $Result.DefaultSelection<Prisma.$Conversat
  */
 export type Message = $Result.DefaultSelection<Prisma.$MessagePayload>
 /**
+ * Model MessageAttachment
+ * 
+ */
+export type MessageAttachment = $Result.DefaultSelection<Prisma.$MessageAttachmentPayload>
+/**
  * Model PasswordResetToken
  * 
  */
@@ -48,6 +53,11 @@ export type PasswordResetToken = $Result.DefaultSelection<Prisma.$PasswordResetT
  * 
  */
 export type Queues = $Result.DefaultSelection<Prisma.$QueuesPayload>
+/**
+ * Model UserBlock
+ * 
+ */
+export type UserBlock = $Result.DefaultSelection<Prisma.$UserBlockPayload>
 
 /**
  * Enums
@@ -274,6 +284,16 @@ export class PrismaClient<
   get message(): Prisma.MessageDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.messageAttachment`: Exposes CRUD operations for the **MessageAttachment** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more MessageAttachments
+    * const messageAttachments = await prisma.messageAttachment.findMany()
+    * ```
+    */
+  get messageAttachment(): Prisma.MessageAttachmentDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.passwordResetToken`: Exposes CRUD operations for the **PasswordResetToken** model.
     * Example usage:
     * ```ts
@@ -292,6 +312,16 @@ export class PrismaClient<
     * ```
     */
   get queues(): Prisma.QueuesDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.userBlock`: Exposes CRUD operations for the **UserBlock** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more UserBlocks
+    * const userBlocks = await prisma.userBlock.findMany()
+    * ```
+    */
+  get userBlock(): Prisma.UserBlockDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -731,8 +761,10 @@ export namespace Prisma {
     Conversation: 'Conversation',
     ConversationParticipant: 'ConversationParticipant',
     Message: 'Message',
+    MessageAttachment: 'MessageAttachment',
     PasswordResetToken: 'PasswordResetToken',
-    Queues: 'Queues'
+    Queues: 'Queues',
+    UserBlock: 'UserBlock'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -748,7 +780,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "refreshToken" | "conversation" | "conversationParticipant" | "message" | "passwordResetToken" | "queues"
+      modelProps: "user" | "refreshToken" | "conversation" | "conversationParticipant" | "message" | "messageAttachment" | "passwordResetToken" | "queues" | "userBlock"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1082,6 +1114,72 @@ export namespace Prisma {
           }
         }
       }
+      MessageAttachment: {
+        payload: Prisma.$MessageAttachmentPayload<ExtArgs>
+        fields: Prisma.MessageAttachmentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.MessageAttachmentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageAttachmentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.MessageAttachmentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageAttachmentPayload>
+          }
+          findFirst: {
+            args: Prisma.MessageAttachmentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageAttachmentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.MessageAttachmentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageAttachmentPayload>
+          }
+          findMany: {
+            args: Prisma.MessageAttachmentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageAttachmentPayload>[]
+          }
+          create: {
+            args: Prisma.MessageAttachmentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageAttachmentPayload>
+          }
+          createMany: {
+            args: Prisma.MessageAttachmentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.MessageAttachmentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageAttachmentPayload>
+          }
+          update: {
+            args: Prisma.MessageAttachmentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageAttachmentPayload>
+          }
+          deleteMany: {
+            args: Prisma.MessageAttachmentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.MessageAttachmentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.MessageAttachmentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MessageAttachmentPayload>
+          }
+          aggregate: {
+            args: Prisma.MessageAttachmentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateMessageAttachment>
+          }
+          groupBy: {
+            args: Prisma.MessageAttachmentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<MessageAttachmentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.MessageAttachmentCountArgs<ExtArgs>
+            result: $Utils.Optional<MessageAttachmentCountAggregateOutputType> | number
+          }
+        }
+      }
       PasswordResetToken: {
         payload: Prisma.$PasswordResetTokenPayload<ExtArgs>
         fields: Prisma.PasswordResetTokenFieldRefs
@@ -1214,6 +1312,72 @@ export namespace Prisma {
           }
         }
       }
+      UserBlock: {
+        payload: Prisma.$UserBlockPayload<ExtArgs>
+        fields: Prisma.UserBlockFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.UserBlockFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBlockPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.UserBlockFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBlockPayload>
+          }
+          findFirst: {
+            args: Prisma.UserBlockFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBlockPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.UserBlockFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBlockPayload>
+          }
+          findMany: {
+            args: Prisma.UserBlockFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBlockPayload>[]
+          }
+          create: {
+            args: Prisma.UserBlockCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBlockPayload>
+          }
+          createMany: {
+            args: Prisma.UserBlockCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.UserBlockDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBlockPayload>
+          }
+          update: {
+            args: Prisma.UserBlockUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBlockPayload>
+          }
+          deleteMany: {
+            args: Prisma.UserBlockDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.UserBlockUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.UserBlockUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBlockPayload>
+          }
+          aggregate: {
+            args: Prisma.UserBlockAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUserBlock>
+          }
+          groupBy: {
+            args: Prisma.UserBlockGroupByArgs<ExtArgs>
+            result: $Utils.Optional<UserBlockGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.UserBlockCountArgs<ExtArgs>
+            result: $Utils.Optional<UserBlockCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1327,8 +1491,10 @@ export namespace Prisma {
     conversation?: ConversationOmit
     conversationParticipant?: ConversationParticipantOmit
     message?: MessageOmit
+    messageAttachment?: MessageAttachmentOmit
     passwordResetToken?: PasswordResetTokenOmit
     queues?: QueuesOmit
+    userBlock?: UserBlockOmit
   }
 
   /* Types for Logging */
@@ -1413,6 +1579,9 @@ export namespace Prisma {
     conversationParticipants: number
     messages: number
     passwordResetTokens: number
+    blockedUsers: number
+    blockedBy: number
+    conversations: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1420,6 +1589,9 @@ export namespace Prisma {
     conversationParticipants?: boolean | UserCountOutputTypeCountConversationParticipantsArgs
     messages?: boolean | UserCountOutputTypeCountMessagesArgs
     passwordResetTokens?: boolean | UserCountOutputTypeCountPasswordResetTokensArgs
+    blockedUsers?: boolean | UserCountOutputTypeCountBlockedUsersArgs
+    blockedBy?: boolean | UserCountOutputTypeCountBlockedByArgs
+    conversations?: boolean | UserCountOutputTypeCountConversationsArgs
   }
 
   // Custom InputTypes
@@ -1459,6 +1631,27 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountPasswordResetTokensArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PasswordResetTokenWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountBlockedUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserBlockWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountBlockedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserBlockWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountConversationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ConversationWhereInput
   }
 
 
@@ -1508,6 +1701,46 @@ export namespace Prisma {
    */
   export type ConversationCountOutputTypeCountMessagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: MessageWhereInput
+  }
+
+
+  /**
+   * Count Type MessageCountOutputType
+   */
+
+  export type MessageCountOutputType = {
+    replies: number
+    attachments: number
+  }
+
+  export type MessageCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    replies?: boolean | MessageCountOutputTypeCountRepliesArgs
+    attachments?: boolean | MessageCountOutputTypeCountAttachmentsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * MessageCountOutputType without action
+   */
+  export type MessageCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageCountOutputType
+     */
+    select?: MessageCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * MessageCountOutputType without action
+   */
+  export type MessageCountOutputTypeCountRepliesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MessageWhereInput
+  }
+
+  /**
+   * MessageCountOutputType without action
+   */
+  export type MessageCountOutputTypeCountAttachmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MessageAttachmentWhereInput
   }
 
 
@@ -1746,6 +1979,9 @@ export namespace Prisma {
     activeConversation?: boolean | User$activeConversationArgs<ExtArgs>
     messages?: boolean | User$messagesArgs<ExtArgs>
     passwordResetTokens?: boolean | User$passwordResetTokensArgs<ExtArgs>
+    blockedUsers?: boolean | User$blockedUsersArgs<ExtArgs>
+    blockedBy?: boolean | User$blockedByArgs<ExtArgs>
+    conversations?: boolean | User$conversationsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1769,6 +2005,9 @@ export namespace Prisma {
     activeConversation?: boolean | User$activeConversationArgs<ExtArgs>
     messages?: boolean | User$messagesArgs<ExtArgs>
     passwordResetTokens?: boolean | User$passwordResetTokensArgs<ExtArgs>
+    blockedUsers?: boolean | User$blockedUsersArgs<ExtArgs>
+    blockedBy?: boolean | User$blockedByArgs<ExtArgs>
+    conversations?: boolean | User$conversationsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -1780,6 +2019,9 @@ export namespace Prisma {
       activeConversation: Prisma.$ConversationPayload<ExtArgs> | null
       messages: Prisma.$MessagePayload<ExtArgs>[]
       passwordResetTokens: Prisma.$PasswordResetTokenPayload<ExtArgs>[]
+      blockedUsers: Prisma.$UserBlockPayload<ExtArgs>[]
+      blockedBy: Prisma.$UserBlockPayload<ExtArgs>[]
+      conversations: Prisma.$ConversationPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
@@ -2135,6 +2377,9 @@ export namespace Prisma {
     activeConversation<T extends User$activeConversationArgs<ExtArgs> = {}>(args?: Subset<T, User$activeConversationArgs<ExtArgs>>): Prisma__ConversationClient<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     messages<T extends User$messagesArgs<ExtArgs> = {}>(args?: Subset<T, User$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     passwordResetTokens<T extends User$passwordResetTokensArgs<ExtArgs> = {}>(args?: Subset<T, User$passwordResetTokensArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PasswordResetTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    blockedUsers<T extends User$blockedUsersArgs<ExtArgs> = {}>(args?: Subset<T, User$blockedUsersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserBlockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    blockedBy<T extends User$blockedByArgs<ExtArgs> = {}>(args?: Subset<T, User$blockedByArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserBlockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    conversations<T extends User$conversationsArgs<ExtArgs> = {}>(args?: Subset<T, User$conversationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2627,6 +2872,78 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: PasswordResetTokenScalarFieldEnum | PasswordResetTokenScalarFieldEnum[]
+  }
+
+  /**
+   * User.blockedUsers
+   */
+  export type User$blockedUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBlock
+     */
+    select?: UserBlockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBlock
+     */
+    omit?: UserBlockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBlockInclude<ExtArgs> | null
+    where?: UserBlockWhereInput
+    orderBy?: UserBlockOrderByWithRelationInput | UserBlockOrderByWithRelationInput[]
+    cursor?: UserBlockWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserBlockScalarFieldEnum | UserBlockScalarFieldEnum[]
+  }
+
+  /**
+   * User.blockedBy
+   */
+  export type User$blockedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBlock
+     */
+    select?: UserBlockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBlock
+     */
+    omit?: UserBlockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBlockInclude<ExtArgs> | null
+    where?: UserBlockWhereInput
+    orderBy?: UserBlockOrderByWithRelationInput | UserBlockOrderByWithRelationInput[]
+    cursor?: UserBlockWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserBlockScalarFieldEnum | UserBlockScalarFieldEnum[]
+  }
+
+  /**
+   * User.conversations
+   */
+  export type User$conversationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conversation
+     */
+    select?: ConversationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conversation
+     */
+    omit?: ConversationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationInclude<ExtArgs> | null
+    where?: ConversationWhereInput
+    orderBy?: ConversationOrderByWithRelationInput | ConversationOrderByWithRelationInput[]
+    cursor?: ConversationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ConversationScalarFieldEnum | ConversationScalarFieldEnum[]
   }
 
   /**
@@ -3651,10 +3968,12 @@ export namespace Prisma {
 
   export type ConversationAvgAggregateOutputType = {
     id: number | null
+    ownerId: number | null
   }
 
   export type ConversationSumAggregateOutputType = {
     id: bigint | null
+    ownerId: bigint | null
   }
 
   export type ConversationMinAggregateOutputType = {
@@ -3662,6 +3981,8 @@ export namespace Prisma {
     title: string | null
     systemPrompt: string | null
     type: $Enums.ConversationType | null
+    ownerId: bigint | null
+    lastMessageAt: Date | null
     deletedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -3672,6 +3993,8 @@ export namespace Prisma {
     title: string | null
     systemPrompt: string | null
     type: $Enums.ConversationType | null
+    ownerId: bigint | null
+    lastMessageAt: Date | null
     deletedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -3682,6 +4005,8 @@ export namespace Prisma {
     title: number
     systemPrompt: number
     type: number
+    ownerId: number
+    lastMessageAt: number
     deletedAt: number
     createdAt: number
     updatedAt: number
@@ -3691,10 +4016,12 @@ export namespace Prisma {
 
   export type ConversationAvgAggregateInputType = {
     id?: true
+    ownerId?: true
   }
 
   export type ConversationSumAggregateInputType = {
     id?: true
+    ownerId?: true
   }
 
   export type ConversationMinAggregateInputType = {
@@ -3702,6 +4029,8 @@ export namespace Prisma {
     title?: true
     systemPrompt?: true
     type?: true
+    ownerId?: true
+    lastMessageAt?: true
     deletedAt?: true
     createdAt?: true
     updatedAt?: true
@@ -3712,6 +4041,8 @@ export namespace Prisma {
     title?: true
     systemPrompt?: true
     type?: true
+    ownerId?: true
+    lastMessageAt?: true
     deletedAt?: true
     createdAt?: true
     updatedAt?: true
@@ -3722,6 +4053,8 @@ export namespace Prisma {
     title?: true
     systemPrompt?: true
     type?: true
+    ownerId?: true
+    lastMessageAt?: true
     deletedAt?: true
     createdAt?: true
     updatedAt?: true
@@ -3819,6 +4152,8 @@ export namespace Prisma {
     title: string | null
     systemPrompt: string | null
     type: $Enums.ConversationType
+    ownerId: bigint | null
+    lastMessageAt: Date | null
     deletedAt: Date | null
     createdAt: Date
     updatedAt: Date
@@ -3848,12 +4183,15 @@ export namespace Prisma {
     title?: boolean
     systemPrompt?: boolean
     type?: boolean
+    ownerId?: boolean
+    lastMessageAt?: boolean
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     participants?: boolean | Conversation$participantsArgs<ExtArgs>
     activeUsers?: boolean | Conversation$activeUsersArgs<ExtArgs>
     messages?: boolean | Conversation$messagesArgs<ExtArgs>
+    owner?: boolean | Conversation$ownerArgs<ExtArgs>
     _count?: boolean | ConversationCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["conversation"]>
 
@@ -3864,16 +4202,19 @@ export namespace Prisma {
     title?: boolean
     systemPrompt?: boolean
     type?: boolean
+    ownerId?: boolean
+    lastMessageAt?: boolean
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ConversationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "systemPrompt" | "type" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["conversation"]>
+  export type ConversationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "systemPrompt" | "type" | "ownerId" | "lastMessageAt" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["conversation"]>
   export type ConversationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     participants?: boolean | Conversation$participantsArgs<ExtArgs>
     activeUsers?: boolean | Conversation$activeUsersArgs<ExtArgs>
     messages?: boolean | Conversation$messagesArgs<ExtArgs>
+    owner?: boolean | Conversation$ownerArgs<ExtArgs>
     _count?: boolean | ConversationCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -3883,12 +4224,15 @@ export namespace Prisma {
       participants: Prisma.$ConversationParticipantPayload<ExtArgs>[]
       activeUsers: Prisma.$UserPayload<ExtArgs>[]
       messages: Prisma.$MessagePayload<ExtArgs>[]
+      owner: Prisma.$UserPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
       title: string | null
       systemPrompt: string | null
       type: $Enums.ConversationType
+      ownerId: bigint | null
+      lastMessageAt: Date | null
       deletedAt: Date | null
       createdAt: Date
       updatedAt: Date
@@ -4235,6 +4579,7 @@ export namespace Prisma {
     participants<T extends Conversation$participantsArgs<ExtArgs> = {}>(args?: Subset<T, Conversation$participantsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationParticipantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     activeUsers<T extends Conversation$activeUsersArgs<ExtArgs> = {}>(args?: Subset<T, Conversation$activeUsersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     messages<T extends Conversation$messagesArgs<ExtArgs> = {}>(args?: Subset<T, Conversation$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    owner<T extends Conversation$ownerArgs<ExtArgs> = {}>(args?: Subset<T, Conversation$ownerArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4268,6 +4613,8 @@ export namespace Prisma {
     readonly title: FieldRef<"Conversation", 'String'>
     readonly systemPrompt: FieldRef<"Conversation", 'String'>
     readonly type: FieldRef<"Conversation", 'ConversationType'>
+    readonly ownerId: FieldRef<"Conversation", 'BigInt'>
+    readonly lastMessageAt: FieldRef<"Conversation", 'DateTime'>
     readonly deletedAt: FieldRef<"Conversation", 'DateTime'>
     readonly createdAt: FieldRef<"Conversation", 'DateTime'>
     readonly updatedAt: FieldRef<"Conversation", 'DateTime'>
@@ -4683,6 +5030,25 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: MessageScalarFieldEnum | MessageScalarFieldEnum[]
+  }
+
+  /**
+   * Conversation.owner
+   */
+  export type Conversation$ownerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
   }
 
   /**
@@ -5717,18 +6083,21 @@ export namespace Prisma {
     id: number | null
     conversationId: number | null
     userId: number | null
+    parentMessageId: number | null
   }
 
   export type MessageSumAggregateOutputType = {
     id: bigint | null
     conversationId: bigint | null
     userId: bigint | null
+    parentMessageId: bigint | null
   }
 
   export type MessageMinAggregateOutputType = {
     id: bigint | null
     conversationId: bigint | null
     userId: bigint | null
+    parentMessageId: bigint | null
     role: $Enums.MessageRole | null
     content: string | null
     isEdited: boolean | null
@@ -5741,6 +6110,7 @@ export namespace Prisma {
     id: bigint | null
     conversationId: bigint | null
     userId: bigint | null
+    parentMessageId: bigint | null
     role: $Enums.MessageRole | null
     content: string | null
     isEdited: boolean | null
@@ -5753,6 +6123,7 @@ export namespace Prisma {
     id: number
     conversationId: number
     userId: number
+    parentMessageId: number
     role: number
     content: number
     isEdited: number
@@ -5767,18 +6138,21 @@ export namespace Prisma {
     id?: true
     conversationId?: true
     userId?: true
+    parentMessageId?: true
   }
 
   export type MessageSumAggregateInputType = {
     id?: true
     conversationId?: true
     userId?: true
+    parentMessageId?: true
   }
 
   export type MessageMinAggregateInputType = {
     id?: true
     conversationId?: true
     userId?: true
+    parentMessageId?: true
     role?: true
     content?: true
     isEdited?: true
@@ -5791,6 +6165,7 @@ export namespace Prisma {
     id?: true
     conversationId?: true
     userId?: true
+    parentMessageId?: true
     role?: true
     content?: true
     isEdited?: true
@@ -5803,6 +6178,7 @@ export namespace Prisma {
     id?: true
     conversationId?: true
     userId?: true
+    parentMessageId?: true
     role?: true
     content?: true
     isEdited?: true
@@ -5902,6 +6278,7 @@ export namespace Prisma {
     id: bigint
     conversationId: bigint
     userId: bigint | null
+    parentMessageId: bigint | null
     role: $Enums.MessageRole
     content: string
     isEdited: boolean
@@ -5933,6 +6310,7 @@ export namespace Prisma {
     id?: boolean
     conversationId?: boolean
     userId?: boolean
+    parentMessageId?: boolean
     role?: boolean
     content?: boolean
     isEdited?: boolean
@@ -5941,6 +6319,10 @@ export namespace Prisma {
     updatedAt?: boolean
     conversation?: boolean | ConversationDefaultArgs<ExtArgs>
     user?: boolean | Message$userArgs<ExtArgs>
+    parentMessage?: boolean | Message$parentMessageArgs<ExtArgs>
+    replies?: boolean | Message$repliesArgs<ExtArgs>
+    attachments?: boolean | Message$attachmentsArgs<ExtArgs>
+    _count?: boolean | MessageCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["message"]>
 
 
@@ -5949,6 +6331,7 @@ export namespace Prisma {
     id?: boolean
     conversationId?: boolean
     userId?: boolean
+    parentMessageId?: boolean
     role?: boolean
     content?: boolean
     isEdited?: boolean
@@ -5957,10 +6340,14 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type MessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "conversationId" | "userId" | "role" | "content" | "isEdited" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["message"]>
+  export type MessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "conversationId" | "userId" | "parentMessageId" | "role" | "content" | "isEdited" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["message"]>
   export type MessageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     conversation?: boolean | ConversationDefaultArgs<ExtArgs>
     user?: boolean | Message$userArgs<ExtArgs>
+    parentMessage?: boolean | Message$parentMessageArgs<ExtArgs>
+    replies?: boolean | Message$repliesArgs<ExtArgs>
+    attachments?: boolean | Message$attachmentsArgs<ExtArgs>
+    _count?: boolean | MessageCountOutputTypeDefaultArgs<ExtArgs>
   }
 
   export type $MessagePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5968,11 +6355,15 @@ export namespace Prisma {
     objects: {
       conversation: Prisma.$ConversationPayload<ExtArgs>
       user: Prisma.$UserPayload<ExtArgs> | null
+      parentMessage: Prisma.$MessagePayload<ExtArgs> | null
+      replies: Prisma.$MessagePayload<ExtArgs>[]
+      attachments: Prisma.$MessageAttachmentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
       conversationId: bigint
       userId: bigint | null
+      parentMessageId: bigint | null
       role: $Enums.MessageRole
       content: string
       isEdited: boolean
@@ -6321,6 +6712,9 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     conversation<T extends ConversationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ConversationDefaultArgs<ExtArgs>>): Prisma__ConversationClient<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     user<T extends Message$userArgs<ExtArgs> = {}>(args?: Subset<T, Message$userArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    parentMessage<T extends Message$parentMessageArgs<ExtArgs> = {}>(args?: Subset<T, Message$parentMessageArgs<ExtArgs>>): Prisma__MessageClient<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    replies<T extends Message$repliesArgs<ExtArgs> = {}>(args?: Subset<T, Message$repliesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    attachments<T extends Message$attachmentsArgs<ExtArgs> = {}>(args?: Subset<T, Message$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessageAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6353,6 +6747,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Message", 'BigInt'>
     readonly conversationId: FieldRef<"Message", 'BigInt'>
     readonly userId: FieldRef<"Message", 'BigInt'>
+    readonly parentMessageId: FieldRef<"Message", 'BigInt'>
     readonly role: FieldRef<"Message", 'MessageRole'>
     readonly content: FieldRef<"Message", 'String'>
     readonly isEdited: FieldRef<"Message", 'Boolean'>
@@ -6721,6 +7116,73 @@ export namespace Prisma {
   }
 
   /**
+   * Message.parentMessage
+   */
+  export type Message$parentMessageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Message
+     */
+    select?: MessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Message
+     */
+    omit?: MessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageInclude<ExtArgs> | null
+    where?: MessageWhereInput
+  }
+
+  /**
+   * Message.replies
+   */
+  export type Message$repliesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Message
+     */
+    select?: MessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Message
+     */
+    omit?: MessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageInclude<ExtArgs> | null
+    where?: MessageWhereInput
+    orderBy?: MessageOrderByWithRelationInput | MessageOrderByWithRelationInput[]
+    cursor?: MessageWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MessageScalarFieldEnum | MessageScalarFieldEnum[]
+  }
+
+  /**
+   * Message.attachments
+   */
+  export type Message$attachmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageAttachment
+     */
+    select?: MessageAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MessageAttachment
+     */
+    omit?: MessageAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageAttachmentInclude<ExtArgs> | null
+    where?: MessageAttachmentWhereInput
+    orderBy?: MessageAttachmentOrderByWithRelationInput | MessageAttachmentOrderByWithRelationInput[]
+    cursor?: MessageAttachmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MessageAttachmentScalarFieldEnum | MessageAttachmentScalarFieldEnum[]
+  }
+
+  /**
    * Message without action
    */
   export type MessageDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6736,6 +7198,999 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: MessageInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model MessageAttachment
+   */
+
+  export type AggregateMessageAttachment = {
+    _count: MessageAttachmentCountAggregateOutputType | null
+    _avg: MessageAttachmentAvgAggregateOutputType | null
+    _sum: MessageAttachmentSumAggregateOutputType | null
+    _min: MessageAttachmentMinAggregateOutputType | null
+    _max: MessageAttachmentMaxAggregateOutputType | null
+  }
+
+  export type MessageAttachmentAvgAggregateOutputType = {
+    id: number | null
+    messageId: number | null
+    fileSize: number | null
+  }
+
+  export type MessageAttachmentSumAggregateOutputType = {
+    id: bigint | null
+    messageId: bigint | null
+    fileSize: number | null
+  }
+
+  export type MessageAttachmentMinAggregateOutputType = {
+    id: bigint | null
+    messageId: bigint | null
+    fileName: string | null
+    fileUrl: string | null
+    fileType: string | null
+    fileSize: number | null
+    createdAt: Date | null
+  }
+
+  export type MessageAttachmentMaxAggregateOutputType = {
+    id: bigint | null
+    messageId: bigint | null
+    fileName: string | null
+    fileUrl: string | null
+    fileType: string | null
+    fileSize: number | null
+    createdAt: Date | null
+  }
+
+  export type MessageAttachmentCountAggregateOutputType = {
+    id: number
+    messageId: number
+    fileName: number
+    fileUrl: number
+    fileType: number
+    fileSize: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type MessageAttachmentAvgAggregateInputType = {
+    id?: true
+    messageId?: true
+    fileSize?: true
+  }
+
+  export type MessageAttachmentSumAggregateInputType = {
+    id?: true
+    messageId?: true
+    fileSize?: true
+  }
+
+  export type MessageAttachmentMinAggregateInputType = {
+    id?: true
+    messageId?: true
+    fileName?: true
+    fileUrl?: true
+    fileType?: true
+    fileSize?: true
+    createdAt?: true
+  }
+
+  export type MessageAttachmentMaxAggregateInputType = {
+    id?: true
+    messageId?: true
+    fileName?: true
+    fileUrl?: true
+    fileType?: true
+    fileSize?: true
+    createdAt?: true
+  }
+
+  export type MessageAttachmentCountAggregateInputType = {
+    id?: true
+    messageId?: true
+    fileName?: true
+    fileUrl?: true
+    fileType?: true
+    fileSize?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type MessageAttachmentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MessageAttachment to aggregate.
+     */
+    where?: MessageAttachmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MessageAttachments to fetch.
+     */
+    orderBy?: MessageAttachmentOrderByWithRelationInput | MessageAttachmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: MessageAttachmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MessageAttachments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MessageAttachments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned MessageAttachments
+    **/
+    _count?: true | MessageAttachmentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: MessageAttachmentAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: MessageAttachmentSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MessageAttachmentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MessageAttachmentMaxAggregateInputType
+  }
+
+  export type GetMessageAttachmentAggregateType<T extends MessageAttachmentAggregateArgs> = {
+        [P in keyof T & keyof AggregateMessageAttachment]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMessageAttachment[P]>
+      : GetScalarType<T[P], AggregateMessageAttachment[P]>
+  }
+
+
+
+
+  export type MessageAttachmentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MessageAttachmentWhereInput
+    orderBy?: MessageAttachmentOrderByWithAggregationInput | MessageAttachmentOrderByWithAggregationInput[]
+    by: MessageAttachmentScalarFieldEnum[] | MessageAttachmentScalarFieldEnum
+    having?: MessageAttachmentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MessageAttachmentCountAggregateInputType | true
+    _avg?: MessageAttachmentAvgAggregateInputType
+    _sum?: MessageAttachmentSumAggregateInputType
+    _min?: MessageAttachmentMinAggregateInputType
+    _max?: MessageAttachmentMaxAggregateInputType
+  }
+
+  export type MessageAttachmentGroupByOutputType = {
+    id: bigint
+    messageId: bigint
+    fileName: string
+    fileUrl: string
+    fileType: string
+    fileSize: number
+    createdAt: Date
+    _count: MessageAttachmentCountAggregateOutputType | null
+    _avg: MessageAttachmentAvgAggregateOutputType | null
+    _sum: MessageAttachmentSumAggregateOutputType | null
+    _min: MessageAttachmentMinAggregateOutputType | null
+    _max: MessageAttachmentMaxAggregateOutputType | null
+  }
+
+  type GetMessageAttachmentGroupByPayload<T extends MessageAttachmentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<MessageAttachmentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MessageAttachmentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MessageAttachmentGroupByOutputType[P]>
+            : GetScalarType<T[P], MessageAttachmentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type MessageAttachmentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    messageId?: boolean
+    fileName?: boolean
+    fileUrl?: boolean
+    fileType?: boolean
+    fileSize?: boolean
+    createdAt?: boolean
+    message?: boolean | MessageDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["messageAttachment"]>
+
+
+
+  export type MessageAttachmentSelectScalar = {
+    id?: boolean
+    messageId?: boolean
+    fileName?: boolean
+    fileUrl?: boolean
+    fileType?: boolean
+    fileSize?: boolean
+    createdAt?: boolean
+  }
+
+  export type MessageAttachmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "messageId" | "fileName" | "fileUrl" | "fileType" | "fileSize" | "createdAt", ExtArgs["result"]["messageAttachment"]>
+  export type MessageAttachmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    message?: boolean | MessageDefaultArgs<ExtArgs>
+  }
+
+  export type $MessageAttachmentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "MessageAttachment"
+    objects: {
+      message: Prisma.$MessagePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: bigint
+      messageId: bigint
+      fileName: string
+      fileUrl: string
+      fileType: string
+      fileSize: number
+      createdAt: Date
+    }, ExtArgs["result"]["messageAttachment"]>
+    composites: {}
+  }
+
+  type MessageAttachmentGetPayload<S extends boolean | null | undefined | MessageAttachmentDefaultArgs> = $Result.GetResult<Prisma.$MessageAttachmentPayload, S>
+
+  type MessageAttachmentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<MessageAttachmentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: MessageAttachmentCountAggregateInputType | true
+    }
+
+  export interface MessageAttachmentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['MessageAttachment'], meta: { name: 'MessageAttachment' } }
+    /**
+     * Find zero or one MessageAttachment that matches the filter.
+     * @param {MessageAttachmentFindUniqueArgs} args - Arguments to find a MessageAttachment
+     * @example
+     * // Get one MessageAttachment
+     * const messageAttachment = await prisma.messageAttachment.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends MessageAttachmentFindUniqueArgs>(args: SelectSubset<T, MessageAttachmentFindUniqueArgs<ExtArgs>>): Prisma__MessageAttachmentClient<$Result.GetResult<Prisma.$MessageAttachmentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one MessageAttachment that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {MessageAttachmentFindUniqueOrThrowArgs} args - Arguments to find a MessageAttachment
+     * @example
+     * // Get one MessageAttachment
+     * const messageAttachment = await prisma.messageAttachment.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends MessageAttachmentFindUniqueOrThrowArgs>(args: SelectSubset<T, MessageAttachmentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MessageAttachmentClient<$Result.GetResult<Prisma.$MessageAttachmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MessageAttachment that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MessageAttachmentFindFirstArgs} args - Arguments to find a MessageAttachment
+     * @example
+     * // Get one MessageAttachment
+     * const messageAttachment = await prisma.messageAttachment.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends MessageAttachmentFindFirstArgs>(args?: SelectSubset<T, MessageAttachmentFindFirstArgs<ExtArgs>>): Prisma__MessageAttachmentClient<$Result.GetResult<Prisma.$MessageAttachmentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MessageAttachment that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MessageAttachmentFindFirstOrThrowArgs} args - Arguments to find a MessageAttachment
+     * @example
+     * // Get one MessageAttachment
+     * const messageAttachment = await prisma.messageAttachment.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends MessageAttachmentFindFirstOrThrowArgs>(args?: SelectSubset<T, MessageAttachmentFindFirstOrThrowArgs<ExtArgs>>): Prisma__MessageAttachmentClient<$Result.GetResult<Prisma.$MessageAttachmentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more MessageAttachments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MessageAttachmentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all MessageAttachments
+     * const messageAttachments = await prisma.messageAttachment.findMany()
+     * 
+     * // Get first 10 MessageAttachments
+     * const messageAttachments = await prisma.messageAttachment.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const messageAttachmentWithIdOnly = await prisma.messageAttachment.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends MessageAttachmentFindManyArgs>(args?: SelectSubset<T, MessageAttachmentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessageAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a MessageAttachment.
+     * @param {MessageAttachmentCreateArgs} args - Arguments to create a MessageAttachment.
+     * @example
+     * // Create one MessageAttachment
+     * const MessageAttachment = await prisma.messageAttachment.create({
+     *   data: {
+     *     // ... data to create a MessageAttachment
+     *   }
+     * })
+     * 
+     */
+    create<T extends MessageAttachmentCreateArgs>(args: SelectSubset<T, MessageAttachmentCreateArgs<ExtArgs>>): Prisma__MessageAttachmentClient<$Result.GetResult<Prisma.$MessageAttachmentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many MessageAttachments.
+     * @param {MessageAttachmentCreateManyArgs} args - Arguments to create many MessageAttachments.
+     * @example
+     * // Create many MessageAttachments
+     * const messageAttachment = await prisma.messageAttachment.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends MessageAttachmentCreateManyArgs>(args?: SelectSubset<T, MessageAttachmentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a MessageAttachment.
+     * @param {MessageAttachmentDeleteArgs} args - Arguments to delete one MessageAttachment.
+     * @example
+     * // Delete one MessageAttachment
+     * const MessageAttachment = await prisma.messageAttachment.delete({
+     *   where: {
+     *     // ... filter to delete one MessageAttachment
+     *   }
+     * })
+     * 
+     */
+    delete<T extends MessageAttachmentDeleteArgs>(args: SelectSubset<T, MessageAttachmentDeleteArgs<ExtArgs>>): Prisma__MessageAttachmentClient<$Result.GetResult<Prisma.$MessageAttachmentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one MessageAttachment.
+     * @param {MessageAttachmentUpdateArgs} args - Arguments to update one MessageAttachment.
+     * @example
+     * // Update one MessageAttachment
+     * const messageAttachment = await prisma.messageAttachment.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends MessageAttachmentUpdateArgs>(args: SelectSubset<T, MessageAttachmentUpdateArgs<ExtArgs>>): Prisma__MessageAttachmentClient<$Result.GetResult<Prisma.$MessageAttachmentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more MessageAttachments.
+     * @param {MessageAttachmentDeleteManyArgs} args - Arguments to filter MessageAttachments to delete.
+     * @example
+     * // Delete a few MessageAttachments
+     * const { count } = await prisma.messageAttachment.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends MessageAttachmentDeleteManyArgs>(args?: SelectSubset<T, MessageAttachmentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MessageAttachments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MessageAttachmentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many MessageAttachments
+     * const messageAttachment = await prisma.messageAttachment.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends MessageAttachmentUpdateManyArgs>(args: SelectSubset<T, MessageAttachmentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one MessageAttachment.
+     * @param {MessageAttachmentUpsertArgs} args - Arguments to update or create a MessageAttachment.
+     * @example
+     * // Update or create a MessageAttachment
+     * const messageAttachment = await prisma.messageAttachment.upsert({
+     *   create: {
+     *     // ... data to create a MessageAttachment
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the MessageAttachment we want to update
+     *   }
+     * })
+     */
+    upsert<T extends MessageAttachmentUpsertArgs>(args: SelectSubset<T, MessageAttachmentUpsertArgs<ExtArgs>>): Prisma__MessageAttachmentClient<$Result.GetResult<Prisma.$MessageAttachmentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of MessageAttachments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MessageAttachmentCountArgs} args - Arguments to filter MessageAttachments to count.
+     * @example
+     * // Count the number of MessageAttachments
+     * const count = await prisma.messageAttachment.count({
+     *   where: {
+     *     // ... the filter for the MessageAttachments we want to count
+     *   }
+     * })
+    **/
+    count<T extends MessageAttachmentCountArgs>(
+      args?: Subset<T, MessageAttachmentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MessageAttachmentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a MessageAttachment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MessageAttachmentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MessageAttachmentAggregateArgs>(args: Subset<T, MessageAttachmentAggregateArgs>): Prisma.PrismaPromise<GetMessageAttachmentAggregateType<T>>
+
+    /**
+     * Group by MessageAttachment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MessageAttachmentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends MessageAttachmentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: MessageAttachmentGroupByArgs['orderBy'] }
+        : { orderBy?: MessageAttachmentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, MessageAttachmentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMessageAttachmentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the MessageAttachment model
+   */
+  readonly fields: MessageAttachmentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for MessageAttachment.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__MessageAttachmentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    message<T extends MessageDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MessageDefaultArgs<ExtArgs>>): Prisma__MessageClient<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the MessageAttachment model
+   */
+  interface MessageAttachmentFieldRefs {
+    readonly id: FieldRef<"MessageAttachment", 'BigInt'>
+    readonly messageId: FieldRef<"MessageAttachment", 'BigInt'>
+    readonly fileName: FieldRef<"MessageAttachment", 'String'>
+    readonly fileUrl: FieldRef<"MessageAttachment", 'String'>
+    readonly fileType: FieldRef<"MessageAttachment", 'String'>
+    readonly fileSize: FieldRef<"MessageAttachment", 'Int'>
+    readonly createdAt: FieldRef<"MessageAttachment", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * MessageAttachment findUnique
+   */
+  export type MessageAttachmentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageAttachment
+     */
+    select?: MessageAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MessageAttachment
+     */
+    omit?: MessageAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageAttachmentInclude<ExtArgs> | null
+    /**
+     * Filter, which MessageAttachment to fetch.
+     */
+    where: MessageAttachmentWhereUniqueInput
+  }
+
+  /**
+   * MessageAttachment findUniqueOrThrow
+   */
+  export type MessageAttachmentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageAttachment
+     */
+    select?: MessageAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MessageAttachment
+     */
+    omit?: MessageAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageAttachmentInclude<ExtArgs> | null
+    /**
+     * Filter, which MessageAttachment to fetch.
+     */
+    where: MessageAttachmentWhereUniqueInput
+  }
+
+  /**
+   * MessageAttachment findFirst
+   */
+  export type MessageAttachmentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageAttachment
+     */
+    select?: MessageAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MessageAttachment
+     */
+    omit?: MessageAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageAttachmentInclude<ExtArgs> | null
+    /**
+     * Filter, which MessageAttachment to fetch.
+     */
+    where?: MessageAttachmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MessageAttachments to fetch.
+     */
+    orderBy?: MessageAttachmentOrderByWithRelationInput | MessageAttachmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MessageAttachments.
+     */
+    cursor?: MessageAttachmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MessageAttachments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MessageAttachments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MessageAttachments.
+     */
+    distinct?: MessageAttachmentScalarFieldEnum | MessageAttachmentScalarFieldEnum[]
+  }
+
+  /**
+   * MessageAttachment findFirstOrThrow
+   */
+  export type MessageAttachmentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageAttachment
+     */
+    select?: MessageAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MessageAttachment
+     */
+    omit?: MessageAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageAttachmentInclude<ExtArgs> | null
+    /**
+     * Filter, which MessageAttachment to fetch.
+     */
+    where?: MessageAttachmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MessageAttachments to fetch.
+     */
+    orderBy?: MessageAttachmentOrderByWithRelationInput | MessageAttachmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MessageAttachments.
+     */
+    cursor?: MessageAttachmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MessageAttachments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MessageAttachments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MessageAttachments.
+     */
+    distinct?: MessageAttachmentScalarFieldEnum | MessageAttachmentScalarFieldEnum[]
+  }
+
+  /**
+   * MessageAttachment findMany
+   */
+  export type MessageAttachmentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageAttachment
+     */
+    select?: MessageAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MessageAttachment
+     */
+    omit?: MessageAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageAttachmentInclude<ExtArgs> | null
+    /**
+     * Filter, which MessageAttachments to fetch.
+     */
+    where?: MessageAttachmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MessageAttachments to fetch.
+     */
+    orderBy?: MessageAttachmentOrderByWithRelationInput | MessageAttachmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing MessageAttachments.
+     */
+    cursor?: MessageAttachmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MessageAttachments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MessageAttachments.
+     */
+    skip?: number
+    distinct?: MessageAttachmentScalarFieldEnum | MessageAttachmentScalarFieldEnum[]
+  }
+
+  /**
+   * MessageAttachment create
+   */
+  export type MessageAttachmentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageAttachment
+     */
+    select?: MessageAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MessageAttachment
+     */
+    omit?: MessageAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageAttachmentInclude<ExtArgs> | null
+    /**
+     * The data needed to create a MessageAttachment.
+     */
+    data: XOR<MessageAttachmentCreateInput, MessageAttachmentUncheckedCreateInput>
+  }
+
+  /**
+   * MessageAttachment createMany
+   */
+  export type MessageAttachmentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many MessageAttachments.
+     */
+    data: MessageAttachmentCreateManyInput | MessageAttachmentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * MessageAttachment update
+   */
+  export type MessageAttachmentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageAttachment
+     */
+    select?: MessageAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MessageAttachment
+     */
+    omit?: MessageAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageAttachmentInclude<ExtArgs> | null
+    /**
+     * The data needed to update a MessageAttachment.
+     */
+    data: XOR<MessageAttachmentUpdateInput, MessageAttachmentUncheckedUpdateInput>
+    /**
+     * Choose, which MessageAttachment to update.
+     */
+    where: MessageAttachmentWhereUniqueInput
+  }
+
+  /**
+   * MessageAttachment updateMany
+   */
+  export type MessageAttachmentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update MessageAttachments.
+     */
+    data: XOR<MessageAttachmentUpdateManyMutationInput, MessageAttachmentUncheckedUpdateManyInput>
+    /**
+     * Filter which MessageAttachments to update
+     */
+    where?: MessageAttachmentWhereInput
+    /**
+     * Limit how many MessageAttachments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * MessageAttachment upsert
+   */
+  export type MessageAttachmentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageAttachment
+     */
+    select?: MessageAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MessageAttachment
+     */
+    omit?: MessageAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageAttachmentInclude<ExtArgs> | null
+    /**
+     * The filter to search for the MessageAttachment to update in case it exists.
+     */
+    where: MessageAttachmentWhereUniqueInput
+    /**
+     * In case the MessageAttachment found by the `where` argument doesn't exist, create a new MessageAttachment with this data.
+     */
+    create: XOR<MessageAttachmentCreateInput, MessageAttachmentUncheckedCreateInput>
+    /**
+     * In case the MessageAttachment was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<MessageAttachmentUpdateInput, MessageAttachmentUncheckedUpdateInput>
+  }
+
+  /**
+   * MessageAttachment delete
+   */
+  export type MessageAttachmentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageAttachment
+     */
+    select?: MessageAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MessageAttachment
+     */
+    omit?: MessageAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageAttachmentInclude<ExtArgs> | null
+    /**
+     * Filter which MessageAttachment to delete.
+     */
+    where: MessageAttachmentWhereUniqueInput
+  }
+
+  /**
+   * MessageAttachment deleteMany
+   */
+  export type MessageAttachmentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MessageAttachments to delete
+     */
+    where?: MessageAttachmentWhereInput
+    /**
+     * Limit how many MessageAttachments to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * MessageAttachment without action
+   */
+  export type MessageAttachmentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MessageAttachment
+     */
+    select?: MessageAttachmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MessageAttachment
+     */
+    omit?: MessageAttachmentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageAttachmentInclude<ExtArgs> | null
   }
 
 
@@ -8682,6 +10137,981 @@ export namespace Prisma {
 
 
   /**
+   * Model UserBlock
+   */
+
+  export type AggregateUserBlock = {
+    _count: UserBlockCountAggregateOutputType | null
+    _avg: UserBlockAvgAggregateOutputType | null
+    _sum: UserBlockSumAggregateOutputType | null
+    _min: UserBlockMinAggregateOutputType | null
+    _max: UserBlockMaxAggregateOutputType | null
+  }
+
+  export type UserBlockAvgAggregateOutputType = {
+    id: number | null
+    blockerId: number | null
+    blockedId: number | null
+  }
+
+  export type UserBlockSumAggregateOutputType = {
+    id: bigint | null
+    blockerId: bigint | null
+    blockedId: bigint | null
+  }
+
+  export type UserBlockMinAggregateOutputType = {
+    id: bigint | null
+    blockerId: bigint | null
+    blockedId: bigint | null
+    createdAt: Date | null
+    deletedAt: Date | null
+  }
+
+  export type UserBlockMaxAggregateOutputType = {
+    id: bigint | null
+    blockerId: bigint | null
+    blockedId: bigint | null
+    createdAt: Date | null
+    deletedAt: Date | null
+  }
+
+  export type UserBlockCountAggregateOutputType = {
+    id: number
+    blockerId: number
+    blockedId: number
+    createdAt: number
+    deletedAt: number
+    _all: number
+  }
+
+
+  export type UserBlockAvgAggregateInputType = {
+    id?: true
+    blockerId?: true
+    blockedId?: true
+  }
+
+  export type UserBlockSumAggregateInputType = {
+    id?: true
+    blockerId?: true
+    blockedId?: true
+  }
+
+  export type UserBlockMinAggregateInputType = {
+    id?: true
+    blockerId?: true
+    blockedId?: true
+    createdAt?: true
+    deletedAt?: true
+  }
+
+  export type UserBlockMaxAggregateInputType = {
+    id?: true
+    blockerId?: true
+    blockedId?: true
+    createdAt?: true
+    deletedAt?: true
+  }
+
+  export type UserBlockCountAggregateInputType = {
+    id?: true
+    blockerId?: true
+    blockedId?: true
+    createdAt?: true
+    deletedAt?: true
+    _all?: true
+  }
+
+  export type UserBlockAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserBlock to aggregate.
+     */
+    where?: UserBlockWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserBlocks to fetch.
+     */
+    orderBy?: UserBlockOrderByWithRelationInput | UserBlockOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: UserBlockWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserBlocks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserBlocks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned UserBlocks
+    **/
+    _count?: true | UserBlockCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: UserBlockAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UserBlockSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UserBlockMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UserBlockMaxAggregateInputType
+  }
+
+  export type GetUserBlockAggregateType<T extends UserBlockAggregateArgs> = {
+        [P in keyof T & keyof AggregateUserBlock]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUserBlock[P]>
+      : GetScalarType<T[P], AggregateUserBlock[P]>
+  }
+
+
+
+
+  export type UserBlockGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserBlockWhereInput
+    orderBy?: UserBlockOrderByWithAggregationInput | UserBlockOrderByWithAggregationInput[]
+    by: UserBlockScalarFieldEnum[] | UserBlockScalarFieldEnum
+    having?: UserBlockScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UserBlockCountAggregateInputType | true
+    _avg?: UserBlockAvgAggregateInputType
+    _sum?: UserBlockSumAggregateInputType
+    _min?: UserBlockMinAggregateInputType
+    _max?: UserBlockMaxAggregateInputType
+  }
+
+  export type UserBlockGroupByOutputType = {
+    id: bigint
+    blockerId: bigint
+    blockedId: bigint
+    createdAt: Date
+    deletedAt: Date | null
+    _count: UserBlockCountAggregateOutputType | null
+    _avg: UserBlockAvgAggregateOutputType | null
+    _sum: UserBlockSumAggregateOutputType | null
+    _min: UserBlockMinAggregateOutputType | null
+    _max: UserBlockMaxAggregateOutputType | null
+  }
+
+  type GetUserBlockGroupByPayload<T extends UserBlockGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<UserBlockGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UserBlockGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UserBlockGroupByOutputType[P]>
+            : GetScalarType<T[P], UserBlockGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type UserBlockSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    blockerId?: boolean
+    blockedId?: boolean
+    createdAt?: boolean
+    deletedAt?: boolean
+    blocker?: boolean | UserDefaultArgs<ExtArgs>
+    blocked?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userBlock"]>
+
+
+
+  export type UserBlockSelectScalar = {
+    id?: boolean
+    blockerId?: boolean
+    blockedId?: boolean
+    createdAt?: boolean
+    deletedAt?: boolean
+  }
+
+  export type UserBlockOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "blockerId" | "blockedId" | "createdAt" | "deletedAt", ExtArgs["result"]["userBlock"]>
+  export type UserBlockInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    blocker?: boolean | UserDefaultArgs<ExtArgs>
+    blocked?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $UserBlockPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "UserBlock"
+    objects: {
+      blocker: Prisma.$UserPayload<ExtArgs>
+      blocked: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: bigint
+      blockerId: bigint
+      blockedId: bigint
+      createdAt: Date
+      deletedAt: Date | null
+    }, ExtArgs["result"]["userBlock"]>
+    composites: {}
+  }
+
+  type UserBlockGetPayload<S extends boolean | null | undefined | UserBlockDefaultArgs> = $Result.GetResult<Prisma.$UserBlockPayload, S>
+
+  type UserBlockCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<UserBlockFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: UserBlockCountAggregateInputType | true
+    }
+
+  export interface UserBlockDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UserBlock'], meta: { name: 'UserBlock' } }
+    /**
+     * Find zero or one UserBlock that matches the filter.
+     * @param {UserBlockFindUniqueArgs} args - Arguments to find a UserBlock
+     * @example
+     * // Get one UserBlock
+     * const userBlock = await prisma.userBlock.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends UserBlockFindUniqueArgs>(args: SelectSubset<T, UserBlockFindUniqueArgs<ExtArgs>>): Prisma__UserBlockClient<$Result.GetResult<Prisma.$UserBlockPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one UserBlock that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {UserBlockFindUniqueOrThrowArgs} args - Arguments to find a UserBlock
+     * @example
+     * // Get one UserBlock
+     * const userBlock = await prisma.userBlock.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends UserBlockFindUniqueOrThrowArgs>(args: SelectSubset<T, UserBlockFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserBlockClient<$Result.GetResult<Prisma.$UserBlockPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserBlock that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserBlockFindFirstArgs} args - Arguments to find a UserBlock
+     * @example
+     * // Get one UserBlock
+     * const userBlock = await prisma.userBlock.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends UserBlockFindFirstArgs>(args?: SelectSubset<T, UserBlockFindFirstArgs<ExtArgs>>): Prisma__UserBlockClient<$Result.GetResult<Prisma.$UserBlockPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserBlock that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserBlockFindFirstOrThrowArgs} args - Arguments to find a UserBlock
+     * @example
+     * // Get one UserBlock
+     * const userBlock = await prisma.userBlock.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends UserBlockFindFirstOrThrowArgs>(args?: SelectSubset<T, UserBlockFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserBlockClient<$Result.GetResult<Prisma.$UserBlockPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more UserBlocks that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserBlockFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all UserBlocks
+     * const userBlocks = await prisma.userBlock.findMany()
+     * 
+     * // Get first 10 UserBlocks
+     * const userBlocks = await prisma.userBlock.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const userBlockWithIdOnly = await prisma.userBlock.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends UserBlockFindManyArgs>(args?: SelectSubset<T, UserBlockFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserBlockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a UserBlock.
+     * @param {UserBlockCreateArgs} args - Arguments to create a UserBlock.
+     * @example
+     * // Create one UserBlock
+     * const UserBlock = await prisma.userBlock.create({
+     *   data: {
+     *     // ... data to create a UserBlock
+     *   }
+     * })
+     * 
+     */
+    create<T extends UserBlockCreateArgs>(args: SelectSubset<T, UserBlockCreateArgs<ExtArgs>>): Prisma__UserBlockClient<$Result.GetResult<Prisma.$UserBlockPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many UserBlocks.
+     * @param {UserBlockCreateManyArgs} args - Arguments to create many UserBlocks.
+     * @example
+     * // Create many UserBlocks
+     * const userBlock = await prisma.userBlock.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends UserBlockCreateManyArgs>(args?: SelectSubset<T, UserBlockCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a UserBlock.
+     * @param {UserBlockDeleteArgs} args - Arguments to delete one UserBlock.
+     * @example
+     * // Delete one UserBlock
+     * const UserBlock = await prisma.userBlock.delete({
+     *   where: {
+     *     // ... filter to delete one UserBlock
+     *   }
+     * })
+     * 
+     */
+    delete<T extends UserBlockDeleteArgs>(args: SelectSubset<T, UserBlockDeleteArgs<ExtArgs>>): Prisma__UserBlockClient<$Result.GetResult<Prisma.$UserBlockPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one UserBlock.
+     * @param {UserBlockUpdateArgs} args - Arguments to update one UserBlock.
+     * @example
+     * // Update one UserBlock
+     * const userBlock = await prisma.userBlock.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends UserBlockUpdateArgs>(args: SelectSubset<T, UserBlockUpdateArgs<ExtArgs>>): Prisma__UserBlockClient<$Result.GetResult<Prisma.$UserBlockPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more UserBlocks.
+     * @param {UserBlockDeleteManyArgs} args - Arguments to filter UserBlocks to delete.
+     * @example
+     * // Delete a few UserBlocks
+     * const { count } = await prisma.userBlock.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends UserBlockDeleteManyArgs>(args?: SelectSubset<T, UserBlockDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserBlocks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserBlockUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many UserBlocks
+     * const userBlock = await prisma.userBlock.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends UserBlockUpdateManyArgs>(args: SelectSubset<T, UserBlockUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one UserBlock.
+     * @param {UserBlockUpsertArgs} args - Arguments to update or create a UserBlock.
+     * @example
+     * // Update or create a UserBlock
+     * const userBlock = await prisma.userBlock.upsert({
+     *   create: {
+     *     // ... data to create a UserBlock
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the UserBlock we want to update
+     *   }
+     * })
+     */
+    upsert<T extends UserBlockUpsertArgs>(args: SelectSubset<T, UserBlockUpsertArgs<ExtArgs>>): Prisma__UserBlockClient<$Result.GetResult<Prisma.$UserBlockPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of UserBlocks.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserBlockCountArgs} args - Arguments to filter UserBlocks to count.
+     * @example
+     * // Count the number of UserBlocks
+     * const count = await prisma.userBlock.count({
+     *   where: {
+     *     // ... the filter for the UserBlocks we want to count
+     *   }
+     * })
+    **/
+    count<T extends UserBlockCountArgs>(
+      args?: Subset<T, UserBlockCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UserBlockCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a UserBlock.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserBlockAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UserBlockAggregateArgs>(args: Subset<T, UserBlockAggregateArgs>): Prisma.PrismaPromise<GetUserBlockAggregateType<T>>
+
+    /**
+     * Group by UserBlock.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserBlockGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UserBlockGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UserBlockGroupByArgs['orderBy'] }
+        : { orderBy?: UserBlockGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UserBlockGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserBlockGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the UserBlock model
+   */
+  readonly fields: UserBlockFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for UserBlock.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__UserBlockClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    blocker<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    blocked<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the UserBlock model
+   */
+  interface UserBlockFieldRefs {
+    readonly id: FieldRef<"UserBlock", 'BigInt'>
+    readonly blockerId: FieldRef<"UserBlock", 'BigInt'>
+    readonly blockedId: FieldRef<"UserBlock", 'BigInt'>
+    readonly createdAt: FieldRef<"UserBlock", 'DateTime'>
+    readonly deletedAt: FieldRef<"UserBlock", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * UserBlock findUnique
+   */
+  export type UserBlockFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBlock
+     */
+    select?: UserBlockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBlock
+     */
+    omit?: UserBlockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBlockInclude<ExtArgs> | null
+    /**
+     * Filter, which UserBlock to fetch.
+     */
+    where: UserBlockWhereUniqueInput
+  }
+
+  /**
+   * UserBlock findUniqueOrThrow
+   */
+  export type UserBlockFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBlock
+     */
+    select?: UserBlockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBlock
+     */
+    omit?: UserBlockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBlockInclude<ExtArgs> | null
+    /**
+     * Filter, which UserBlock to fetch.
+     */
+    where: UserBlockWhereUniqueInput
+  }
+
+  /**
+   * UserBlock findFirst
+   */
+  export type UserBlockFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBlock
+     */
+    select?: UserBlockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBlock
+     */
+    omit?: UserBlockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBlockInclude<ExtArgs> | null
+    /**
+     * Filter, which UserBlock to fetch.
+     */
+    where?: UserBlockWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserBlocks to fetch.
+     */
+    orderBy?: UserBlockOrderByWithRelationInput | UserBlockOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserBlocks.
+     */
+    cursor?: UserBlockWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserBlocks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserBlocks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserBlocks.
+     */
+    distinct?: UserBlockScalarFieldEnum | UserBlockScalarFieldEnum[]
+  }
+
+  /**
+   * UserBlock findFirstOrThrow
+   */
+  export type UserBlockFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBlock
+     */
+    select?: UserBlockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBlock
+     */
+    omit?: UserBlockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBlockInclude<ExtArgs> | null
+    /**
+     * Filter, which UserBlock to fetch.
+     */
+    where?: UserBlockWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserBlocks to fetch.
+     */
+    orderBy?: UserBlockOrderByWithRelationInput | UserBlockOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserBlocks.
+     */
+    cursor?: UserBlockWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserBlocks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserBlocks.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserBlocks.
+     */
+    distinct?: UserBlockScalarFieldEnum | UserBlockScalarFieldEnum[]
+  }
+
+  /**
+   * UserBlock findMany
+   */
+  export type UserBlockFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBlock
+     */
+    select?: UserBlockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBlock
+     */
+    omit?: UserBlockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBlockInclude<ExtArgs> | null
+    /**
+     * Filter, which UserBlocks to fetch.
+     */
+    where?: UserBlockWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserBlocks to fetch.
+     */
+    orderBy?: UserBlockOrderByWithRelationInput | UserBlockOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing UserBlocks.
+     */
+    cursor?: UserBlockWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserBlocks from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserBlocks.
+     */
+    skip?: number
+    distinct?: UserBlockScalarFieldEnum | UserBlockScalarFieldEnum[]
+  }
+
+  /**
+   * UserBlock create
+   */
+  export type UserBlockCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBlock
+     */
+    select?: UserBlockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBlock
+     */
+    omit?: UserBlockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBlockInclude<ExtArgs> | null
+    /**
+     * The data needed to create a UserBlock.
+     */
+    data: XOR<UserBlockCreateInput, UserBlockUncheckedCreateInput>
+  }
+
+  /**
+   * UserBlock createMany
+   */
+  export type UserBlockCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many UserBlocks.
+     */
+    data: UserBlockCreateManyInput | UserBlockCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * UserBlock update
+   */
+  export type UserBlockUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBlock
+     */
+    select?: UserBlockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBlock
+     */
+    omit?: UserBlockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBlockInclude<ExtArgs> | null
+    /**
+     * The data needed to update a UserBlock.
+     */
+    data: XOR<UserBlockUpdateInput, UserBlockUncheckedUpdateInput>
+    /**
+     * Choose, which UserBlock to update.
+     */
+    where: UserBlockWhereUniqueInput
+  }
+
+  /**
+   * UserBlock updateMany
+   */
+  export type UserBlockUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update UserBlocks.
+     */
+    data: XOR<UserBlockUpdateManyMutationInput, UserBlockUncheckedUpdateManyInput>
+    /**
+     * Filter which UserBlocks to update
+     */
+    where?: UserBlockWhereInput
+    /**
+     * Limit how many UserBlocks to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserBlock upsert
+   */
+  export type UserBlockUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBlock
+     */
+    select?: UserBlockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBlock
+     */
+    omit?: UserBlockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBlockInclude<ExtArgs> | null
+    /**
+     * The filter to search for the UserBlock to update in case it exists.
+     */
+    where: UserBlockWhereUniqueInput
+    /**
+     * In case the UserBlock found by the `where` argument doesn't exist, create a new UserBlock with this data.
+     */
+    create: XOR<UserBlockCreateInput, UserBlockUncheckedCreateInput>
+    /**
+     * In case the UserBlock was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<UserBlockUpdateInput, UserBlockUncheckedUpdateInput>
+  }
+
+  /**
+   * UserBlock delete
+   */
+  export type UserBlockDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBlock
+     */
+    select?: UserBlockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBlock
+     */
+    omit?: UserBlockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBlockInclude<ExtArgs> | null
+    /**
+     * Filter which UserBlock to delete.
+     */
+    where: UserBlockWhereUniqueInput
+  }
+
+  /**
+   * UserBlock deleteMany
+   */
+  export type UserBlockDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserBlocks to delete
+     */
+    where?: UserBlockWhereInput
+    /**
+     * Limit how many UserBlocks to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserBlock without action
+   */
+  export type UserBlockDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBlock
+     */
+    select?: UserBlockSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBlock
+     */
+    omit?: UserBlockOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBlockInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -8727,6 +11157,8 @@ export namespace Prisma {
     title: 'title',
     systemPrompt: 'systemPrompt',
     type: 'type',
+    ownerId: 'ownerId',
+    lastMessageAt: 'lastMessageAt',
     deletedAt: 'deletedAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -8752,6 +11184,7 @@ export namespace Prisma {
     id: 'id',
     conversationId: 'conversationId',
     userId: 'userId',
+    parentMessageId: 'parentMessageId',
     role: 'role',
     content: 'content',
     isEdited: 'isEdited',
@@ -8761,6 +11194,19 @@ export namespace Prisma {
   };
 
   export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
+
+
+  export const MessageAttachmentScalarFieldEnum: {
+    id: 'id',
+    messageId: 'messageId',
+    fileName: 'fileName',
+    fileUrl: 'fileUrl',
+    fileType: 'fileType',
+    fileSize: 'fileSize',
+    createdAt: 'createdAt'
+  };
+
+  export type MessageAttachmentScalarFieldEnum = (typeof MessageAttachmentScalarFieldEnum)[keyof typeof MessageAttachmentScalarFieldEnum]
 
 
   export const PasswordResetTokenScalarFieldEnum: {
@@ -8788,6 +11234,17 @@ export namespace Prisma {
   };
 
   export type QueuesScalarFieldEnum = (typeof QueuesScalarFieldEnum)[keyof typeof QueuesScalarFieldEnum]
+
+
+  export const UserBlockScalarFieldEnum: {
+    id: 'id',
+    blockerId: 'blockerId',
+    blockedId: 'blockedId',
+    createdAt: 'createdAt',
+    deletedAt: 'deletedAt'
+  };
+
+  export type UserBlockScalarFieldEnum = (typeof UserBlockScalarFieldEnum)[keyof typeof UserBlockScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -8842,6 +11299,15 @@ export namespace Prisma {
   };
 
   export type MessageOrderByRelevanceFieldEnum = (typeof MessageOrderByRelevanceFieldEnum)[keyof typeof MessageOrderByRelevanceFieldEnum]
+
+
+  export const MessageAttachmentOrderByRelevanceFieldEnum: {
+    fileName: 'fileName',
+    fileUrl: 'fileUrl',
+    fileType: 'fileType'
+  };
+
+  export type MessageAttachmentOrderByRelevanceFieldEnum = (typeof MessageAttachmentOrderByRelevanceFieldEnum)[keyof typeof MessageAttachmentOrderByRelevanceFieldEnum]
 
 
   export const PasswordResetTokenOrderByRelevanceFieldEnum: {
@@ -8931,6 +11397,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Int'
+   */
+  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+  /**
    * Reference to a field of type 'Json'
    */
   export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
@@ -8948,13 +11421,6 @@ export namespace Prisma {
    * Reference to a field of type 'QueueStatus'
    */
   export type EnumQueueStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueueStatus'>
-    
-
-
-  /**
-   * Reference to a field of type 'Int'
-   */
-  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
     
 
 
@@ -8985,6 +11451,9 @@ export namespace Prisma {
     activeConversation?: XOR<ConversationNullableScalarRelationFilter, ConversationWhereInput> | null
     messages?: MessageListRelationFilter
     passwordResetTokens?: PasswordResetTokenListRelationFilter
+    blockedUsers?: UserBlockListRelationFilter
+    blockedBy?: UserBlockListRelationFilter
+    conversations?: ConversationListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -9001,6 +11470,9 @@ export namespace Prisma {
     activeConversation?: ConversationOrderByWithRelationInput
     messages?: MessageOrderByRelationAggregateInput
     passwordResetTokens?: PasswordResetTokenOrderByRelationAggregateInput
+    blockedUsers?: UserBlockOrderByRelationAggregateInput
+    blockedBy?: UserBlockOrderByRelationAggregateInput
+    conversations?: ConversationOrderByRelationAggregateInput
     _relevance?: UserOrderByRelevanceInput
   }
 
@@ -9021,6 +11493,9 @@ export namespace Prisma {
     activeConversation?: XOR<ConversationNullableScalarRelationFilter, ConversationWhereInput> | null
     messages?: MessageListRelationFilter
     passwordResetTokens?: PasswordResetTokenListRelationFilter
+    blockedUsers?: UserBlockListRelationFilter
+    blockedBy?: UserBlockListRelationFilter
+    conversations?: ConversationListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -9129,12 +11604,15 @@ export namespace Prisma {
     title?: StringNullableFilter<"Conversation"> | string | null
     systemPrompt?: StringNullableFilter<"Conversation"> | string | null
     type?: EnumConversationTypeFilter<"Conversation"> | $Enums.ConversationType
+    ownerId?: BigIntNullableFilter<"Conversation"> | bigint | number | null
+    lastMessageAt?: DateTimeNullableFilter<"Conversation"> | Date | string | null
     deletedAt?: DateTimeNullableFilter<"Conversation"> | Date | string | null
     createdAt?: DateTimeFilter<"Conversation"> | Date | string
     updatedAt?: DateTimeFilter<"Conversation"> | Date | string
     participants?: ConversationParticipantListRelationFilter
     activeUsers?: UserListRelationFilter
     messages?: MessageListRelationFilter
+    owner?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
   }
 
   export type ConversationOrderByWithRelationInput = {
@@ -9142,12 +11620,15 @@ export namespace Prisma {
     title?: SortOrderInput | SortOrder
     systemPrompt?: SortOrderInput | SortOrder
     type?: SortOrder
+    ownerId?: SortOrderInput | SortOrder
+    lastMessageAt?: SortOrderInput | SortOrder
     deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     participants?: ConversationParticipantOrderByRelationAggregateInput
     activeUsers?: UserOrderByRelationAggregateInput
     messages?: MessageOrderByRelationAggregateInput
+    owner?: UserOrderByWithRelationInput
     _relevance?: ConversationOrderByRelevanceInput
   }
 
@@ -9159,12 +11640,15 @@ export namespace Prisma {
     title?: StringNullableFilter<"Conversation"> | string | null
     systemPrompt?: StringNullableFilter<"Conversation"> | string | null
     type?: EnumConversationTypeFilter<"Conversation"> | $Enums.ConversationType
+    ownerId?: BigIntNullableFilter<"Conversation"> | bigint | number | null
+    lastMessageAt?: DateTimeNullableFilter<"Conversation"> | Date | string | null
     deletedAt?: DateTimeNullableFilter<"Conversation"> | Date | string | null
     createdAt?: DateTimeFilter<"Conversation"> | Date | string
     updatedAt?: DateTimeFilter<"Conversation"> | Date | string
     participants?: ConversationParticipantListRelationFilter
     activeUsers?: UserListRelationFilter
     messages?: MessageListRelationFilter
+    owner?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
   }, "id">
 
   export type ConversationOrderByWithAggregationInput = {
@@ -9172,6 +11656,8 @@ export namespace Prisma {
     title?: SortOrderInput | SortOrder
     systemPrompt?: SortOrderInput | SortOrder
     type?: SortOrder
+    ownerId?: SortOrderInput | SortOrder
+    lastMessageAt?: SortOrderInput | SortOrder
     deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -9190,6 +11676,8 @@ export namespace Prisma {
     title?: StringNullableWithAggregatesFilter<"Conversation"> | string | null
     systemPrompt?: StringNullableWithAggregatesFilter<"Conversation"> | string | null
     type?: EnumConversationTypeWithAggregatesFilter<"Conversation"> | $Enums.ConversationType
+    ownerId?: BigIntNullableWithAggregatesFilter<"Conversation"> | bigint | number | null
+    lastMessageAt?: DateTimeNullableWithAggregatesFilter<"Conversation"> | Date | string | null
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Conversation"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Conversation"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Conversation"> | Date | string
@@ -9273,6 +11761,7 @@ export namespace Prisma {
     id?: BigIntFilter<"Message"> | bigint | number
     conversationId?: BigIntFilter<"Message"> | bigint | number
     userId?: BigIntNullableFilter<"Message"> | bigint | number | null
+    parentMessageId?: BigIntNullableFilter<"Message"> | bigint | number | null
     role?: EnumMessageRoleFilter<"Message"> | $Enums.MessageRole
     content?: StringFilter<"Message"> | string
     isEdited?: BoolFilter<"Message"> | boolean
@@ -9281,12 +11770,16 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Message"> | Date | string
     conversation?: XOR<ConversationScalarRelationFilter, ConversationWhereInput>
     user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    parentMessage?: XOR<MessageNullableScalarRelationFilter, MessageWhereInput> | null
+    replies?: MessageListRelationFilter
+    attachments?: MessageAttachmentListRelationFilter
   }
 
   export type MessageOrderByWithRelationInput = {
     id?: SortOrder
     conversationId?: SortOrder
     userId?: SortOrderInput | SortOrder
+    parentMessageId?: SortOrderInput | SortOrder
     role?: SortOrder
     content?: SortOrder
     isEdited?: SortOrder
@@ -9295,6 +11788,9 @@ export namespace Prisma {
     updatedAt?: SortOrder
     conversation?: ConversationOrderByWithRelationInput
     user?: UserOrderByWithRelationInput
+    parentMessage?: MessageOrderByWithRelationInput
+    replies?: MessageOrderByRelationAggregateInput
+    attachments?: MessageAttachmentOrderByRelationAggregateInput
     _relevance?: MessageOrderByRelevanceInput
   }
 
@@ -9305,6 +11801,7 @@ export namespace Prisma {
     NOT?: MessageWhereInput | MessageWhereInput[]
     conversationId?: BigIntFilter<"Message"> | bigint | number
     userId?: BigIntNullableFilter<"Message"> | bigint | number | null
+    parentMessageId?: BigIntNullableFilter<"Message"> | bigint | number | null
     role?: EnumMessageRoleFilter<"Message"> | $Enums.MessageRole
     content?: StringFilter<"Message"> | string
     isEdited?: BoolFilter<"Message"> | boolean
@@ -9313,12 +11810,16 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Message"> | Date | string
     conversation?: XOR<ConversationScalarRelationFilter, ConversationWhereInput>
     user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    parentMessage?: XOR<MessageNullableScalarRelationFilter, MessageWhereInput> | null
+    replies?: MessageListRelationFilter
+    attachments?: MessageAttachmentListRelationFilter
   }, "id">
 
   export type MessageOrderByWithAggregationInput = {
     id?: SortOrder
     conversationId?: SortOrder
     userId?: SortOrderInput | SortOrder
+    parentMessageId?: SortOrderInput | SortOrder
     role?: SortOrder
     content?: SortOrder
     isEdited?: SortOrder
@@ -9339,12 +11840,81 @@ export namespace Prisma {
     id?: BigIntWithAggregatesFilter<"Message"> | bigint | number
     conversationId?: BigIntWithAggregatesFilter<"Message"> | bigint | number
     userId?: BigIntNullableWithAggregatesFilter<"Message"> | bigint | number | null
+    parentMessageId?: BigIntNullableWithAggregatesFilter<"Message"> | bigint | number | null
     role?: EnumMessageRoleWithAggregatesFilter<"Message"> | $Enums.MessageRole
     content?: StringWithAggregatesFilter<"Message"> | string
     isEdited?: BoolWithAggregatesFilter<"Message"> | boolean
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Message"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Message"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Message"> | Date | string
+  }
+
+  export type MessageAttachmentWhereInput = {
+    AND?: MessageAttachmentWhereInput | MessageAttachmentWhereInput[]
+    OR?: MessageAttachmentWhereInput[]
+    NOT?: MessageAttachmentWhereInput | MessageAttachmentWhereInput[]
+    id?: BigIntFilter<"MessageAttachment"> | bigint | number
+    messageId?: BigIntFilter<"MessageAttachment"> | bigint | number
+    fileName?: StringFilter<"MessageAttachment"> | string
+    fileUrl?: StringFilter<"MessageAttachment"> | string
+    fileType?: StringFilter<"MessageAttachment"> | string
+    fileSize?: IntFilter<"MessageAttachment"> | number
+    createdAt?: DateTimeFilter<"MessageAttachment"> | Date | string
+    message?: XOR<MessageScalarRelationFilter, MessageWhereInput>
+  }
+
+  export type MessageAttachmentOrderByWithRelationInput = {
+    id?: SortOrder
+    messageId?: SortOrder
+    fileName?: SortOrder
+    fileUrl?: SortOrder
+    fileType?: SortOrder
+    fileSize?: SortOrder
+    createdAt?: SortOrder
+    message?: MessageOrderByWithRelationInput
+    _relevance?: MessageAttachmentOrderByRelevanceInput
+  }
+
+  export type MessageAttachmentWhereUniqueInput = Prisma.AtLeast<{
+    id?: bigint | number
+    AND?: MessageAttachmentWhereInput | MessageAttachmentWhereInput[]
+    OR?: MessageAttachmentWhereInput[]
+    NOT?: MessageAttachmentWhereInput | MessageAttachmentWhereInput[]
+    messageId?: BigIntFilter<"MessageAttachment"> | bigint | number
+    fileName?: StringFilter<"MessageAttachment"> | string
+    fileUrl?: StringFilter<"MessageAttachment"> | string
+    fileType?: StringFilter<"MessageAttachment"> | string
+    fileSize?: IntFilter<"MessageAttachment"> | number
+    createdAt?: DateTimeFilter<"MessageAttachment"> | Date | string
+    message?: XOR<MessageScalarRelationFilter, MessageWhereInput>
+  }, "id">
+
+  export type MessageAttachmentOrderByWithAggregationInput = {
+    id?: SortOrder
+    messageId?: SortOrder
+    fileName?: SortOrder
+    fileUrl?: SortOrder
+    fileType?: SortOrder
+    fileSize?: SortOrder
+    createdAt?: SortOrder
+    _count?: MessageAttachmentCountOrderByAggregateInput
+    _avg?: MessageAttachmentAvgOrderByAggregateInput
+    _max?: MessageAttachmentMaxOrderByAggregateInput
+    _min?: MessageAttachmentMinOrderByAggregateInput
+    _sum?: MessageAttachmentSumOrderByAggregateInput
+  }
+
+  export type MessageAttachmentScalarWhereWithAggregatesInput = {
+    AND?: MessageAttachmentScalarWhereWithAggregatesInput | MessageAttachmentScalarWhereWithAggregatesInput[]
+    OR?: MessageAttachmentScalarWhereWithAggregatesInput[]
+    NOT?: MessageAttachmentScalarWhereWithAggregatesInput | MessageAttachmentScalarWhereWithAggregatesInput[]
+    id?: BigIntWithAggregatesFilter<"MessageAttachment"> | bigint | number
+    messageId?: BigIntWithAggregatesFilter<"MessageAttachment"> | bigint | number
+    fileName?: StringWithAggregatesFilter<"MessageAttachment"> | string
+    fileUrl?: StringWithAggregatesFilter<"MessageAttachment"> | string
+    fileType?: StringWithAggregatesFilter<"MessageAttachment"> | string
+    fileSize?: IntWithAggregatesFilter<"MessageAttachment"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"MessageAttachment"> | Date | string
   }
 
   export type PasswordResetTokenWhereInput = {
@@ -9485,6 +12055,67 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Queues"> | Date | string
   }
 
+  export type UserBlockWhereInput = {
+    AND?: UserBlockWhereInput | UserBlockWhereInput[]
+    OR?: UserBlockWhereInput[]
+    NOT?: UserBlockWhereInput | UserBlockWhereInput[]
+    id?: BigIntFilter<"UserBlock"> | bigint | number
+    blockerId?: BigIntFilter<"UserBlock"> | bigint | number
+    blockedId?: BigIntFilter<"UserBlock"> | bigint | number
+    createdAt?: DateTimeFilter<"UserBlock"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"UserBlock"> | Date | string | null
+    blocker?: XOR<UserScalarRelationFilter, UserWhereInput>
+    blocked?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type UserBlockOrderByWithRelationInput = {
+    id?: SortOrder
+    blockerId?: SortOrder
+    blockedId?: SortOrder
+    createdAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    blocker?: UserOrderByWithRelationInput
+    blocked?: UserOrderByWithRelationInput
+  }
+
+  export type UserBlockWhereUniqueInput = Prisma.AtLeast<{
+    id?: bigint | number
+    blockerId_blockedId?: UserBlockBlockerIdBlockedIdCompoundUniqueInput
+    AND?: UserBlockWhereInput | UserBlockWhereInput[]
+    OR?: UserBlockWhereInput[]
+    NOT?: UserBlockWhereInput | UserBlockWhereInput[]
+    blockerId?: BigIntFilter<"UserBlock"> | bigint | number
+    blockedId?: BigIntFilter<"UserBlock"> | bigint | number
+    createdAt?: DateTimeFilter<"UserBlock"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"UserBlock"> | Date | string | null
+    blocker?: XOR<UserScalarRelationFilter, UserWhereInput>
+    blocked?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "blockerId_blockedId">
+
+  export type UserBlockOrderByWithAggregationInput = {
+    id?: SortOrder
+    blockerId?: SortOrder
+    blockedId?: SortOrder
+    createdAt?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
+    _count?: UserBlockCountOrderByAggregateInput
+    _avg?: UserBlockAvgOrderByAggregateInput
+    _max?: UserBlockMaxOrderByAggregateInput
+    _min?: UserBlockMinOrderByAggregateInput
+    _sum?: UserBlockSumOrderByAggregateInput
+  }
+
+  export type UserBlockScalarWhereWithAggregatesInput = {
+    AND?: UserBlockScalarWhereWithAggregatesInput | UserBlockScalarWhereWithAggregatesInput[]
+    OR?: UserBlockScalarWhereWithAggregatesInput[]
+    NOT?: UserBlockScalarWhereWithAggregatesInput | UserBlockScalarWhereWithAggregatesInput[]
+    id?: BigIntWithAggregatesFilter<"UserBlock"> | bigint | number
+    blockerId?: BigIntWithAggregatesFilter<"UserBlock"> | bigint | number
+    blockedId?: BigIntWithAggregatesFilter<"UserBlock"> | bigint | number
+    createdAt?: DateTimeWithAggregatesFilter<"UserBlock"> | Date | string
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"UserBlock"> | Date | string | null
+  }
+
   export type UserCreateInput = {
     id?: bigint | number
     email: string
@@ -9498,6 +12129,9 @@ export namespace Prisma {
     activeConversation?: ConversationCreateNestedOneWithoutActiveUsersInput
     messages?: MessageCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
+    blockedBy?: UserBlockCreateNestedManyWithoutBlockedInput
+    conversations?: ConversationCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -9513,6 +12147,9 @@ export namespace Prisma {
     conversationParticipants?: ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    blockedUsers?: UserBlockUncheckedCreateNestedManyWithoutBlockerInput
+    blockedBy?: UserBlockUncheckedCreateNestedManyWithoutBlockedInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUpdateInput = {
@@ -9528,6 +12165,9 @@ export namespace Prisma {
     activeConversation?: ConversationUpdateOneWithoutActiveUsersNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
+    blockedBy?: UserBlockUpdateManyWithoutBlockedNestedInput
+    conversations?: ConversationUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -9543,6 +12183,9 @@ export namespace Prisma {
     conversationParticipants?: ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    blockedUsers?: UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
+    blockedBy?: UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -9651,12 +12294,14 @@ export namespace Prisma {
     title?: string | null
     systemPrompt?: string | null
     type?: $Enums.ConversationType
+    lastMessageAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     participants?: ConversationParticipantCreateNestedManyWithoutConversationInput
     activeUsers?: UserCreateNestedManyWithoutActiveConversationInput
     messages?: MessageCreateNestedManyWithoutConversationInput
+    owner?: UserCreateNestedOneWithoutConversationsInput
   }
 
   export type ConversationUncheckedCreateInput = {
@@ -9664,6 +12309,8 @@ export namespace Prisma {
     title?: string | null
     systemPrompt?: string | null
     type?: $Enums.ConversationType
+    ownerId?: bigint | number | null
+    lastMessageAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -9677,12 +12324,14 @@ export namespace Prisma {
     title?: NullableStringFieldUpdateOperationsInput | string | null
     systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
+    lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     participants?: ConversationParticipantUpdateManyWithoutConversationNestedInput
     activeUsers?: UserUpdateManyWithoutActiveConversationNestedInput
     messages?: MessageUpdateManyWithoutConversationNestedInput
+    owner?: UserUpdateOneWithoutConversationsNestedInput
   }
 
   export type ConversationUncheckedUpdateInput = {
@@ -9690,6 +12339,8 @@ export namespace Prisma {
     title?: NullableStringFieldUpdateOperationsInput | string | null
     systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
+    ownerId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9703,6 +12354,8 @@ export namespace Prisma {
     title?: string | null
     systemPrompt?: string | null
     type?: $Enums.ConversationType
+    ownerId?: bigint | number | null
+    lastMessageAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -9713,6 +12366,7 @@ export namespace Prisma {
     title?: NullableStringFieldUpdateOperationsInput | string | null
     systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
+    lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9723,6 +12377,8 @@ export namespace Prisma {
     title?: NullableStringFieldUpdateOperationsInput | string | null
     systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
+    ownerId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9806,18 +12462,24 @@ export namespace Prisma {
     updatedAt?: Date | string
     conversation: ConversationCreateNestedOneWithoutMessagesInput
     user?: UserCreateNestedOneWithoutMessagesInput
+    parentMessage?: MessageCreateNestedOneWithoutRepliesInput
+    replies?: MessageCreateNestedManyWithoutParentMessageInput
+    attachments?: MessageAttachmentCreateNestedManyWithoutMessageInput
   }
 
   export type MessageUncheckedCreateInput = {
     id?: bigint | number
     conversationId: bigint | number
     userId?: bigint | number | null
+    parentMessageId?: bigint | number | null
     role: $Enums.MessageRole
     content: string
     isEdited?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    replies?: MessageUncheckedCreateNestedManyWithoutParentMessageInput
+    attachments?: MessageAttachmentUncheckedCreateNestedManyWithoutMessageInput
   }
 
   export type MessageUpdateInput = {
@@ -9830,24 +12492,31 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     conversation?: ConversationUpdateOneRequiredWithoutMessagesNestedInput
     user?: UserUpdateOneWithoutMessagesNestedInput
+    parentMessage?: MessageUpdateOneWithoutRepliesNestedInput
+    replies?: MessageUpdateManyWithoutParentMessageNestedInput
+    attachments?: MessageAttachmentUpdateManyWithoutMessageNestedInput
   }
 
   export type MessageUncheckedUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     conversationId?: BigIntFieldUpdateOperationsInput | bigint | number
     userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    parentMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
     content?: StringFieldUpdateOperationsInput | string
     isEdited?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    replies?: MessageUncheckedUpdateManyWithoutParentMessageNestedInput
+    attachments?: MessageAttachmentUncheckedUpdateManyWithoutMessageNestedInput
   }
 
   export type MessageCreateManyInput = {
     id?: bigint | number
     conversationId: bigint | number
     userId?: bigint | number | null
+    parentMessageId?: bigint | number | null
     role: $Enums.MessageRole
     content: string
     isEdited?: boolean
@@ -9870,12 +12539,82 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     conversationId?: BigIntFieldUpdateOperationsInput | bigint | number
     userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    parentMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
     content?: StringFieldUpdateOperationsInput | string
     isEdited?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MessageAttachmentCreateInput = {
+    id?: bigint | number
+    fileName: string
+    fileUrl: string
+    fileType: string
+    fileSize: number
+    createdAt?: Date | string
+    message: MessageCreateNestedOneWithoutAttachmentsInput
+  }
+
+  export type MessageAttachmentUncheckedCreateInput = {
+    id?: bigint | number
+    messageId: bigint | number
+    fileName: string
+    fileUrl: string
+    fileType: string
+    fileSize: number
+    createdAt?: Date | string
+  }
+
+  export type MessageAttachmentUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    message?: MessageUpdateOneRequiredWithoutAttachmentsNestedInput
+  }
+
+  export type MessageAttachmentUncheckedUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    messageId?: BigIntFieldUpdateOperationsInput | bigint | number
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MessageAttachmentCreateManyInput = {
+    id?: bigint | number
+    messageId: bigint | number
+    fileName: string
+    fileUrl: string
+    fileType: string
+    fileSize: number
+    createdAt?: Date | string
+  }
+
+  export type MessageAttachmentUpdateManyMutationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MessageAttachmentUncheckedUpdateManyInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    messageId?: BigIntFieldUpdateOperationsInput | bigint | number
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PasswordResetTokenCreateInput = {
@@ -10024,6 +12763,60 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type UserBlockCreateInput = {
+    id?: bigint | number
+    createdAt?: Date | string
+    deletedAt?: Date | string | null
+    blocker: UserCreateNestedOneWithoutBlockedUsersInput
+    blocked: UserCreateNestedOneWithoutBlockedByInput
+  }
+
+  export type UserBlockUncheckedCreateInput = {
+    id?: bigint | number
+    blockerId: bigint | number
+    blockedId: bigint | number
+    createdAt?: Date | string
+    deletedAt?: Date | string | null
+  }
+
+  export type UserBlockUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    blocker?: UserUpdateOneRequiredWithoutBlockedUsersNestedInput
+    blocked?: UserUpdateOneRequiredWithoutBlockedByNestedInput
+  }
+
+  export type UserBlockUncheckedUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    blockerId?: BigIntFieldUpdateOperationsInput | bigint | number
+    blockedId?: BigIntFieldUpdateOperationsInput | bigint | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type UserBlockCreateManyInput = {
+    id?: bigint | number
+    blockerId: bigint | number
+    blockedId: bigint | number
+    createdAt?: Date | string
+    deletedAt?: Date | string | null
+  }
+
+  export type UserBlockUpdateManyMutationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type UserBlockUncheckedUpdateManyInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    blockerId?: BigIntFieldUpdateOperationsInput | bigint | number
+    blockedId?: BigIntFieldUpdateOperationsInput | bigint | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type BigIntFilter<$PrismaModel = never> = {
     equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
     in?: bigint[] | number[]
@@ -10127,6 +12920,18 @@ export namespace Prisma {
     none?: PasswordResetTokenWhereInput
   }
 
+  export type UserBlockListRelationFilter = {
+    every?: UserBlockWhereInput
+    some?: UserBlockWhereInput
+    none?: UserBlockWhereInput
+  }
+
+  export type ConversationListRelationFilter = {
+    every?: ConversationWhereInput
+    some?: ConversationWhereInput
+    none?: ConversationWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -10145,6 +12950,14 @@ export namespace Prisma {
   }
 
   export type PasswordResetTokenOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type UserBlockOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ConversationOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -10370,6 +13183,11 @@ export namespace Prisma {
     none?: UserWhereInput
   }
 
+  export type UserNullableScalarRelationFilter = {
+    is?: UserWhereInput | null
+    isNot?: UserWhereInput | null
+  }
+
   export type UserOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -10385,6 +13203,8 @@ export namespace Prisma {
     title?: SortOrder
     systemPrompt?: SortOrder
     type?: SortOrder
+    ownerId?: SortOrder
+    lastMessageAt?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -10392,6 +13212,7 @@ export namespace Prisma {
 
   export type ConversationAvgOrderByAggregateInput = {
     id?: SortOrder
+    ownerId?: SortOrder
   }
 
   export type ConversationMaxOrderByAggregateInput = {
@@ -10399,6 +13220,8 @@ export namespace Prisma {
     title?: SortOrder
     systemPrompt?: SortOrder
     type?: SortOrder
+    ownerId?: SortOrder
+    lastMessageAt?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -10409,6 +13232,8 @@ export namespace Prisma {
     title?: SortOrder
     systemPrompt?: SortOrder
     type?: SortOrder
+    ownerId?: SortOrder
+    lastMessageAt?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -10416,6 +13241,7 @@ export namespace Prisma {
 
   export type ConversationSumOrderByAggregateInput = {
     id?: SortOrder
+    ownerId?: SortOrder
   }
 
   export type EnumConversationTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -10504,9 +13330,19 @@ export namespace Prisma {
     not?: NestedEnumMessageRoleFilter<$PrismaModel> | $Enums.MessageRole
   }
 
-  export type UserNullableScalarRelationFilter = {
-    is?: UserWhereInput | null
-    isNot?: UserWhereInput | null
+  export type MessageNullableScalarRelationFilter = {
+    is?: MessageWhereInput | null
+    isNot?: MessageWhereInput | null
+  }
+
+  export type MessageAttachmentListRelationFilter = {
+    every?: MessageAttachmentWhereInput
+    some?: MessageAttachmentWhereInput
+    none?: MessageAttachmentWhereInput
+  }
+
+  export type MessageAttachmentOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type MessageOrderByRelevanceInput = {
@@ -10519,6 +13355,7 @@ export namespace Prisma {
     id?: SortOrder
     conversationId?: SortOrder
     userId?: SortOrder
+    parentMessageId?: SortOrder
     role?: SortOrder
     content?: SortOrder
     isEdited?: SortOrder
@@ -10531,12 +13368,14 @@ export namespace Prisma {
     id?: SortOrder
     conversationId?: SortOrder
     userId?: SortOrder
+    parentMessageId?: SortOrder
   }
 
   export type MessageMaxOrderByAggregateInput = {
     id?: SortOrder
     conversationId?: SortOrder
     userId?: SortOrder
+    parentMessageId?: SortOrder
     role?: SortOrder
     content?: SortOrder
     isEdited?: SortOrder
@@ -10549,6 +13388,7 @@ export namespace Prisma {
     id?: SortOrder
     conversationId?: SortOrder
     userId?: SortOrder
+    parentMessageId?: SortOrder
     role?: SortOrder
     content?: SortOrder
     isEdited?: SortOrder
@@ -10561,6 +13401,7 @@ export namespace Prisma {
     id?: SortOrder
     conversationId?: SortOrder
     userId?: SortOrder
+    parentMessageId?: SortOrder
   }
 
   export type EnumMessageRoleWithAggregatesFilter<$PrismaModel = never> = {
@@ -10571,6 +13412,86 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumMessageRoleFilter<$PrismaModel>
     _max?: NestedEnumMessageRoleFilter<$PrismaModel>
+  }
+
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[]
+    notIn?: number[]
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type MessageScalarRelationFilter = {
+    is?: MessageWhereInput
+    isNot?: MessageWhereInput
+  }
+
+  export type MessageAttachmentOrderByRelevanceInput = {
+    fields: MessageAttachmentOrderByRelevanceFieldEnum | MessageAttachmentOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type MessageAttachmentCountOrderByAggregateInput = {
+    id?: SortOrder
+    messageId?: SortOrder
+    fileName?: SortOrder
+    fileUrl?: SortOrder
+    fileType?: SortOrder
+    fileSize?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type MessageAttachmentAvgOrderByAggregateInput = {
+    id?: SortOrder
+    messageId?: SortOrder
+    fileSize?: SortOrder
+  }
+
+  export type MessageAttachmentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    messageId?: SortOrder
+    fileName?: SortOrder
+    fileUrl?: SortOrder
+    fileType?: SortOrder
+    fileSize?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type MessageAttachmentMinOrderByAggregateInput = {
+    id?: SortOrder
+    messageId?: SortOrder
+    fileName?: SortOrder
+    fileUrl?: SortOrder
+    fileType?: SortOrder
+    fileSize?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type MessageAttachmentSumOrderByAggregateInput = {
+    id?: SortOrder
+    messageId?: SortOrder
+    fileSize?: SortOrder
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[]
+    notIn?: number[]
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type PasswordResetTokenOrderByRelevanceInput = {
@@ -10644,17 +13565,6 @@ export namespace Prisma {
     in?: $Enums.QueueStatus[]
     notIn?: $Enums.QueueStatus[]
     not?: NestedEnumQueueStatusFilter<$PrismaModel> | $Enums.QueueStatus
-  }
-
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
   }
 
   export type QueuesOrderByRelevanceInput = {
@@ -10745,20 +13655,45 @@ export namespace Prisma {
     _max?: NestedEnumQueueStatusFilter<$PrismaModel>
   }
 
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
+  export type UserBlockBlockerIdBlockedIdCompoundUniqueInput = {
+    blockerId: bigint | number
+    blockedId: bigint | number
+  }
+
+  export type UserBlockCountOrderByAggregateInput = {
+    id?: SortOrder
+    blockerId?: SortOrder
+    blockedId?: SortOrder
+    createdAt?: SortOrder
+    deletedAt?: SortOrder
+  }
+
+  export type UserBlockAvgOrderByAggregateInput = {
+    id?: SortOrder
+    blockerId?: SortOrder
+    blockedId?: SortOrder
+  }
+
+  export type UserBlockMaxOrderByAggregateInput = {
+    id?: SortOrder
+    blockerId?: SortOrder
+    blockedId?: SortOrder
+    createdAt?: SortOrder
+    deletedAt?: SortOrder
+  }
+
+  export type UserBlockMinOrderByAggregateInput = {
+    id?: SortOrder
+    blockerId?: SortOrder
+    blockedId?: SortOrder
+    createdAt?: SortOrder
+    deletedAt?: SortOrder
+  }
+
+  export type UserBlockSumOrderByAggregateInput = {
+    id?: SortOrder
+    blockerId?: SortOrder
+    blockedId?: SortOrder
   }
 
   export type RefreshTokenCreateNestedManyWithoutUserInput = {
@@ -10795,6 +13730,27 @@ export namespace Prisma {
     connect?: PasswordResetTokenWhereUniqueInput | PasswordResetTokenWhereUniqueInput[]
   }
 
+  export type UserBlockCreateNestedManyWithoutBlockerInput = {
+    create?: XOR<UserBlockCreateWithoutBlockerInput, UserBlockUncheckedCreateWithoutBlockerInput> | UserBlockCreateWithoutBlockerInput[] | UserBlockUncheckedCreateWithoutBlockerInput[]
+    connectOrCreate?: UserBlockCreateOrConnectWithoutBlockerInput | UserBlockCreateOrConnectWithoutBlockerInput[]
+    createMany?: UserBlockCreateManyBlockerInputEnvelope
+    connect?: UserBlockWhereUniqueInput | UserBlockWhereUniqueInput[]
+  }
+
+  export type UserBlockCreateNestedManyWithoutBlockedInput = {
+    create?: XOR<UserBlockCreateWithoutBlockedInput, UserBlockUncheckedCreateWithoutBlockedInput> | UserBlockCreateWithoutBlockedInput[] | UserBlockUncheckedCreateWithoutBlockedInput[]
+    connectOrCreate?: UserBlockCreateOrConnectWithoutBlockedInput | UserBlockCreateOrConnectWithoutBlockedInput[]
+    createMany?: UserBlockCreateManyBlockedInputEnvelope
+    connect?: UserBlockWhereUniqueInput | UserBlockWhereUniqueInput[]
+  }
+
+  export type ConversationCreateNestedManyWithoutOwnerInput = {
+    create?: XOR<ConversationCreateWithoutOwnerInput, ConversationUncheckedCreateWithoutOwnerInput> | ConversationCreateWithoutOwnerInput[] | ConversationUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: ConversationCreateOrConnectWithoutOwnerInput | ConversationCreateOrConnectWithoutOwnerInput[]
+    createMany?: ConversationCreateManyOwnerInputEnvelope
+    connect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+  }
+
   export type RefreshTokenUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<RefreshTokenCreateWithoutUserInput, RefreshTokenUncheckedCreateWithoutUserInput> | RefreshTokenCreateWithoutUserInput[] | RefreshTokenUncheckedCreateWithoutUserInput[]
     connectOrCreate?: RefreshTokenCreateOrConnectWithoutUserInput | RefreshTokenCreateOrConnectWithoutUserInput[]
@@ -10821,6 +13777,27 @@ export namespace Prisma {
     connectOrCreate?: PasswordResetTokenCreateOrConnectWithoutUserInput | PasswordResetTokenCreateOrConnectWithoutUserInput[]
     createMany?: PasswordResetTokenCreateManyUserInputEnvelope
     connect?: PasswordResetTokenWhereUniqueInput | PasswordResetTokenWhereUniqueInput[]
+  }
+
+  export type UserBlockUncheckedCreateNestedManyWithoutBlockerInput = {
+    create?: XOR<UserBlockCreateWithoutBlockerInput, UserBlockUncheckedCreateWithoutBlockerInput> | UserBlockCreateWithoutBlockerInput[] | UserBlockUncheckedCreateWithoutBlockerInput[]
+    connectOrCreate?: UserBlockCreateOrConnectWithoutBlockerInput | UserBlockCreateOrConnectWithoutBlockerInput[]
+    createMany?: UserBlockCreateManyBlockerInputEnvelope
+    connect?: UserBlockWhereUniqueInput | UserBlockWhereUniqueInput[]
+  }
+
+  export type UserBlockUncheckedCreateNestedManyWithoutBlockedInput = {
+    create?: XOR<UserBlockCreateWithoutBlockedInput, UserBlockUncheckedCreateWithoutBlockedInput> | UserBlockCreateWithoutBlockedInput[] | UserBlockUncheckedCreateWithoutBlockedInput[]
+    connectOrCreate?: UserBlockCreateOrConnectWithoutBlockedInput | UserBlockCreateOrConnectWithoutBlockedInput[]
+    createMany?: UserBlockCreateManyBlockedInputEnvelope
+    connect?: UserBlockWhereUniqueInput | UserBlockWhereUniqueInput[]
+  }
+
+  export type ConversationUncheckedCreateNestedManyWithoutOwnerInput = {
+    create?: XOR<ConversationCreateWithoutOwnerInput, ConversationUncheckedCreateWithoutOwnerInput> | ConversationCreateWithoutOwnerInput[] | ConversationUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: ConversationCreateOrConnectWithoutOwnerInput | ConversationCreateOrConnectWithoutOwnerInput[]
+    createMany?: ConversationCreateManyOwnerInputEnvelope
+    connect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
   }
 
   export type BigIntFieldUpdateOperationsInput = {
@@ -10913,6 +13890,48 @@ export namespace Prisma {
     deleteMany?: PasswordResetTokenScalarWhereInput | PasswordResetTokenScalarWhereInput[]
   }
 
+  export type UserBlockUpdateManyWithoutBlockerNestedInput = {
+    create?: XOR<UserBlockCreateWithoutBlockerInput, UserBlockUncheckedCreateWithoutBlockerInput> | UserBlockCreateWithoutBlockerInput[] | UserBlockUncheckedCreateWithoutBlockerInput[]
+    connectOrCreate?: UserBlockCreateOrConnectWithoutBlockerInput | UserBlockCreateOrConnectWithoutBlockerInput[]
+    upsert?: UserBlockUpsertWithWhereUniqueWithoutBlockerInput | UserBlockUpsertWithWhereUniqueWithoutBlockerInput[]
+    createMany?: UserBlockCreateManyBlockerInputEnvelope
+    set?: UserBlockWhereUniqueInput | UserBlockWhereUniqueInput[]
+    disconnect?: UserBlockWhereUniqueInput | UserBlockWhereUniqueInput[]
+    delete?: UserBlockWhereUniqueInput | UserBlockWhereUniqueInput[]
+    connect?: UserBlockWhereUniqueInput | UserBlockWhereUniqueInput[]
+    update?: UserBlockUpdateWithWhereUniqueWithoutBlockerInput | UserBlockUpdateWithWhereUniqueWithoutBlockerInput[]
+    updateMany?: UserBlockUpdateManyWithWhereWithoutBlockerInput | UserBlockUpdateManyWithWhereWithoutBlockerInput[]
+    deleteMany?: UserBlockScalarWhereInput | UserBlockScalarWhereInput[]
+  }
+
+  export type UserBlockUpdateManyWithoutBlockedNestedInput = {
+    create?: XOR<UserBlockCreateWithoutBlockedInput, UserBlockUncheckedCreateWithoutBlockedInput> | UserBlockCreateWithoutBlockedInput[] | UserBlockUncheckedCreateWithoutBlockedInput[]
+    connectOrCreate?: UserBlockCreateOrConnectWithoutBlockedInput | UserBlockCreateOrConnectWithoutBlockedInput[]
+    upsert?: UserBlockUpsertWithWhereUniqueWithoutBlockedInput | UserBlockUpsertWithWhereUniqueWithoutBlockedInput[]
+    createMany?: UserBlockCreateManyBlockedInputEnvelope
+    set?: UserBlockWhereUniqueInput | UserBlockWhereUniqueInput[]
+    disconnect?: UserBlockWhereUniqueInput | UserBlockWhereUniqueInput[]
+    delete?: UserBlockWhereUniqueInput | UserBlockWhereUniqueInput[]
+    connect?: UserBlockWhereUniqueInput | UserBlockWhereUniqueInput[]
+    update?: UserBlockUpdateWithWhereUniqueWithoutBlockedInput | UserBlockUpdateWithWhereUniqueWithoutBlockedInput[]
+    updateMany?: UserBlockUpdateManyWithWhereWithoutBlockedInput | UserBlockUpdateManyWithWhereWithoutBlockedInput[]
+    deleteMany?: UserBlockScalarWhereInput | UserBlockScalarWhereInput[]
+  }
+
+  export type ConversationUpdateManyWithoutOwnerNestedInput = {
+    create?: XOR<ConversationCreateWithoutOwnerInput, ConversationUncheckedCreateWithoutOwnerInput> | ConversationCreateWithoutOwnerInput[] | ConversationUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: ConversationCreateOrConnectWithoutOwnerInput | ConversationCreateOrConnectWithoutOwnerInput[]
+    upsert?: ConversationUpsertWithWhereUniqueWithoutOwnerInput | ConversationUpsertWithWhereUniqueWithoutOwnerInput[]
+    createMany?: ConversationCreateManyOwnerInputEnvelope
+    set?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    disconnect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    delete?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    connect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    update?: ConversationUpdateWithWhereUniqueWithoutOwnerInput | ConversationUpdateWithWhereUniqueWithoutOwnerInput[]
+    updateMany?: ConversationUpdateManyWithWhereWithoutOwnerInput | ConversationUpdateManyWithWhereWithoutOwnerInput[]
+    deleteMany?: ConversationScalarWhereInput | ConversationScalarWhereInput[]
+  }
+
   export type NullableBigIntFieldUpdateOperationsInput = {
     set?: bigint | number | null
     increment?: bigint | number
@@ -10977,6 +13996,48 @@ export namespace Prisma {
     deleteMany?: PasswordResetTokenScalarWhereInput | PasswordResetTokenScalarWhereInput[]
   }
 
+  export type UserBlockUncheckedUpdateManyWithoutBlockerNestedInput = {
+    create?: XOR<UserBlockCreateWithoutBlockerInput, UserBlockUncheckedCreateWithoutBlockerInput> | UserBlockCreateWithoutBlockerInput[] | UserBlockUncheckedCreateWithoutBlockerInput[]
+    connectOrCreate?: UserBlockCreateOrConnectWithoutBlockerInput | UserBlockCreateOrConnectWithoutBlockerInput[]
+    upsert?: UserBlockUpsertWithWhereUniqueWithoutBlockerInput | UserBlockUpsertWithWhereUniqueWithoutBlockerInput[]
+    createMany?: UserBlockCreateManyBlockerInputEnvelope
+    set?: UserBlockWhereUniqueInput | UserBlockWhereUniqueInput[]
+    disconnect?: UserBlockWhereUniqueInput | UserBlockWhereUniqueInput[]
+    delete?: UserBlockWhereUniqueInput | UserBlockWhereUniqueInput[]
+    connect?: UserBlockWhereUniqueInput | UserBlockWhereUniqueInput[]
+    update?: UserBlockUpdateWithWhereUniqueWithoutBlockerInput | UserBlockUpdateWithWhereUniqueWithoutBlockerInput[]
+    updateMany?: UserBlockUpdateManyWithWhereWithoutBlockerInput | UserBlockUpdateManyWithWhereWithoutBlockerInput[]
+    deleteMany?: UserBlockScalarWhereInput | UserBlockScalarWhereInput[]
+  }
+
+  export type UserBlockUncheckedUpdateManyWithoutBlockedNestedInput = {
+    create?: XOR<UserBlockCreateWithoutBlockedInput, UserBlockUncheckedCreateWithoutBlockedInput> | UserBlockCreateWithoutBlockedInput[] | UserBlockUncheckedCreateWithoutBlockedInput[]
+    connectOrCreate?: UserBlockCreateOrConnectWithoutBlockedInput | UserBlockCreateOrConnectWithoutBlockedInput[]
+    upsert?: UserBlockUpsertWithWhereUniqueWithoutBlockedInput | UserBlockUpsertWithWhereUniqueWithoutBlockedInput[]
+    createMany?: UserBlockCreateManyBlockedInputEnvelope
+    set?: UserBlockWhereUniqueInput | UserBlockWhereUniqueInput[]
+    disconnect?: UserBlockWhereUniqueInput | UserBlockWhereUniqueInput[]
+    delete?: UserBlockWhereUniqueInput | UserBlockWhereUniqueInput[]
+    connect?: UserBlockWhereUniqueInput | UserBlockWhereUniqueInput[]
+    update?: UserBlockUpdateWithWhereUniqueWithoutBlockedInput | UserBlockUpdateWithWhereUniqueWithoutBlockedInput[]
+    updateMany?: UserBlockUpdateManyWithWhereWithoutBlockedInput | UserBlockUpdateManyWithWhereWithoutBlockedInput[]
+    deleteMany?: UserBlockScalarWhereInput | UserBlockScalarWhereInput[]
+  }
+
+  export type ConversationUncheckedUpdateManyWithoutOwnerNestedInput = {
+    create?: XOR<ConversationCreateWithoutOwnerInput, ConversationUncheckedCreateWithoutOwnerInput> | ConversationCreateWithoutOwnerInput[] | ConversationUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: ConversationCreateOrConnectWithoutOwnerInput | ConversationCreateOrConnectWithoutOwnerInput[]
+    upsert?: ConversationUpsertWithWhereUniqueWithoutOwnerInput | ConversationUpsertWithWhereUniqueWithoutOwnerInput[]
+    createMany?: ConversationCreateManyOwnerInputEnvelope
+    set?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    disconnect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    delete?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    connect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    update?: ConversationUpdateWithWhereUniqueWithoutOwnerInput | ConversationUpdateWithWhereUniqueWithoutOwnerInput[]
+    updateMany?: ConversationUpdateManyWithWhereWithoutOwnerInput | ConversationUpdateManyWithWhereWithoutOwnerInput[]
+    deleteMany?: ConversationScalarWhereInput | ConversationScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutRefreshTokensInput = {
     create?: XOR<UserCreateWithoutRefreshTokensInput, UserUncheckedCreateWithoutRefreshTokensInput>
     connectOrCreate?: UserCreateOrConnectWithoutRefreshTokensInput
@@ -11014,6 +14075,12 @@ export namespace Prisma {
     connectOrCreate?: MessageCreateOrConnectWithoutConversationInput | MessageCreateOrConnectWithoutConversationInput[]
     createMany?: MessageCreateManyConversationInputEnvelope
     connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+  }
+
+  export type UserCreateNestedOneWithoutConversationsInput = {
+    create?: XOR<UserCreateWithoutConversationsInput, UserUncheckedCreateWithoutConversationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutConversationsInput
+    connect?: UserWhereUniqueInput
   }
 
   export type ConversationParticipantUncheckedCreateNestedManyWithoutConversationInput = {
@@ -11081,6 +14148,16 @@ export namespace Prisma {
     update?: MessageUpdateWithWhereUniqueWithoutConversationInput | MessageUpdateWithWhereUniqueWithoutConversationInput[]
     updateMany?: MessageUpdateManyWithWhereWithoutConversationInput | MessageUpdateManyWithWhereWithoutConversationInput[]
     deleteMany?: MessageScalarWhereInput | MessageScalarWhereInput[]
+  }
+
+  export type UserUpdateOneWithoutConversationsNestedInput = {
+    create?: XOR<UserCreateWithoutConversationsInput, UserUncheckedCreateWithoutConversationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutConversationsInput
+    upsert?: UserUpsertWithoutConversationsInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutConversationsInput, UserUpdateWithoutConversationsInput>, UserUncheckedUpdateWithoutConversationsInput>
   }
 
   export type ConversationParticipantUncheckedUpdateManyWithoutConversationNestedInput = {
@@ -11169,6 +14246,40 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type MessageCreateNestedOneWithoutRepliesInput = {
+    create?: XOR<MessageCreateWithoutRepliesInput, MessageUncheckedCreateWithoutRepliesInput>
+    connectOrCreate?: MessageCreateOrConnectWithoutRepliesInput
+    connect?: MessageWhereUniqueInput
+  }
+
+  export type MessageCreateNestedManyWithoutParentMessageInput = {
+    create?: XOR<MessageCreateWithoutParentMessageInput, MessageUncheckedCreateWithoutParentMessageInput> | MessageCreateWithoutParentMessageInput[] | MessageUncheckedCreateWithoutParentMessageInput[]
+    connectOrCreate?: MessageCreateOrConnectWithoutParentMessageInput | MessageCreateOrConnectWithoutParentMessageInput[]
+    createMany?: MessageCreateManyParentMessageInputEnvelope
+    connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+  }
+
+  export type MessageAttachmentCreateNestedManyWithoutMessageInput = {
+    create?: XOR<MessageAttachmentCreateWithoutMessageInput, MessageAttachmentUncheckedCreateWithoutMessageInput> | MessageAttachmentCreateWithoutMessageInput[] | MessageAttachmentUncheckedCreateWithoutMessageInput[]
+    connectOrCreate?: MessageAttachmentCreateOrConnectWithoutMessageInput | MessageAttachmentCreateOrConnectWithoutMessageInput[]
+    createMany?: MessageAttachmentCreateManyMessageInputEnvelope
+    connect?: MessageAttachmentWhereUniqueInput | MessageAttachmentWhereUniqueInput[]
+  }
+
+  export type MessageUncheckedCreateNestedManyWithoutParentMessageInput = {
+    create?: XOR<MessageCreateWithoutParentMessageInput, MessageUncheckedCreateWithoutParentMessageInput> | MessageCreateWithoutParentMessageInput[] | MessageUncheckedCreateWithoutParentMessageInput[]
+    connectOrCreate?: MessageCreateOrConnectWithoutParentMessageInput | MessageCreateOrConnectWithoutParentMessageInput[]
+    createMany?: MessageCreateManyParentMessageInputEnvelope
+    connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+  }
+
+  export type MessageAttachmentUncheckedCreateNestedManyWithoutMessageInput = {
+    create?: XOR<MessageAttachmentCreateWithoutMessageInput, MessageAttachmentUncheckedCreateWithoutMessageInput> | MessageAttachmentCreateWithoutMessageInput[] | MessageAttachmentUncheckedCreateWithoutMessageInput[]
+    connectOrCreate?: MessageAttachmentCreateOrConnectWithoutMessageInput | MessageAttachmentCreateOrConnectWithoutMessageInput[]
+    createMany?: MessageAttachmentCreateManyMessageInputEnvelope
+    connect?: MessageAttachmentWhereUniqueInput | MessageAttachmentWhereUniqueInput[]
+  }
+
   export type EnumMessageRoleFieldUpdateOperationsInput = {
     set?: $Enums.MessageRole
   }
@@ -11191,6 +14302,94 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutMessagesInput, UserUpdateWithoutMessagesInput>, UserUncheckedUpdateWithoutMessagesInput>
   }
 
+  export type MessageUpdateOneWithoutRepliesNestedInput = {
+    create?: XOR<MessageCreateWithoutRepliesInput, MessageUncheckedCreateWithoutRepliesInput>
+    connectOrCreate?: MessageCreateOrConnectWithoutRepliesInput
+    upsert?: MessageUpsertWithoutRepliesInput
+    disconnect?: MessageWhereInput | boolean
+    delete?: MessageWhereInput | boolean
+    connect?: MessageWhereUniqueInput
+    update?: XOR<XOR<MessageUpdateToOneWithWhereWithoutRepliesInput, MessageUpdateWithoutRepliesInput>, MessageUncheckedUpdateWithoutRepliesInput>
+  }
+
+  export type MessageUpdateManyWithoutParentMessageNestedInput = {
+    create?: XOR<MessageCreateWithoutParentMessageInput, MessageUncheckedCreateWithoutParentMessageInput> | MessageCreateWithoutParentMessageInput[] | MessageUncheckedCreateWithoutParentMessageInput[]
+    connectOrCreate?: MessageCreateOrConnectWithoutParentMessageInput | MessageCreateOrConnectWithoutParentMessageInput[]
+    upsert?: MessageUpsertWithWhereUniqueWithoutParentMessageInput | MessageUpsertWithWhereUniqueWithoutParentMessageInput[]
+    createMany?: MessageCreateManyParentMessageInputEnvelope
+    set?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    disconnect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    delete?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    update?: MessageUpdateWithWhereUniqueWithoutParentMessageInput | MessageUpdateWithWhereUniqueWithoutParentMessageInput[]
+    updateMany?: MessageUpdateManyWithWhereWithoutParentMessageInput | MessageUpdateManyWithWhereWithoutParentMessageInput[]
+    deleteMany?: MessageScalarWhereInput | MessageScalarWhereInput[]
+  }
+
+  export type MessageAttachmentUpdateManyWithoutMessageNestedInput = {
+    create?: XOR<MessageAttachmentCreateWithoutMessageInput, MessageAttachmentUncheckedCreateWithoutMessageInput> | MessageAttachmentCreateWithoutMessageInput[] | MessageAttachmentUncheckedCreateWithoutMessageInput[]
+    connectOrCreate?: MessageAttachmentCreateOrConnectWithoutMessageInput | MessageAttachmentCreateOrConnectWithoutMessageInput[]
+    upsert?: MessageAttachmentUpsertWithWhereUniqueWithoutMessageInput | MessageAttachmentUpsertWithWhereUniqueWithoutMessageInput[]
+    createMany?: MessageAttachmentCreateManyMessageInputEnvelope
+    set?: MessageAttachmentWhereUniqueInput | MessageAttachmentWhereUniqueInput[]
+    disconnect?: MessageAttachmentWhereUniqueInput | MessageAttachmentWhereUniqueInput[]
+    delete?: MessageAttachmentWhereUniqueInput | MessageAttachmentWhereUniqueInput[]
+    connect?: MessageAttachmentWhereUniqueInput | MessageAttachmentWhereUniqueInput[]
+    update?: MessageAttachmentUpdateWithWhereUniqueWithoutMessageInput | MessageAttachmentUpdateWithWhereUniqueWithoutMessageInput[]
+    updateMany?: MessageAttachmentUpdateManyWithWhereWithoutMessageInput | MessageAttachmentUpdateManyWithWhereWithoutMessageInput[]
+    deleteMany?: MessageAttachmentScalarWhereInput | MessageAttachmentScalarWhereInput[]
+  }
+
+  export type MessageUncheckedUpdateManyWithoutParentMessageNestedInput = {
+    create?: XOR<MessageCreateWithoutParentMessageInput, MessageUncheckedCreateWithoutParentMessageInput> | MessageCreateWithoutParentMessageInput[] | MessageUncheckedCreateWithoutParentMessageInput[]
+    connectOrCreate?: MessageCreateOrConnectWithoutParentMessageInput | MessageCreateOrConnectWithoutParentMessageInput[]
+    upsert?: MessageUpsertWithWhereUniqueWithoutParentMessageInput | MessageUpsertWithWhereUniqueWithoutParentMessageInput[]
+    createMany?: MessageCreateManyParentMessageInputEnvelope
+    set?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    disconnect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    delete?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    update?: MessageUpdateWithWhereUniqueWithoutParentMessageInput | MessageUpdateWithWhereUniqueWithoutParentMessageInput[]
+    updateMany?: MessageUpdateManyWithWhereWithoutParentMessageInput | MessageUpdateManyWithWhereWithoutParentMessageInput[]
+    deleteMany?: MessageScalarWhereInput | MessageScalarWhereInput[]
+  }
+
+  export type MessageAttachmentUncheckedUpdateManyWithoutMessageNestedInput = {
+    create?: XOR<MessageAttachmentCreateWithoutMessageInput, MessageAttachmentUncheckedCreateWithoutMessageInput> | MessageAttachmentCreateWithoutMessageInput[] | MessageAttachmentUncheckedCreateWithoutMessageInput[]
+    connectOrCreate?: MessageAttachmentCreateOrConnectWithoutMessageInput | MessageAttachmentCreateOrConnectWithoutMessageInput[]
+    upsert?: MessageAttachmentUpsertWithWhereUniqueWithoutMessageInput | MessageAttachmentUpsertWithWhereUniqueWithoutMessageInput[]
+    createMany?: MessageAttachmentCreateManyMessageInputEnvelope
+    set?: MessageAttachmentWhereUniqueInput | MessageAttachmentWhereUniqueInput[]
+    disconnect?: MessageAttachmentWhereUniqueInput | MessageAttachmentWhereUniqueInput[]
+    delete?: MessageAttachmentWhereUniqueInput | MessageAttachmentWhereUniqueInput[]
+    connect?: MessageAttachmentWhereUniqueInput | MessageAttachmentWhereUniqueInput[]
+    update?: MessageAttachmentUpdateWithWhereUniqueWithoutMessageInput | MessageAttachmentUpdateWithWhereUniqueWithoutMessageInput[]
+    updateMany?: MessageAttachmentUpdateManyWithWhereWithoutMessageInput | MessageAttachmentUpdateManyWithWhereWithoutMessageInput[]
+    deleteMany?: MessageAttachmentScalarWhereInput | MessageAttachmentScalarWhereInput[]
+  }
+
+  export type MessageCreateNestedOneWithoutAttachmentsInput = {
+    create?: XOR<MessageCreateWithoutAttachmentsInput, MessageUncheckedCreateWithoutAttachmentsInput>
+    connectOrCreate?: MessageCreateOrConnectWithoutAttachmentsInput
+    connect?: MessageWhereUniqueInput
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type MessageUpdateOneRequiredWithoutAttachmentsNestedInput = {
+    create?: XOR<MessageCreateWithoutAttachmentsInput, MessageUncheckedCreateWithoutAttachmentsInput>
+    connectOrCreate?: MessageCreateOrConnectWithoutAttachmentsInput
+    upsert?: MessageUpsertWithoutAttachmentsInput
+    connect?: MessageWhereUniqueInput
+    update?: XOR<XOR<MessageUpdateToOneWithWhereWithoutAttachmentsInput, MessageUpdateWithoutAttachmentsInput>, MessageUncheckedUpdateWithoutAttachmentsInput>
+  }
+
   export type UserCreateNestedOneWithoutPasswordResetTokensInput = {
     create?: XOR<UserCreateWithoutPasswordResetTokensInput, UserUncheckedCreateWithoutPasswordResetTokensInput>
     connectOrCreate?: UserCreateOrConnectWithoutPasswordResetTokensInput
@@ -11209,12 +14408,32 @@ export namespace Prisma {
     set?: $Enums.QueueStatus
   }
 
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
+  export type UserCreateNestedOneWithoutBlockedUsersInput = {
+    create?: XOR<UserCreateWithoutBlockedUsersInput, UserUncheckedCreateWithoutBlockedUsersInput>
+    connectOrCreate?: UserCreateOrConnectWithoutBlockedUsersInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutBlockedByInput = {
+    create?: XOR<UserCreateWithoutBlockedByInput, UserUncheckedCreateWithoutBlockedByInput>
+    connectOrCreate?: UserCreateOrConnectWithoutBlockedByInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutBlockedUsersNestedInput = {
+    create?: XOR<UserCreateWithoutBlockedUsersInput, UserUncheckedCreateWithoutBlockedUsersInput>
+    connectOrCreate?: UserCreateOrConnectWithoutBlockedUsersInput
+    upsert?: UserUpsertWithoutBlockedUsersInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutBlockedUsersInput, UserUpdateWithoutBlockedUsersInput>, UserUncheckedUpdateWithoutBlockedUsersInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutBlockedByNestedInput = {
+    create?: XOR<UserCreateWithoutBlockedByInput, UserUncheckedCreateWithoutBlockedByInput>
+    connectOrCreate?: UserCreateOrConnectWithoutBlockedByInput
+    upsert?: UserUpsertWithoutBlockedByInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutBlockedByInput, UserUpdateWithoutBlockedByInput>, UserUncheckedUpdateWithoutBlockedByInput>
   }
 
   export type NestedBigIntFilter<$PrismaModel = never> = {
@@ -11495,6 +14714,22 @@ export namespace Prisma {
     _max?: NestedEnumMessageRoleFilter<$PrismaModel>
   }
 
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[]
+    notIn?: number[]
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
   export type NestedEnumQueueStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.QueueStatus | EnumQueueStatusFieldRefInput<$PrismaModel>
     in?: $Enums.QueueStatus[]
@@ -11533,22 +14768,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumQueueStatusFilter<$PrismaModel>
     _max?: NestedEnumQueueStatusFilter<$PrismaModel>
-  }
-
-  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type RefreshTokenCreateWithoutUserInput = {
@@ -11612,11 +14831,13 @@ export namespace Prisma {
     title?: string | null
     systemPrompt?: string | null
     type?: $Enums.ConversationType
+    lastMessageAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     participants?: ConversationParticipantCreateNestedManyWithoutConversationInput
     messages?: MessageCreateNestedManyWithoutConversationInput
+    owner?: UserCreateNestedOneWithoutConversationsInput
   }
 
   export type ConversationUncheckedCreateWithoutActiveUsersInput = {
@@ -11624,6 +14845,8 @@ export namespace Prisma {
     title?: string | null
     systemPrompt?: string | null
     type?: $Enums.ConversationType
+    ownerId?: bigint | number | null
+    lastMessageAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -11645,17 +14868,23 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     conversation: ConversationCreateNestedOneWithoutMessagesInput
+    parentMessage?: MessageCreateNestedOneWithoutRepliesInput
+    replies?: MessageCreateNestedManyWithoutParentMessageInput
+    attachments?: MessageAttachmentCreateNestedManyWithoutMessageInput
   }
 
   export type MessageUncheckedCreateWithoutUserInput = {
     id?: bigint | number
     conversationId: bigint | number
+    parentMessageId?: bigint | number | null
     role: $Enums.MessageRole
     content: string
     isEdited?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    replies?: MessageUncheckedCreateNestedManyWithoutParentMessageInput
+    attachments?: MessageAttachmentUncheckedCreateNestedManyWithoutMessageInput
   }
 
   export type MessageCreateOrConnectWithoutUserInput = {
@@ -11691,6 +14920,92 @@ export namespace Prisma {
 
   export type PasswordResetTokenCreateManyUserInputEnvelope = {
     data: PasswordResetTokenCreateManyUserInput | PasswordResetTokenCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserBlockCreateWithoutBlockerInput = {
+    id?: bigint | number
+    createdAt?: Date | string
+    deletedAt?: Date | string | null
+    blocked: UserCreateNestedOneWithoutBlockedByInput
+  }
+
+  export type UserBlockUncheckedCreateWithoutBlockerInput = {
+    id?: bigint | number
+    blockedId: bigint | number
+    createdAt?: Date | string
+    deletedAt?: Date | string | null
+  }
+
+  export type UserBlockCreateOrConnectWithoutBlockerInput = {
+    where: UserBlockWhereUniqueInput
+    create: XOR<UserBlockCreateWithoutBlockerInput, UserBlockUncheckedCreateWithoutBlockerInput>
+  }
+
+  export type UserBlockCreateManyBlockerInputEnvelope = {
+    data: UserBlockCreateManyBlockerInput | UserBlockCreateManyBlockerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserBlockCreateWithoutBlockedInput = {
+    id?: bigint | number
+    createdAt?: Date | string
+    deletedAt?: Date | string | null
+    blocker: UserCreateNestedOneWithoutBlockedUsersInput
+  }
+
+  export type UserBlockUncheckedCreateWithoutBlockedInput = {
+    id?: bigint | number
+    blockerId: bigint | number
+    createdAt?: Date | string
+    deletedAt?: Date | string | null
+  }
+
+  export type UserBlockCreateOrConnectWithoutBlockedInput = {
+    where: UserBlockWhereUniqueInput
+    create: XOR<UserBlockCreateWithoutBlockedInput, UserBlockUncheckedCreateWithoutBlockedInput>
+  }
+
+  export type UserBlockCreateManyBlockedInputEnvelope = {
+    data: UserBlockCreateManyBlockedInput | UserBlockCreateManyBlockedInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ConversationCreateWithoutOwnerInput = {
+    id?: bigint | number
+    title?: string | null
+    systemPrompt?: string | null
+    type?: $Enums.ConversationType
+    lastMessageAt?: Date | string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    participants?: ConversationParticipantCreateNestedManyWithoutConversationInput
+    activeUsers?: UserCreateNestedManyWithoutActiveConversationInput
+    messages?: MessageCreateNestedManyWithoutConversationInput
+  }
+
+  export type ConversationUncheckedCreateWithoutOwnerInput = {
+    id?: bigint | number
+    title?: string | null
+    systemPrompt?: string | null
+    type?: $Enums.ConversationType
+    lastMessageAt?: Date | string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    participants?: ConversationParticipantUncheckedCreateNestedManyWithoutConversationInput
+    activeUsers?: UserUncheckedCreateNestedManyWithoutActiveConversationInput
+    messages?: MessageUncheckedCreateNestedManyWithoutConversationInput
+  }
+
+  export type ConversationCreateOrConnectWithoutOwnerInput = {
+    where: ConversationWhereUniqueInput
+    create: XOR<ConversationCreateWithoutOwnerInput, ConversationUncheckedCreateWithoutOwnerInput>
+  }
+
+  export type ConversationCreateManyOwnerInputEnvelope = {
+    data: ConversationCreateManyOwnerInput | ConversationCreateManyOwnerInput[]
     skipDuplicates?: boolean
   }
 
@@ -11768,11 +15083,13 @@ export namespace Prisma {
     title?: NullableStringFieldUpdateOperationsInput | string | null
     systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
+    lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     participants?: ConversationParticipantUpdateManyWithoutConversationNestedInput
     messages?: MessageUpdateManyWithoutConversationNestedInput
+    owner?: UserUpdateOneWithoutConversationsNestedInput
   }
 
   export type ConversationUncheckedUpdateWithoutActiveUsersInput = {
@@ -11780,6 +15097,8 @@ export namespace Prisma {
     title?: NullableStringFieldUpdateOperationsInput | string | null
     systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
+    ownerId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11810,6 +15129,7 @@ export namespace Prisma {
     id?: BigIntFilter<"Message"> | bigint | number
     conversationId?: BigIntFilter<"Message"> | bigint | number
     userId?: BigIntNullableFilter<"Message"> | bigint | number | null
+    parentMessageId?: BigIntNullableFilter<"Message"> | bigint | number | null
     role?: EnumMessageRoleFilter<"Message"> | $Enums.MessageRole
     content?: StringFilter<"Message"> | string
     isEdited?: BoolFilter<"Message"> | boolean
@@ -11846,6 +15166,80 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"PasswordResetToken"> | Date | string
   }
 
+  export type UserBlockUpsertWithWhereUniqueWithoutBlockerInput = {
+    where: UserBlockWhereUniqueInput
+    update: XOR<UserBlockUpdateWithoutBlockerInput, UserBlockUncheckedUpdateWithoutBlockerInput>
+    create: XOR<UserBlockCreateWithoutBlockerInput, UserBlockUncheckedCreateWithoutBlockerInput>
+  }
+
+  export type UserBlockUpdateWithWhereUniqueWithoutBlockerInput = {
+    where: UserBlockWhereUniqueInput
+    data: XOR<UserBlockUpdateWithoutBlockerInput, UserBlockUncheckedUpdateWithoutBlockerInput>
+  }
+
+  export type UserBlockUpdateManyWithWhereWithoutBlockerInput = {
+    where: UserBlockScalarWhereInput
+    data: XOR<UserBlockUpdateManyMutationInput, UserBlockUncheckedUpdateManyWithoutBlockerInput>
+  }
+
+  export type UserBlockScalarWhereInput = {
+    AND?: UserBlockScalarWhereInput | UserBlockScalarWhereInput[]
+    OR?: UserBlockScalarWhereInput[]
+    NOT?: UserBlockScalarWhereInput | UserBlockScalarWhereInput[]
+    id?: BigIntFilter<"UserBlock"> | bigint | number
+    blockerId?: BigIntFilter<"UserBlock"> | bigint | number
+    blockedId?: BigIntFilter<"UserBlock"> | bigint | number
+    createdAt?: DateTimeFilter<"UserBlock"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"UserBlock"> | Date | string | null
+  }
+
+  export type UserBlockUpsertWithWhereUniqueWithoutBlockedInput = {
+    where: UserBlockWhereUniqueInput
+    update: XOR<UserBlockUpdateWithoutBlockedInput, UserBlockUncheckedUpdateWithoutBlockedInput>
+    create: XOR<UserBlockCreateWithoutBlockedInput, UserBlockUncheckedCreateWithoutBlockedInput>
+  }
+
+  export type UserBlockUpdateWithWhereUniqueWithoutBlockedInput = {
+    where: UserBlockWhereUniqueInput
+    data: XOR<UserBlockUpdateWithoutBlockedInput, UserBlockUncheckedUpdateWithoutBlockedInput>
+  }
+
+  export type UserBlockUpdateManyWithWhereWithoutBlockedInput = {
+    where: UserBlockScalarWhereInput
+    data: XOR<UserBlockUpdateManyMutationInput, UserBlockUncheckedUpdateManyWithoutBlockedInput>
+  }
+
+  export type ConversationUpsertWithWhereUniqueWithoutOwnerInput = {
+    where: ConversationWhereUniqueInput
+    update: XOR<ConversationUpdateWithoutOwnerInput, ConversationUncheckedUpdateWithoutOwnerInput>
+    create: XOR<ConversationCreateWithoutOwnerInput, ConversationUncheckedCreateWithoutOwnerInput>
+  }
+
+  export type ConversationUpdateWithWhereUniqueWithoutOwnerInput = {
+    where: ConversationWhereUniqueInput
+    data: XOR<ConversationUpdateWithoutOwnerInput, ConversationUncheckedUpdateWithoutOwnerInput>
+  }
+
+  export type ConversationUpdateManyWithWhereWithoutOwnerInput = {
+    where: ConversationScalarWhereInput
+    data: XOR<ConversationUpdateManyMutationInput, ConversationUncheckedUpdateManyWithoutOwnerInput>
+  }
+
+  export type ConversationScalarWhereInput = {
+    AND?: ConversationScalarWhereInput | ConversationScalarWhereInput[]
+    OR?: ConversationScalarWhereInput[]
+    NOT?: ConversationScalarWhereInput | ConversationScalarWhereInput[]
+    id?: BigIntFilter<"Conversation"> | bigint | number
+    title?: StringNullableFilter<"Conversation"> | string | null
+    systemPrompt?: StringNullableFilter<"Conversation"> | string | null
+    type?: EnumConversationTypeFilter<"Conversation"> | $Enums.ConversationType
+    ownerId?: BigIntNullableFilter<"Conversation"> | bigint | number | null
+    lastMessageAt?: DateTimeNullableFilter<"Conversation"> | Date | string | null
+    deletedAt?: DateTimeNullableFilter<"Conversation"> | Date | string | null
+    createdAt?: DateTimeFilter<"Conversation"> | Date | string
+    updatedAt?: DateTimeFilter<"Conversation"> | Date | string
+  }
+
   export type UserCreateWithoutRefreshTokensInput = {
     id?: bigint | number
     email: string
@@ -11858,6 +15252,9 @@ export namespace Prisma {
     activeConversation?: ConversationCreateNestedOneWithoutActiveUsersInput
     messages?: MessageCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
+    blockedBy?: UserBlockCreateNestedManyWithoutBlockedInput
+    conversations?: ConversationCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutRefreshTokensInput = {
@@ -11872,6 +15269,9 @@ export namespace Prisma {
     conversationParticipants?: ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    blockedUsers?: UserBlockUncheckedCreateNestedManyWithoutBlockerInput
+    blockedBy?: UserBlockUncheckedCreateNestedManyWithoutBlockedInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutRefreshTokensInput = {
@@ -11902,6 +15302,9 @@ export namespace Prisma {
     activeConversation?: ConversationUpdateOneWithoutActiveUsersNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
+    blockedBy?: UserBlockUpdateManyWithoutBlockedNestedInput
+    conversations?: ConversationUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRefreshTokensInput = {
@@ -11916,6 +15319,9 @@ export namespace Prisma {
     conversationParticipants?: ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    blockedUsers?: UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
+    blockedBy?: UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type ConversationParticipantCreateWithoutConversationInput = {
@@ -11958,6 +15364,9 @@ export namespace Prisma {
     conversationParticipants?: ConversationParticipantCreateNestedManyWithoutUserInput
     messages?: MessageCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
+    blockedBy?: UserBlockCreateNestedManyWithoutBlockedInput
+    conversations?: ConversationCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutActiveConversationInput = {
@@ -11972,6 +15381,9 @@ export namespace Prisma {
     conversationParticipants?: ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    blockedUsers?: UserBlockUncheckedCreateNestedManyWithoutBlockerInput
+    blockedBy?: UserBlockUncheckedCreateNestedManyWithoutBlockedInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutActiveConversationInput = {
@@ -11993,17 +15405,23 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     user?: UserCreateNestedOneWithoutMessagesInput
+    parentMessage?: MessageCreateNestedOneWithoutRepliesInput
+    replies?: MessageCreateNestedManyWithoutParentMessageInput
+    attachments?: MessageAttachmentCreateNestedManyWithoutMessageInput
   }
 
   export type MessageUncheckedCreateWithoutConversationInput = {
     id?: bigint | number
     userId?: bigint | number | null
+    parentMessageId?: bigint | number | null
     role: $Enums.MessageRole
     content: string
     isEdited?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    replies?: MessageUncheckedCreateNestedManyWithoutParentMessageInput
+    attachments?: MessageAttachmentUncheckedCreateNestedManyWithoutMessageInput
   }
 
   export type MessageCreateOrConnectWithoutConversationInput = {
@@ -12014,6 +15432,45 @@ export namespace Prisma {
   export type MessageCreateManyConversationInputEnvelope = {
     data: MessageCreateManyConversationInput | MessageCreateManyConversationInput[]
     skipDuplicates?: boolean
+  }
+
+  export type UserCreateWithoutConversationsInput = {
+    id?: bigint | number
+    email: string
+    name?: string | null
+    password: string
+    emailVerifiedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
+    conversationParticipants?: ConversationParticipantCreateNestedManyWithoutUserInput
+    activeConversation?: ConversationCreateNestedOneWithoutActiveUsersInput
+    messages?: MessageCreateNestedManyWithoutUserInput
+    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
+    blockedBy?: UserBlockCreateNestedManyWithoutBlockedInput
+  }
+
+  export type UserUncheckedCreateWithoutConversationsInput = {
+    id?: bigint | number
+    email: string
+    name?: string | null
+    password: string
+    emailVerifiedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    activeConversationId?: bigint | number | null
+    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+    conversationParticipants?: ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
+    messages?: MessageUncheckedCreateNestedManyWithoutUserInput
+    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    blockedUsers?: UserBlockUncheckedCreateNestedManyWithoutBlockerInput
+    blockedBy?: UserBlockUncheckedCreateNestedManyWithoutBlockedInput
+  }
+
+  export type UserCreateOrConnectWithoutConversationsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutConversationsInput, UserUncheckedCreateWithoutConversationsInput>
   }
 
   export type ConversationParticipantUpsertWithWhereUniqueWithoutConversationInput = {
@@ -12078,16 +15535,63 @@ export namespace Prisma {
     data: XOR<MessageUpdateManyMutationInput, MessageUncheckedUpdateManyWithoutConversationInput>
   }
 
+  export type UserUpsertWithoutConversationsInput = {
+    update: XOR<UserUpdateWithoutConversationsInput, UserUncheckedUpdateWithoutConversationsInput>
+    create: XOR<UserCreateWithoutConversationsInput, UserUncheckedCreateWithoutConversationsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutConversationsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutConversationsInput, UserUncheckedUpdateWithoutConversationsInput>
+  }
+
+  export type UserUpdateWithoutConversationsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
+    conversationParticipants?: ConversationParticipantUpdateManyWithoutUserNestedInput
+    activeConversation?: ConversationUpdateOneWithoutActiveUsersNestedInput
+    messages?: MessageUpdateManyWithoutUserNestedInput
+    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
+    blockedBy?: UserBlockUpdateManyWithoutBlockedNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutConversationsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activeConversationId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+    conversationParticipants?: ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    blockedUsers?: UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
+    blockedBy?: UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
+  }
+
   export type ConversationCreateWithoutParticipantsInput = {
     id?: bigint | number
     title?: string | null
     systemPrompt?: string | null
     type?: $Enums.ConversationType
+    lastMessageAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     activeUsers?: UserCreateNestedManyWithoutActiveConversationInput
     messages?: MessageCreateNestedManyWithoutConversationInput
+    owner?: UserCreateNestedOneWithoutConversationsInput
   }
 
   export type ConversationUncheckedCreateWithoutParticipantsInput = {
@@ -12095,6 +15599,8 @@ export namespace Prisma {
     title?: string | null
     systemPrompt?: string | null
     type?: $Enums.ConversationType
+    ownerId?: bigint | number | null
+    lastMessageAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -12119,6 +15625,9 @@ export namespace Prisma {
     activeConversation?: ConversationCreateNestedOneWithoutActiveUsersInput
     messages?: MessageCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
+    blockedBy?: UserBlockCreateNestedManyWithoutBlockedInput
+    conversations?: ConversationCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutConversationParticipantsInput = {
@@ -12133,6 +15642,9 @@ export namespace Prisma {
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    blockedUsers?: UserBlockUncheckedCreateNestedManyWithoutBlockerInput
+    blockedBy?: UserBlockUncheckedCreateNestedManyWithoutBlockedInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutConversationParticipantsInput = {
@@ -12156,11 +15668,13 @@ export namespace Prisma {
     title?: NullableStringFieldUpdateOperationsInput | string | null
     systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
+    lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     activeUsers?: UserUpdateManyWithoutActiveConversationNestedInput
     messages?: MessageUpdateManyWithoutConversationNestedInput
+    owner?: UserUpdateOneWithoutConversationsNestedInput
   }
 
   export type ConversationUncheckedUpdateWithoutParticipantsInput = {
@@ -12168,6 +15682,8 @@ export namespace Prisma {
     title?: NullableStringFieldUpdateOperationsInput | string | null
     systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
+    ownerId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12198,6 +15714,9 @@ export namespace Prisma {
     activeConversation?: ConversationUpdateOneWithoutActiveUsersNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
+    blockedBy?: UserBlockUpdateManyWithoutBlockedNestedInput
+    conversations?: ConversationUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutConversationParticipantsInput = {
@@ -12212,6 +15731,9 @@ export namespace Prisma {
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    blockedUsers?: UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
+    blockedBy?: UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type ConversationCreateWithoutMessagesInput = {
@@ -12219,11 +15741,13 @@ export namespace Prisma {
     title?: string | null
     systemPrompt?: string | null
     type?: $Enums.ConversationType
+    lastMessageAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     participants?: ConversationParticipantCreateNestedManyWithoutConversationInput
     activeUsers?: UserCreateNestedManyWithoutActiveConversationInput
+    owner?: UserCreateNestedOneWithoutConversationsInput
   }
 
   export type ConversationUncheckedCreateWithoutMessagesInput = {
@@ -12231,6 +15755,8 @@ export namespace Prisma {
     title?: string | null
     systemPrompt?: string | null
     type?: $Enums.ConversationType
+    ownerId?: bigint | number | null
+    lastMessageAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -12255,6 +15781,9 @@ export namespace Prisma {
     conversationParticipants?: ConversationParticipantCreateNestedManyWithoutUserInput
     activeConversation?: ConversationCreateNestedOneWithoutActiveUsersInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
+    blockedBy?: UserBlockCreateNestedManyWithoutBlockedInput
+    conversations?: ConversationCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutMessagesInput = {
@@ -12269,11 +15798,113 @@ export namespace Prisma {
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     conversationParticipants?: ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    blockedUsers?: UserBlockUncheckedCreateNestedManyWithoutBlockerInput
+    blockedBy?: UserBlockUncheckedCreateNestedManyWithoutBlockedInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutMessagesInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutMessagesInput, UserUncheckedCreateWithoutMessagesInput>
+  }
+
+  export type MessageCreateWithoutRepliesInput = {
+    id?: bigint | number
+    role: $Enums.MessageRole
+    content: string
+    isEdited?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    conversation: ConversationCreateNestedOneWithoutMessagesInput
+    user?: UserCreateNestedOneWithoutMessagesInput
+    parentMessage?: MessageCreateNestedOneWithoutRepliesInput
+    attachments?: MessageAttachmentCreateNestedManyWithoutMessageInput
+  }
+
+  export type MessageUncheckedCreateWithoutRepliesInput = {
+    id?: bigint | number
+    conversationId: bigint | number
+    userId?: bigint | number | null
+    parentMessageId?: bigint | number | null
+    role: $Enums.MessageRole
+    content: string
+    isEdited?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    attachments?: MessageAttachmentUncheckedCreateNestedManyWithoutMessageInput
+  }
+
+  export type MessageCreateOrConnectWithoutRepliesInput = {
+    where: MessageWhereUniqueInput
+    create: XOR<MessageCreateWithoutRepliesInput, MessageUncheckedCreateWithoutRepliesInput>
+  }
+
+  export type MessageCreateWithoutParentMessageInput = {
+    id?: bigint | number
+    role: $Enums.MessageRole
+    content: string
+    isEdited?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    conversation: ConversationCreateNestedOneWithoutMessagesInput
+    user?: UserCreateNestedOneWithoutMessagesInput
+    replies?: MessageCreateNestedManyWithoutParentMessageInput
+    attachments?: MessageAttachmentCreateNestedManyWithoutMessageInput
+  }
+
+  export type MessageUncheckedCreateWithoutParentMessageInput = {
+    id?: bigint | number
+    conversationId: bigint | number
+    userId?: bigint | number | null
+    role: $Enums.MessageRole
+    content: string
+    isEdited?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    replies?: MessageUncheckedCreateNestedManyWithoutParentMessageInput
+    attachments?: MessageAttachmentUncheckedCreateNestedManyWithoutMessageInput
+  }
+
+  export type MessageCreateOrConnectWithoutParentMessageInput = {
+    where: MessageWhereUniqueInput
+    create: XOR<MessageCreateWithoutParentMessageInput, MessageUncheckedCreateWithoutParentMessageInput>
+  }
+
+  export type MessageCreateManyParentMessageInputEnvelope = {
+    data: MessageCreateManyParentMessageInput | MessageCreateManyParentMessageInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type MessageAttachmentCreateWithoutMessageInput = {
+    id?: bigint | number
+    fileName: string
+    fileUrl: string
+    fileType: string
+    fileSize: number
+    createdAt?: Date | string
+  }
+
+  export type MessageAttachmentUncheckedCreateWithoutMessageInput = {
+    id?: bigint | number
+    fileName: string
+    fileUrl: string
+    fileType: string
+    fileSize: number
+    createdAt?: Date | string
+  }
+
+  export type MessageAttachmentCreateOrConnectWithoutMessageInput = {
+    where: MessageAttachmentWhereUniqueInput
+    create: XOR<MessageAttachmentCreateWithoutMessageInput, MessageAttachmentUncheckedCreateWithoutMessageInput>
+  }
+
+  export type MessageAttachmentCreateManyMessageInputEnvelope = {
+    data: MessageAttachmentCreateManyMessageInput | MessageAttachmentCreateManyMessageInput[]
+    skipDuplicates?: boolean
   }
 
   export type ConversationUpsertWithoutMessagesInput = {
@@ -12292,11 +15923,13 @@ export namespace Prisma {
     title?: NullableStringFieldUpdateOperationsInput | string | null
     systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
+    lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     participants?: ConversationParticipantUpdateManyWithoutConversationNestedInput
     activeUsers?: UserUpdateManyWithoutActiveConversationNestedInput
+    owner?: UserUpdateOneWithoutConversationsNestedInput
   }
 
   export type ConversationUncheckedUpdateWithoutMessagesInput = {
@@ -12304,6 +15937,8 @@ export namespace Prisma {
     title?: NullableStringFieldUpdateOperationsInput | string | null
     systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
+    ownerId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12334,6 +15969,9 @@ export namespace Prisma {
     conversationParticipants?: ConversationParticipantUpdateManyWithoutUserNestedInput
     activeConversation?: ConversationUpdateOneWithoutActiveUsersNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
+    blockedBy?: UserBlockUpdateManyWithoutBlockedNestedInput
+    conversations?: ConversationUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMessagesInput = {
@@ -12348,6 +15986,165 @@ export namespace Prisma {
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     conversationParticipants?: ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    blockedUsers?: UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
+    blockedBy?: UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutOwnerNestedInput
+  }
+
+  export type MessageUpsertWithoutRepliesInput = {
+    update: XOR<MessageUpdateWithoutRepliesInput, MessageUncheckedUpdateWithoutRepliesInput>
+    create: XOR<MessageCreateWithoutRepliesInput, MessageUncheckedCreateWithoutRepliesInput>
+    where?: MessageWhereInput
+  }
+
+  export type MessageUpdateToOneWithWhereWithoutRepliesInput = {
+    where?: MessageWhereInput
+    data: XOR<MessageUpdateWithoutRepliesInput, MessageUncheckedUpdateWithoutRepliesInput>
+  }
+
+  export type MessageUpdateWithoutRepliesInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
+    content?: StringFieldUpdateOperationsInput | string
+    isEdited?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    conversation?: ConversationUpdateOneRequiredWithoutMessagesNestedInput
+    user?: UserUpdateOneWithoutMessagesNestedInput
+    parentMessage?: MessageUpdateOneWithoutRepliesNestedInput
+    attachments?: MessageAttachmentUpdateManyWithoutMessageNestedInput
+  }
+
+  export type MessageUncheckedUpdateWithoutRepliesInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    conversationId?: BigIntFieldUpdateOperationsInput | bigint | number
+    userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    parentMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
+    content?: StringFieldUpdateOperationsInput | string
+    isEdited?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attachments?: MessageAttachmentUncheckedUpdateManyWithoutMessageNestedInput
+  }
+
+  export type MessageUpsertWithWhereUniqueWithoutParentMessageInput = {
+    where: MessageWhereUniqueInput
+    update: XOR<MessageUpdateWithoutParentMessageInput, MessageUncheckedUpdateWithoutParentMessageInput>
+    create: XOR<MessageCreateWithoutParentMessageInput, MessageUncheckedCreateWithoutParentMessageInput>
+  }
+
+  export type MessageUpdateWithWhereUniqueWithoutParentMessageInput = {
+    where: MessageWhereUniqueInput
+    data: XOR<MessageUpdateWithoutParentMessageInput, MessageUncheckedUpdateWithoutParentMessageInput>
+  }
+
+  export type MessageUpdateManyWithWhereWithoutParentMessageInput = {
+    where: MessageScalarWhereInput
+    data: XOR<MessageUpdateManyMutationInput, MessageUncheckedUpdateManyWithoutParentMessageInput>
+  }
+
+  export type MessageAttachmentUpsertWithWhereUniqueWithoutMessageInput = {
+    where: MessageAttachmentWhereUniqueInput
+    update: XOR<MessageAttachmentUpdateWithoutMessageInput, MessageAttachmentUncheckedUpdateWithoutMessageInput>
+    create: XOR<MessageAttachmentCreateWithoutMessageInput, MessageAttachmentUncheckedCreateWithoutMessageInput>
+  }
+
+  export type MessageAttachmentUpdateWithWhereUniqueWithoutMessageInput = {
+    where: MessageAttachmentWhereUniqueInput
+    data: XOR<MessageAttachmentUpdateWithoutMessageInput, MessageAttachmentUncheckedUpdateWithoutMessageInput>
+  }
+
+  export type MessageAttachmentUpdateManyWithWhereWithoutMessageInput = {
+    where: MessageAttachmentScalarWhereInput
+    data: XOR<MessageAttachmentUpdateManyMutationInput, MessageAttachmentUncheckedUpdateManyWithoutMessageInput>
+  }
+
+  export type MessageAttachmentScalarWhereInput = {
+    AND?: MessageAttachmentScalarWhereInput | MessageAttachmentScalarWhereInput[]
+    OR?: MessageAttachmentScalarWhereInput[]
+    NOT?: MessageAttachmentScalarWhereInput | MessageAttachmentScalarWhereInput[]
+    id?: BigIntFilter<"MessageAttachment"> | bigint | number
+    messageId?: BigIntFilter<"MessageAttachment"> | bigint | number
+    fileName?: StringFilter<"MessageAttachment"> | string
+    fileUrl?: StringFilter<"MessageAttachment"> | string
+    fileType?: StringFilter<"MessageAttachment"> | string
+    fileSize?: IntFilter<"MessageAttachment"> | number
+    createdAt?: DateTimeFilter<"MessageAttachment"> | Date | string
+  }
+
+  export type MessageCreateWithoutAttachmentsInput = {
+    id?: bigint | number
+    role: $Enums.MessageRole
+    content: string
+    isEdited?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    conversation: ConversationCreateNestedOneWithoutMessagesInput
+    user?: UserCreateNestedOneWithoutMessagesInput
+    parentMessage?: MessageCreateNestedOneWithoutRepliesInput
+    replies?: MessageCreateNestedManyWithoutParentMessageInput
+  }
+
+  export type MessageUncheckedCreateWithoutAttachmentsInput = {
+    id?: bigint | number
+    conversationId: bigint | number
+    userId?: bigint | number | null
+    parentMessageId?: bigint | number | null
+    role: $Enums.MessageRole
+    content: string
+    isEdited?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    replies?: MessageUncheckedCreateNestedManyWithoutParentMessageInput
+  }
+
+  export type MessageCreateOrConnectWithoutAttachmentsInput = {
+    where: MessageWhereUniqueInput
+    create: XOR<MessageCreateWithoutAttachmentsInput, MessageUncheckedCreateWithoutAttachmentsInput>
+  }
+
+  export type MessageUpsertWithoutAttachmentsInput = {
+    update: XOR<MessageUpdateWithoutAttachmentsInput, MessageUncheckedUpdateWithoutAttachmentsInput>
+    create: XOR<MessageCreateWithoutAttachmentsInput, MessageUncheckedCreateWithoutAttachmentsInput>
+    where?: MessageWhereInput
+  }
+
+  export type MessageUpdateToOneWithWhereWithoutAttachmentsInput = {
+    where?: MessageWhereInput
+    data: XOR<MessageUpdateWithoutAttachmentsInput, MessageUncheckedUpdateWithoutAttachmentsInput>
+  }
+
+  export type MessageUpdateWithoutAttachmentsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
+    content?: StringFieldUpdateOperationsInput | string
+    isEdited?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    conversation?: ConversationUpdateOneRequiredWithoutMessagesNestedInput
+    user?: UserUpdateOneWithoutMessagesNestedInput
+    parentMessage?: MessageUpdateOneWithoutRepliesNestedInput
+    replies?: MessageUpdateManyWithoutParentMessageNestedInput
+  }
+
+  export type MessageUncheckedUpdateWithoutAttachmentsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    conversationId?: BigIntFieldUpdateOperationsInput | bigint | number
+    userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    parentMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
+    content?: StringFieldUpdateOperationsInput | string
+    isEdited?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    replies?: MessageUncheckedUpdateManyWithoutParentMessageNestedInput
   }
 
   export type UserCreateWithoutPasswordResetTokensInput = {
@@ -12362,6 +16159,9 @@ export namespace Prisma {
     conversationParticipants?: ConversationParticipantCreateNestedManyWithoutUserInput
     activeConversation?: ConversationCreateNestedOneWithoutActiveUsersInput
     messages?: MessageCreateNestedManyWithoutUserInput
+    blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
+    blockedBy?: UserBlockCreateNestedManyWithoutBlockedInput
+    conversations?: ConversationCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
@@ -12376,6 +16176,9 @@ export namespace Prisma {
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     conversationParticipants?: ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
+    blockedUsers?: UserBlockUncheckedCreateNestedManyWithoutBlockerInput
+    blockedBy?: UserBlockUncheckedCreateNestedManyWithoutBlockedInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutPasswordResetTokensInput = {
@@ -12406,6 +16209,9 @@ export namespace Prisma {
     conversationParticipants?: ConversationParticipantUpdateManyWithoutUserNestedInput
     activeConversation?: ConversationUpdateOneWithoutActiveUsersNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
+    blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
+    blockedBy?: UserBlockUpdateManyWithoutBlockedNestedInput
+    conversations?: ConversationUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
@@ -12420,6 +16226,177 @@ export namespace Prisma {
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     conversationParticipants?: ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    blockedUsers?: UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
+    blockedBy?: UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutOwnerNestedInput
+  }
+
+  export type UserCreateWithoutBlockedUsersInput = {
+    id?: bigint | number
+    email: string
+    name?: string | null
+    password: string
+    emailVerifiedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
+    conversationParticipants?: ConversationParticipantCreateNestedManyWithoutUserInput
+    activeConversation?: ConversationCreateNestedOneWithoutActiveUsersInput
+    messages?: MessageCreateNestedManyWithoutUserInput
+    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    blockedBy?: UserBlockCreateNestedManyWithoutBlockedInput
+    conversations?: ConversationCreateNestedManyWithoutOwnerInput
+  }
+
+  export type UserUncheckedCreateWithoutBlockedUsersInput = {
+    id?: bigint | number
+    email: string
+    name?: string | null
+    password: string
+    emailVerifiedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    activeConversationId?: bigint | number | null
+    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+    conversationParticipants?: ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
+    messages?: MessageUncheckedCreateNestedManyWithoutUserInput
+    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    blockedBy?: UserBlockUncheckedCreateNestedManyWithoutBlockedInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutOwnerInput
+  }
+
+  export type UserCreateOrConnectWithoutBlockedUsersInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutBlockedUsersInput, UserUncheckedCreateWithoutBlockedUsersInput>
+  }
+
+  export type UserCreateWithoutBlockedByInput = {
+    id?: bigint | number
+    email: string
+    name?: string | null
+    password: string
+    emailVerifiedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
+    conversationParticipants?: ConversationParticipantCreateNestedManyWithoutUserInput
+    activeConversation?: ConversationCreateNestedOneWithoutActiveUsersInput
+    messages?: MessageCreateNestedManyWithoutUserInput
+    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
+    conversations?: ConversationCreateNestedManyWithoutOwnerInput
+  }
+
+  export type UserUncheckedCreateWithoutBlockedByInput = {
+    id?: bigint | number
+    email: string
+    name?: string | null
+    password: string
+    emailVerifiedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    activeConversationId?: bigint | number | null
+    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+    conversationParticipants?: ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
+    messages?: MessageUncheckedCreateNestedManyWithoutUserInput
+    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    blockedUsers?: UserBlockUncheckedCreateNestedManyWithoutBlockerInput
+    conversations?: ConversationUncheckedCreateNestedManyWithoutOwnerInput
+  }
+
+  export type UserCreateOrConnectWithoutBlockedByInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutBlockedByInput, UserUncheckedCreateWithoutBlockedByInput>
+  }
+
+  export type UserUpsertWithoutBlockedUsersInput = {
+    update: XOR<UserUpdateWithoutBlockedUsersInput, UserUncheckedUpdateWithoutBlockedUsersInput>
+    create: XOR<UserCreateWithoutBlockedUsersInput, UserUncheckedCreateWithoutBlockedUsersInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutBlockedUsersInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutBlockedUsersInput, UserUncheckedUpdateWithoutBlockedUsersInput>
+  }
+
+  export type UserUpdateWithoutBlockedUsersInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
+    conversationParticipants?: ConversationParticipantUpdateManyWithoutUserNestedInput
+    activeConversation?: ConversationUpdateOneWithoutActiveUsersNestedInput
+    messages?: MessageUpdateManyWithoutUserNestedInput
+    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    blockedBy?: UserBlockUpdateManyWithoutBlockedNestedInput
+    conversations?: ConversationUpdateManyWithoutOwnerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutBlockedUsersInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activeConversationId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+    conversationParticipants?: ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    blockedBy?: UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutOwnerNestedInput
+  }
+
+  export type UserUpsertWithoutBlockedByInput = {
+    update: XOR<UserUpdateWithoutBlockedByInput, UserUncheckedUpdateWithoutBlockedByInput>
+    create: XOR<UserCreateWithoutBlockedByInput, UserUncheckedCreateWithoutBlockedByInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutBlockedByInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutBlockedByInput, UserUncheckedUpdateWithoutBlockedByInput>
+  }
+
+  export type UserUpdateWithoutBlockedByInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
+    conversationParticipants?: ConversationParticipantUpdateManyWithoutUserNestedInput
+    activeConversation?: ConversationUpdateOneWithoutActiveUsersNestedInput
+    messages?: MessageUpdateManyWithoutUserNestedInput
+    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
+    conversations?: ConversationUpdateManyWithoutOwnerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutBlockedByInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activeConversationId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+    conversationParticipants?: ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    blockedUsers?: UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type RefreshTokenCreateManyUserInput = {
@@ -12443,6 +16420,7 @@ export namespace Prisma {
   export type MessageCreateManyUserInput = {
     id?: bigint | number
     conversationId: bigint | number
+    parentMessageId?: bigint | number | null
     role: $Enums.MessageRole
     content: string
     isEdited?: boolean
@@ -12457,6 +16435,31 @@ export namespace Prisma {
     expiresAt: Date | string
     usedAt?: Date | string | null
     createdAt?: Date | string
+  }
+
+  export type UserBlockCreateManyBlockerInput = {
+    id?: bigint | number
+    blockedId: bigint | number
+    createdAt?: Date | string
+    deletedAt?: Date | string | null
+  }
+
+  export type UserBlockCreateManyBlockedInput = {
+    id?: bigint | number
+    blockerId: bigint | number
+    createdAt?: Date | string
+    deletedAt?: Date | string | null
+  }
+
+  export type ConversationCreateManyOwnerInput = {
+    id?: bigint | number
+    title?: string | null
+    systemPrompt?: string | null
+    type?: $Enums.ConversationType
+    lastMessageAt?: Date | string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type RefreshTokenUpdateWithoutUserInput = {
@@ -12522,22 +16525,29 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     conversation?: ConversationUpdateOneRequiredWithoutMessagesNestedInput
+    parentMessage?: MessageUpdateOneWithoutRepliesNestedInput
+    replies?: MessageUpdateManyWithoutParentMessageNestedInput
+    attachments?: MessageAttachmentUpdateManyWithoutMessageNestedInput
   }
 
   export type MessageUncheckedUpdateWithoutUserInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     conversationId?: BigIntFieldUpdateOperationsInput | bigint | number
+    parentMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
     content?: StringFieldUpdateOperationsInput | string
     isEdited?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    replies?: MessageUncheckedUpdateManyWithoutParentMessageNestedInput
+    attachments?: MessageAttachmentUncheckedUpdateManyWithoutMessageNestedInput
   }
 
   export type MessageUncheckedUpdateManyWithoutUserInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     conversationId?: BigIntFieldUpdateOperationsInput | bigint | number
+    parentMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
     content?: StringFieldUpdateOperationsInput | string
     isEdited?: BoolFieldUpdateOperationsInput | boolean
@@ -12570,6 +16580,87 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type UserBlockUpdateWithoutBlockerInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    blocked?: UserUpdateOneRequiredWithoutBlockedByNestedInput
+  }
+
+  export type UserBlockUncheckedUpdateWithoutBlockerInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    blockedId?: BigIntFieldUpdateOperationsInput | bigint | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type UserBlockUncheckedUpdateManyWithoutBlockerInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    blockedId?: BigIntFieldUpdateOperationsInput | bigint | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type UserBlockUpdateWithoutBlockedInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    blocker?: UserUpdateOneRequiredWithoutBlockedUsersNestedInput
+  }
+
+  export type UserBlockUncheckedUpdateWithoutBlockedInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    blockerId?: BigIntFieldUpdateOperationsInput | bigint | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type UserBlockUncheckedUpdateManyWithoutBlockedInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    blockerId?: BigIntFieldUpdateOperationsInput | bigint | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ConversationUpdateWithoutOwnerInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
+    lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    participants?: ConversationParticipantUpdateManyWithoutConversationNestedInput
+    activeUsers?: UserUpdateManyWithoutActiveConversationNestedInput
+    messages?: MessageUpdateManyWithoutConversationNestedInput
+  }
+
+  export type ConversationUncheckedUpdateWithoutOwnerInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
+    lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    participants?: ConversationParticipantUncheckedUpdateManyWithoutConversationNestedInput
+    activeUsers?: UserUncheckedUpdateManyWithoutActiveConversationNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutConversationNestedInput
+  }
+
+  export type ConversationUncheckedUpdateManyWithoutOwnerInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
+    lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ConversationParticipantCreateManyConversationInput = {
     id?: bigint | number
     userId: bigint | number
@@ -12592,6 +16683,7 @@ export namespace Prisma {
   export type MessageCreateManyConversationInput = {
     id?: bigint | number
     userId?: bigint | number | null
+    parentMessageId?: bigint | number | null
     role: $Enums.MessageRole
     content: string
     isEdited?: boolean
@@ -12639,6 +16731,9 @@ export namespace Prisma {
     conversationParticipants?: ConversationParticipantUpdateManyWithoutUserNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
+    blockedBy?: UserBlockUpdateManyWithoutBlockedNestedInput
+    conversations?: ConversationUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutActiveConversationInput = {
@@ -12653,6 +16748,9 @@ export namespace Prisma {
     conversationParticipants?: ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    blockedUsers?: UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
+    blockedBy?: UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
+    conversations?: ConversationUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutActiveConversationInput = {
@@ -12674,11 +16772,29 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneWithoutMessagesNestedInput
+    parentMessage?: MessageUpdateOneWithoutRepliesNestedInput
+    replies?: MessageUpdateManyWithoutParentMessageNestedInput
+    attachments?: MessageAttachmentUpdateManyWithoutMessageNestedInput
   }
 
   export type MessageUncheckedUpdateWithoutConversationInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    parentMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
+    content?: StringFieldUpdateOperationsInput | string
+    isEdited?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    replies?: MessageUncheckedUpdateManyWithoutParentMessageNestedInput
+    attachments?: MessageAttachmentUncheckedUpdateManyWithoutMessageNestedInput
+  }
+
+  export type MessageUncheckedUpdateManyWithoutConversationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    parentMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
     content?: StringFieldUpdateOperationsInput | string
     isEdited?: BoolFieldUpdateOperationsInput | boolean
@@ -12687,8 +16803,44 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type MessageUncheckedUpdateManyWithoutConversationInput = {
+  export type MessageCreateManyParentMessageInput = {
+    id?: bigint | number
+    conversationId: bigint | number
+    userId?: bigint | number | null
+    role: $Enums.MessageRole
+    content: string
+    isEdited?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MessageAttachmentCreateManyMessageInput = {
+    id?: bigint | number
+    fileName: string
+    fileUrl: string
+    fileType: string
+    fileSize: number
+    createdAt?: Date | string
+  }
+
+  export type MessageUpdateWithoutParentMessageInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
+    content?: StringFieldUpdateOperationsInput | string
+    isEdited?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    conversation?: ConversationUpdateOneRequiredWithoutMessagesNestedInput
+    user?: UserUpdateOneWithoutMessagesNestedInput
+    replies?: MessageUpdateManyWithoutParentMessageNestedInput
+    attachments?: MessageAttachmentUpdateManyWithoutMessageNestedInput
+  }
+
+  export type MessageUncheckedUpdateWithoutParentMessageInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    conversationId?: BigIntFieldUpdateOperationsInput | bigint | number
     userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
     content?: StringFieldUpdateOperationsInput | string
@@ -12696,6 +16848,47 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    replies?: MessageUncheckedUpdateManyWithoutParentMessageNestedInput
+    attachments?: MessageAttachmentUncheckedUpdateManyWithoutMessageNestedInput
+  }
+
+  export type MessageUncheckedUpdateManyWithoutParentMessageInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    conversationId?: BigIntFieldUpdateOperationsInput | bigint | number
+    userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
+    content?: StringFieldUpdateOperationsInput | string
+    isEdited?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MessageAttachmentUpdateWithoutMessageInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MessageAttachmentUncheckedUpdateWithoutMessageInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MessageAttachmentUncheckedUpdateManyWithoutMessageInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    fileName?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    fileType?: StringFieldUpdateOperationsInput | string
+    fileSize?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 
