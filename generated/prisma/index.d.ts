@@ -2989,30 +2989,27 @@ export namespace Prisma {
 
   export type RefreshTokenMinAggregateOutputType = {
     id: bigint | null
+    userId: bigint | null
     token: string | null
     tokenExpiresAt: Date | null
-    userId: bigint | null
-    isRevoked: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
 
   export type RefreshTokenMaxAggregateOutputType = {
     id: bigint | null
+    userId: bigint | null
     token: string | null
     tokenExpiresAt: Date | null
-    userId: bigint | null
-    isRevoked: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
 
   export type RefreshTokenCountAggregateOutputType = {
     id: number
+    userId: number
     token: number
     tokenExpiresAt: number
-    userId: number
-    isRevoked: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -3031,30 +3028,27 @@ export namespace Prisma {
 
   export type RefreshTokenMinAggregateInputType = {
     id?: true
+    userId?: true
     token?: true
     tokenExpiresAt?: true
-    userId?: true
-    isRevoked?: true
     createdAt?: true
     updatedAt?: true
   }
 
   export type RefreshTokenMaxAggregateInputType = {
     id?: true
+    userId?: true
     token?: true
     tokenExpiresAt?: true
-    userId?: true
-    isRevoked?: true
     createdAt?: true
     updatedAt?: true
   }
 
   export type RefreshTokenCountAggregateInputType = {
     id?: true
+    userId?: true
     token?: true
     tokenExpiresAt?: true
-    userId?: true
-    isRevoked?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -3148,10 +3142,9 @@ export namespace Prisma {
 
   export type RefreshTokenGroupByOutputType = {
     id: bigint
+    userId: bigint
     token: string
     tokenExpiresAt: Date
-    userId: bigint
-    isRevoked: boolean
     createdAt: Date
     updatedAt: Date
     _count: RefreshTokenCountAggregateOutputType | null
@@ -3177,10 +3170,9 @@ export namespace Prisma {
 
   export type RefreshTokenSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    userId?: boolean
     token?: boolean
     tokenExpiresAt?: boolean
-    userId?: boolean
-    isRevoked?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -3190,15 +3182,14 @@ export namespace Prisma {
 
   export type RefreshTokenSelectScalar = {
     id?: boolean
+    userId?: boolean
     token?: boolean
     tokenExpiresAt?: boolean
-    userId?: boolean
-    isRevoked?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type RefreshTokenOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "token" | "tokenExpiresAt" | "userId" | "isRevoked" | "createdAt" | "updatedAt", ExtArgs["result"]["refreshToken"]>
+  export type RefreshTokenOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "token" | "tokenExpiresAt" | "createdAt" | "updatedAt", ExtArgs["result"]["refreshToken"]>
   export type RefreshTokenInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -3210,10 +3201,9 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
+      userId: bigint
       token: string
       tokenExpiresAt: Date
-      userId: bigint
-      isRevoked: boolean
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["refreshToken"]>
@@ -3587,10 +3577,9 @@ export namespace Prisma {
    */
   interface RefreshTokenFieldRefs {
     readonly id: FieldRef<"RefreshToken", 'BigInt'>
+    readonly userId: FieldRef<"RefreshToken", 'BigInt'>
     readonly token: FieldRef<"RefreshToken", 'String'>
     readonly tokenExpiresAt: FieldRef<"RefreshToken", 'DateTime'>
-    readonly userId: FieldRef<"RefreshToken", 'BigInt'>
-    readonly isRevoked: FieldRef<"RefreshToken", 'Boolean'>
     readonly createdAt: FieldRef<"RefreshToken", 'DateTime'>
     readonly updatedAt: FieldRef<"RefreshToken", 'DateTime'>
   }
@@ -5102,6 +5091,7 @@ export namespace Prisma {
     joinedAt: Date | null
     leftAt: Date | null
     lastReadAt: Date | null
+    deletedAt: Date | null
   }
 
   export type ConversationParticipantMaxAggregateOutputType = {
@@ -5112,6 +5102,7 @@ export namespace Prisma {
     joinedAt: Date | null
     leftAt: Date | null
     lastReadAt: Date | null
+    deletedAt: Date | null
   }
 
   export type ConversationParticipantCountAggregateOutputType = {
@@ -5122,6 +5113,7 @@ export namespace Prisma {
     joinedAt: number
     leftAt: number
     lastReadAt: number
+    deletedAt: number
     _all: number
   }
 
@@ -5146,6 +5138,7 @@ export namespace Prisma {
     joinedAt?: true
     leftAt?: true
     lastReadAt?: true
+    deletedAt?: true
   }
 
   export type ConversationParticipantMaxAggregateInputType = {
@@ -5156,6 +5149,7 @@ export namespace Prisma {
     joinedAt?: true
     leftAt?: true
     lastReadAt?: true
+    deletedAt?: true
   }
 
   export type ConversationParticipantCountAggregateInputType = {
@@ -5166,6 +5160,7 @@ export namespace Prisma {
     joinedAt?: true
     leftAt?: true
     lastReadAt?: true
+    deletedAt?: true
     _all?: true
   }
 
@@ -5263,6 +5258,7 @@ export namespace Prisma {
     joinedAt: Date
     leftAt: Date | null
     lastReadAt: Date | null
+    deletedAt: Date | null
     _count: ConversationParticipantCountAggregateOutputType | null
     _avg: ConversationParticipantAvgAggregateOutputType | null
     _sum: ConversationParticipantSumAggregateOutputType | null
@@ -5292,6 +5288,7 @@ export namespace Prisma {
     joinedAt?: boolean
     leftAt?: boolean
     lastReadAt?: boolean
+    deletedAt?: boolean
     conversation?: boolean | ConversationDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["conversationParticipant"]>
@@ -5306,9 +5303,10 @@ export namespace Prisma {
     joinedAt?: boolean
     leftAt?: boolean
     lastReadAt?: boolean
+    deletedAt?: boolean
   }
 
-  export type ConversationParticipantOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "conversationId" | "userId" | "role" | "joinedAt" | "leftAt" | "lastReadAt", ExtArgs["result"]["conversationParticipant"]>
+  export type ConversationParticipantOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "conversationId" | "userId" | "role" | "joinedAt" | "leftAt" | "lastReadAt" | "deletedAt", ExtArgs["result"]["conversationParticipant"]>
   export type ConversationParticipantInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     conversation?: boolean | ConversationDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -5328,6 +5326,7 @@ export namespace Prisma {
       joinedAt: Date
       leftAt: Date | null
       lastReadAt: Date | null
+      deletedAt: Date | null
     }, ExtArgs["result"]["conversationParticipant"]>
     composites: {}
   }
@@ -5706,6 +5705,7 @@ export namespace Prisma {
     readonly joinedAt: FieldRef<"ConversationParticipant", 'DateTime'>
     readonly leftAt: FieldRef<"ConversationParticipant", 'DateTime'>
     readonly lastReadAt: FieldRef<"ConversationParticipant", 'DateTime'>
+    readonly deletedAt: FieldRef<"ConversationParticipant", 'DateTime'>
   }
     
 
@@ -6082,22 +6082,22 @@ export namespace Prisma {
   export type MessageAvgAggregateOutputType = {
     id: number | null
     conversationId: number | null
-    userId: number | null
     parentMessageId: number | null
+    userId: number | null
   }
 
   export type MessageSumAggregateOutputType = {
     id: bigint | null
     conversationId: bigint | null
-    userId: bigint | null
     parentMessageId: bigint | null
+    userId: bigint | null
   }
 
   export type MessageMinAggregateOutputType = {
     id: bigint | null
     conversationId: bigint | null
-    userId: bigint | null
     parentMessageId: bigint | null
+    userId: bigint | null
     role: $Enums.MessageRole | null
     content: string | null
     isEdited: boolean | null
@@ -6109,8 +6109,8 @@ export namespace Prisma {
   export type MessageMaxAggregateOutputType = {
     id: bigint | null
     conversationId: bigint | null
-    userId: bigint | null
     parentMessageId: bigint | null
+    userId: bigint | null
     role: $Enums.MessageRole | null
     content: string | null
     isEdited: boolean | null
@@ -6122,8 +6122,8 @@ export namespace Prisma {
   export type MessageCountAggregateOutputType = {
     id: number
     conversationId: number
-    userId: number
     parentMessageId: number
+    userId: number
     role: number
     content: number
     isEdited: number
@@ -6137,22 +6137,22 @@ export namespace Prisma {
   export type MessageAvgAggregateInputType = {
     id?: true
     conversationId?: true
-    userId?: true
     parentMessageId?: true
+    userId?: true
   }
 
   export type MessageSumAggregateInputType = {
     id?: true
     conversationId?: true
-    userId?: true
     parentMessageId?: true
+    userId?: true
   }
 
   export type MessageMinAggregateInputType = {
     id?: true
     conversationId?: true
-    userId?: true
     parentMessageId?: true
+    userId?: true
     role?: true
     content?: true
     isEdited?: true
@@ -6164,8 +6164,8 @@ export namespace Prisma {
   export type MessageMaxAggregateInputType = {
     id?: true
     conversationId?: true
-    userId?: true
     parentMessageId?: true
+    userId?: true
     role?: true
     content?: true
     isEdited?: true
@@ -6177,8 +6177,8 @@ export namespace Prisma {
   export type MessageCountAggregateInputType = {
     id?: true
     conversationId?: true
-    userId?: true
     parentMessageId?: true
+    userId?: true
     role?: true
     content?: true
     isEdited?: true
@@ -6277,8 +6277,8 @@ export namespace Prisma {
   export type MessageGroupByOutputType = {
     id: bigint
     conversationId: bigint
-    userId: bigint | null
     parentMessageId: bigint | null
+    userId: bigint | null
     role: $Enums.MessageRole
     content: string
     isEdited: boolean
@@ -6309,8 +6309,8 @@ export namespace Prisma {
   export type MessageSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     conversationId?: boolean
-    userId?: boolean
     parentMessageId?: boolean
+    userId?: boolean
     role?: boolean
     content?: boolean
     isEdited?: boolean
@@ -6330,8 +6330,8 @@ export namespace Prisma {
   export type MessageSelectScalar = {
     id?: boolean
     conversationId?: boolean
-    userId?: boolean
     parentMessageId?: boolean
+    userId?: boolean
     role?: boolean
     content?: boolean
     isEdited?: boolean
@@ -6340,7 +6340,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type MessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "conversationId" | "userId" | "parentMessageId" | "role" | "content" | "isEdited" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["message"]>
+  export type MessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "conversationId" | "parentMessageId" | "userId" | "role" | "content" | "isEdited" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["message"]>
   export type MessageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     conversation?: boolean | ConversationDefaultArgs<ExtArgs>
     user?: boolean | Message$userArgs<ExtArgs>
@@ -6362,8 +6362,8 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
       conversationId: bigint
-      userId: bigint | null
       parentMessageId: bigint | null
+      userId: bigint | null
       role: $Enums.MessageRole
       content: string
       isEdited: boolean
@@ -6746,8 +6746,8 @@ export namespace Prisma {
   interface MessageFieldRefs {
     readonly id: FieldRef<"Message", 'BigInt'>
     readonly conversationId: FieldRef<"Message", 'BigInt'>
-    readonly userId: FieldRef<"Message", 'BigInt'>
     readonly parentMessageId: FieldRef<"Message", 'BigInt'>
+    readonly userId: FieldRef<"Message", 'BigInt'>
     readonly role: FieldRef<"Message", 'MessageRole'>
     readonly content: FieldRef<"Message", 'String'>
     readonly isEdited: FieldRef<"Message", 'Boolean'>
@@ -11141,10 +11141,9 @@ export namespace Prisma {
 
   export const RefreshTokenScalarFieldEnum: {
     id: 'id',
+    userId: 'userId',
     token: 'token',
     tokenExpiresAt: 'tokenExpiresAt',
-    userId: 'userId',
-    isRevoked: 'isRevoked',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -11174,7 +11173,8 @@ export namespace Prisma {
     role: 'role',
     joinedAt: 'joinedAt',
     leftAt: 'leftAt',
-    lastReadAt: 'lastReadAt'
+    lastReadAt: 'lastReadAt',
+    deletedAt: 'deletedAt'
   };
 
   export type ConversationParticipantScalarFieldEnum = (typeof ConversationParticipantScalarFieldEnum)[keyof typeof ConversationParticipantScalarFieldEnum]
@@ -11183,8 +11183,8 @@ export namespace Prisma {
   export const MessageScalarFieldEnum: {
     id: 'id',
     conversationId: 'conversationId',
-    userId: 'userId',
     parentMessageId: 'parentMessageId',
+    userId: 'userId',
     role: 'role',
     content: 'content',
     isEdited: 'isEdited',
@@ -11369,13 +11369,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Boolean'
-   */
-  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-    
-
-
-  /**
    * Reference to a field of type 'ConversationType'
    */
   export type EnumConversationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ConversationType'>
@@ -11393,6 +11386,13 @@ export namespace Prisma {
    * Reference to a field of type 'MessageRole'
    */
   export type EnumMessageRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MessageRole'>
+    
+
+
+  /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -11533,10 +11533,9 @@ export namespace Prisma {
     OR?: RefreshTokenWhereInput[]
     NOT?: RefreshTokenWhereInput | RefreshTokenWhereInput[]
     id?: BigIntFilter<"RefreshToken"> | bigint | number
+    userId?: BigIntFilter<"RefreshToken"> | bigint | number
     token?: StringFilter<"RefreshToken"> | string
     tokenExpiresAt?: DateTimeFilter<"RefreshToken"> | Date | string
-    userId?: BigIntFilter<"RefreshToken"> | bigint | number
-    isRevoked?: BoolFilter<"RefreshToken"> | boolean
     createdAt?: DateTimeFilter<"RefreshToken"> | Date | string
     updatedAt?: DateTimeFilter<"RefreshToken"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -11544,10 +11543,9 @@ export namespace Prisma {
 
   export type RefreshTokenOrderByWithRelationInput = {
     id?: SortOrder
+    userId?: SortOrder
     token?: SortOrder
     tokenExpiresAt?: SortOrder
-    userId?: SortOrder
-    isRevoked?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     user?: UserOrderByWithRelationInput
@@ -11556,24 +11554,22 @@ export namespace Prisma {
 
   export type RefreshTokenWhereUniqueInput = Prisma.AtLeast<{
     id?: bigint | number
+    userId?: bigint | number
     token?: string
     AND?: RefreshTokenWhereInput | RefreshTokenWhereInput[]
     OR?: RefreshTokenWhereInput[]
     NOT?: RefreshTokenWhereInput | RefreshTokenWhereInput[]
     tokenExpiresAt?: DateTimeFilter<"RefreshToken"> | Date | string
-    userId?: BigIntFilter<"RefreshToken"> | bigint | number
-    isRevoked?: BoolFilter<"RefreshToken"> | boolean
     createdAt?: DateTimeFilter<"RefreshToken"> | Date | string
     updatedAt?: DateTimeFilter<"RefreshToken"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
-  }, "id" | "token">
+  }, "id" | "userId" | "token">
 
   export type RefreshTokenOrderByWithAggregationInput = {
     id?: SortOrder
+    userId?: SortOrder
     token?: SortOrder
     tokenExpiresAt?: SortOrder
-    userId?: SortOrder
-    isRevoked?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: RefreshTokenCountOrderByAggregateInput
@@ -11588,10 +11584,9 @@ export namespace Prisma {
     OR?: RefreshTokenScalarWhereWithAggregatesInput[]
     NOT?: RefreshTokenScalarWhereWithAggregatesInput | RefreshTokenScalarWhereWithAggregatesInput[]
     id?: BigIntWithAggregatesFilter<"RefreshToken"> | bigint | number
+    userId?: BigIntWithAggregatesFilter<"RefreshToken"> | bigint | number
     token?: StringWithAggregatesFilter<"RefreshToken"> | string
     tokenExpiresAt?: DateTimeWithAggregatesFilter<"RefreshToken"> | Date | string
-    userId?: BigIntWithAggregatesFilter<"RefreshToken"> | bigint | number
-    isRevoked?: BoolWithAggregatesFilter<"RefreshToken"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"RefreshToken"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"RefreshToken"> | Date | string
   }
@@ -11694,6 +11689,7 @@ export namespace Prisma {
     joinedAt?: DateTimeFilter<"ConversationParticipant"> | Date | string
     leftAt?: DateTimeNullableFilter<"ConversationParticipant"> | Date | string | null
     lastReadAt?: DateTimeNullableFilter<"ConversationParticipant"> | Date | string | null
+    deletedAt?: DateTimeNullableFilter<"ConversationParticipant"> | Date | string | null
     conversation?: XOR<ConversationScalarRelationFilter, ConversationWhereInput>
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
@@ -11706,6 +11702,7 @@ export namespace Prisma {
     joinedAt?: SortOrder
     leftAt?: SortOrderInput | SortOrder
     lastReadAt?: SortOrderInput | SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     conversation?: ConversationOrderByWithRelationInput
     user?: UserOrderByWithRelationInput
   }
@@ -11722,6 +11719,7 @@ export namespace Prisma {
     joinedAt?: DateTimeFilter<"ConversationParticipant"> | Date | string
     leftAt?: DateTimeNullableFilter<"ConversationParticipant"> | Date | string | null
     lastReadAt?: DateTimeNullableFilter<"ConversationParticipant"> | Date | string | null
+    deletedAt?: DateTimeNullableFilter<"ConversationParticipant"> | Date | string | null
     conversation?: XOR<ConversationScalarRelationFilter, ConversationWhereInput>
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id" | "conversationId_userId">
@@ -11734,6 +11732,7 @@ export namespace Prisma {
     joinedAt?: SortOrder
     leftAt?: SortOrderInput | SortOrder
     lastReadAt?: SortOrderInput | SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     _count?: ConversationParticipantCountOrderByAggregateInput
     _avg?: ConversationParticipantAvgOrderByAggregateInput
     _max?: ConversationParticipantMaxOrderByAggregateInput
@@ -11752,6 +11751,7 @@ export namespace Prisma {
     joinedAt?: DateTimeWithAggregatesFilter<"ConversationParticipant"> | Date | string
     leftAt?: DateTimeNullableWithAggregatesFilter<"ConversationParticipant"> | Date | string | null
     lastReadAt?: DateTimeNullableWithAggregatesFilter<"ConversationParticipant"> | Date | string | null
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"ConversationParticipant"> | Date | string | null
   }
 
   export type MessageWhereInput = {
@@ -11760,8 +11760,8 @@ export namespace Prisma {
     NOT?: MessageWhereInput | MessageWhereInput[]
     id?: BigIntFilter<"Message"> | bigint | number
     conversationId?: BigIntFilter<"Message"> | bigint | number
-    userId?: BigIntNullableFilter<"Message"> | bigint | number | null
     parentMessageId?: BigIntNullableFilter<"Message"> | bigint | number | null
+    userId?: BigIntNullableFilter<"Message"> | bigint | number | null
     role?: EnumMessageRoleFilter<"Message"> | $Enums.MessageRole
     content?: StringFilter<"Message"> | string
     isEdited?: BoolFilter<"Message"> | boolean
@@ -11778,8 +11778,8 @@ export namespace Prisma {
   export type MessageOrderByWithRelationInput = {
     id?: SortOrder
     conversationId?: SortOrder
-    userId?: SortOrderInput | SortOrder
     parentMessageId?: SortOrderInput | SortOrder
+    userId?: SortOrderInput | SortOrder
     role?: SortOrder
     content?: SortOrder
     isEdited?: SortOrder
@@ -11800,8 +11800,8 @@ export namespace Prisma {
     OR?: MessageWhereInput[]
     NOT?: MessageWhereInput | MessageWhereInput[]
     conversationId?: BigIntFilter<"Message"> | bigint | number
-    userId?: BigIntNullableFilter<"Message"> | bigint | number | null
     parentMessageId?: BigIntNullableFilter<"Message"> | bigint | number | null
+    userId?: BigIntNullableFilter<"Message"> | bigint | number | null
     role?: EnumMessageRoleFilter<"Message"> | $Enums.MessageRole
     content?: StringFilter<"Message"> | string
     isEdited?: BoolFilter<"Message"> | boolean
@@ -11818,8 +11818,8 @@ export namespace Prisma {
   export type MessageOrderByWithAggregationInput = {
     id?: SortOrder
     conversationId?: SortOrder
-    userId?: SortOrderInput | SortOrder
     parentMessageId?: SortOrderInput | SortOrder
+    userId?: SortOrderInput | SortOrder
     role?: SortOrder
     content?: SortOrder
     isEdited?: SortOrder
@@ -11839,8 +11839,8 @@ export namespace Prisma {
     NOT?: MessageScalarWhereWithAggregatesInput | MessageScalarWhereWithAggregatesInput[]
     id?: BigIntWithAggregatesFilter<"Message"> | bigint | number
     conversationId?: BigIntWithAggregatesFilter<"Message"> | bigint | number
-    userId?: BigIntNullableWithAggregatesFilter<"Message"> | bigint | number | null
     parentMessageId?: BigIntNullableWithAggregatesFilter<"Message"> | bigint | number | null
+    userId?: BigIntNullableWithAggregatesFilter<"Message"> | bigint | number | null
     role?: EnumMessageRoleWithAggregatesFilter<"Message"> | $Enums.MessageRole
     content?: StringWithAggregatesFilter<"Message"> | string
     isEdited?: BoolWithAggregatesFilter<"Message"> | boolean
@@ -12224,7 +12224,6 @@ export namespace Prisma {
     id?: bigint | number
     token: string
     tokenExpiresAt: Date | string
-    isRevoked?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutRefreshTokensInput
@@ -12232,10 +12231,9 @@ export namespace Prisma {
 
   export type RefreshTokenUncheckedCreateInput = {
     id?: bigint | number
+    userId: bigint | number
     token: string
     tokenExpiresAt: Date | string
-    userId: bigint | number
-    isRevoked?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -12244,7 +12242,6 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     token?: StringFieldUpdateOperationsInput | string
     tokenExpiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    isRevoked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutRefreshTokensNestedInput
@@ -12252,20 +12249,18 @@ export namespace Prisma {
 
   export type RefreshTokenUncheckedUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     token?: StringFieldUpdateOperationsInput | string
     tokenExpiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    isRevoked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type RefreshTokenCreateManyInput = {
     id?: bigint | number
+    userId: bigint | number
     token: string
     tokenExpiresAt: Date | string
-    userId: bigint | number
-    isRevoked?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -12274,17 +12269,15 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     token?: StringFieldUpdateOperationsInput | string
     tokenExpiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    isRevoked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type RefreshTokenUncheckedUpdateManyInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     token?: StringFieldUpdateOperationsInput | string
     tokenExpiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    isRevoked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -12390,6 +12383,7 @@ export namespace Prisma {
     joinedAt?: Date | string
     leftAt?: Date | string | null
     lastReadAt?: Date | string | null
+    deletedAt?: Date | string | null
     conversation: ConversationCreateNestedOneWithoutParticipantsInput
     user: UserCreateNestedOneWithoutConversationParticipantsInput
   }
@@ -12402,6 +12396,7 @@ export namespace Prisma {
     joinedAt?: Date | string
     leftAt?: Date | string | null
     lastReadAt?: Date | string | null
+    deletedAt?: Date | string | null
   }
 
   export type ConversationParticipantUpdateInput = {
@@ -12410,6 +12405,7 @@ export namespace Prisma {
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leftAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     conversation?: ConversationUpdateOneRequiredWithoutParticipantsNestedInput
     user?: UserUpdateOneRequiredWithoutConversationParticipantsNestedInput
   }
@@ -12422,6 +12418,7 @@ export namespace Prisma {
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leftAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ConversationParticipantCreateManyInput = {
@@ -12432,6 +12429,7 @@ export namespace Prisma {
     joinedAt?: Date | string
     leftAt?: Date | string | null
     lastReadAt?: Date | string | null
+    deletedAt?: Date | string | null
   }
 
   export type ConversationParticipantUpdateManyMutationInput = {
@@ -12440,6 +12438,7 @@ export namespace Prisma {
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leftAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ConversationParticipantUncheckedUpdateManyInput = {
@@ -12450,6 +12449,7 @@ export namespace Prisma {
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leftAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type MessageCreateInput = {
@@ -12470,8 +12470,8 @@ export namespace Prisma {
   export type MessageUncheckedCreateInput = {
     id?: bigint | number
     conversationId: bigint | number
-    userId?: bigint | number | null
     parentMessageId?: bigint | number | null
+    userId?: bigint | number | null
     role: $Enums.MessageRole
     content: string
     isEdited?: boolean
@@ -12500,8 +12500,8 @@ export namespace Prisma {
   export type MessageUncheckedUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     conversationId?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     parentMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
     content?: StringFieldUpdateOperationsInput | string
     isEdited?: BoolFieldUpdateOperationsInput | boolean
@@ -12515,8 +12515,8 @@ export namespace Prisma {
   export type MessageCreateManyInput = {
     id?: bigint | number
     conversationId: bigint | number
-    userId?: bigint | number | null
     parentMessageId?: bigint | number | null
+    userId?: bigint | number | null
     role: $Enums.MessageRole
     content: string
     isEdited?: boolean
@@ -12538,8 +12538,8 @@ export namespace Prisma {
   export type MessageUncheckedUpdateManyInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     conversationId?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     parentMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
     content?: StringFieldUpdateOperationsInput | string
     isEdited?: BoolFieldUpdateOperationsInput | boolean
@@ -13106,11 +13106,6 @@ export namespace Prisma {
     _max?: NestedBigIntNullableFilter<$PrismaModel>
   }
 
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
   export type UserScalarRelationFilter = {
     is?: UserWhereInput
     isNot?: UserWhereInput
@@ -13124,10 +13119,9 @@ export namespace Prisma {
 
   export type RefreshTokenCountOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
     token?: SortOrder
     tokenExpiresAt?: SortOrder
-    userId?: SortOrder
-    isRevoked?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -13139,20 +13133,18 @@ export namespace Prisma {
 
   export type RefreshTokenMaxOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
     token?: SortOrder
     tokenExpiresAt?: SortOrder
-    userId?: SortOrder
-    isRevoked?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type RefreshTokenMinOrderByAggregateInput = {
     id?: SortOrder
+    userId?: SortOrder
     token?: SortOrder
     tokenExpiresAt?: SortOrder
-    userId?: SortOrder
-    isRevoked?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -13160,14 +13152,6 @@ export namespace Prisma {
   export type RefreshTokenSumOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
-  }
-
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type EnumConversationTypeFilter<$PrismaModel = never> = {
@@ -13279,6 +13263,7 @@ export namespace Prisma {
     joinedAt?: SortOrder
     leftAt?: SortOrder
     lastReadAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type ConversationParticipantAvgOrderByAggregateInput = {
@@ -13295,6 +13280,7 @@ export namespace Prisma {
     joinedAt?: SortOrder
     leftAt?: SortOrder
     lastReadAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type ConversationParticipantMinOrderByAggregateInput = {
@@ -13305,6 +13291,7 @@ export namespace Prisma {
     joinedAt?: SortOrder
     leftAt?: SortOrder
     lastReadAt?: SortOrder
+    deletedAt?: SortOrder
   }
 
   export type ConversationParticipantSumOrderByAggregateInput = {
@@ -13328,6 +13315,11 @@ export namespace Prisma {
     in?: $Enums.MessageRole[]
     notIn?: $Enums.MessageRole[]
     not?: NestedEnumMessageRoleFilter<$PrismaModel> | $Enums.MessageRole
+  }
+
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
   export type MessageNullableScalarRelationFilter = {
@@ -13354,8 +13346,8 @@ export namespace Prisma {
   export type MessageCountOrderByAggregateInput = {
     id?: SortOrder
     conversationId?: SortOrder
-    userId?: SortOrder
     parentMessageId?: SortOrder
+    userId?: SortOrder
     role?: SortOrder
     content?: SortOrder
     isEdited?: SortOrder
@@ -13367,15 +13359,15 @@ export namespace Prisma {
   export type MessageAvgOrderByAggregateInput = {
     id?: SortOrder
     conversationId?: SortOrder
-    userId?: SortOrder
     parentMessageId?: SortOrder
+    userId?: SortOrder
   }
 
   export type MessageMaxOrderByAggregateInput = {
     id?: SortOrder
     conversationId?: SortOrder
-    userId?: SortOrder
     parentMessageId?: SortOrder
+    userId?: SortOrder
     role?: SortOrder
     content?: SortOrder
     isEdited?: SortOrder
@@ -13387,8 +13379,8 @@ export namespace Prisma {
   export type MessageMinOrderByAggregateInput = {
     id?: SortOrder
     conversationId?: SortOrder
-    userId?: SortOrder
     parentMessageId?: SortOrder
+    userId?: SortOrder
     role?: SortOrder
     content?: SortOrder
     isEdited?: SortOrder
@@ -13400,8 +13392,8 @@ export namespace Prisma {
   export type MessageSumOrderByAggregateInput = {
     id?: SortOrder
     conversationId?: SortOrder
-    userId?: SortOrder
     parentMessageId?: SortOrder
+    userId?: SortOrder
   }
 
   export type EnumMessageRoleWithAggregatesFilter<$PrismaModel = never> = {
@@ -13412,6 +13404,14 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumMessageRoleFilter<$PrismaModel>
     _max?: NestedEnumMessageRoleFilter<$PrismaModel>
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -14044,10 +14044,6 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
-  }
-
   export type UserUpdateOneRequiredWithoutRefreshTokensNestedInput = {
     create?: XOR<UserCreateWithoutRefreshTokensInput, UserUncheckedCreateWithoutRefreshTokensInput>
     connectOrCreate?: UserCreateOrConnectWithoutRefreshTokensInput
@@ -14282,6 +14278,10 @@ export namespace Prisma {
 
   export type EnumMessageRoleFieldUpdateOperationsInput = {
     set?: $Enums.MessageRole
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
   }
 
   export type ConversationUpdateOneRequiredWithoutMessagesNestedInput = {
@@ -14650,19 +14650,6 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
-  }
-
   export type NestedEnumConversationTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.ConversationType | EnumConversationTypeFieldRefInput<$PrismaModel>
     in?: $Enums.ConversationType[]
@@ -14704,6 +14691,11 @@ export namespace Prisma {
     not?: NestedEnumMessageRoleFilter<$PrismaModel> | $Enums.MessageRole
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type NestedEnumMessageRoleWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.MessageRole | EnumMessageRoleFieldRefInput<$PrismaModel>
     in?: $Enums.MessageRole[]
@@ -14712,6 +14704,14 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumMessageRoleFilter<$PrismaModel>
     _max?: NestedEnumMessageRoleFilter<$PrismaModel>
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -14774,7 +14774,6 @@ export namespace Prisma {
     id?: bigint | number
     token: string
     tokenExpiresAt: Date | string
-    isRevoked?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -14783,7 +14782,6 @@ export namespace Prisma {
     id?: bigint | number
     token: string
     tokenExpiresAt: Date | string
-    isRevoked?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -14804,6 +14802,7 @@ export namespace Prisma {
     joinedAt?: Date | string
     leftAt?: Date | string | null
     lastReadAt?: Date | string | null
+    deletedAt?: Date | string | null
     conversation: ConversationCreateNestedOneWithoutParticipantsInput
   }
 
@@ -14814,6 +14813,7 @@ export namespace Prisma {
     joinedAt?: Date | string
     leftAt?: Date | string | null
     lastReadAt?: Date | string | null
+    deletedAt?: Date | string | null
   }
 
   export type ConversationParticipantCreateOrConnectWithoutUserInput = {
@@ -15030,10 +15030,9 @@ export namespace Prisma {
     OR?: RefreshTokenScalarWhereInput[]
     NOT?: RefreshTokenScalarWhereInput | RefreshTokenScalarWhereInput[]
     id?: BigIntFilter<"RefreshToken"> | bigint | number
+    userId?: BigIntFilter<"RefreshToken"> | bigint | number
     token?: StringFilter<"RefreshToken"> | string
     tokenExpiresAt?: DateTimeFilter<"RefreshToken"> | Date | string
-    userId?: BigIntFilter<"RefreshToken"> | bigint | number
-    isRevoked?: BoolFilter<"RefreshToken"> | boolean
     createdAt?: DateTimeFilter<"RefreshToken"> | Date | string
     updatedAt?: DateTimeFilter<"RefreshToken"> | Date | string
   }
@@ -15065,6 +15064,7 @@ export namespace Prisma {
     joinedAt?: DateTimeFilter<"ConversationParticipant"> | Date | string
     leftAt?: DateTimeNullableFilter<"ConversationParticipant"> | Date | string | null
     lastReadAt?: DateTimeNullableFilter<"ConversationParticipant"> | Date | string | null
+    deletedAt?: DateTimeNullableFilter<"ConversationParticipant"> | Date | string | null
   }
 
   export type ConversationUpsertWithoutActiveUsersInput = {
@@ -15128,8 +15128,8 @@ export namespace Prisma {
     NOT?: MessageScalarWhereInput | MessageScalarWhereInput[]
     id?: BigIntFilter<"Message"> | bigint | number
     conversationId?: BigIntFilter<"Message"> | bigint | number
-    userId?: BigIntNullableFilter<"Message"> | bigint | number | null
     parentMessageId?: BigIntNullableFilter<"Message"> | bigint | number | null
+    userId?: BigIntNullableFilter<"Message"> | bigint | number | null
     role?: EnumMessageRoleFilter<"Message"> | $Enums.MessageRole
     content?: StringFilter<"Message"> | string
     isEdited?: BoolFilter<"Message"> | boolean
@@ -15330,6 +15330,7 @@ export namespace Prisma {
     joinedAt?: Date | string
     leftAt?: Date | string | null
     lastReadAt?: Date | string | null
+    deletedAt?: Date | string | null
     user: UserCreateNestedOneWithoutConversationParticipantsInput
   }
 
@@ -15340,6 +15341,7 @@ export namespace Prisma {
     joinedAt?: Date | string
     leftAt?: Date | string | null
     lastReadAt?: Date | string | null
+    deletedAt?: Date | string | null
   }
 
   export type ConversationParticipantCreateOrConnectWithoutConversationInput = {
@@ -15412,8 +15414,8 @@ export namespace Prisma {
 
   export type MessageUncheckedCreateWithoutConversationInput = {
     id?: bigint | number
-    userId?: bigint | number | null
     parentMessageId?: bigint | number | null
+    userId?: bigint | number | null
     role: $Enums.MessageRole
     content: string
     isEdited?: boolean
@@ -15825,8 +15827,8 @@ export namespace Prisma {
   export type MessageUncheckedCreateWithoutRepliesInput = {
     id?: bigint | number
     conversationId: bigint | number
-    userId?: bigint | number | null
     parentMessageId?: bigint | number | null
+    userId?: bigint | number | null
     role: $Enums.MessageRole
     content: string
     isEdited?: boolean
@@ -16019,8 +16021,8 @@ export namespace Prisma {
   export type MessageUncheckedUpdateWithoutRepliesInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     conversationId?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     parentMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
     content?: StringFieldUpdateOperationsInput | string
     isEdited?: BoolFieldUpdateOperationsInput | boolean
@@ -16092,8 +16094,8 @@ export namespace Prisma {
   export type MessageUncheckedCreateWithoutAttachmentsInput = {
     id?: bigint | number
     conversationId: bigint | number
-    userId?: bigint | number | null
     parentMessageId?: bigint | number | null
+    userId?: bigint | number | null
     role: $Enums.MessageRole
     content: string
     isEdited?: boolean
@@ -16136,8 +16138,8 @@ export namespace Prisma {
   export type MessageUncheckedUpdateWithoutAttachmentsInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     conversationId?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     parentMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
     content?: StringFieldUpdateOperationsInput | string
     isEdited?: BoolFieldUpdateOperationsInput | boolean
@@ -16403,7 +16405,6 @@ export namespace Prisma {
     id?: bigint | number
     token: string
     tokenExpiresAt: Date | string
-    isRevoked?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -16415,6 +16416,7 @@ export namespace Prisma {
     joinedAt?: Date | string
     leftAt?: Date | string | null
     lastReadAt?: Date | string | null
+    deletedAt?: Date | string | null
   }
 
   export type MessageCreateManyUserInput = {
@@ -16466,7 +16468,6 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     token?: StringFieldUpdateOperationsInput | string
     tokenExpiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    isRevoked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -16475,7 +16476,6 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     token?: StringFieldUpdateOperationsInput | string
     tokenExpiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    isRevoked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -16484,7 +16484,6 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     token?: StringFieldUpdateOperationsInput | string
     tokenExpiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    isRevoked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -16495,6 +16494,7 @@ export namespace Prisma {
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leftAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     conversation?: ConversationUpdateOneRequiredWithoutParticipantsNestedInput
   }
 
@@ -16505,6 +16505,7 @@ export namespace Prisma {
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leftAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ConversationParticipantUncheckedUpdateManyWithoutUserInput = {
@@ -16514,6 +16515,7 @@ export namespace Prisma {
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leftAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type MessageUpdateWithoutUserInput = {
@@ -16668,6 +16670,7 @@ export namespace Prisma {
     joinedAt?: Date | string
     leftAt?: Date | string | null
     lastReadAt?: Date | string | null
+    deletedAt?: Date | string | null
   }
 
   export type UserCreateManyActiveConversationInput = {
@@ -16682,8 +16685,8 @@ export namespace Prisma {
 
   export type MessageCreateManyConversationInput = {
     id?: bigint | number
-    userId?: bigint | number | null
     parentMessageId?: bigint | number | null
+    userId?: bigint | number | null
     role: $Enums.MessageRole
     content: string
     isEdited?: boolean
@@ -16698,6 +16701,7 @@ export namespace Prisma {
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leftAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user?: UserUpdateOneRequiredWithoutConversationParticipantsNestedInput
   }
 
@@ -16708,6 +16712,7 @@ export namespace Prisma {
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leftAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ConversationParticipantUncheckedUpdateManyWithoutConversationInput = {
@@ -16717,6 +16722,7 @@ export namespace Prisma {
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leftAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type UserUpdateWithoutActiveConversationInput = {
@@ -16779,8 +16785,8 @@ export namespace Prisma {
 
   export type MessageUncheckedUpdateWithoutConversationInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     parentMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
     content?: StringFieldUpdateOperationsInput | string
     isEdited?: BoolFieldUpdateOperationsInput | boolean
@@ -16793,8 +16799,8 @@ export namespace Prisma {
 
   export type MessageUncheckedUpdateManyWithoutConversationInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     parentMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
     content?: StringFieldUpdateOperationsInput | string
     isEdited?: BoolFieldUpdateOperationsInput | boolean

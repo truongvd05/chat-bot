@@ -7,7 +7,7 @@ info:
         name: thanh090800@gmail.com
 
 servers:
-    - url: http://localhost:3000
+    - url: http://127.0.0.1:3000/api
       description: Local development
     - url: https://your-app.railway.app
       description: Production
@@ -25,12 +25,25 @@ components:
             type: object
             properties:
                 id:
-                    type: integer
-                    example: 1
+                    type: string
+                    format: int64
+                    example: "1"
                 email:
                     type: string
                     format: email
                     example: user@gmail.com
+                name:
+                    type: string
+                    nullable: true
+                    example: "Nguyen Van A"
+                emailVerifiedAt:
+                    type: string
+                    format: date-time
+                    nullable: true
+                activeConversationId:
+                    type: string
+                    format: int64
+                    nullable: true
                 createdAt:
                     type: string
                     format: date-time
@@ -42,14 +55,35 @@ components:
             type: object
             properties:
                 id:
-                    type: integer
-                    example: 1
+                    type: string
+                    format: int64
+                    example: "1"
                 title:
                     type: string
+                    nullable: true
                     example: "Chat về AI"
-                userId:
-                    type: integer
-                    example: 1
+                systemPrompt:
+                    type: string
+                    nullable: true
+                    description: System prompt cho bot conversation
+                    example: "You are a helpful AI assistant"
+                type:
+                    type: string
+                    enum: [DIRECT, GROUP, BOT]
+                    example: DIRECT
+                ownerId:
+                    type: string
+                    format: int64
+                    nullable: true
+                    description: ID của owner (dùng với chat bot)
+                lastMessageAt:
+                    type: string
+                    format: date-time
+                    nullable: true
+                deletedAt:
+                    type: string
+                    format: date-time
+                    nullable: true
                 createdAt:
                     type: string
                     format: date-time
@@ -57,22 +91,121 @@ components:
                     type: string
                     format: date-time
 
+        ConversationWithParticipants:
+            allOf:
+                - $ref: "#/components/schemas/Conversation"
+                - type: object
+                  properties:
+                      participants:
+                          type: array
+                          items:
+                              $ref: "#/components/schemas/ConversationParticipant"
+                      unreadCount:
+                          type: integer
+                          example: 5
+
+        ConversationParticipant:
+            type: object
+            properties:
+                id:
+                    type: string
+                    format: int64
+                    example: "1"
+                conversationId:
+                    type: string
+                    format: int64
+                userId:
+                    type: string
+                    format: int64
+                role:
+                    type: string
+                    enum: [MEMBER, OWNER, BOT]
+                    example: MEMBER
+                joinedAt:
+                    type: string
+                    format: date-time
+                leftAt:
+                    type: string
+                    format: date-time
+                    nullable: true
+                lastReadAt:
+                    type: string
+                    format: date-time
+                    nullable: true
+                deletedAt:
+                    type: string
+                    format: date-time
+                    nullable: true
+                user:
+                    $ref: "#/components/schemas/User"
+
         Message:
             type: object
             properties:
                 id:
-                    type: integer
-                    example: 1
-                content:
                     type: string
-                    example: "Xin chào, tôi cần giúp đỡ về AI"
+                    format: int64
+                    example: "1"
+                conversationId:
+                    type: string
+                    format: int64
+                parentMessageId:
+                    type: string
+                    format: int64
+                    nullable: true
+                userId:
+                    type: string
+                    format: int64
+                    nullable: true
                 role:
                     type: string
                     enum: [user, bot]
                     example: user
-                conversationId:
+                content:
+                    type: string
+                    example: "Xin chào, tôi cần giúp đỡ về AI"
+                isEdited:
+                    type: boolean
+                    default: false
+                deletedAt:
+                    type: string
+                    format: date-time
+                    nullable: true
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+                user:
+                    $ref: "#/components/schemas/User"
+                    nullable: true
+                attachments:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/MessageAttachment"
+
+        MessageAttachment:
+            type: object
+            properties:
+                id:
+                    type: string
+                    format: int64
+                messageId:
+                    type: string
+                    format: int64
+                fileName:
+                    type: string
+                    example: "document.pdf"
+                fileUrl:
+                    type: string
+                    example: "https://storage.example.com/files/abc123.pdf"
+                fileType:
+                    type: string
+                    example: "application/pdf"
+                fileSize:
                     type: integer
-                    example: 1
+                    example: 1048576
                 createdAt:
                     type: string
                     format: date-time
@@ -180,6 +313,9 @@ paths:
                                     type: string
                                     minLength: 6
                                     example: "123456"
+                                name:
+                                    type: string
+                                    example: "Nguyen Van A"
             responses:
                 201:
                     description: Đăng ký thành công
@@ -309,11 +445,151 @@ paths:
                 500:
                     $ref: "#/components/responses/InternalServerError"
 
+    /conversation/direct:
+        post:
+            tags: [Conversation]
+            summary: Tạo cuộc hội thoại trực tiếp (DIRECT)
+            description: |
+                Tạo một cuộc hội thoại trực tiếp 1-1 giữa user hiện tại và user khác.
+                Type: DIRECT
+            security:
+                - bearerAuth: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required: [participantId]
+                            properties:
+                                participantId:
+                                    type: string
+                                    format: int64
+                                    description: ID của user để chat
+                                    example: "2"
+                                title:
+                                    type: string
+                                    description: Tiêu đề (tùy chọn)
+                                    example: "Chat với John"
+            responses:
+                201:
+                    description: Tạo conversation thành công
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ConversationWithParticipants"
+                400:
+                    $ref: "#/components/responses/BadRequest"
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /conversation/bot:
+        post:
+            tags: [Bot Conversations]
+            summary: Tạo cuộc hội thoại với bot (BOT)
+            description: |
+                Tạo một cuộc hội thoại mới với AI bot.
+                Type: BOT
+                Owner: User hiện tại
+            security:
+                - bearerAuth: []
+            requestBody:
+                required: false
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                title:
+                                    type: string
+                                    description: Tiêu đề cuộc hội thoại
+                                    example: "Chat với AI Assistant"
+                                systemPrompt:
+                                    type: string
+                                    description: System prompt tùy chỉnh cho bot
+                                    example: "You are a helpful coding assistant"
+            responses:
+                201:
+                    description: Tạo bot conversation thành công
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Conversation"
+                400:
+                    $ref: "#/components/responses/BadRequest"
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
     /conversation:
         get:
             tags: [Conversation]
             summary: Lấy tất cả conversations
-            description: Lấy danh sách conversation của user hiện tại
+            description: |
+                Lấy danh sách tất cả conversations của user (DIRECT, GROUP, BOT).
+                Bao gồm thông tin participants và unread count.
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                      type: integer
+                      default: 1
+                  description: Số trang
+                - name: limit
+                  in: query
+                  schema:
+                      type: integer
+                      default: 20
+                  description: Số lượng items mỗi trang
+                - name: type
+                  in: query
+                  schema:
+                      type: string
+                      enum: [DIRECT, GROUP, BOT]
+                  description: Lọc theo loại conversation
+            responses:
+                200:
+                    description: Danh sách conversations
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    conversations:
+                                        type: array
+                                        items:
+                                            $ref: "#/components/schemas/ConversationWithParticipants"
+                                    total:
+                                        type: integer
+                                        example: 50
+                                    page:
+                                        type: integer
+                                        example: 1
+                                    limit:
+                                        type: integer
+                                        example: 20
+                                    totalPages:
+                                        type: integer
+                                        example: 3
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /conversation/bots:
+        get:
+            tags: [Bot Conversations]
+            summary: Lấy danh sách bot conversations
+            description: Lấy tất cả conversations có type = BOT của user hiện tại
             security:
                 - bearerAuth: []
             parameters:
@@ -329,7 +605,7 @@ paths:
                       default: 20
             responses:
                 200:
-                    description: Danh sách conversation
+                    description: Danh sách bot conversations
                     content:
                         application/json:
                             schema:
@@ -345,62 +621,108 @@ paths:
                                         type: integer
                                     limit:
                                         type: integer
+                                    totalPages:
+                                        type: integer
                 401:
                     $ref: "#/components/responses/Unauthorized"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
                 500:
                     $ref: "#/components/responses/InternalServerError"
 
-    /conversation/create:
-        post:
-            tags: [Conversation]
-            summary: Tạo conversation mới
+    /conversation/bots/{conversationId}:
+        get:
+            tags: [Bot Conversations]
+            summary: Lấy chi tiết bot conversation
+            description: Lấy thông tin chi tiết của một bot conversation
             security:
                 - bearerAuth: []
-            requestBody:
-                required: false
-                content:
-                    application/json:
-                        schema:
-                            type: object
-                            properties:
-                                title:
-                                    type: string
-                                    example: "Chat về AI"
+            parameters:
+                - name: conversationId
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                      format: int64
+                  example: "1"
             responses:
-                201:
-                    description: Conversation mới
+                200:
+                    description: Thông tin bot conversation
                     content:
                         application/json:
                             schema:
                                 $ref: "#/components/schemas/Conversation"
                 401:
                     $ref: "#/components/responses/Unauthorized"
+                404:
+                    $ref: "#/components/responses/NotFound"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+    /conversation/{conversationId}:
+        get:
+            tags: [Conversation]
+            summary: Lấy chi tiết conversation
+            description: Lấy thông tin chi tiết của một conversation bao gồm participants
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: conversationId
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                      format: int64
+                  example: "1"
+            responses:
+                200:
+                    description: Thông tin conversation
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ConversationWithParticipants"
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                404:
+                    $ref: "#/components/responses/NotFound"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
                 500:
                     $ref: "#/components/responses/InternalServerError"
 
-    /conversation/rename:
-        post:
+        put:
             tags: [Conversation]
-            summary: Đổi tên conversation
+            summary: Cập nhật conversation
+            description: Đổi tên hoặc cập nhật system prompt của conversation
             security:
                 - bearerAuth: []
+            parameters:
+                - name: conversationId
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                      format: int64
+                  example: "1"
             requestBody:
                 required: true
                 content:
                     application/json:
                         schema:
                             type: object
-                            required: [id, title]
                             properties:
-                                id:
-                                    type: integer
-                                    example: 1
                                 title:
                                     type: string
-                                    example: "Chat mới về Machine Learning"
+                                    description: Tên mới cho conversation
+                                    example: "Chat về Deep Learning"
+                                systemPrompt:
+                                    type: string
+                                    description: System prompt mới (chỉ cho BOT conversation)
+                                    example: "You are an expert in deep learning"
             responses:
                 200:
-                    description: Conversation đã đổi tên
+                    description: Cập nhật thành công
                     content:
                         application/json:
                             schema:
@@ -411,39 +733,15 @@ paths:
                     $ref: "#/components/responses/Unauthorized"
                 404:
                     $ref: "#/components/responses/NotFound"
-                500:
-                    $ref: "#/components/responses/InternalServerError"
-
-    /conversation/{conversationId}:
-        get:
-            tags: [Conversation]
-            summary: Lấy một conversation
-            security:
-                - bearerAuth: []
-            parameters:
-                - name: conversationId
-                  in: path
-                  required: true
-                  schema:
-                      type: integer
-                  example: 1
-            responses:
-                200:
-                    description: Thông tin conversation
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/Conversation"
-                401:
-                    $ref: "#/components/responses/Unauthorized"
-                404:
-                    $ref: "#/components/responses/NotFound"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
                 500:
                     $ref: "#/components/responses/InternalServerError"
 
         delete:
             tags: [Conversation]
-            summary: Xóa conversation
+            summary: Xóa conversation (soft delete)
+            description: Soft delete conversation (set deletedAt)
             security:
                 - bearerAuth: []
             parameters:
@@ -451,7 +749,9 @@ paths:
                   in: path
                   required: true
                   schema:
-                      type: integer
+                      type: string
+                      format: int64
+                  example: "1"
             responses:
                 200:
                     description: Xóa thành công
@@ -467,13 +767,28 @@ paths:
                     $ref: "#/components/responses/Unauthorized"
                 404:
                     $ref: "#/components/responses/NotFound"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
                 500:
                     $ref: "#/components/responses/InternalServerError"
 
-    /conversation/{conversationId}/messages:
+    /conversation/{conversationId}/stream:
         get:
             tags: [Message]
-            summary: Lấy messages trong conversation
+            summary: Stream AI response (SSE)
+            description: |
+                Server-Sent Events endpoint để stream AI response real-time.
+                Chỉ hoạt động với BOT conversations.
+
+                **Cách sử dụng:**
+                1. Tạo EventSource với Authorization header
+                2. Listen event 'message'
+                3. Parse JSON từ event.data
+                4. Khi nhận [DONE], đóng connection
+
+                **Event format:**
+                data: {"content": "text chunk"}
+                data: [DONE]
             security:
                 - bearerAuth: []
             parameters:
@@ -481,7 +796,57 @@ paths:
                   in: path
                   required: true
                   schema:
-                      type: integer
+                      type: string
+                      format: int64
+                  example: "1"
+                - name: message
+                  in: query
+                  required: true
+                  description: User message content
+                  schema:
+                      type: string
+                  example: "Giải thích về machine learning"
+            responses:
+                200:
+                    description: Event stream
+                    content:
+                        text/event-stream:
+                            schema:
+                                type: string
+                            example: |
+                                data: {"content": "Machine learning"}
+
+                                data: {"content": " là"}
+
+                                data: {"content": " một nhánh"}
+
+                                data: [DONE]
+                400:
+                    $ref: "#/components/responses/BadRequest"
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                404:
+                    $ref: "#/components/responses/NotFound"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /conversation/{conversationId}/messages:
+        get:
+            tags: [Message]
+            summary: Lấy messages trong conversation
+            description: Lấy danh sách messages với pagination, bao gồm attachments và user info
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: conversationId
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                      format: int64
+                  example: "1"
                 - name: page
                   in: query
                   schema:
@@ -492,9 +857,15 @@ paths:
                   schema:
                       type: integer
                       default: 50
+                - name: before
+                  in: query
+                  description: Lấy messages trước message ID này (cursor pagination)
+                  schema:
+                      type: string
+                      format: int64
             responses:
                 200:
-                    description: Danh sách message
+                    description: Danh sách messages
                     content:
                         application/json:
                             schema:
@@ -506,6 +877,12 @@ paths:
                                             $ref: "#/components/schemas/Message"
                                     total:
                                         type: integer
+                                    page:
+                                        type: integer
+                                    limit:
+                                        type: integer
+                                    hasMore:
+                                        type: boolean
                 401:
                     $ref: "#/components/responses/Unauthorized"
                 404:
@@ -516,8 +893,11 @@ paths:
     /conversation/{conversationId}/message:
         post:
             tags: [Message]
-            summary: Tạo message mới
-            description: Gửi message và nhận response từ AI (không streaming)
+            summary: Gửi message mới
+            description: |
+                Gửi message và nhận response từ AI (không streaming).
+                Tự động tạo message với role 'user' và AI response với role 'bot'.
+                Cập nhật lastMessageAt và lastReadAt.
             security:
                 - bearerAuth: []
             parameters:
@@ -525,7 +905,9 @@ paths:
                   in: path
                   required: true
                   schema:
-                      type: integer
+                      type: string
+                      format: int64
+                  example: "1"
             requestBody:
                 required: true
                 content:
@@ -537,9 +919,14 @@ paths:
                                 content:
                                     type: string
                                     example: "Giải thích về AI cho tôi"
+                                parentMessageId:
+                                    type: string
+                                    format: int64
+                                    description: ID của message cha (để reply)
+                                    nullable: true
             responses:
                 200:
-                    description: Message vừa tạo và AI response
+                    description: Message đã tạo và AI response
                     content:
                         application/json:
                             schema:
@@ -563,6 +950,7 @@ paths:
         put:
             tags: [Message]
             summary: Sửa message
+            description: Chỉnh sửa nội dung message (set isEdited = true)
             security:
                 - bearerAuth: []
             parameters:
@@ -570,7 +958,8 @@ paths:
                   in: path
                   required: true
                   schema:
-                      type: integer
+                      type: string
+                      format: int64
             requestBody:
                 required: true
                 content:
@@ -580,8 +969,9 @@ paths:
                             required: [messageId, content]
                             properties:
                                 messageId:
-                                    type: integer
-                                    example: 10
+                                    type: string
+                                    format: int64
+                                    example: "10"
                                 content:
                                     type: string
                                     example: "Nội dung đã chỉnh sửa"
@@ -603,7 +993,8 @@ paths:
 
         delete:
             tags: [Message]
-            summary: Xóa message
+            summary: Xóa message (soft delete)
+            description: Soft delete message (set deletedAt)
             security:
                 - bearerAuth: []
             parameters:
@@ -611,7 +1002,8 @@ paths:
                   in: path
                   required: true
                   schema:
-                      type: integer
+                      type: string
+                      format: int64
             requestBody:
                 required: true
                 content:
@@ -621,8 +1013,9 @@ paths:
                             required: [messageId]
                             properties:
                                 messageId:
-                                    type: integer
-                                    example: 10
+                                    type: string
+                                    format: int64
+                                    example: "10"
             responses:
                 200:
                     description: Xóa message thành công
@@ -642,66 +1035,12 @@ paths:
                     $ref: "#/components/responses/NotFound"
                 500:
                     $ref: "#/components/responses/InternalServerError"
-
-    /conversation/stream/{conversationId}:
-        get:
-            tags: [Message]
-            summary: Stream AI response (SSE)
-            description: |
-                Server-Sent Events endpoint để stream AI response real-time.
-                Client cần:
-                1. Tạo EventSource với Authorization header
-                2. Listen vào events
-                3. Parse JSON data từ mỗi event
-                4. Khi nhận event [DONE], đóng connection
-            security:
-                - bearerAuth: []
-            parameters:
-                - name: conversationId
-                  in: path
-                  required: true
-                  schema:
-                      type: integer
-                  example: 1
-                - name: message
-                  in: query
-                  required: true
-                  description: User message to send to AI
-                  schema:
-                      type: string
-                  example: "Giải thích về machine learning"
-            responses:
-                200:
-                    description: Event stream
-                    content:
-                        text/event-stream:
-                            schema:
-                                type: string
-                            example: |
-                                data: {"content": "Machine learning"}
-
-                                data: {"content": " là"}
-
-                                data: {"content": " một nhánh"}
-
-                                data: {"content": " của AI..."}
-
-                                data: [DONE]
-                400:
-                    $ref: "#/components/responses/BadRequest"
-                401:
-                    $ref: "#/components/responses/Unauthorized"
-                404:
-                    $ref: "#/components/responses/NotFound"
-                429:
-                    $ref: "#/components/responses/TooManyRequests"
-                500:
-                    $ref: "#/components/responses/InternalServerError"
-
 tags:
     - name: Auth
-      description: Authentication endpoints
+      description: Authentication và user management
     - name: Conversation
-      description: Conversation management
+      description: Quản lý conversations (DIRECT, GROUP, BOT)
+    - name: Bot Conversations
+      description: Chuyên biệt cho BOT conversations
     - name: Message
-      description: Message operations and streaming
+      description: Message operations và streaming

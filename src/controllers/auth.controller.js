@@ -1,5 +1,4 @@
 import authService from "#services/auth.service.js";
-import emailService from "#services/email.service.js";
 import { serializeBigInt } from "#utils/serialize.js";
 import bcrypt from "bcrypt";
 import jwtconfig from "#config/jwt.js";
@@ -26,21 +25,21 @@ class AuthController {
         try {
             const user = await authService.register(email, password);
             const token = responseTokenService.loginAndRegister(user);
-            await authService.createRefreshToken(
-                user.id,
-                token.refresh_token,
-                token.refresh_token_ttl,
-            );
             const emailtoken = jwtService(
                 user.id,
                 jwtconfig.emailSecret,
                 jwtconfig.emailTokenTTL,
             );
-            await queueService.push("sendVerifyEmail", {
+            queueService.push("sendVerifyEmail", {
                 email: user.email,
                 token: emailtoken,
             });
-            res.success(user, 200, token);
+            await authService.updateUserRefreshToken(
+                user.id,
+                token.refresh_token,
+                token.refresh_token_ttl,
+            );
+            return res.success(user, 200, token);
         } catch (err) {
             console.log(err);
             if (err.message === "EMAIL_ALREADY_EXISTS") {
@@ -71,13 +70,13 @@ class AuthController {
                 return res.unauthorized("Email hoặc password không đúng");
             }
             const token = responseTokenService.loginAndRegister(user.id);
-            await authService.createRefreshToken(
+            await authService.updateUserRefreshToken(
                 user.id,
                 token.refresh_token,
                 token.refresh_token_ttl,
             );
             const { password: _, ...saveUser } = user;
-            res.success(serializeBigInt(saveUser), 200, token);
+            return res.success(serializeBigInt(saveUser), 200, token);
         } catch (err) {
             console.log(err);
             return res.error(err);
@@ -142,7 +141,7 @@ class AuthController {
                 jwtconfig.emailSecret,
                 jwtconfig.emailTokenTTL,
             );
-            await queueService.push("sendVerifyEmail", {
+            queueService.push("sendVerifyEmail", {
                 email: user.email,
                 token: emailtoken,
             });
@@ -155,7 +154,19 @@ class AuthController {
     async getMe(req, res) {
         const authHeader = req.headers.authorization;
         if (!authHeader) return null;
-        res.success(authHeader);
+        const access_token = extractAccessToken(req);
+        try {
+            const payload = jwt.verify(access_token, jwtconfig.secret);
+            const user = await authService.getMe(payload.sub);
+            if (!user) {
+                return res.error("USER_NOT_FOUND");
+            }
+            return res.success(user);
+        } catch (err) {
+            console.log(err);
+
+            return res.error("INVALID_ACCESS_TOKEN");
+        }
     }
     async refreshAccessToken(req, res) {
         const { refresh_token } = req.body;
@@ -163,24 +174,28 @@ class AuthController {
             return res.error("MISSING_REFRESH_TOKEN");
         }
         try {
-            const isToken =
-                await authService.findRefreshTokenNotRevokedOrExpired(
-                    refresh_token,
-                );
-            if (!isToken) {
-                return res.error("INVALID_REFRESH_TOKEN");
-            }
-            const accessToken = responseTokenService.refreshAccessToken(
-                isToken.userId,
+            const payload = jwt.verify(refresh_token, jwtconfig.refresh_token);
+            const refreshToken = await authService.getRefreshTokenByUser(
+                payload.userId,
             );
 
+            if (!refreshToken || refreshToken.token !== refresh_token) {
+                return res.error("INVALID_REFRESH_TOKEN");
+            }
+            if (refreshToken.tokenExpiresAt <= new Date()) {
+                return res.error("REFRESH_TOKEN_EXPIRED");
+            }
+
+            const accessToken = responseTokenService.refreshAccessToken(
+                payload.userId,
+            );
             return res.success({
                 access_token: accessToken.access_token,
                 expires_in: accessToken.access_token_ttl,
             });
         } catch (err) {
             console.log(err);
-            return res.error(err.message, "refresh failed");
+            return res.error("INVALID_REFRESH_TOKEN");
         }
     }
     async changePassword(req, res) {
@@ -198,7 +213,7 @@ class AuthController {
             const hashedPassword = await bcrypt.hash(newPassword, 10);
             await authService.updatePassword(user.id, hashedPassword);
             await authService.revokeAllRefreshTokens(user.id);
-            await queueService.push("sendChangePasswordEmail", {
+            queueService.push("sendChangePasswordEmail", {
                 email: user.email,
             });
             return res.success("PASSWORD_CHANGED");
@@ -228,7 +243,7 @@ class AuthController {
                 tokenHash,
                 expiresAt,
             );
-            await queueService.push("sendPasswordResetToken", {
+            queueService.push("sendPasswordResetToken", {
                 email,
                 token: passwordResetToken,
             });

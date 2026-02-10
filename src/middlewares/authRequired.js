@@ -8,9 +8,6 @@ const authMeRequired = async (req, res, next) => {
         const access_token = extractAccessToken(req);
         if (!access_token) return res.unauthorized();
         const payload = jwt.verify(access_token, jwtconfig.secret);
-        if (!payload.jti) {
-            return res.error("Invalid token (missing jti)", 401);
-        }
         const currentUser = await authService.findUserById(payload.sub);
         if (!currentUser) {
             return res.error({ message: "User not found" }, 401);

@@ -43,15 +43,6 @@ class AuthService {
         });
         return user;
     }
-    async createRefreshToken(userId, refresh_token, refresh_token_ttl) {
-        await prisma.refreshToken.create({
-            data: {
-                token: refresh_token,
-                tokenExpiresAt: refresh_token_ttl,
-                userId: BigInt(userId),
-            },
-        });
-    }
     async verifyEmail(id) {
         const user = await prisma.user.updateMany({
             where: {
@@ -85,17 +76,10 @@ class AuthService {
         });
         return token;
     }
-    async findRefreshTokenNotRevokedOrExpired(refresh_token) {
-        const result = await prisma.refreshToken.findFirst({
-            where: {
-                token: refresh_token,
-                isRevoked: false,
-                tokenExpiresAt: {
-                    gt: new Date(),
-                },
-            },
+    async getRefreshTokenByUser(userId) {
+        return prisma.refreshToken.findUnique({
+            where: { userId },
         });
-        return result;
     }
     async updatePassword(userId, hashedPassword) {
         const result = await prisma.user.update({
@@ -106,14 +90,41 @@ class AuthService {
         });
         return result;
     }
+    async getMe(userId) {
+        return await prisma.user.findUnique({
+            where: { userId },
+            select: {
+                id: true,
+                email: true,
+                name: true,
+                createdAt: true,
+            },
+        });
+    }
+    async updateUserRefreshToken(userId, newRefreshToken, tokenExpiresAt) {
+        await prisma.refreshToken.upsert({
+            where: { userId },
+            update: {
+                token: newRefreshToken,
+                tokenExpiresAt,
+            },
+            create: {
+                userId,
+                token: newRefreshToken,
+                expiresAt,
+            },
+        });
+    }
+    async findRefreshTokenById(userId) {
+        const result = await prisma.refreshToken.findUnique({
+            where: { userId },
+        });
+        return result;
+    }
     async revokeAllRefreshTokens(userId) {
-        const result = await prisma.refreshToken.updateMany({
+        const result = await prisma.refreshToken.delete({
             where: {
                 userId,
-                isRevoked: false,
-            },
-            data: {
-                isRevoked: true,
             },
         });
         return result;

@@ -133,10 +133,9 @@ exports.Prisma.UserScalarFieldEnum = {
 
 exports.Prisma.RefreshTokenScalarFieldEnum = {
   id: 'id',
+  userId: 'userId',
   token: 'token',
   tokenExpiresAt: 'tokenExpiresAt',
-  userId: 'userId',
-  isRevoked: 'isRevoked',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -160,14 +159,15 @@ exports.Prisma.ConversationParticipantScalarFieldEnum = {
   role: 'role',
   joinedAt: 'joinedAt',
   leftAt: 'leftAt',
-  lastReadAt: 'lastReadAt'
+  lastReadAt: 'lastReadAt',
+  deletedAt: 'deletedAt'
 };
 
 exports.Prisma.MessageScalarFieldEnum = {
   id: 'id',
   conversationId: 'conversationId',
-  userId: 'userId',
   parentMessageId: 'parentMessageId',
+  userId: 'userId',
   role: 'role',
   content: 'content',
   isEdited: 'isEdited',

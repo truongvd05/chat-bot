@@ -4,7 +4,7 @@
 
 - REST API cho CRUD
 - SSE dùng cho streaming response (thay vì WebSocket để đơn giản hoá backend)
-- Access token ngắn hạn + refresh token dài hạn
+- Mỗi user có 1 refresh_token khi logout refresh_token sẽ bị xóa, access_token để ngắn hạn
 - Redis dùng cho:
     - Rate limiting
     - Refresh token management
@@ -13,7 +13,7 @@
 
 - Access token: short-lived, dùng cho API & SSE
 - Refresh token: lưu trong database gắn với user
-- Khi logout, refresh token được đưa vào bảng revoked để chặn tái sử dụng
+- Khi logout, refresh token được xóa để chặn tái sử dụng
 
 ## 1. Giới thiệu
 
@@ -153,27 +153,106 @@ Header:
 Authorization: Bearer <access_token>
 ```
 
+### 4.5 reset-password
+
+`POST /reset-password`
+
+```json
+{
+    "password": "...",
+    "new-password": "..."
+}
+```
+
+Header:
+
+```
+Authorization: Bearer <access_token>
+```
+
 ---
 
-### 4.5 Get current user
+### 4.6 Get current user
 
 `GET /me`
 
 ---
+
+### 4.7 forgot password
+
+`POST /forgot-password`
+
+```json
+{
+    "email": "..."
+}
+```
+
+### 4.8 change password
+
+`POST /change-password`
+
+```json
+{
+    "password": "...",
+    "new-password": "...",
+    "confirm_password": "..."
+}
+```
+
+Header:
+
+```
+Authorization: Bearer <access_token>
+```
+
+### 4.9 verify email
+
+`POST /verify-email`
+
+```json
+{
+    "token": "..."
+}
+```
+
+Header:
+
+```
+Authorization: Bearer <access_token>
+```
+
+### 4.10 resen verify email
+
+`POST /resen-verify-email`
+
+```
+
+Header:
+
+```
+
+Authorization: Bearer <access_token>
+
+```
 
 ## 5. Conversation API
 
 Base path:
 
 ```
+
 /api/conversations
+
 ```
 
 > Tất cả endpoint yêu cầu header:
 
 ```
+
 Authorization: Bearer <access_token>
-```
+
+````
 
 ---
 
@@ -194,7 +273,7 @@ Authorization: Bearer <access_token>
 {
     "title": "Chat with AI"
 }
-```
+````
 
 ---
 

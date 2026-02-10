@@ -13,14 +13,18 @@ var app = express();
 
 const port = process.env.PORT || 3000;
 
-const ALLOWED_ORIGIN = process.env.CLIENT_URL || "http://localhost:5173";
-
+const ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:3000",
+    "http://localhost:3000",
+    process.env.CLIENT_URL,
+];
 const allowMethods = ["GET", "POST", "PUT", "DELETE", "OPTIONS"];
 
 const corsOptions = {
     origin: function (origin, callback) {
         if (!origin) return callback(null, true);
-        if (origin === ALLOWED_ORIGIN) {
+        if (ALLOWED_ORIGINS.includes(origin)) {
             return callback(null, true);
         } else {
             callback(new Error("Not allow by cors"));
