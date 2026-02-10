@@ -1,5 +1,11 @@
 # Chat Bot Backend API Documentation
 
+## API Documentation
+
+## API Documentation
+
+- Swagger UI: /docs
+
 ## Architecture Overview
 
 - REST API cho CRUD
