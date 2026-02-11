@@ -1,3 +1,4 @@
+import { HTTP_STATUS } from "#config/constants.js";
 import conversationService from "#services/conversation.service.js";
 import messageService from "#services/message.service.js";
 
@@ -8,7 +9,7 @@ class ConversationController {
         try {
             const newConversation =
                 await conversationService.createBotConversation(user);
-            return res.success(newConversation);
+            return res.success(newConversation, HTTP_STATUS.CREATED);
         } catch (err) {
             console.error(err);
             return res.error("Failed to create conversation", 500);
@@ -43,7 +44,7 @@ class ConversationController {
 
         const rawId = req.body.conversationId;
         if (!rawId || !/^\d+$/.test(rawId)) {
-            return res.error("INVALID_USER_ID", 400);
+            return res.error("INVALID_USER_ID");
         }
         const conversationId = BigInt(rawId);
         try {
@@ -64,7 +65,7 @@ class ConversationController {
 
         const rawId = req.body.targetUserId;
         if (!rawId || !/^\d+$/.test(rawId)) {
-            return res.error("INVALID_USER_ID", 400);
+            return res.error("INVALID_USER_ID");
         }
         const targetUserId = BigInt(rawId);
 
@@ -82,10 +83,9 @@ class ConversationController {
                     user.id,
                     targetUserId,
                 );
-            return res.success(conversation);
+            return res.success(conversation, HTTP_STATUS.CREATED);
         } catch (err) {
             console.log(err);
-
             return res.error("Failed to create conversation");
         }
     }
@@ -104,28 +104,35 @@ class ConversationController {
                 conversationId,
             );
             if (!conversation) {
-                return res.error("Conversation not found", 404);
+                return res.error(
+                    "Conversation not found",
+                    HTTP_STATUS.NOT_FOUND,
+                );
             }
             return res.success(conversation);
         } catch (err) {
             console.log(err);
             if (err.message === "CONVERSATION_NOT_FOUND") {
-                return res.error("Conversation not found", 404);
+                return res.error(
+                    "Conversation not found",
+                    HTTP_STATUS.NOT_FOUND,
+                );
             }
-            return res.error(err);
+            return res.error(err, 500);
         }
     }
     async renameConversation(req, res) {
         const title = req.body?.title?.trim();
         const user = req.user;
 
-        const rawId = req.params.id;
+        const rawId = req.params.conversationId;
         if (!rawId || !/^\d+$/.test(rawId)) {
-            return res.error("INVALID_USER_ID", 400);
+            return res.error("INVALID_USER_ID");
         }
         const conversationId = BigInt(rawId);
+
         if (!title || typeof title !== "string" || title.trim().length === 0) {
-            return res.error("INVALID_TITLE", 400);
+            return res.error("INVALID_TITLE");
         }
         if (title.length > 255) {
             return res.error("TITLE_TOO_LONG");
@@ -141,7 +148,10 @@ class ConversationController {
             return res.success(newConversation);
         } catch (err) {
             if (err.message === "CONVERSATION_NOT_FOUND") {
-                return res.error("Conversation not found", 404);
+                return res.error(
+                    "Conversation not found",
+                    HTTP_STATUS.NOT_FOUND,
+                );
             }
             return res.error(err);
         }
@@ -160,7 +170,7 @@ class ConversationController {
                 user.id,
                 conversationId,
             );
-            return res.success("success", 200);
+            return res.success("ok", 204);
         } catch (err) {
             console.log(err);
             if (err.message === "CONVERSATION_NOT_FOUND") {
@@ -201,12 +211,12 @@ class ConversationController {
         const rawTargetId = req.body.user_id;
 
         if (!rawConversationId || !/^\d+$/.test(rawConversationId)) {
-            return res.error("INVALID_USER_ID", 400);
+            return res.error("INVALID_USER_ID");
         }
         const conversationId = BigInt(rawId);
 
         if (!rawTargetId || !/^\d+$/.test(rawTargetId)) {
-            return res.error("INVALID_USER_ID", 400);
+            return res.error("INVALID_USER_ID");
         }
         const targetUserId = BigInt(rawId);
         try {
@@ -215,7 +225,7 @@ class ConversationController {
                 conversationId,
                 targetUserId,
             );
-            return res.success(result);
+            return res.success(result, HTTP_STATUS.CREATED);
         } catch (err) {
             console.log(err);
             return res.error(err);

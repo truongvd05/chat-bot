@@ -2,8 +2,6 @@
 
 ## API Documentation
 
-## API Documentation
-
 - Swagger UI: /docs
 
 ## Architecture Overview
@@ -445,7 +443,7 @@ src/
 
 Project được xây dựng nhằm:
 
-- Luyện tư duy backend thực tế
+- Luyện tư duy backend
 - Áp dụng auth, rate limit, streaming
 
 ✍️ Author: TruongVD

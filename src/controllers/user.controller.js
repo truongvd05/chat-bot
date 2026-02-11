@@ -7,16 +7,16 @@ class UserController {
 
         const rawId = req.params.id;
         if (!rawId || !/^\d+$/.test(rawId)) {
-            return res.error("INVALID_USER_ID", 400);
+            return res.error("INVALID_USER_ID");
         }
         const targetUserId = BigInt(rawId);
 
         if (targetUserId === user.id) {
-            return res.error("CANNOT_BLOCK_YOURSELF", 400);
+            return res.error("CANNOT_BLOCK_YOURSELF");
         }
         try {
-            await userService.blockUser(user.id, targetUserId);
-            return res.success("ok", 204);
+            const result = await userService.blockUser(user.id, targetUserId);
+            return res.success(result);
         } catch (err) {
             console.log(err);
 
@@ -29,16 +29,16 @@ class UserController {
 
         const rawId = req.params.id;
         if (!rawId || !/^\d+$/.test(rawId)) {
-            return res.error("INVALID_USER_ID", 400);
+            return res.error("INVALID_USER_ID");
         }
         const targetUserId = BigInt(rawId);
 
         if (targetUserId === user.id) {
-            return res.error("CANNOT_UN_BLOCK_YOURSELF", 400);
+            return res.error("CANNOT_UN_BLOCK_YOURSELF");
         }
         try {
-            await userService.unblockUser(user.id, targetUserId);
-            return res.success("ok", 204);
+            const result = await userService.unblockUser(user.id, targetUserId);
+            return res.success(result);
         } catch (err) {
             console.log(err);
 

@@ -1,3 +1,4 @@
+import { HTTP_STATUS } from "#config/constants.js";
 import chatBotService from "#services/chatBot.service.js";
 import messageService from "#services/message.service.js";
 
@@ -14,7 +15,7 @@ class MessageController {
         const targetUserId = BigInt(rawTargetId);
 
         if (!rawConversationId || !/^\d+$/.test(rawConversationId)) {
-            return res.error("INVALID_USER_ID", 400);
+            return res.error("INVALID_USER_ID");
         }
         const conversationId = BigInt(rawConversationId);
         if (
@@ -22,7 +23,7 @@ class MessageController {
             typeof content !== "string" ||
             content.trim().length === 0
         ) {
-            return res.error("Message content is required", 400);
+            return res.error("Message content is required");
         }
 
         try {
@@ -32,7 +33,7 @@ class MessageController {
                 content,
                 targetUserId,
             );
-            return res.success(result);
+            return res.success(result, HTTP_STATUS.CREATED);
         } catch (err) {
             console.log(err);
             return res.error(err);
@@ -44,14 +45,14 @@ class MessageController {
 
         const rawConversationId = req.params.conversationI;
         if (!rawConversationId || !/^\d+$/.test(rawConversationId)) {
-            return res.error("INVALID_USER_ID", 400);
+            return res.error("INVALID_USER_ID");
         }
         if (
             !content ||
             typeof content !== "string" ||
             content.trim().length === 0
         ) {
-            return res.error("Message content is required", 400);
+            return res.error("Message content is required");
         }
         const conversationId = BigInt(rawConversationId);
         try {
@@ -61,7 +62,7 @@ class MessageController {
                 content,
             );
             chatBotService.reply(conversationId, content);
-            return res.success(result);
+            return res.success(result, HTTP_STATUS.CREATED);
         } catch (err) {
             console.log(err);
             return res.error(err);
@@ -91,7 +92,10 @@ class MessageController {
             console.error("Failed to get messages:", err);
 
             if (err.message === "CONVERSATION_NOT_FOUND") {
-                return res.error("Conversation not found", 404);
+                return res.error(
+                    "Conversation not found",
+                    HTTP_STATUS.NOT_FOUND,
+                );
             }
 
             return res.error("Failed to retrieve messages");
@@ -110,15 +114,22 @@ class MessageController {
             return res.error("invalid or missing message");
         }
         try {
-            await messageService.editMessage(user.id, messageId, content);
-            return res.success("ok", 200);
+            const result = await messageService.editMessage(
+                user.id,
+                messageId,
+                content,
+            );
+            return res.success(result, 200);
         } catch (err) {
             console.log(err);
             if (err.message === "CONVERSATION_NOT_FOUND") {
-                return res.error("Conversation not found", 404);
+                return res.error(
+                    "Conversation not found",
+                    HTTP_STATUS.NOT_FOUND,
+                );
             }
             if (err.message === "MESSAGE_NOT_FOUND") {
-                return res.error("Message not found", 404);
+                return res.error("Message not found", HTTP_STATUS.NOT_FOUND);
             }
             return res.error("Failed to edit message");
         }
@@ -127,19 +138,22 @@ class MessageController {
         const user = req.user;
         const rawMessageId = req.params.messageId;
         if (!rawMessageId || !/^\d+$/.test(rawMessageId)) {
-            return res.error("INVALID_USER_ID", 400);
+            return res.error("INVALID_USER_ID");
         }
         const messageId = BigInt(rawMessageId);
         try {
             await messageService.deleteMessage(user.id, messageId);
-            return res.success("ok", 200);
+            return res.success("ok", 204);
         } catch (err) {
             console.log(err);
             if (err.message === "CONVERSATION_NOT_FOUND") {
-                return res.error("Conversation not found", 404);
+                return res.error(
+                    "Conversation not found",
+                    HTTP_STATUS.NOT_FOUND,
+                );
             }
             if (err.message === "MESSAGE_NOT_FOUND") {
-                return res.error("Message not found", 404);
+                return res.error("Message not found", HTTP_STATUS.NOT_FOUND);
             }
 
             return res.error("Failed to delete message");
