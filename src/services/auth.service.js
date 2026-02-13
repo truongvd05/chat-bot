@@ -1,30 +1,27 @@
+import { HTTP_STATUS } from "#config/constants.js";
 import prisma from "#libs/prisma.js";
+import AppError from "#utils/AppError.js";
 import { serializeBigInt } from "#utils/serialize.js";
 import bcrypt from "bcrypt";
 
 class AuthService {
     async register(email, password) {
-        try {
-            const existed = await prisma.user.findUnique({
-                where: { email },
-            });
-            if (existed) {
-                throw new Error("EMAIL_ALREADY_EXISTS");
-            }
-            const hashPassword = await bcrypt.hash(password, 10);
-            const user = await prisma.user.create({
-                data: {
-                    email,
-                    password: hashPassword,
-                },
-            });
-            return serializeBigInt(user);
-        } catch (err) {
-            if (err.code === "P2002") {
-                throw new Error("EMAIL_ALREADY_EXISTS");
-            }
-            throw err;
+        const existed = await prisma.user.findUnique({
+            where: { email },
+        });
+        if (existed) {
+            throw new AppError("EMAIL_ALREADY_EXISTS", HTTP_STATUS.CONFLICT);
         }
+
+        const hashPassword = await bcrypt.hash(password, 10);
+
+        const user = await prisma.user.create({
+            data: {
+                email,
+                password: hashPassword,
+            },
+        });
+        return serializeBigInt(user);
     }
     async findUserById(id) {
         const user = await prisma.user.findUnique({

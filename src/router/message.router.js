@@ -6,21 +6,21 @@ import authMeRequired from "#middlewares/authRequired.js";
 const router = express.Router();
 
 router.post(
-    "/conversations/:conversationId/messages",
+    "/conversations/:conversationId",
     authMeRequired,
     rateLimitServce.message(),
     messageController.sendMessage,
 );
 
 router.post(
-    "/bot/conversations/:conversationId/messages",
+    "/bot/conversations/:conversationId",
     authMeRequired,
     rateLimitServce.message(),
     messageController.sendBotMessage,
 );
 
 router.get(
-    "/conversations/:conversationId/messages",
+    "/conversations/:conversationId",
     authMeRequired,
     rateLimitServce.defaultPerMinuteRateLimit(),
     messageController.getMessages,

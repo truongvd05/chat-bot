@@ -4,24 +4,25 @@
 
 - Swagger UI: /docs
 
+## 1. Giới thiệu
+
+Đây là backend cho một hệ thống **chat bot / chat conversation** tương tự ChatGPT, được xây dựng bằng **Node.js + Express + Prisma**.
+
 ## Architecture Overview
 
-- REST API cho CRUD
-- SSE dùng cho streaming response (thay vì WebSocket để đơn giản hoá backend)
-- Mỗi user có 1 refresh_token khi logout refresh_token sẽ bị xóa, access_token để ngắn hạn
-- Redis dùng cho:
-    - Rate limiting
-    - Refresh token management
+Thiết kế và xây dựng hệ thống RESTful APIs sử dụng Node.js và Express:
+
+Triển khai cơ chế xác thực JWT với refresh token rotation, đảm bảo bảo mật và quản lý phiên đăng nhập hiệu quả
+Tích hợp Redis để thực hiện rate limiting và quản lý refresh token
+Xây dựng tính năng quên mật khẩu với hệ thống gửi email, sử dụng cơ chế hash token trước khi lưu vào cơ sở dữ liệu để tăng cường bảo mật
+Triển khai cron job tự động xoá các PasswordResetToken hết hạn nhằm tối ưu và làm sạch dữ liệu hệ thống
+Sử dụng SSE (Server-Sent Events) để xử lý streaming response theo thời gian thực cho tính năng chat/AI
 
 ## Token Strategy
 
 - Access token: short-lived, dùng cho API & SSE
 - Refresh token: lưu trong database gắn với user
 - Khi logout, refresh token được xóa để chặn tái sử dụng
-
-## 1. Giới thiệu
-
-Đây là backend cho một hệ thống **chat bot / chat conversation** tương tự ChatGPT, được xây dựng bằng **Node.js + Express + Prisma**.
 
 Dự án cung cấp:
 
@@ -102,7 +103,7 @@ Base path:
 
 ### 4.1 Register
 
-`POST /register`
+`POST /api/auth/register`
 
 ```json
 {
@@ -115,7 +116,7 @@ Base path:
 
 ### 4.2 Login
 
-`POST /login`
+`POST /api/auth/login`
 
 ```json
 {
@@ -137,7 +138,7 @@ Response:
 
 ### 4.3 Refresh access token
 
-`POST /refresh`
+`POST /api/auth/refresh`
 
 ```json
 {
@@ -149,7 +150,7 @@ Response:
 
 ### 4.4 Logout
 
-`POST /logout`
+`POST /api/auth/logout`
 
 Header:
 
@@ -159,7 +160,7 @@ Authorization: Bearer <access_token>
 
 ### 4.5 reset-password
 
-`POST /reset-password`
+`POST /api/auth/reset-password`
 
 ```json
 {
@@ -178,13 +179,13 @@ Authorization: Bearer <access_token>
 
 ### 4.6 Get current user
 
-`GET /me`
+`GET /api/auth/me`
 
 ---
 
 ### 4.7 forgot password
 
-`POST /forgot-password`
+`POST /api/auth/forgot-password`
 
 ```json
 {
@@ -194,7 +195,7 @@ Authorization: Bearer <access_token>
 
 ### 4.8 change password
 
-`POST /change-password`
+`POST /api/auth/change-password`
 
 ```json
 {
@@ -212,7 +213,7 @@ Authorization: Bearer <access_token>
 
 ### 4.9 verify email
 
-`POST /verify-email`
+`POST /api/auth/verify-email`
 
 ```json
 {
@@ -228,7 +229,7 @@ Authorization: Bearer <access_token>
 
 ### 4.10 resen verify email
 
-`POST /resen-verify-email`
+`POST /api/auth/resen-verify-email`
 
 ```
 
@@ -256,11 +257,9 @@ Base path:
 
 Authorization: Bearer <access_token>
 
-````
-
 ---
 
-### 5.1 Create conversation
+## 5.1 Create conversation
 
 `POST /direct` tạo chat user-user
 `POST /bot` tạo chat user-bot
@@ -277,7 +276,7 @@ Authorization: Bearer <access_token>
 {
     "title": "Chat with AI"
 }
-````
+```
 
 ---
 
@@ -315,27 +314,29 @@ Authorization: Bearer <access_token>
 
 Base path:
 
-```
-/api/message
+`/api/message`
+
 ```
 
 > Tất cả endpoint yêu cầu header:
 
 ```
+
 Authorization: Bearer <access_token>
-```
+
+````
 
 ---
 
 ### 6.1 Get messages
 
-`GET /:conversationId/messages`
+`GET /conversation/:conversationId`
 
 ---
 
 ### 6.2 Send message
 
-`POST /conversations/:conversationId/message`
+`POST /conversations/:conversationId`
 
 <!-- send với bot -->
 
@@ -343,7 +344,7 @@ Authorization: Bearer <access_token>
 {
     "message": "Hello AI"
 }
-```
+````
 
 <!-- send với user -->
 
@@ -360,7 +361,7 @@ Authorization: Bearer <access_token>
 
 ### 6.3 Edit message
 
-`PUT /:conversationId/message`
+`PUT /:conversationId`
 
 ```json
 {
@@ -373,7 +374,7 @@ Authorization: Bearer <access_token>
 
 ### 6.4 Delete message
 
-`DELETE /:conversationId/message`
+`DELETE /:conversationId`
 
 ```json
 {

@@ -28,4 +28,9 @@ export const QUEUE_STATUS = {
 
 export const PRISMA_CODE = {
     DUPLICATE: "P2002",
+    NOT_FOUND: "P2025",
+    FOREIGN_KEY: "P2003",
+    VALUE_TOO_LONG: "P2000",
+    NULL_CONSTRAINT: "P2011",
+    INVALID_INPUT: "P2006",
 };

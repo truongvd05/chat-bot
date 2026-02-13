@@ -832,7 +832,7 @@ paths:
                 500:
                     $ref: "#/components/responses/InternalServerError"
 
-    /conversation/{conversationId}/messages:
+    /messages/conversation/{conversationId}:
         get:
             tags: [Message]
             summary: Lấy messages trong conversation
@@ -890,7 +890,7 @@ paths:
                 500:
                     $ref: "#/components/responses/InternalServerError"
 
-    /conversation/{conversationId}/message:
+    /message/conversation/{conversationId}:
         post:
             tags: [Message]
             summary: Gửi message mới

@@ -9,19 +9,30 @@ import validateChangePassword from "#utils/validateChangePassword.js";
 import crypto from "crypto";
 import queueService from "#services/queue.service.js";
 import { HTTP_STATUS } from "#config/constants.js";
+import AppError from "#utils/AppError.js";
 
 class AuthController {
-    async register(req, res) {
+    async register(req, res, next) {
         const { email, password } = req.body;
         if (!email || typeof email !== "string" || email.trim().length === 0) {
-            return res.error("Email is required and must be valid");
+            return next(
+                new AppError(
+                    "Email is required and must be valid",
+                    HTTP_STATUS.BAD_REQUEST,
+                ),
+            );
         }
         if (
             !password ||
             typeof password !== "string" ||
             password.trim().length < 6
         ) {
-            return res.error("Password must be at least 6 characters");
+            return next(
+                new AppError(
+                    "Password must be at least 6 characters",
+                    HTTP_STATUS.BAD_REQUEST,
+                ),
+            );
         }
         try {
             const user = await authService.register(email, password);
@@ -42,24 +53,30 @@ class AuthController {
             );
             return res.success(user, 201, token);
         } catch (err) {
-            console.log(err);
-            if (err.message === "EMAIL_ALREADY_EXISTS") {
-                return res.error("Email đã tồn tại", HTTP_STATUS.CONFLICT);
-            }
-            return res.error(err);
+            return next(err);
         }
     }
-    async login(req, res) {
+    async login(req, res, next) {
         const { email, password } = req.body;
         if (!email || typeof email !== "string" || email.trim().length === 0) {
-            return res.error("Email is required and must be valid");
+            return next(
+                new AppError(
+                    "Email is required and must be valid",
+                    HTTP_STATUS.BAD_REQUEST,
+                ),
+            );
         }
         if (
             !password ||
             typeof password !== "string" ||
             password.trim().length < 6
         ) {
-            return res.error("Password must be at least 6 characters");
+            return next(
+                new AppError(
+                    "Password must be at least 6 characters",
+                    HTTP_STATUS.BAD_REQUEST,
+                ),
+            );
         }
         try {
             const user = await authService.findUserByEmail(email);
@@ -79,11 +96,10 @@ class AuthController {
             const { password: _, ...saveUser } = user;
             return res.success(serializeBigInt(saveUser), 200, token);
         } catch (err) {
-            console.log(err);
-            return res.error(err);
+            return next(err);
         }
     }
-    async logout(req, res) {
+    async logout(req, res, next) {
         const user = req.user;
         const { refresh_token } = req.body;
         if (!refresh_token) {
@@ -95,27 +111,33 @@ class AuthController {
                 user.id,
             );
             if (!token) {
-                return res.success(null, 204);
+                return res.success(null, 200);
             }
             await authService.revokedRefreshToken(refresh_token, token);
             return res.success("logout", 200);
         } catch (err) {
-            console.log(err);
-            return res.error(err);
+            return next(err);
         }
     }
-    async verifyEmail(req, res) {
+    async verifyEmail(req, res, next) {
         const emailToken = req.body?.token;
         if (!emailToken) {
-            return res.error("missing token");
+            new AppError("Missing token", HTTP_STATUS.BAD_REQUEST);
         }
         if (typeof emailToken !== "string" || !emailToken.trim()) {
-            return res.error("Invalid token");
+            return next(
+                new AppError("Invalid email token", HTTP_STATUS.BAD_REQUEST),
+            );
         }
         try {
             const payload = jwt.verify(emailToken, jwtconfig.emailSecret);
             if (!payload?.sub) {
-                return res.error("Invalid token payload");
+                return next(
+                    new AppError(
+                        "Invalid token payload",
+                        HTTP_STATUS.BAD_REQUEST,
+                    ),
+                );
             }
             const user = await authService.findUserById(payload.sub);
             if (!user) return res.unauthorized();
@@ -125,17 +147,22 @@ class AuthController {
             await authService.verifyEmail(user.id);
             return res.success({ verified: true });
         } catch (err) {
-            return res.error(err.message || "Verify email failed", 429);
+            return next(err);
         }
     }
-    async resenVerifyEmail(req, res) {
+    async resenVerifyEmail(req, res, next) {
         const user = req.user;
         try {
             if (!user) {
                 return res.unauthorized();
             }
             if (user.verified_at) {
-                return res.error("Email already verified");
+                return next(
+                    new AppError(
+                        "Email already verified",
+                        HTTP_STATUS.BAD_REQUEST,
+                    ),
+                );
             }
             const emailtoken = jwtService(
                 user.id,
@@ -148,11 +175,10 @@ class AuthController {
             });
             return res.success("Verification email has been resent");
         } catch (err) {
-            console.log(err);
-            return res.error(err);
+            next(err);
         }
     }
-    async getMe(req, res) {
+    async getMe(req, res, next) {
         const authHeader = req.headers.authorization;
         if (!authHeader) return null;
         const access_token = extractAccessToken(req);
@@ -160,19 +186,21 @@ class AuthController {
             const payload = jwt.verify(access_token, jwtconfig.secret);
             const user = await authService.getMe(payload.sub);
             if (!user) {
-                return res.error("USER_NOT_FOUND");
+                return next(
+                    new AppError("USER_NOT_FOUND", HTTP_STATUS.UNAUTHORIZED),
+                );
             }
             return res.success(user);
         } catch (err) {
-            console.log(err);
-
-            return res.error("INVALID_ACCESS_TOKEN");
+            next(err);
         }
     }
-    async refreshAccessToken(req, res) {
+    async refreshAccessToken(req, res, next) {
         const { refresh_token } = req.body;
         if (!refresh_token) {
-            return res.error("MISSING_REFRESH_TOKEN");
+            return next(
+                new AppError("MISSING_REFRESH_TOKEN", HTTP_STATUS.BAD_REQUEST),
+            );
         }
         try {
             const payload = jwt.verify(refresh_token, jwtconfig.refresh_token);
@@ -181,15 +209,19 @@ class AuthController {
             );
 
             if (!refreshToken || refreshToken.token !== refresh_token) {
-                return res.error(
-                    "INVALID_REFRESH_TOKEN",
-                    HTTP_STATUS.UNAUTHORIZED,
+                return next(
+                    new AppError(
+                        "INVALID_REFRESH_TOKEN",
+                        HTTP_STATUS.UNAUTHORIZED,
+                    ),
                 );
             }
             if (refreshToken.tokenExpiresAt <= new Date()) {
-                return res.error(
-                    "REFRESH_TOKEN_EXPIRED",
-                    HTTP_STATUS.UNAUTHORIZED,
+                return next(
+                    new AppError(
+                        "REFRESH_TOKEN_EXPIRED",
+                        HTTP_STATUS.UNAUTHORIZED,
+                    ),
                 );
             }
 
@@ -201,11 +233,10 @@ class AuthController {
                 expires_in: accessToken.access_token_ttl,
             });
         } catch (err) {
-            console.log(err);
-            return res.error("server err", 500);
+            next(err);
         }
     }
-    async changePassword(req, res) {
+    async changePassword(req, res, next) {
         const password = req.body.password;
         const newPassword = req.body.new_password;
         const confirmPassword = req.body.confirm_password;
@@ -215,9 +246,11 @@ class AuthController {
             validateChangePassword({ password, newPassword, confirmPassword });
             const isMatch = await bcrypt.compare(password, user.password);
             if (!isMatch) {
-                return res.error(
-                    "Mật khẩu hiện tại không đúng",
-                    HTTP_STATUS.UNAUTHORIZED,
+                return next(
+                    new AppError(
+                        "Mật khẩu hiện tại không đúng",
+                        HTTP_STATUS.UNAUTHORIZED,
+                    ),
                 );
             }
             const hashedPassword = await bcrypt.hash(newPassword, 10);
@@ -228,18 +261,20 @@ class AuthController {
             });
             return res.success("PASSWORD_CHANGED");
         } catch (err) {
-            console.log(err);
-            return res.error(err.message || "Đổi mật khẩu thất bại");
+            next(err);
         }
     }
-    async forgotPassword(req, res) {
+    async forgotPassword(req, res, next) {
         const email = req.body.email;
         if (!email || typeof email !== "string" || email.trim().length === 0) {
             return res.error("Invalid or misssing email");
         }
         try {
             const user = await authService.findUserByEmail(email);
-            if (!user) return res.error("Email không tồn tại", 401);
+            if (!user)
+                return next(
+                    new AppError("Email không tồn tại", HTTP_STATUS.NOT_FOUND),
+                );
             const passwordResetToken = crypto.randomBytes(64).toString("hex");
             const expiresAt = new Date(
                 Date.now() + jwtconfig.PasswordSecrectTTL * 1000,
@@ -259,36 +294,43 @@ class AuthController {
             });
             return res.success("Đổi mật khẩu thành công", 200);
         } catch (err) {
-            console.log(err);
-            return res.error(err, 500);
+            next(err);
         }
     }
-    async resetPassword(req, res) {
+    async resetPassword(req, res, next) {
         const password = req.body.password;
         const newPassword = req.body.new_password;
         const token = req.query.token;
         if (!password || password.trim().length === 0) {
-            return res.error(
-                "Missing password fields",
-                HTTP_STATUS.UNAUTHORIZED,
+            return next(
+                new AppError(
+                    "Missing password fields",
+                    HTTP_STATUS.UNAUTHORIZED,
+                ),
             );
         }
         if (newPassword.trim().length < 6) {
-            return res.error(
-                "Mật khẩu phải ít nhất 6 ký tự",
-                HTTP_STATUS.UNAUTHORIZED,
+            return next(
+                new AppError(
+                    "Mật khẩu phải ít nhất 6 ký tự",
+                    HTTP_STATUS.UNAUTHORIZED,
+                ),
             );
         }
         if (password !== newPassword) {
-            return res.error(
-                "Mật khẩu Không giống nhau",
-                HTTP_STATUS.UNAUTHORIZED,
+            return next(
+                new AppError(
+                    "Mật khẩu Không giống nhau",
+                    HTTP_STATUS.UNAUTHORIZED,
+                ),
             );
         }
         if (!token) {
-            return res.error(
-                "Invalit or missing token",
-                HTTP_STATUS.UNAUTHORIZED,
+            return next(
+                new AppError(
+                    "Invalit or missing token",
+                    HTTP_STATUS.UNAUTHORIZED,
+                ),
             );
         }
         try {
@@ -300,7 +342,12 @@ class AuthController {
             const resetToken =
                 await authService.findValidPasswordResetToken(tokenHash);
             if (!resetToken) {
-                return res.error("Link đã hết hạn hoặc không hợp lệ");
+                return next(
+                    new AppError(
+                        "Link đã hết hạn hoặc không hợp lệ",
+                        HTTP_STATUS.BAD_REQUEST,
+                    ),
+                );
             }
             const hashedPassword = await bcrypt.hash(password, 10);
             await authService.updatePassword(resetToken.userId, hashedPassword);
@@ -308,8 +355,7 @@ class AuthController {
             await authService.revokeAllRefreshTokens(resetToken.userId);
             return res.success("Đổi mật khẩu thành công", 200);
         } catch (err) {
-            console.log(err);
-            return res.error(err, 429);
+            next(err);
         }
     }
 }
