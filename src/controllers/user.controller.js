@@ -14,14 +14,8 @@ class UserController {
         if (targetUserId === user.id) {
             return res.error("CANNOT_BLOCK_YOURSELF");
         }
-        try {
-            const result = await userService.blockUser(user.id, targetUserId);
-            return res.success(result);
-        } catch (err) {
-            console.log(err);
-
-            return res.error("Failed to block user");
-        }
+        const result = await userService.blockUser(user.id, targetUserId);
+        return res.success(result);
     }
     async unblockUser(req, res) {
         const user = req.user;
@@ -36,14 +30,8 @@ class UserController {
         if (targetUserId === user.id) {
             return res.error("CANNOT_UN_BLOCK_YOURSELF");
         }
-        try {
-            const result = await userService.unblockUser(user.id, targetUserId);
-            return res.success(result);
-        } catch (err) {
-            console.log(err);
-
-            return res.error("Failed to block user");
-        }
+        const result = await userService.unblockUser(user.id, targetUserId);
+        return res.success(result);
     }
 }
 

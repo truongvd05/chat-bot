@@ -1,9 +1,9 @@
 import jwt from "jsonwebtoken";
 import { ERROR_MESSAGE, HTTP_STATUS, PRISMA_CODE } from "#config/constants.js";
-import isProduction from "#utils/isProduction.js";
 
 const errorHandle = (err, _, res, next) => {
-    const status = HTTP_STATUS.INTERNAL_SERVER_ERROR;
+    console.log(err);
+    const status = err.statusCode || HTTP_STATUS.INTERNAL_SERVER_ERROR;
     let errorMessage = err.message || String(err);
     if (err?.code) {
         switch (err.code) {
@@ -47,15 +47,10 @@ const errorHandle = (err, _, res, next) => {
         errorMessage = ERROR_MESSAGE.UNAUTHORIZED;
     }
     if (err.isOperational) {
-        return res.error(err.message, err.statusCode);
+        console.log(123);
+        return res.error(errorMessage, status);
     }
-    if (isProduction()) {
-        return res.error("Server error", HTTP_STATUS.INTERNAL_SERVER_ERROR);
-    }
-    return res.status(status).json({
-        success: false,
-        errorMessage,
-    });
+    return next(err);
 };
 
 export default errorHandle;

@@ -1,43 +1,28 @@
 import { HTTP_STATUS } from "#config/constants.js";
 import conversationService from "#services/conversation.service.js";
 import messageService from "#services/message.service.js";
+import AppError from "#utils/AppError.js";
 
 class ConversationController {
     async createBotConversation(req, res) {
         const user = req.user;
-
-        try {
-            const newConversation =
-                await conversationService.createBotConversation(user);
-            return res.success(newConversation, HTTP_STATUS.CREATED);
-        } catch (err) {
-            console.error(err);
-            return res.error("Failed to create conversation", 500);
-        }
+        const newConversation =
+            await conversationService.createBotConversation(user);
+        return res.success(newConversation, HTTP_STATUS.CREATED);
     }
     async getConversations(req, res) {
         const user = req.user;
-        try {
-            const conversations = await conversationService.getConversations(
-                user.id,
-            );
-            return res.success(conversations);
-        } catch (err) {
-            console.error(err);
-            return res.error("Failed to get conversation", 500);
-        }
+        const conversations = await conversationService.getConversations(
+            user.id,
+        );
+        return res.success(conversations);
     }
     async getMyBotConversations(req, res) {
         const user = req.user;
 
-        try {
-            const conversations =
-                await conversationService.getMyBotConversations(user);
-            return res.success(conversations);
-        } catch (err) {
-            console.log(err);
-            return res.error(err);
-        }
+        const conversations =
+            await conversationService.getMyBotConversations(user);
+        return res.success(conversations);
     }
     async getMyBotConversation(req, res) {
         const user = req.user;
@@ -47,17 +32,11 @@ class ConversationController {
             return res.error("INVALID_USER_ID");
         }
         const conversationId = BigInt(rawId);
-        try {
-            const botConversation =
-                await conversationService.getMyBotConversation(
-                    user.id,
-                    conversationId,
-                );
-            return res.success(botConversation);
-        } catch (err) {
-            console.log(err);
-            return res.error(err);
-        }
+        const botConversation = await conversationService.getMyBotConversation(
+            user.id,
+            conversationId,
+        );
+        return res.success(botConversation);
     }
 
     async createDirectConversation(req, res) {
@@ -65,29 +44,30 @@ class ConversationController {
 
         const rawId = req.body.targetUserId;
         if (!rawId || !/^\d+$/.test(rawId)) {
-            return res.error("INVALID_USER_ID");
+            throw new AppError("INVALID_USER_ID", HTTP_STATUS.BAD_REQUEST);
         }
         const targetUserId = BigInt(rawId);
 
-        try {
-            const existingConversation =
-                await conversationService.findDirectConversation(
-                    user.id,
-                    targetUserId,
-                );
-            if (existingConversation) {
-                return res.success(existingConversation);
-            }
-            const conversation =
-                await conversationService.createDirectConversation(
-                    user.id,
-                    targetUserId,
-                );
-            return res.success(conversation, HTTP_STATUS.CREATED);
-        } catch (err) {
-            console.log(err);
-            return res.error("Failed to create conversation");
+        const conversation = await conversationService.createDirectConversation(
+            user.id,
+            targetUserId,
+        );
+        return res.success(conversation, HTTP_STATUS.CREATED);
+    }
+    async createGroupConversation(req, res) {
+        const user = req.user;
+        const name = req.body.name;
+        if (!name || typeof name !== "string" || name.trim().length === 0) {
+            throw new AppError("INVALID_name", HTTP_STATUS.BAD_REQUEST);
         }
+        if (name.length > 255) {
+            throw new AppError("TITLE_TOO_LONG", HTTP_STATUS.BAD_REQUEST);
+        }
+        const conversation = await conversationService.createGroupConversation(
+            user.id,
+            name,
+        );
+        return res.success(conversation, HTTP_STATUS.CREATED);
     }
     async getConversation(req, res) {
         const user = req.user;
@@ -98,28 +78,12 @@ class ConversationController {
         }
         const conversationId = BigInt(rawId);
 
-        try {
-            const conversation = await conversationService.getConversation(
-                user.id,
-                conversationId,
-            );
-            if (!conversation) {
-                return res.error(
-                    "Conversation not found",
-                    HTTP_STATUS.NOT_FOUND,
-                );
-            }
-            return res.success(conversation);
-        } catch (err) {
-            console.log(err);
-            if (err.message === "CONVERSATION_NOT_FOUND") {
-                return res.error(
-                    "Conversation not found",
-                    HTTP_STATUS.NOT_FOUND,
-                );
-            }
-            return res.error(err, 500);
-        }
+        const conversation = await conversationService.getConversation(
+            user.id,
+            conversationId,
+        );
+
+        return res.success(conversation);
     }
     async renameConversation(req, res) {
         const title = req.body?.title?.trim();
@@ -127,34 +91,23 @@ class ConversationController {
 
         const rawId = req.params.conversationId;
         if (!rawId || !/^\d+$/.test(rawId)) {
-            return res.error("INVALID_USER_ID");
+            throw new AppError("INVALID_USER_ID", HTTP_STATUS.BAD_REQUEST);
         }
         const conversationId = BigInt(rawId);
 
         if (!title || typeof title !== "string" || title.trim().length === 0) {
-            return res.error("INVALID_TITLE");
+            throw new AppError("INVALID_TITLE", HTTP_STATUS.BAD_REQUEST);
         }
         if (title.length > 255) {
-            return res.error("TITLE_TOO_LONG");
+            throw new AppError("TITLE_TOO_LONG", HTTP_STATUS.BAD_REQUEST);
         }
 
-        try {
-            const newConversation =
-                await conversationService.renameConversation(
-                    user.id,
-                    conversationId,
-                    title,
-                );
-            return res.success(newConversation);
-        } catch (err) {
-            if (err.message === "CONVERSATION_NOT_FOUND") {
-                return res.error(
-                    "Conversation not found",
-                    HTTP_STATUS.NOT_FOUND,
-                );
-            }
-            return res.error(err);
-        }
+        const newConversation = await conversationService.renameConversation(
+            user.id,
+            conversationId,
+            title,
+        );
+        return res.success(newConversation);
     }
     async deleteConversation(req, res) {
         const user = req.user;
@@ -165,19 +118,8 @@ class ConversationController {
         }
         const conversationId = BigInt(rawId);
 
-        try {
-            await conversationService.deleteConversation(
-                user.id,
-                conversationId,
-            );
-            return res.success("ok", 204);
-        } catch (err) {
-            console.log(err);
-            if (err.message === "CONVERSATION_NOT_FOUND") {
-                return res.error("Conversation not found", 404);
-            }
-            return res.error(err);
-        }
+        await conversationService.deleteConversation(user.id, conversationId);
+        return res.success("ok", 204);
     }
 
     async stream(req, res) {
@@ -219,19 +161,34 @@ class ConversationController {
             return res.error("INVALID_USER_ID");
         }
         const targetUserId = BigInt(rawId);
-        try {
-            const result = await conversationService.addParticipant(
-                user.id,
-                conversationId,
-                targetUserId,
-            );
-            return res.success(result, HTTP_STATUS.CREATED);
-        } catch (err) {
-            console.log(err);
-            return res.error(err);
-        }
+        const result = await conversationService.addParticipant(
+            user.id,
+            conversationId,
+            targetUserId,
+        );
+        return res.success(result, HTTP_STATUS.CREATED);
     }
-    async removeParticipant(req, res) {}
+    async removeParticipant(req, res) {
+        const user = req.user;
+        const rawConversationId = req.params.id;
+        const rawTargetId = req.body.user_id;
+
+        if (!rawConversationId || !/^\d+$/.test(rawConversationId)) {
+            return res.error("INVALID_USER_ID");
+        }
+        const conversationId = BigInt(rawId);
+
+        if (!rawTargetId || !/^\d+$/.test(rawTargetId)) {
+            return res.error("INVALID_USER_ID");
+        }
+        const targetUserId = BigInt(rawId);
+        const result = await conversationService.removeParticipant(
+            user.id,
+            conversationId,
+            targetUserId,
+        );
+        return res.success(result, HTTP_STATUS.CREATED);
+    }
     async listParticipants(req, res) {}
 }
 

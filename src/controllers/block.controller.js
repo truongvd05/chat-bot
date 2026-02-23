@@ -5,13 +5,8 @@ class BlockController {
         const user = req.user;
         if (!user) return res.unauthorized();
 
-        try {
-            const result = await blockService.getAllBlock(user.id);
-            return res.success(result);
-        } catch (err) {
-            console.log(err);
-            return res.error(err);
-        }
+        const result = await blockService.getAllBlock(user.id);
+        return res.success(result);
     }
 }
 

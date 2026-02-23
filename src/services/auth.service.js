@@ -3,16 +3,93 @@ import prisma from "#libs/prisma.js";
 import AppError from "#utils/AppError.js";
 import { serializeBigInt } from "#utils/serialize.js";
 import bcrypt from "bcrypt";
+import responseTokenService from "./responseToken.service.js";
+import jwt from "jsonwebtoken";
+import jwtconfig from "../config/jwt.js";
+import jwtService from "./jwtService.js";
 
 class AuthService {
-    async register(email, password) {
+    async _findUserByEmail(email) {
+        return await prisma.user.findUnique({
+            where: { email },
+            select: {
+                id: true,
+                email: true,
+                password: true,
+            },
+        });
+    }
+    async _revokeAllRefreshTokens(userId) {
+        const result = await prisma.refreshToken.delete({
+            where: {
+                userId,
+            },
+        });
+        return result;
+    }
+    async _createPasswordResetToken(userId, tokenHash, time) {
+        await prisma.passwordResetToken.create({
+            data: {
+                userId,
+                tokenHash,
+                expiresAt: time,
+            },
+        });
+    }
+    async _findValidPasswordResetToken(tokenHash) {
+        const result = await prisma.passwordResetToken.findFirst({
+            where: {
+                tokenHash,
+                usedAt: null,
+                expiresAt: {
+                    gt: new Date(),
+                },
+            },
+        });
+        if (!resetToken) {
+            throw new AppError(
+                "Link đã hết hạn hoặc không hợp lệ",
+                HTTP_STATUS.BAD_REQUEST,
+            );
+        }
+        return result;
+    }
+    async _updateUserRefreshToken(userId, newRefreshToken, tokenExpiresAt) {
+        await prisma.refreshToken.upsert({
+            where: { userId },
+            update: {
+                token: newRefreshToken,
+                tokenExpiresAt,
+            },
+            create: {
+                userId,
+                token: newRefreshToken,
+                tokenExpiresAt,
+            },
+        });
+    }
+    async _existedUser(email) {
         const existed = await prisma.user.findUnique({
             where: { email },
         });
         if (existed) {
             throw new AppError("EMAIL_ALREADY_EXISTS", HTTP_STATUS.CONFLICT);
         }
-
+    }
+    async _markPasswordResetTokenUsed(tokenId) {
+        const result = await prisma.passwordResetToken.updateMany({
+            where: {
+                id: tokenId,
+                usedAt: null,
+            },
+            data: {
+                usedAt: new Date(),
+            },
+        });
+        return result;
+    }
+    async register(email, password) {
+        await this._existedUser(email);
         const hashPassword = await bcrypt.hash(password, 10);
 
         const user = await prisma.user.create({
@@ -21,7 +98,24 @@ class AuthService {
                 password: hashPassword,
             },
         });
-        return serializeBigInt(user);
+        const token = responseTokenService.loginAndRegister(user);
+        const emailtoken = jwtService(
+            user.id,
+            jwtconfig.emailSecret,
+            jwtconfig.emailTokenTTL,
+        );
+        queueService.push("sendVerifyEmail", {
+            email: user.email,
+            token: emailtoken,
+        });
+
+        await this._updateUserRefreshToken(
+            user.id,
+            token.refresh_token,
+            token.refresh_token_ttl,
+        );
+
+        return { user: serializeBigInt(user), token };
     }
     async findUserById(id) {
         const user = await prisma.user.findUnique({
@@ -29,30 +123,64 @@ class AuthService {
         });
         return user;
     }
-    async findUserByEmail(email) {
-        const user = await prisma.user.findUnique({
-            where: { email },
-            select: {
-                id: true,
-                email: true,
-                password: true,
-            },
-        });
-        return user;
+    async login(email, password) {
+        const user = await this._findUserByEmail(email);
+        if (!user)
+            throw new AppError("INVALID_CREDENTIALS", HTTP_STATUS.BAD_REQUEST);
+        const isValid = await bcrypt.compare(password, user.password);
+
+        if (!isValid) {
+            throw new AppError("Invalid credentials", HTTP_STATUS.UNAUTHORIZED);
+        }
+
+        const token = responseTokenService.loginAndRegister(user.id);
+
+        await this._updateUserRefreshToken(
+            user.id,
+            token.refresh_token,
+            token.refresh_token_ttl,
+        );
+        const { password: _, ...saveUser } = user;
+
+        return { user: serializeBigInt(saveUser), token };
     }
-    async verifyEmail(id) {
-        const user = await prisma.user.updateMany({
-            where: {
-                id,
-                emailVerifiedAt: null,
-            },
-            data: {
-                emailVerifiedAt: new Date(),
-            },
+    async forgotPassword(email) {
+        const user = await this._findUserByEmail(email);
+        // luôn trả về true nếu không có user vì bảo mật
+        if (!user) return;
+        const passwordResetToken = crypto.randomBytes(64).toString("hex");
+        const expiresAt = new Date(
+            Date.now() + jwtconfig.PasswordSecrectTTL * 1000,
+        );
+        const tokenHash = crypto
+            .createHash("sha256")
+            .update(passwordResetToken)
+            .digest("hex");
+
+        // xóa token cũ trước khi tạo token mới
+        await prisma.$transaction([
+            prisma.passwordResetToken.deleteMany({
+                where: { userId: user.id },
+            }),
+            prisma.passwordResetToken.create({
+                data: {
+                    userId: user.id,
+                    tokenHash,
+                    expiresAt,
+                },
+            }),
+        ]);
+        queueService.push("sendPasswordResetToken", {
+            email: user.email,
+            token: passwordResetToken,
         });
-        return user;
     }
-    async revokedRefreshToken(refresh_token, token) {
+    async logout(refresh_token, userId) {
+        const token = await this._findTokenRevoked(refresh_token, userId);
+        if (!token) return;
+        await this._revokedRefreshToken(refresh_token, token);
+    }
+    async _revokedRefreshToken(refresh_token, token) {
         const result = await prisma.refreshToken.updateMany({
             where: {
                 id: token.id,
@@ -67,18 +195,13 @@ class AuthService {
             return null;
         }
     }
-    async findTokenRevoked(refresh_token, userId) {
+    async _findTokenRevoked(refresh_token, userId) {
         const token = await prisma.refreshToken.findFirst({
             where: { token: refresh_token, userId, isRevoked: false },
         });
         return token;
     }
-    async getRefreshTokenByUser(userId) {
-        return prisma.refreshToken.findUnique({
-            where: { userId },
-        });
-    }
-    async updatePassword(userId, hashedPassword) {
+    async _updatePassword(userId, hashedPassword) {
         const result = await prisma.user.update({
             where: { id: userId },
             data: {
@@ -86,6 +209,98 @@ class AuthService {
             },
         });
         return result;
+    }
+    async _getRefreshTokenByUser(userId) {
+        return prisma.refreshToken.findUnique({
+            where: { userId },
+        });
+    }
+    async refreshAccessToken() {
+        const payload = jwt.verify(refresh_token, jwtconfig.refresh_token);
+
+        const refreshToken = await this._getRefreshTokenByUser(payload.userId);
+
+        if (!refreshToken || refreshToken.token !== refresh_token) {
+            throw new AppError(
+                "INVALID_REFRESH_TOKEN",
+                HTTP_STATUS.UNAUTHORIZED,
+            );
+        }
+        if (refreshToken.tokenExpiresAt <= new Date()) {
+            throw new AppError(
+                "REFRESH_TOKEN_EXPIRED",
+                HTTP_STATUS.UNAUTHORIZED,
+            );
+        }
+        const accessToken = responseTokenService.refreshAccessToken(
+            payload.userId,
+        );
+        return accessToken;
+    }
+    async resetPassword(token, password, newPassword) {
+        const tokenHash = crypto
+            .createHash("sha256")
+            .update(token)
+            .digest("hex");
+
+        const resetToken =
+            await authService._findValidPasswordResetToken(tokenHash);
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        await this._updatePassword(resetToken.userId, hashedPassword);
+        await this._markPasswordResetTokenUsed(resetToken.id);
+        await this._revokeAllRefreshTokens(resetToken.userId);
+    }
+    async changePassword(user, password, newPassword) {
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            throw new AppError(
+                "Mật khẩu hiện tại không đúng",
+                HTTP_STATUS.UNAUTHORIZED,
+            );
+        }
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        await this._updatePassword(user.id, hashedPassword);
+        await this._revokeAllRefreshTokens(user.id);
+        queueService.push("sendChangePasswordEmail", {
+            email: user.email,
+        });
+    }
+    async verifyEmail(emailToken) {
+        const payload = jwt.verify(emailToken, jwtconfig.emailSecret);
+        if (!payload?.sub) {
+            throw new AppError(
+                "Invalid token payload",
+                HTTP_STATUS.BAD_REQUEST,
+            );
+        }
+        const user = await this.findUserById(payload.sub);
+        if (!user) {
+            return;
+        }
+        if (user.emailVerifiedAt) return;
+        await prisma.user.update({
+            where: {
+                id: user.id,
+            },
+            data: {
+                emailVerifiedAt: new Date(),
+            },
+        });
+        return;
+    }
+
+    async resenVerifyEmail() {
+        const emailtoken = jwtService(
+            user.id,
+            jwtconfig.emailSecret,
+            jwtconfig.emailTokenTTL,
+        );
+        queueService.push("sendVerifyEmail", {
+            email: user.email,
+            token: emailtoken,
+        });
+        return;
     }
     async getMe(userId) {
         return await prisma.user.findUnique({
@@ -98,68 +313,7 @@ class AuthService {
             },
         });
     }
-    async updateUserRefreshToken(userId, newRefreshToken, tokenExpiresAt) {
-        await prisma.refreshToken.upsert({
-            where: { userId },
-            update: {
-                token: newRefreshToken,
-                tokenExpiresAt,
-            },
-            create: {
-                userId,
-                token: newRefreshToken,
-                expiresAt,
-            },
-        });
-    }
-    async findRefreshTokenById(userId) {
-        const result = await prisma.refreshToken.findUnique({
-            where: { userId },
-        });
-        return result;
-    }
-    async revokeAllRefreshTokens(userId) {
-        const result = await prisma.refreshToken.delete({
-            where: {
-                userId,
-            },
-        });
-        return result;
-    }
-    async createPasswordResetToken(userId, tokenHash, time) {
-        const result = await prisma.passwordResetToken.create({
-            data: {
-                userId,
-                tokenHash,
-                expiresAt: time,
-            },
-        });
-        return result;
-    }
-    async findValidPasswordResetToken(tokenHash) {
-        const result = await prisma.passwordResetToken.findFirst({
-            where: {
-                tokenHash,
-                usedAt: null,
-                expiresAt: {
-                    gt: new Date(),
-                },
-            },
-        });
-        return result;
-    }
-    async markPasswordResetTokenUsed(tokenId) {
-        const result = await prisma.passwordResetToken.updateMany({
-            where: {
-                id: tokenId,
-                usedAt: null,
-            },
-            data: {
-                usedAt: new Date(),
-            },
-        });
-        return result;
-    }
+
     async deleteExpiredPassword() {
         const result = await prisma.passwordResetToken.deleteMany({
             where: {

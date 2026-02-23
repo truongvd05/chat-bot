@@ -49,7 +49,7 @@ model Conversation {
   title         String?
   systemPrompt  String?          @map("system_prompt") @db.Text //dùng với bot
   type          ConversationType @default(DIRECT)
-  ownerId       BigInt? //dùng với chat bot
+  ownerId       BigInt? //dùng với chat bot và GROUP (người đầu tiên tạo đoạn hột thoại)
   lastMessageAt DateTime?        @map("last_message_at")
   deletedAt     DateTime?        @map("deleted_at")
   createdAt     DateTime         @default(now()) @map("created_at")
@@ -94,6 +94,7 @@ model ConversationParticipant {
 enum ParticipantRole {
   MEMBER
   OWNER
+  ADMIN
   BOT
 }
 

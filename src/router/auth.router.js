@@ -3,51 +3,62 @@ import authController from "#controllers/auth.controller.js";
 import authMeRequired from "#middlewares/authRequired.js";
 import rateLimitServce from "#services/rateLimit.servce.js";
 import { limitRefreshAccessToken } from "#middlewares/limitRefreshAccessToken.js";
+import asyneHandle from "#middlewares/asyneHandle.js";
 
 const router = express.Router();
+
+// mọi router đếu có asyneHandle để xứ lí try catch
 
 router.post(
     "/refresh",
     limitRefreshAccessToken,
-    authController.refreshAccessToken,
+    asyneHandle(authController.refreshAccessToken),
 );
-router.post("/register", rateLimitServce.login(), authController.register);
-router.post("/login", rateLimitServce.login(), authController.login);
+router.post(
+    "/register",
+    rateLimitServce.login(),
+    asyneHandle(authController.register),
+);
+router.post(
+    "/login",
+    rateLimitServce.login(),
+    asyneHandle(authController.login),
+);
 router.post(
     "/forgot-password",
     rateLimitServce.defaultAuthRateLimit(),
-    authController.forgotPassword,
+    asyneHandle(authController.forgotPassword),
 );
 router.post(
     "/reset-password",
     rateLimitServce.defaultAuthRateLimit(),
-    authController.resetPassword,
+    asyneHandle(authController.resetPassword),
 );
 
 router.post(
     "/logout",
     authMeRequired,
     rateLimitServce.defaultAuthRateLimit(),
-    authController.logout,
+    asyneHandle(authController.logout),
 );
 router.post(
     "/change-password",
     authMeRequired,
     rateLimitServce.defaultAuthRateLimit(),
-    authController.changePassword,
+    asyneHandle(authController.changePassword),
 );
 router.post(
     "/verify-email",
     rateLimitServce.verifyEmailPerMinute(),
     rateLimitServce.verifyEmailPreDay(),
-    authController.verifyEmail,
+    asyneHandle(authController.verifyEmail),
 );
 router.post(
     "/resen-verify-email",
     rateLimitServce.senVerifyEmailPerMinute(),
     rateLimitServce.senVerifyEmailPerDay(),
     authMeRequired,
-    authController.resenVerifyEmail,
+    asyneHandle(authController.resenVerifyEmail),
 );
 router.get("/me", authMeRequired, authController.getMe);
 

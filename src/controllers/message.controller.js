@@ -26,26 +26,21 @@ class MessageController {
             return res.error("Message content is required");
         }
 
-        try {
-            const result = await messageService.sendMessage(
-                conversationId,
-                user,
-                content,
-                targetUserId,
-            );
-            return res.success(result, HTTP_STATUS.CREATED);
-        } catch (err) {
-            console.log(err);
-            return res.error(err);
-        }
+        const result = await messageService.sendMessage(
+            conversationId,
+            user,
+            content,
+            targetUserId,
+        );
+        return res.success(result, HTTP_STATUS.CREATED);
     }
     async sendBotMessage(req, res) {
         const user = req.user;
         const content = req.body.content?.trim();
+        const rawConversationId = req.params.conversationId;
 
-        const rawConversationId = req.params.conversationI;
         if (!rawConversationId || !/^\d+$/.test(rawConversationId)) {
-            return res.error("INVALID_USER_ID");
+            return res.error("INVALID_CONVERSATION_ID");
         }
         if (
             !content ||
@@ -55,18 +50,12 @@ class MessageController {
             return res.error("Message content is required");
         }
         const conversationId = BigInt(rawConversationId);
-        try {
-            await messageService.sendBotMessage(
-                user.id,
-                conversationId,
-                content,
-            );
-            chatBotService.reply(conversationId, content);
-            return res.success(result, HTTP_STATUS.CREATED);
-        } catch (err) {
-            console.log(err);
-            return res.error(err);
-        }
+        const result = await messageService.sendBotMessage(
+            user.id,
+            conversationId,
+            content,
+        );
+        return res.success(result, HTTP_STATUS.CREATED);
     }
     async getMessages(req, res) {
         const user = req.user;
@@ -80,26 +69,13 @@ class MessageController {
         const limit = Math.min(Number(req.query.limit) || 5, 50);
         const offset = Math.max(Number(req.query.offset) || 0, 0);
 
-        try {
-            const messages = await messageService.getMessage(
-                user,
-                conversationId,
-                limit,
-                offset,
-            );
-            return res.success(messages);
-        } catch (err) {
-            console.error("Failed to get messages:", err);
-
-            if (err.message === "CONVERSATION_NOT_FOUND") {
-                return res.error(
-                    "Conversation not found",
-                    HTTP_STATUS.NOT_FOUND,
-                );
-            }
-
-            return res.error("Failed to retrieve messages");
-        }
+        const messages = await messageService.getMessage(
+            user,
+            conversationId,
+            limit,
+            offset,
+        );
+        return res.success(messages);
     }
     async editMessage(req, res) {
         const user = req.user;
@@ -113,26 +89,12 @@ class MessageController {
         if (typeof content !== "string" || !content.trim()) {
             return res.error("invalid or missing message");
         }
-        try {
-            const result = await messageService.editMessage(
-                user.id,
-                messageId,
-                content,
-            );
-            return res.success(result, 200);
-        } catch (err) {
-            console.log(err);
-            if (err.message === "CONVERSATION_NOT_FOUND") {
-                return res.error(
-                    "Conversation not found",
-                    HTTP_STATUS.NOT_FOUND,
-                );
-            }
-            if (err.message === "MESSAGE_NOT_FOUND") {
-                return res.error("Message not found", HTTP_STATUS.NOT_FOUND);
-            }
-            return res.error("Failed to edit message");
-        }
+        const result = await messageService.editMessage(
+            user.id,
+            messageId,
+            content,
+        );
+        return res.success(result, 200);
     }
     async deleteMessage(req, res) {
         const user = req.user;
@@ -141,23 +103,8 @@ class MessageController {
             return res.error("INVALID_USER_ID");
         }
         const messageId = BigInt(rawMessageId);
-        try {
-            await messageService.deleteMessage(user.id, messageId);
-            return res.success("ok", 204);
-        } catch (err) {
-            console.log(err);
-            if (err.message === "CONVERSATION_NOT_FOUND") {
-                return res.error(
-                    "Conversation not found",
-                    HTTP_STATUS.NOT_FOUND,
-                );
-            }
-            if (err.message === "MESSAGE_NOT_FOUND") {
-                return res.error("Message not found", HTTP_STATUS.NOT_FOUND);
-            }
-
-            return res.error("Failed to delete message");
-        }
+        await messageService.deleteMessage(user.id, messageId);
+        return res.success("ok", 204);
     }
 }
 

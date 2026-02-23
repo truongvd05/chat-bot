@@ -1,25 +1,28 @@
 import express from "express";
 import conversationController from "#controllers/conversation.controlle.js";
 import authMeRequired from "#middlewares/authRequired.js";
+import asyneHandle from "#middlewares/asyneHandle.js";
+import rateLimitServce from "#services/rateLimit.servce.js";
 
 const router = express.Router();
 
 router.post(
-    "/:conversationId/participants",
+    "/:conversationId",
     authMeRequired,
-    conversationController.addParticipant,
+    rateLimitServce.defaultPerMinuteRateLimit(),
+    asyneHandle(conversationController.addParticipant),
 );
 
 router.delete(
-    "/:conversationId/participants/:userId",
+    "/:conversationId/:userId",
     authMeRequired,
-    conversationController.removeParticipant,
+    asyneHandle(conversationController.removeParticipant),
 );
 
 router.get(
-    "/:conversationId/participants",
+    "/:conversationId",
     authMeRequired,
-    conversationController.listParticipants,
+    asyneHandle(conversationController.listParticipants),
 );
 
 export default router;

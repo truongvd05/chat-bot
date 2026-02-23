@@ -22,3 +22,5 @@ function formatChatItem(conversation, meId) {
         lastMessage,
     };
 }
+
+export default formatChatItem;

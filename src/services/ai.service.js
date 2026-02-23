@@ -10,31 +10,27 @@ class AiService {
             .map((m) => `${m.role.toUpperCase()}: ${m.content}`)
             .join("\n");
         try {
-            const result = streamText({
+            const { textStream } = streamText({
                 model,
-                prompt: `Bạn là một chatbot hỗ trợ người dùng.
-                      Trả lời ngắn gọn, rõ ràng, đúng trọng tâm.
-                      Nếu có code, hãy giải thích từng dòng.
-                      đây là lịch sử cuộc hội thoại ${historyText}
-                      đây là câu mới của user: ${messages}
-                      :`,
+                prompt: `Bạn là một chatbot hỗ trợ người dùng. Trả lời ngắn gọn, 
+                rõ ràng, đúng trọng tâm. Nếu có code, hãy giải thích từng dòng. 
+                đây là lịch sử cuộc hội thoại ${historyText} đây là câu mới của 
+                user: ${messages} nếu họ không hỏi đừng trả lời câu cũ. :`,
                 tools,
-                onChunk(chunk) {
-                    if (chunk.type === "text-delta") {
-                        fullAnswer += chunk.text;
-                    }
-                },
-                onFinish: async () => {
-                    await messageService.createBotMessage(
-                        conversationId,
-                        null,
-                        fullAnswer,
-                        "bot",
-                    );
-                    emit(conversationId, {
-                        type: "bot_done",
-                    });
-                },
+            });
+            for await (const textPart of textStream) {
+                process.stdout.write(textPart);
+                fullAnswer += textPart;
+            }
+            await messageService.createBotMessage(
+                conversationId,
+                null,
+                fullAnswer,
+                "bot",
+            );
+
+            emit(conversationId, {
+                type: "bot_done",
             });
         } catch (err) {
             console.log(err);

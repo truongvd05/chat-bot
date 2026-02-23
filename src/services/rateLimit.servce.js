@@ -3,7 +3,7 @@ import rateLimit, { ipKeyGenerator } from "express-rate-limit";
 class RateLimit {
     _create({ time, limit, message, keyGenerator }) {
         return rateLimit({
-            windowMs: time * 60 * 1000,
+            windowMs: time * 1000,
             max: limit,
             keyGenerator: (req, res) => {
                 const key = keyGenerator?.(req, res);
@@ -17,10 +17,26 @@ class RateLimit {
             message: { message },
         });
     }
-    message() {
+    shortMessage() {
         return this._create({
             time: 1,
-            limit: 10,
+            limit: 1,
+            message: "Bạn nhắn quá nhanh",
+            keyGenerator: (req) => req.body.email?.toLowerCase() || req.ip,
+        });
+    }
+    burstMessage() {
+        return this._create({
+            time: 10,
+            limit: 15,
+            message: "Bạn nhắn quá nhanh",
+            keyGenerator: (req) => req.body.email?.toLowerCase() || req.ip,
+        });
+    }
+    longMessage() {
+        return this._create({
+            time: 5 * 60,
+            limit: 100,
             message: "Bạn nhắn quá nhanh",
             keyGenerator: (req) => req.body.email?.toLowerCase() || req.ip,
         });
@@ -35,7 +51,7 @@ class RateLimit {
     }
     login() {
         return this._create({
-            time: 1,
+            time: 1 * 60,
             limit: 2,
             message: "Đăng nhập quá nhiều lần",
             keyGenerator: (req) => {
@@ -45,7 +61,7 @@ class RateLimit {
     }
     senVerifyEmailPerMinute() {
         return this._create({
-            time: 1,
+            time: 60 * 60,
             limit: 5,
             message: "Bạn gửi quá nhiều Email",
             keyGenerator: (req) => req.body.email?.toLowerCase() || req.ip,
@@ -53,8 +69,8 @@ class RateLimit {
     }
     senVerifyEmailPerDay() {
         return this._create({
-            time: 24 * 60,
-            limit: 20,
+            time: 24 * 60 * 60,
+            limit: 5,
             message: "Bạn gửi quá nhiều Email",
             keyGenerator: (req) => req.body.email?.toLowerCase() || req.ip,
         });
@@ -69,7 +85,7 @@ class RateLimit {
     }
     verifyEmailPreDay() {
         return this._create({
-            time: 24 * 60,
+            time: 24 * 60 * 60,
             limit: 20,
             message: "bạn verify quá nhiều trong ngày",
             keyGenerator: (req) => req.body.email?.toLowerCase() || req.ip,
@@ -77,25 +93,25 @@ class RateLimit {
     }
     defaultAuthRateLimit() {
         return this._create({
-            time: 1,
+            time: 1 * 60 * 60,
             limit: 5,
-            message: "bạn verify quá nhiều trong ngày",
+            message: "bạn spam quá nhiều",
             keyGenerator: (req) => req.body.email?.toLowerCase() || req.ip,
         });
     }
     defaultPerMinuteRateLimit() {
         return this._create({
-            time: 1,
-            limit: 10,
-            message: "bạn verify quá nhiều trong ngày",
+            time: 1 * 60,
+            limit: 5,
+            message: "bạn spam quá nhiều",
             keyGenerator: (req) => req.body.email?.toLowerCase() || req.ip,
         });
     }
     defaultPerDayRateLimit() {
         return this._create({
-            time: 24 * 60,
+            time: 24 * 60 * 60,
             limit: 20,
-            message: "bạn verify quá nhiều trong ngày",
+            message: "bạn spam quá nhiều",
             keyGenerator: (req) => req.body.email?.toLowerCase() || req.ip,
         });
     }

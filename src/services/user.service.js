@@ -1,14 +1,18 @@
+import { HTTP_STATUS } from "#config/constants.js";
 import prisma from "#libs/prisma.js";
+import AppError from "#utils/AppError.js";
 import { serializeBigInt } from "#utils/serialize.js";
 
 class UserService {
     async blockUser(userId, targetUserId) {
+        // check xem có mục tiêu block không?
         const target = await prisma.user.findUnique({
             where: { id: targetUserId },
             select: { id: true },
         });
 
-        if (!target) throw new Error("USER_NOT_FOUND");
+        if (!target)
+            throw new AppError("USER_NOT_FOUND", HTTP_STATUS.NOT_FOUND);
         return prisma.$transaction(async (tx) => {
             // check đã block chưa
             const existing = await tx.userBlock.findUnique({
@@ -25,7 +29,7 @@ class UserService {
             if (existing) {
                 return serializeBigInt(existing);
             }
-            // create block
+            // chư thì block
             const blocked = await tx.userBlock.create({
                 data: {
                     blockerId: userId,
@@ -36,12 +40,15 @@ class UserService {
         });
     }
     async unblockUser(userId, targetUserId) {
+        // check mục tiêu
         const target = await prisma.user.findUnique({
             where: { id: targetUserId },
             select: { id: true },
         });
 
-        if (!target) throw new Error("USER_NOT_FOUND");
+        if (!target)
+            throw new AppError("USER_NOT_FOUND", HTTP_STATUS.NOT_FOUND);
+        // đã block chưa
         const existing = await prisma.userBlock.findUnique({
             where: {
                 blockerId_blockedId: {
@@ -51,6 +58,7 @@ class UserService {
             },
         });
         if (!existing) return null;
+        // chưa thì block
         await prisma.userBlock.delete({
             where: {
                 blockerId_blockedId: {
