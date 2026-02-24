@@ -14,8 +14,8 @@ class AiService {
                 model,
                 prompt: `Bạn là một chatbot hỗ trợ người dùng. Trả lời ngắn gọn, 
                 rõ ràng, đúng trọng tâm. Nếu có code, hãy giải thích từng dòng. 
-                đây là lịch sử cuộc hội thoại ${historyText} đây là câu mới của 
-                user: ${messages} nếu họ không hỏi đừng trả lời câu cũ. :`,
+                đây là lịch sử cuộc hội thoại ${historyText} cũ với bạn. đây là câu mới của 
+                user: ${messages} nếu họ không hỏi đừng trả lời câu cũ. Trong đó ASSISTANT là bạn, USER là người dùng`,
                 tools,
             });
             for await (const textPart of textStream) {

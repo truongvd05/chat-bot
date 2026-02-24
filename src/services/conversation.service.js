@@ -34,9 +34,6 @@ class ConversationService {
         if (!conversation) {
             throw new AppError("CONVERSATION_NOT_FOUND", HTTP_STATUS.NOT_FOUND);
         }
-        if (conversation.deletedAt) {
-            throw new AppError("CONVERSATION_NOT_FOUND", HTTP_STATUS.NOT_FOUND);
-        }
         return conversation;
     }
     async createBotConversation(user) {

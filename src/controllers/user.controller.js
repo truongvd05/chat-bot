@@ -1,19 +1,16 @@
+import { HTTP_STATUS } from "#config/constants.js";
 import userService from "#services/user.service.js";
 import AppError from "#utils/AppError.js";
 
 class UserController {
     async blockUser(req, res) {
-        const user = req.user;
-        if (!user) return res.unauthorized();
-
-        const rawId = req.params.id;
-        if (!rawId || !/^\d+$/.test(rawId)) {
-            return res.error("INVALID_USER_ID");
-        }
-        const targetUserId = BigInt(rawId);
+        const targetUserId = req.targetUserId;
 
         if (targetUserId === user.id) {
-            return res.error("CANNOT_BLOCK_YOURSELF");
+            throw new AppError(
+                "CANNOT_BLOCK_YOURSELF",
+                HTTP_STATUS.BAD_REQUEST,
+            );
         }
         const result = await userService.blockUser(user.id, targetUserId);
         return res.success(result);
@@ -22,14 +19,13 @@ class UserController {
         const user = req.user;
         if (!user) return res.unauthorized();
 
-        const rawId = req.params.id;
-        if (!rawId || !/^\d+$/.test(rawId)) {
-            return res.error("INVALID_USER_ID");
-        }
-        const targetUserId = BigInt(rawId);
+        const targetUserId = req.id;
 
         if (targetUserId === user.id) {
-            return res.error("CANNOT_UN_BLOCK_YOURSELF");
+            throw new AppError(
+                "CANNOT_BLOCK_YOURSELF",
+                HTTP_STATUS.BAD_REQUEST,
+            );
         }
         const result = await userService.unblockUser(user.id, targetUserId);
         return res.success(result);

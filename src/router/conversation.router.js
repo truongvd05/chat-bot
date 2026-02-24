@@ -3,6 +3,8 @@ import conversationController from "#controllers/conversation.controlle.js";
 import authMeRequired from "#middlewares/authRequired.js";
 import rateLimitServce from "#services/rateLimit.servce.js";
 import asyneHandle from "#middlewares/asyneHandle.js";
+import parseConversationId from "#middlewares/parseConversationId.js";
+import parseTargetId from "#middlewares/parseTargerId.js";
 
 const router = express.Router();
 
@@ -10,6 +12,7 @@ router.post(
     "/direct",
     authMeRequired,
     rateLimitServce.defaultPerMinuteRateLimit(),
+    parseTargetId,
     asyneHandle(conversationController.createDirectConversation),
 );
 router.post(
@@ -41,8 +44,9 @@ router.get(
     asyneHandle(conversationController.getMyBotConversations),
 );
 router.get(
-    "/bots/:conversationId",
+    "/bot/:conversationId",
     authMeRequired,
+    parseConversationId,
     rateLimitServce.defaultPerMinuteRateLimit(),
     asyneHandle(conversationController.getMyBotConversation),
 );
@@ -51,6 +55,7 @@ router.get(
     "/:conversationId",
     authMeRequired,
     rateLimitServce.defaultPerMinuteRateLimit(),
+    parseConversationId,
     asyneHandle(conversationController.getConversation),
 );
 
@@ -58,6 +63,7 @@ router.put(
     "/:conversationId",
     authMeRequired,
     rateLimitServce.defaultPerMinuteRateLimit(),
+    parseConversationId,
     asyneHandle(conversationController.renameConversation),
 );
 
@@ -65,6 +71,7 @@ router.delete(
     "/:conversationId",
     authMeRequired,
     rateLimitServce.defaultPerMinuteRateLimit(),
+    parseConversationId,
     asyneHandle(conversationController.deleteConversation),
 );
 
@@ -72,6 +79,7 @@ router.get(
     "/:conversationId/stream",
     authMeRequired,
     rateLimitServce.defaultPerMinuteRateLimit(),
+    parseConversationId,
     conversationController.stream,
 );
 

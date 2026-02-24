@@ -27,11 +27,8 @@ class ConversationController {
     async getMyBotConversation(req, res) {
         const user = req.user;
 
-        const rawId = req.body.conversationId;
-        if (!rawId || !/^\d+$/.test(rawId)) {
-            return res.error("INVALID_USER_ID");
-        }
-        const conversationId = BigInt(rawId);
+        const conversationId = req.conversationId;
+
         const botConversation = await conversationService.getMyBotConversation(
             user.id,
             conversationId,
@@ -42,11 +39,7 @@ class ConversationController {
     async createDirectConversation(req, res) {
         const user = req.user;
 
-        const rawId = req.body.targetUserId;
-        if (!rawId || !/^\d+$/.test(rawId)) {
-            throw new AppError("INVALID_USER_ID", HTTP_STATUS.BAD_REQUEST);
-        }
-        const targetUserId = BigInt(rawId);
+        const targetUserId = req.targetUserId;
 
         const conversation = await conversationService.createDirectConversation(
             user.id,
@@ -72,11 +65,7 @@ class ConversationController {
     async getConversation(req, res) {
         const user = req.user;
 
-        const rawId = req.params.conversationId;
-        if (!rawId || !/^\d+$/.test(rawId)) {
-            return res.error("INVALID_USER_ID", 400);
-        }
-        const conversationId = BigInt(rawId);
+        const conversationId = req.conversationId;
 
         const conversation = await conversationService.getConversation(
             user.id,
@@ -89,11 +78,7 @@ class ConversationController {
         const title = req.body?.title?.trim();
         const user = req.user;
 
-        const rawId = req.params.conversationId;
-        if (!rawId || !/^\d+$/.test(rawId)) {
-            throw new AppError("INVALID_USER_ID", HTTP_STATUS.BAD_REQUEST);
-        }
-        const conversationId = BigInt(rawId);
+        const conversationId = req.conversationId;
 
         if (!title || typeof title !== "string" || title.trim().length === 0) {
             throw new AppError("INVALID_TITLE", HTTP_STATUS.BAD_REQUEST);
@@ -112,11 +97,7 @@ class ConversationController {
     async deleteConversation(req, res) {
         const user = req.user;
 
-        const rawId = req.params.conversationId;
-        if (!rawId || !/^\d+$/.test(rawId)) {
-            return res.error("INVALID_USER_ID", 400);
-        }
-        const conversationId = BigInt(rawId);
+        const conversationId = req.conversationId;
 
         await conversationService.deleteConversation(user.id, conversationId);
         return res.success("ok", 204);
@@ -125,11 +106,8 @@ class ConversationController {
     async stream(req, res) {
         const user = req.user;
 
-        const rawId = req.params.conversationId;
-        if (!rawId || !/^\d+$/.test(rawId)) {
-            return res.error("INVALID_USER_ID", 400);
-        }
-        const conversationId = BigInt(rawId);
+        const conversationId = req.conversationId;
+
         try {
             await messageService.verifyAccess(conversationId, user.id);
             res.setHeader("Content-Type", "text/event-stream");
@@ -157,18 +135,9 @@ class ConversationController {
     async addParticipant(req, res) {
         const user = req.user;
 
-        const rawConversationId = req.params.id;
-        const rawTargetId = req.body.user_id;
+        const conversationId = req.conversationId;
+        const targetUserId = req.targetUserId;
 
-        if (!rawConversationId || !/^\d+$/.test(rawConversationId)) {
-            return res.error("INVALID_USER_ID");
-        }
-        const conversationId = BigInt(rawId);
-
-        if (!rawTargetId || !/^\d+$/.test(rawTargetId)) {
-            return res.error("INVALID_USER_ID");
-        }
-        const targetUserId = BigInt(rawId);
         const result = await conversationService.addParticipant(
             user.id,
             conversationId,
@@ -178,18 +147,9 @@ class ConversationController {
     }
     async removeParticipant(req, res) {
         const user = req.user;
-        const rawConversationId = req.params.id;
-        const rawTargetId = req.body.user_id;
+        const conversationId = req.id;
+        const targetUserId = req.targetUserId;
 
-        if (!rawConversationId || !/^\d+$/.test(rawConversationId)) {
-            return res.error("INVALID_USER_ID");
-        }
-        const conversationId = BigInt(rawId);
-
-        if (!rawTargetId || !/^\d+$/.test(rawTargetId)) {
-            return res.error("INVALID_USER_ID");
-        }
-        const targetUserId = BigInt(rawId);
         const result = await conversationService.removeParticipant(
             user.id,
             conversationId,
