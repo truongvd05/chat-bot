@@ -19,4 +19,6 @@ router.delete(
     asyneHandle(userController.unblockUser),
 );
 
+router.get("/search", authMeRequired, asyneHandle(userController.searchUsers));
+
 export default router;

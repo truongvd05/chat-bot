@@ -7,34 +7,29 @@ import { serializeBigInt } from "#utils/serialize.js";
 const allowedRoles = ["OWNER"];
 
 class ConversationService {
-    // kiểm tra user có trong cuộc hội thoại hay không và conversation bị xóa chưa
+    // kiểm tra user có trong cuộc hội thoại hay không
     async _userInConversation(conversationId, userId) {
-        const user = await prisma.conversationParticipant.findUnique({
+        const participant = await prisma.conversationParticipant.findUnique({
             where: {
                 conversationId_userId: { conversationId, userId },
             },
-            include: {
-                conversation: {
-                    select: { deletedAt: true },
-                },
-            },
         });
-        if (!user) {
+        if (!participant || participant.leftAt) {
             throw new AppError(
                 "USER_NOT_FOUND_IN_CONVERSATION",
-                HTTP_STATUS.BAD_REQUEST,
+                HTTP_STATUS.NOT_FOUND,
             );
         }
-        if (user.conversation.deletedAt)
-            throw new AppError("CONVERSATION_NOT_FOUND");
-        if (user.leftAt)
-            throw new AppError("USER_NOT_FOUND", HTTP_STATUS.NOT_FOUND);
-        return user;
+
+        return participant;
     }
     // kiểm tra conversation có tồn tại hay đã xóa chưa
     async _exitedConversation(conversationId) {
-        const conversation = await prisma.conversation.findUnique({
-            where: { id: conversationId },
+        const conversation = await prisma.conversation.findFirst({
+            where: {
+                id: conversationId,
+                deletedAt: null,
+            },
         });
         if (!conversation) {
             throw new AppError("CONVERSATION_NOT_FOUND", HTTP_STATUS.NOT_FOUND);
@@ -258,6 +253,29 @@ class ConversationService {
             throw new AppError("CONVERSATION_NOT_FOUND", HTTP_STATUS.NOT_FOUND);
         }
         return serializeBigInt(conversation);
+    }
+
+    async searchConversation(userId, keyword) {
+        return prisma.conversation.findMany({
+            where: {
+                deletedAt: null,
+                type: {
+                    in: ["DIRECT", "GROUP"],
+                },
+                participants: {
+                    some: {
+                        userId,
+                        leftAt: null,
+                    },
+                },
+                title: {
+                    contains: keyword,
+                    mode: "insensitive",
+                },
+            },
+            orderBy: { createdAt: "desc" },
+            take: 20,
+        });
     }
 
     async deleteConversation(userId, conversationId) {

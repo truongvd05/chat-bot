@@ -125,7 +125,7 @@ class ConversationController {
     async stream(req, res) {
         const user = req.user;
 
-        const rawId = req.params.id;
+        const rawId = req.params.conversationId;
         if (!rawId || !/^\d+$/.test(rawId)) {
             return res.error("INVALID_USER_ID", 400);
         }
@@ -145,6 +145,14 @@ class ConversationController {
             }
             return res.error("Failed to establish stream connection");
         }
+    }
+    async searchConversation(req, res) {
+        const user = req.user;
+        const { q } = req.query;
+        if (!q) throw new AppError("INVALID_OR_MISSING_QERRY");
+
+        const result = await conversationService.searchConversation(user.id, q);
+        return res.success(result);
     }
     async addParticipant(req, res) {
         const user = req.user;

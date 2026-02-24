@@ -75,4 +75,10 @@ router.get(
     conversationController.stream,
 );
 
+router.get(
+    "/search",
+    authMeRequired,
+    asyneHandle(conversationController.searchConversation),
+);
+
 export default router;
