@@ -60,6 +60,13 @@ router.post(
     authMeRequired,
     asyneHandle(authController.resenVerifyEmail),
 );
+router.post(
+    "/validate/email",
+    rateLimitServce.validateEmailPerMinute(),
+    rateLimitServce.validateEmailPerHour(),
+    rateLimitServce.validateEmailPerDay(),
+    asyneHandle(authController.validateEmail),
+);
 router.get("/me", authMeRequired, authController.getMe);
 
 export default router;

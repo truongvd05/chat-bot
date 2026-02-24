@@ -4,10 +4,23 @@ import jwt from "jsonwebtoken";
 import validateChangePassword from "#utils/validateChangePassword.js";
 import { HTTP_STATUS } from "#config/constants.js";
 import AppError from "#utils/AppError.js";
+import validator from "validator";
 
 class AuthController {
     async register(req, res) {
-        const { email, password } = req.body;
+        const { name, email, password, confirm_password } = req.body;
+        if (!name || typeof name !== "string" || name.trim().length === 0) {
+            throw new AppError(
+                "Name is required and must be valid",
+                HTTP_STATUS.BAD_REQUEST,
+            );
+        }
+        if (name.trim().length < 2) {
+            throw new AppError(
+                "Name is must be at least 2 characters",
+                HTTP_STATUS.BAD_REQUEST,
+            );
+        }
         if (!email || typeof email !== "string" || email.trim().length === 0) {
             throw new AppError(
                 "Email is required and must be valid",
@@ -24,7 +37,18 @@ class AuthController {
                 HTTP_STATUS.BAD_REQUEST,
             );
         }
-        const { user, token } = await authService.register(email, password);
+        if (password !== confirm_password) {
+            throw new AppError(
+                "Password must be at least 6 characters",
+                HTTP_STATUS.BAD_REQUEST,
+            );
+        }
+
+        const { user, token } = await authService.register(
+            name,
+            email,
+            password,
+        );
 
         return res.success(user, 201, token);
     }
@@ -163,6 +187,20 @@ class AuthController {
         await authService.resetPassword(token, password, newPassword);
 
         return res.success("Đổi mật khẩu thành công", 200);
+    }
+    async validateEmail(req, res) {
+        const { email } = req.body || null;
+        if (!email) {
+            throw new AppError("Email is required", 400);
+        }
+        if (!validator.isEmail(email)) {
+            throw new AppError("Invalid email format", 400);
+        }
+        const user = await authService.findUserByEmail(email);
+        if (user) throw new AppError("Email already exists", 400);
+        return res.success({
+            available: !user,
+        });
     }
 }
 

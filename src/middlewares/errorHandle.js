@@ -47,7 +47,6 @@ const errorHandle = (err, _, res, next) => {
         errorMessage = ERROR_MESSAGE.UNAUTHORIZED;
     }
     if (err.isOperational) {
-        console.log(123);
         return res.error(errorMessage, status);
     }
     return next(err);

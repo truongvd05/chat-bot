@@ -5,7 +5,6 @@ import "dotenv/config";
 
 setInterval(async () => {
     try {
-        console.log("queue");
         const pendingJobs = await queueService.findOneAndLockPending();
         if (!pendingJobs) return;
         switch (pendingJobs.type) {

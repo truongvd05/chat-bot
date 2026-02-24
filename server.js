@@ -31,11 +31,12 @@ const corsOptions = {
         }
     },
     methods: allowMethods,
+    credentials: true,
     optionsSuccessStatus: 200,
 };
+app.use(cors(corsOptions));
 app.use("/docs", swaggerSetup.serve, swaggerSetup.setup);
 app.use(helmet());
-app.use(cors(corsOptions));
 app.use(express.json());
 app.use(responseFormat);
 app.use("/api", router);

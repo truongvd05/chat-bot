@@ -30,7 +30,7 @@ class EmailService {
         const info = await transporter.sendMail({
             from: process.env.EMAIL_FROM || "thanh090800@gmail.com",
             to: payload.email,
-            subject: "Xác thực email của bạn",
+            subject: "Quên mật khẩu",
             html: `<p>Click vào đây để đổi lại mật khẩu mới <a href="${verifyUrl} <b>link hết hạn sau 15p</b>" target="_blank">${verifyUrl}</a></p>`,
         });
         console.log("Message sent: %s", info.messageId);

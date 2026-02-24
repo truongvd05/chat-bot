@@ -52,7 +52,7 @@ class RateLimit {
     login() {
         return this._create({
             time: 1 * 60,
-            limit: 2,
+            limit: 5,
             message: "Đăng nhập quá nhiều lần",
             keyGenerator: (req) => {
                 return req.body.email?.toLowerCase() || req.ip;
@@ -88,6 +88,30 @@ class RateLimit {
             time: 24 * 60 * 60,
             limit: 20,
             message: "bạn verify quá nhiều trong ngày",
+            keyGenerator: (req) => req.body.email?.toLowerCase() || req.ip,
+        });
+    }
+    validateEmailPerMinute() {
+        return this._create({
+            time: 1 * 60,
+            limit: 15,
+            message: "bạn validate quá nhiều ",
+            keyGenerator: (req) => req.body.email?.toLowerCase() || req.ip,
+        });
+    }
+    validateEmailPerHour() {
+        return this._create({
+            time: 1 * 60 * 60,
+            limit: 50,
+            message: "bạn validate quá nhiều",
+            keyGenerator: (req) => req.body.email?.toLowerCase() || req.ip,
+        });
+    }
+    validateEmailPerDay() {
+        return this._create({
+            time: 24 * 60 * 60,
+            limit: 100,
+            message: "bạn validate quá nhiều trong ngày",
             keyGenerator: (req) => req.body.email?.toLowerCase() || req.ip,
         });
     }

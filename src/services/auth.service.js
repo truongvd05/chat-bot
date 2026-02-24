@@ -7,9 +7,11 @@ import responseTokenService from "./responseToken.service.js";
 import jwt from "jsonwebtoken";
 import jwtconfig from "../config/jwt.js";
 import jwtService from "./jwtService.js";
+import queueService from "./queue.service.js";
+import crypto from "crypto";
 
 class AuthService {
-    async _findUserByEmail(email) {
+    async findUserByEmail(email) {
         return await prisma.user.findUnique({
             where: { email },
             select: {
@@ -73,7 +75,7 @@ class AuthService {
             where: { email },
         });
         if (existed) {
-            throw new AppError("EMAIL_ALREADY_EXISTS", HTTP_STATUS.CONFLICT);
+            throw new AppError("email already exists", HTTP_STATUS.CONFLICT);
         }
     }
     async _markPasswordResetTokenUsed(tokenId) {
@@ -88,12 +90,13 @@ class AuthService {
         });
         return result;
     }
-    async register(email, password) {
+    async register(name, email, password) {
         await this._existedUser(email);
         const hashPassword = await bcrypt.hash(password, 10);
 
         const user = await prisma.user.create({
             data: {
+                name,
                 email,
                 password: hashPassword,
             },
@@ -124,13 +127,19 @@ class AuthService {
         return user;
     }
     async login(email, password) {
-        const user = await this._findUserByEmail(email);
+        const user = await this.findUserByEmail(email);
         if (!user)
-            throw new AppError("INVALID_CREDENTIALS", HTTP_STATUS.BAD_REQUEST);
+            throw new AppError(
+                "sai tài khoản hoặc mật khẩu",
+                HTTP_STATUS.UNAUTHORIZED,
+            );
         const isValid = await bcrypt.compare(password, user.password);
 
         if (!isValid) {
-            throw new AppError("Invalid credentials", HTTP_STATUS.UNAUTHORIZED);
+            throw new AppError(
+                "sai tài khoản hoặc mật khẩu",
+                HTTP_STATUS.UNAUTHORIZED,
+            );
         }
 
         const token = responseTokenService.loginAndRegister(user.id);
@@ -145,7 +154,7 @@ class AuthService {
         return { user: serializeBigInt(saveUser), token };
     }
     async forgotPassword(email) {
-        const user = await this._findUserByEmail(email);
+        const user = await this.findUserByEmail(email);
         // luôn trả về true nếu không có user vì bảo mật
         if (!user) return;
         const passwordResetToken = crypto.randomBytes(64).toString("hex");
@@ -222,13 +231,13 @@ class AuthService {
 
         if (!refreshToken || refreshToken.token !== refresh_token) {
             throw new AppError(
-                "INVALID_REFRESH_TOKEN",
+                "Invalid refresh token",
                 HTTP_STATUS.UNAUTHORIZED,
             );
         }
         if (refreshToken.tokenExpiresAt <= new Date()) {
             throw new AppError(
-                "REFRESH_TOKEN_EXPIRED",
+                "Refresh token expired",
                 HTTP_STATUS.UNAUTHORIZED,
             );
         }
@@ -276,10 +285,10 @@ class AuthService {
         }
         const user = await this.findUserById(payload.sub);
         if (!user) {
-            return;
+            throw new AppError("Invalid token user", HTTP_STATUS.BAD_REQUEST);
         }
         if (user.emailVerifiedAt) return;
-        await prisma.user.update({
+        return await prisma.user.update({
             where: {
                 id: user.id,
             },
@@ -287,7 +296,6 @@ class AuthService {
                 emailVerifiedAt: new Date(),
             },
         });
-        return;
     }
 
     async resenVerifyEmail() {
