@@ -46,7 +46,7 @@ class MessageController {
     }
     async getMessages(req, res) {
         const user = req.user;
-        const rawConversationId = req.conversationI;
+        const conversationId = req.rawConversationId;
 
         const limit = Math.min(Number(req.query.limit) || 5, 50);
         const offset = Math.max(Number(req.query.offset) || 0, 0);

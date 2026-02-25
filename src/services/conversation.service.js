@@ -30,6 +30,9 @@ class ConversationService {
                 id: conversationId,
                 deletedAt: null,
             },
+            include: {
+                lastMessage: true,
+            },
         });
         if (!conversation) {
             throw new AppError("CONVERSATION_NOT_FOUND", HTTP_STATUS.NOT_FOUND);
@@ -74,9 +77,7 @@ class ConversationService {
                                 },
                             },
                         },
-                        messages: {
-                            orderBy: { createdAt: "desc" },
-                            take: 1,
+                        lastMessage: {
                             select: {
                                 id: true,
                                 content: true,
@@ -178,7 +179,7 @@ class ConversationService {
                 },
             });
 
-            if (existing && existing.participants.length === 2) {
+            if (existing) {
                 return serializeBigInt(existing);
             }
 
@@ -234,6 +235,9 @@ class ConversationService {
             orderBy: {
                 updatedAt: "desc",
             },
+            include: {
+                lastMessage: true,
+            },
         });
         return serializeBigInt(rows);
     }
@@ -244,6 +248,9 @@ class ConversationService {
                 ownerId: userId,
                 deletedAt: null,
                 type: "BOT",
+            },
+            include: {
+                lastMessage: true,
             },
         });
         if (!conversation) {

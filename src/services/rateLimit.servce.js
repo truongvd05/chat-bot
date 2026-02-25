@@ -22,7 +22,7 @@ class RateLimit {
             time: 1,
             limit: 1,
             message: "Bạn nhắn quá nhanh",
-            keyGenerator: (req) => req.body.email?.toLowerCase() || req.ip,
+            keyGenerator: (req) => req.user?.email?.toLowerCase() || req.ip,
         });
     }
     burstMessage() {
@@ -30,7 +30,7 @@ class RateLimit {
             time: 10,
             limit: 15,
             message: "Bạn nhắn quá nhanh",
-            keyGenerator: (req) => req.body.email?.toLowerCase() || req.ip,
+            keyGenerator: (req) => req.user?.email?.toLowerCase() || req.ip,
         });
     }
     longMessage() {
@@ -38,7 +38,7 @@ class RateLimit {
             time: 5 * 60,
             limit: 100,
             message: "Bạn nhắn quá nhanh",
-            keyGenerator: (req) => req.body.email?.toLowerCase() || req.ip,
+            keyGenerator: (req) => req.user?.email?.toLowerCase() || req.ip,
         });
     }
     botMessage() {
@@ -46,7 +46,7 @@ class RateLimit {
             time: 1,
             limit: 10,
             message: "Bạn nhắn quá nhanh",
-            keyGenerator: (req) => req.body.email?.toLowerCase() || req.ip,
+            keyGenerator: (req) => req.user?.email?.toLowerCase() || req.ip,
         });
     }
     login() {
@@ -55,7 +55,7 @@ class RateLimit {
             limit: 5,
             message: "Đăng nhập quá nhiều lần",
             keyGenerator: (req) => {
-                return req.body.email?.toLowerCase() || req.ip;
+                return req.user?.email?.toLowerCase() || req.ip;
             },
         });
     }
@@ -64,7 +64,7 @@ class RateLimit {
             time: 60 * 60,
             limit: 5,
             message: "Bạn gửi quá nhiều Email",
-            keyGenerator: (req) => req.body.email?.toLowerCase() || req.ip,
+            keyGenerator: (req) => req.user?.email?.toLowerCase() || req.ip,
         });
     }
     senVerifyEmailPerDay() {
@@ -72,7 +72,7 @@ class RateLimit {
             time: 24 * 60 * 60,
             limit: 5,
             message: "Bạn gửi quá nhiều Email",
-            keyGenerator: (req) => req.body.email?.toLowerCase() || req.ip,
+            keyGenerator: (req) => req.user?.email?.toLowerCase() || req.ip,
         });
     }
     verifyEmailPerMinute() {
@@ -80,7 +80,7 @@ class RateLimit {
             time: 1,
             limit: 5,
             message: "bạn verify quá nhiều",
-            keyGenerator: (req) => req.body.email?.toLowerCase() || req.ip,
+            keyGenerator: (req) => req.user?.email?.toLowerCase() || req.ip,
         });
     }
     verifyEmailPreDay() {
@@ -88,7 +88,7 @@ class RateLimit {
             time: 24 * 60 * 60,
             limit: 20,
             message: "bạn verify quá nhiều trong ngày",
-            keyGenerator: (req) => req.body.email?.toLowerCase() || req.ip,
+            keyGenerator: (req) => req.user?.email?.toLowerCase() || req.ip,
         });
     }
     validateEmailPerMinute() {
@@ -96,7 +96,7 @@ class RateLimit {
             time: 1 * 60,
             limit: 15,
             message: "bạn validate quá nhiều ",
-            keyGenerator: (req) => req.body.email?.toLowerCase() || req.ip,
+            keyGenerator: (req) => req.user?.email?.toLowerCase() || req.ip,
         });
     }
     validateEmailPerHour() {
@@ -104,7 +104,7 @@ class RateLimit {
             time: 1 * 60 * 60,
             limit: 50,
             message: "bạn validate quá nhiều",
-            keyGenerator: (req) => req.body.email?.toLowerCase() || req.ip,
+            keyGenerator: (req) => req.user?.email?.toLowerCase() || req.ip,
         });
     }
     validateEmailPerDay() {
@@ -112,7 +112,7 @@ class RateLimit {
             time: 24 * 60 * 60,
             limit: 100,
             message: "bạn validate quá nhiều trong ngày",
-            keyGenerator: (req) => req.body.email?.toLowerCase() || req.ip,
+            keyGenerator: (req) => req.user?.email?.toLowerCase() || req.ip,
         });
     }
     defaultAuthRateLimit() {
@@ -120,7 +120,7 @@ class RateLimit {
             time: 1 * 60 * 60,
             limit: 5,
             message: "bạn spam quá nhiều",
-            keyGenerator: (req) => req.body.email?.toLowerCase() || req.ip,
+            keyGenerator: (req) => req.user?.email?.toLowerCase() || req.ip,
         });
     }
     defaultPerMinuteRateLimit() {
@@ -128,7 +128,7 @@ class RateLimit {
             time: 1 * 60,
             limit: 5,
             message: "bạn spam quá nhiều",
-            keyGenerator: (req) => req.body.email?.toLowerCase() || req.ip,
+            keyGenerator: (req) => req.user?.email?.toLowerCase() || req.ip,
         });
     }
     defaultPerDayRateLimit() {
@@ -136,7 +136,7 @@ class RateLimit {
             time: 24 * 60 * 60,
             limit: 20,
             message: "bạn spam quá nhiều",
-            keyGenerator: (req) => req.body.email?.toLowerCase() || req.ip,
+            keyGenerator: (req) => req.user?.email?.toLowerCase() || req.ip,
         });
     }
 }

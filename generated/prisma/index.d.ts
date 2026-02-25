@@ -75,6 +75,7 @@ export type ConversationType = (typeof ConversationType)[keyof typeof Conversati
 export const ParticipantRole: {
   MEMBER: 'MEMBER',
   OWNER: 'OWNER',
+  ADMIN: 'ADMIN',
   BOT: 'BOT'
 };
 
@@ -1581,7 +1582,7 @@ export namespace Prisma {
     passwordResetTokens: number
     blockedUsers: number
     blockedBy: number
-    conversations: number
+    ownedConversations: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1591,7 +1592,7 @@ export namespace Prisma {
     passwordResetTokens?: boolean | UserCountOutputTypeCountPasswordResetTokensArgs
     blockedUsers?: boolean | UserCountOutputTypeCountBlockedUsersArgs
     blockedBy?: boolean | UserCountOutputTypeCountBlockedByArgs
-    conversations?: boolean | UserCountOutputTypeCountConversationsArgs
+    ownedConversations?: boolean | UserCountOutputTypeCountOwnedConversationsArgs
   }
 
   // Custom InputTypes
@@ -1650,7 +1651,7 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountConversationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type UserCountOutputTypeCountOwnedConversationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ConversationWhereInput
   }
 
@@ -1711,11 +1712,13 @@ export namespace Prisma {
   export type MessageCountOutputType = {
     replies: number
     attachments: number
+    lastMessageOf: number
   }
 
   export type MessageCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     replies?: boolean | MessageCountOutputTypeCountRepliesArgs
     attachments?: boolean | MessageCountOutputTypeCountAttachmentsArgs
+    lastMessageOf?: boolean | MessageCountOutputTypeCountLastMessageOfArgs
   }
 
   // Custom InputTypes
@@ -1741,6 +1744,13 @@ export namespace Prisma {
    */
   export type MessageCountOutputTypeCountAttachmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: MessageAttachmentWhereInput
+  }
+
+  /**
+   * MessageCountOutputType without action
+   */
+  export type MessageCountOutputTypeCountLastMessageOfArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ConversationWhereInput
   }
 
 
@@ -1981,7 +1991,7 @@ export namespace Prisma {
     passwordResetTokens?: boolean | User$passwordResetTokensArgs<ExtArgs>
     blockedUsers?: boolean | User$blockedUsersArgs<ExtArgs>
     blockedBy?: boolean | User$blockedByArgs<ExtArgs>
-    conversations?: boolean | User$conversationsArgs<ExtArgs>
+    ownedConversations?: boolean | User$ownedConversationsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -2007,7 +2017,7 @@ export namespace Prisma {
     passwordResetTokens?: boolean | User$passwordResetTokensArgs<ExtArgs>
     blockedUsers?: boolean | User$blockedUsersArgs<ExtArgs>
     blockedBy?: boolean | User$blockedByArgs<ExtArgs>
-    conversations?: boolean | User$conversationsArgs<ExtArgs>
+    ownedConversations?: boolean | User$ownedConversationsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -2021,7 +2031,7 @@ export namespace Prisma {
       passwordResetTokens: Prisma.$PasswordResetTokenPayload<ExtArgs>[]
       blockedUsers: Prisma.$UserBlockPayload<ExtArgs>[]
       blockedBy: Prisma.$UserBlockPayload<ExtArgs>[]
-      conversations: Prisma.$ConversationPayload<ExtArgs>[]
+      ownedConversations: Prisma.$ConversationPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
@@ -2379,7 +2389,7 @@ export namespace Prisma {
     passwordResetTokens<T extends User$passwordResetTokensArgs<ExtArgs> = {}>(args?: Subset<T, User$passwordResetTokensArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PasswordResetTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     blockedUsers<T extends User$blockedUsersArgs<ExtArgs> = {}>(args?: Subset<T, User$blockedUsersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserBlockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     blockedBy<T extends User$blockedByArgs<ExtArgs> = {}>(args?: Subset<T, User$blockedByArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserBlockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    conversations<T extends User$conversationsArgs<ExtArgs> = {}>(args?: Subset<T, User$conversationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    ownedConversations<T extends User$ownedConversationsArgs<ExtArgs> = {}>(args?: Subset<T, User$ownedConversationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2923,9 +2933,9 @@ export namespace Prisma {
   }
 
   /**
-   * User.conversations
+   * User.ownedConversations
    */
-  export type User$conversationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$ownedConversationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Conversation
      */
@@ -3958,11 +3968,13 @@ export namespace Prisma {
   export type ConversationAvgAggregateOutputType = {
     id: number | null
     ownerId: number | null
+    lastMessageId: number | null
   }
 
   export type ConversationSumAggregateOutputType = {
     id: bigint | null
     ownerId: bigint | null
+    lastMessageId: bigint | null
   }
 
   export type ConversationMinAggregateOutputType = {
@@ -3971,6 +3983,7 @@ export namespace Prisma {
     systemPrompt: string | null
     type: $Enums.ConversationType | null
     ownerId: bigint | null
+    lastMessageId: bigint | null
     lastMessageAt: Date | null
     deletedAt: Date | null
     createdAt: Date | null
@@ -3983,6 +3996,7 @@ export namespace Prisma {
     systemPrompt: string | null
     type: $Enums.ConversationType | null
     ownerId: bigint | null
+    lastMessageId: bigint | null
     lastMessageAt: Date | null
     deletedAt: Date | null
     createdAt: Date | null
@@ -3995,6 +4009,7 @@ export namespace Prisma {
     systemPrompt: number
     type: number
     ownerId: number
+    lastMessageId: number
     lastMessageAt: number
     deletedAt: number
     createdAt: number
@@ -4006,11 +4021,13 @@ export namespace Prisma {
   export type ConversationAvgAggregateInputType = {
     id?: true
     ownerId?: true
+    lastMessageId?: true
   }
 
   export type ConversationSumAggregateInputType = {
     id?: true
     ownerId?: true
+    lastMessageId?: true
   }
 
   export type ConversationMinAggregateInputType = {
@@ -4019,6 +4036,7 @@ export namespace Prisma {
     systemPrompt?: true
     type?: true
     ownerId?: true
+    lastMessageId?: true
     lastMessageAt?: true
     deletedAt?: true
     createdAt?: true
@@ -4031,6 +4049,7 @@ export namespace Prisma {
     systemPrompt?: true
     type?: true
     ownerId?: true
+    lastMessageId?: true
     lastMessageAt?: true
     deletedAt?: true
     createdAt?: true
@@ -4043,6 +4062,7 @@ export namespace Prisma {
     systemPrompt?: true
     type?: true
     ownerId?: true
+    lastMessageId?: true
     lastMessageAt?: true
     deletedAt?: true
     createdAt?: true
@@ -4142,6 +4162,7 @@ export namespace Prisma {
     systemPrompt: string | null
     type: $Enums.ConversationType
     ownerId: bigint | null
+    lastMessageId: bigint | null
     lastMessageAt: Date | null
     deletedAt: Date | null
     createdAt: Date
@@ -4173,6 +4194,7 @@ export namespace Prisma {
     systemPrompt?: boolean
     type?: boolean
     ownerId?: boolean
+    lastMessageId?: boolean
     lastMessageAt?: boolean
     deletedAt?: boolean
     createdAt?: boolean
@@ -4181,6 +4203,7 @@ export namespace Prisma {
     activeUsers?: boolean | Conversation$activeUsersArgs<ExtArgs>
     messages?: boolean | Conversation$messagesArgs<ExtArgs>
     owner?: boolean | Conversation$ownerArgs<ExtArgs>
+    lastMessage?: boolean | Conversation$lastMessageArgs<ExtArgs>
     _count?: boolean | ConversationCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["conversation"]>
 
@@ -4192,18 +4215,20 @@ export namespace Prisma {
     systemPrompt?: boolean
     type?: boolean
     ownerId?: boolean
+    lastMessageId?: boolean
     lastMessageAt?: boolean
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ConversationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "systemPrompt" | "type" | "ownerId" | "lastMessageAt" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["conversation"]>
+  export type ConversationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "systemPrompt" | "type" | "ownerId" | "lastMessageId" | "lastMessageAt" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["conversation"]>
   export type ConversationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     participants?: boolean | Conversation$participantsArgs<ExtArgs>
     activeUsers?: boolean | Conversation$activeUsersArgs<ExtArgs>
     messages?: boolean | Conversation$messagesArgs<ExtArgs>
     owner?: boolean | Conversation$ownerArgs<ExtArgs>
+    lastMessage?: boolean | Conversation$lastMessageArgs<ExtArgs>
     _count?: boolean | ConversationCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -4214,6 +4239,7 @@ export namespace Prisma {
       activeUsers: Prisma.$UserPayload<ExtArgs>[]
       messages: Prisma.$MessagePayload<ExtArgs>[]
       owner: Prisma.$UserPayload<ExtArgs> | null
+      lastMessage: Prisma.$MessagePayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
@@ -4221,6 +4247,7 @@ export namespace Prisma {
       systemPrompt: string | null
       type: $Enums.ConversationType
       ownerId: bigint | null
+      lastMessageId: bigint | null
       lastMessageAt: Date | null
       deletedAt: Date | null
       createdAt: Date
@@ -4569,6 +4596,7 @@ export namespace Prisma {
     activeUsers<T extends Conversation$activeUsersArgs<ExtArgs> = {}>(args?: Subset<T, Conversation$activeUsersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     messages<T extends Conversation$messagesArgs<ExtArgs> = {}>(args?: Subset<T, Conversation$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     owner<T extends Conversation$ownerArgs<ExtArgs> = {}>(args?: Subset<T, Conversation$ownerArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    lastMessage<T extends Conversation$lastMessageArgs<ExtArgs> = {}>(args?: Subset<T, Conversation$lastMessageArgs<ExtArgs>>): Prisma__MessageClient<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4603,6 +4631,7 @@ export namespace Prisma {
     readonly systemPrompt: FieldRef<"Conversation", 'String'>
     readonly type: FieldRef<"Conversation", 'ConversationType'>
     readonly ownerId: FieldRef<"Conversation", 'BigInt'>
+    readonly lastMessageId: FieldRef<"Conversation", 'BigInt'>
     readonly lastMessageAt: FieldRef<"Conversation", 'DateTime'>
     readonly deletedAt: FieldRef<"Conversation", 'DateTime'>
     readonly createdAt: FieldRef<"Conversation", 'DateTime'>
@@ -5038,6 +5067,25 @@ export namespace Prisma {
      */
     include?: UserInclude<ExtArgs> | null
     where?: UserWhereInput
+  }
+
+  /**
+   * Conversation.lastMessage
+   */
+  export type Conversation$lastMessageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Message
+     */
+    select?: MessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Message
+     */
+    omit?: MessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageInclude<ExtArgs> | null
+    where?: MessageWhereInput
   }
 
   /**
@@ -6279,7 +6327,7 @@ export namespace Prisma {
     conversationId: bigint
     parentMessageId: bigint | null
     userId: bigint | null
-    role: $Enums.MessageRole
+    role: $Enums.MessageRole | null
     content: string
     isEdited: boolean
     deletedAt: Date | null
@@ -6322,6 +6370,7 @@ export namespace Prisma {
     parentMessage?: boolean | Message$parentMessageArgs<ExtArgs>
     replies?: boolean | Message$repliesArgs<ExtArgs>
     attachments?: boolean | Message$attachmentsArgs<ExtArgs>
+    lastMessageOf?: boolean | Message$lastMessageOfArgs<ExtArgs>
     _count?: boolean | MessageCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["message"]>
 
@@ -6347,6 +6396,7 @@ export namespace Prisma {
     parentMessage?: boolean | Message$parentMessageArgs<ExtArgs>
     replies?: boolean | Message$repliesArgs<ExtArgs>
     attachments?: boolean | Message$attachmentsArgs<ExtArgs>
+    lastMessageOf?: boolean | Message$lastMessageOfArgs<ExtArgs>
     _count?: boolean | MessageCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -6358,13 +6408,14 @@ export namespace Prisma {
       parentMessage: Prisma.$MessagePayload<ExtArgs> | null
       replies: Prisma.$MessagePayload<ExtArgs>[]
       attachments: Prisma.$MessageAttachmentPayload<ExtArgs>[]
+      lastMessageOf: Prisma.$ConversationPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
       conversationId: bigint
       parentMessageId: bigint | null
       userId: bigint | null
-      role: $Enums.MessageRole
+      role: $Enums.MessageRole | null
       content: string
       isEdited: boolean
       deletedAt: Date | null
@@ -6715,6 +6766,7 @@ export namespace Prisma {
     parentMessage<T extends Message$parentMessageArgs<ExtArgs> = {}>(args?: Subset<T, Message$parentMessageArgs<ExtArgs>>): Prisma__MessageClient<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     replies<T extends Message$repliesArgs<ExtArgs> = {}>(args?: Subset<T, Message$repliesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     attachments<T extends Message$attachmentsArgs<ExtArgs> = {}>(args?: Subset<T, Message$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessageAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    lastMessageOf<T extends Message$lastMessageOfArgs<ExtArgs> = {}>(args?: Subset<T, Message$lastMessageOfArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7180,6 +7232,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: MessageAttachmentScalarFieldEnum | MessageAttachmentScalarFieldEnum[]
+  }
+
+  /**
+   * Message.lastMessageOf
+   */
+  export type Message$lastMessageOfArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conversation
+     */
+    select?: ConversationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conversation
+     */
+    omit?: ConversationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationInclude<ExtArgs> | null
+    where?: ConversationWhereInput
+    orderBy?: ConversationOrderByWithRelationInput | ConversationOrderByWithRelationInput[]
+    cursor?: ConversationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ConversationScalarFieldEnum | ConversationScalarFieldEnum[]
   }
 
   /**
@@ -11157,6 +11233,7 @@ export namespace Prisma {
     systemPrompt: 'systemPrompt',
     type: 'type',
     ownerId: 'ownerId',
+    lastMessageId: 'lastMessageId',
     lastMessageAt: 'lastMessageAt',
     deletedAt: 'deletedAt',
     createdAt: 'createdAt',
@@ -11453,7 +11530,7 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenListRelationFilter
     blockedUsers?: UserBlockListRelationFilter
     blockedBy?: UserBlockListRelationFilter
-    conversations?: ConversationListRelationFilter
+    ownedConversations?: ConversationListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -11472,7 +11549,7 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenOrderByRelationAggregateInput
     blockedUsers?: UserBlockOrderByRelationAggregateInput
     blockedBy?: UserBlockOrderByRelationAggregateInput
-    conversations?: ConversationOrderByRelationAggregateInput
+    ownedConversations?: ConversationOrderByRelationAggregateInput
     _relevance?: UserOrderByRelevanceInput
   }
 
@@ -11495,7 +11572,7 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenListRelationFilter
     blockedUsers?: UserBlockListRelationFilter
     blockedBy?: UserBlockListRelationFilter
-    conversations?: ConversationListRelationFilter
+    ownedConversations?: ConversationListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -11600,6 +11677,7 @@ export namespace Prisma {
     systemPrompt?: StringNullableFilter<"Conversation"> | string | null
     type?: EnumConversationTypeFilter<"Conversation"> | $Enums.ConversationType
     ownerId?: BigIntNullableFilter<"Conversation"> | bigint | number | null
+    lastMessageId?: BigIntNullableFilter<"Conversation"> | bigint | number | null
     lastMessageAt?: DateTimeNullableFilter<"Conversation"> | Date | string | null
     deletedAt?: DateTimeNullableFilter<"Conversation"> | Date | string | null
     createdAt?: DateTimeFilter<"Conversation"> | Date | string
@@ -11608,6 +11686,7 @@ export namespace Prisma {
     activeUsers?: UserListRelationFilter
     messages?: MessageListRelationFilter
     owner?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    lastMessage?: XOR<MessageNullableScalarRelationFilter, MessageWhereInput> | null
   }
 
   export type ConversationOrderByWithRelationInput = {
@@ -11616,6 +11695,7 @@ export namespace Prisma {
     systemPrompt?: SortOrderInput | SortOrder
     type?: SortOrder
     ownerId?: SortOrderInput | SortOrder
+    lastMessageId?: SortOrderInput | SortOrder
     lastMessageAt?: SortOrderInput | SortOrder
     deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -11624,6 +11704,7 @@ export namespace Prisma {
     activeUsers?: UserOrderByRelationAggregateInput
     messages?: MessageOrderByRelationAggregateInput
     owner?: UserOrderByWithRelationInput
+    lastMessage?: MessageOrderByWithRelationInput
     _relevance?: ConversationOrderByRelevanceInput
   }
 
@@ -11636,6 +11717,7 @@ export namespace Prisma {
     systemPrompt?: StringNullableFilter<"Conversation"> | string | null
     type?: EnumConversationTypeFilter<"Conversation"> | $Enums.ConversationType
     ownerId?: BigIntNullableFilter<"Conversation"> | bigint | number | null
+    lastMessageId?: BigIntNullableFilter<"Conversation"> | bigint | number | null
     lastMessageAt?: DateTimeNullableFilter<"Conversation"> | Date | string | null
     deletedAt?: DateTimeNullableFilter<"Conversation"> | Date | string | null
     createdAt?: DateTimeFilter<"Conversation"> | Date | string
@@ -11644,6 +11726,7 @@ export namespace Prisma {
     activeUsers?: UserListRelationFilter
     messages?: MessageListRelationFilter
     owner?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    lastMessage?: XOR<MessageNullableScalarRelationFilter, MessageWhereInput> | null
   }, "id">
 
   export type ConversationOrderByWithAggregationInput = {
@@ -11652,6 +11735,7 @@ export namespace Prisma {
     systemPrompt?: SortOrderInput | SortOrder
     type?: SortOrder
     ownerId?: SortOrderInput | SortOrder
+    lastMessageId?: SortOrderInput | SortOrder
     lastMessageAt?: SortOrderInput | SortOrder
     deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -11672,6 +11756,7 @@ export namespace Prisma {
     systemPrompt?: StringNullableWithAggregatesFilter<"Conversation"> | string | null
     type?: EnumConversationTypeWithAggregatesFilter<"Conversation"> | $Enums.ConversationType
     ownerId?: BigIntNullableWithAggregatesFilter<"Conversation"> | bigint | number | null
+    lastMessageId?: BigIntNullableWithAggregatesFilter<"Conversation"> | bigint | number | null
     lastMessageAt?: DateTimeNullableWithAggregatesFilter<"Conversation"> | Date | string | null
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Conversation"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Conversation"> | Date | string
@@ -11762,7 +11847,7 @@ export namespace Prisma {
     conversationId?: BigIntFilter<"Message"> | bigint | number
     parentMessageId?: BigIntNullableFilter<"Message"> | bigint | number | null
     userId?: BigIntNullableFilter<"Message"> | bigint | number | null
-    role?: EnumMessageRoleFilter<"Message"> | $Enums.MessageRole
+    role?: EnumMessageRoleNullableFilter<"Message"> | $Enums.MessageRole | null
     content?: StringFilter<"Message"> | string
     isEdited?: BoolFilter<"Message"> | boolean
     deletedAt?: DateTimeNullableFilter<"Message"> | Date | string | null
@@ -11773,6 +11858,7 @@ export namespace Prisma {
     parentMessage?: XOR<MessageNullableScalarRelationFilter, MessageWhereInput> | null
     replies?: MessageListRelationFilter
     attachments?: MessageAttachmentListRelationFilter
+    lastMessageOf?: ConversationListRelationFilter
   }
 
   export type MessageOrderByWithRelationInput = {
@@ -11780,7 +11866,7 @@ export namespace Prisma {
     conversationId?: SortOrder
     parentMessageId?: SortOrderInput | SortOrder
     userId?: SortOrderInput | SortOrder
-    role?: SortOrder
+    role?: SortOrderInput | SortOrder
     content?: SortOrder
     isEdited?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
@@ -11791,6 +11877,7 @@ export namespace Prisma {
     parentMessage?: MessageOrderByWithRelationInput
     replies?: MessageOrderByRelationAggregateInput
     attachments?: MessageAttachmentOrderByRelationAggregateInput
+    lastMessageOf?: ConversationOrderByRelationAggregateInput
     _relevance?: MessageOrderByRelevanceInput
   }
 
@@ -11802,7 +11889,7 @@ export namespace Prisma {
     conversationId?: BigIntFilter<"Message"> | bigint | number
     parentMessageId?: BigIntNullableFilter<"Message"> | bigint | number | null
     userId?: BigIntNullableFilter<"Message"> | bigint | number | null
-    role?: EnumMessageRoleFilter<"Message"> | $Enums.MessageRole
+    role?: EnumMessageRoleNullableFilter<"Message"> | $Enums.MessageRole | null
     content?: StringFilter<"Message"> | string
     isEdited?: BoolFilter<"Message"> | boolean
     deletedAt?: DateTimeNullableFilter<"Message"> | Date | string | null
@@ -11813,6 +11900,7 @@ export namespace Prisma {
     parentMessage?: XOR<MessageNullableScalarRelationFilter, MessageWhereInput> | null
     replies?: MessageListRelationFilter
     attachments?: MessageAttachmentListRelationFilter
+    lastMessageOf?: ConversationListRelationFilter
   }, "id">
 
   export type MessageOrderByWithAggregationInput = {
@@ -11820,7 +11908,7 @@ export namespace Prisma {
     conversationId?: SortOrder
     parentMessageId?: SortOrderInput | SortOrder
     userId?: SortOrderInput | SortOrder
-    role?: SortOrder
+    role?: SortOrderInput | SortOrder
     content?: SortOrder
     isEdited?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
@@ -11841,7 +11929,7 @@ export namespace Prisma {
     conversationId?: BigIntWithAggregatesFilter<"Message"> | bigint | number
     parentMessageId?: BigIntNullableWithAggregatesFilter<"Message"> | bigint | number | null
     userId?: BigIntNullableWithAggregatesFilter<"Message"> | bigint | number | null
-    role?: EnumMessageRoleWithAggregatesFilter<"Message"> | $Enums.MessageRole
+    role?: EnumMessageRoleNullableWithAggregatesFilter<"Message"> | $Enums.MessageRole | null
     content?: StringWithAggregatesFilter<"Message"> | string
     isEdited?: BoolWithAggregatesFilter<"Message"> | boolean
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Message"> | Date | string | null
@@ -12131,7 +12219,7 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
     blockedBy?: UserBlockCreateNestedManyWithoutBlockedInput
-    conversations?: ConversationCreateNestedManyWithoutOwnerInput
+    ownedConversations?: ConversationCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -12149,7 +12237,7 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     blockedUsers?: UserBlockUncheckedCreateNestedManyWithoutBlockerInput
     blockedBy?: UserBlockUncheckedCreateNestedManyWithoutBlockedInput
-    conversations?: ConversationUncheckedCreateNestedManyWithoutOwnerInput
+    ownedConversations?: ConversationUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUpdateInput = {
@@ -12167,7 +12255,7 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
     blockedBy?: UserBlockUpdateManyWithoutBlockedNestedInput
-    conversations?: ConversationUpdateManyWithoutOwnerNestedInput
+    ownedConversations?: ConversationUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -12185,7 +12273,7 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     blockedUsers?: UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
     blockedBy?: UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
-    conversations?: ConversationUncheckedUpdateManyWithoutOwnerNestedInput
+    ownedConversations?: ConversationUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -12294,7 +12382,8 @@ export namespace Prisma {
     participants?: ConversationParticipantCreateNestedManyWithoutConversationInput
     activeUsers?: UserCreateNestedManyWithoutActiveConversationInput
     messages?: MessageCreateNestedManyWithoutConversationInput
-    owner?: UserCreateNestedOneWithoutConversationsInput
+    owner?: UserCreateNestedOneWithoutOwnedConversationsInput
+    lastMessage?: MessageCreateNestedOneWithoutLastMessageOfInput
   }
 
   export type ConversationUncheckedCreateInput = {
@@ -12303,6 +12392,7 @@ export namespace Prisma {
     systemPrompt?: string | null
     type?: $Enums.ConversationType
     ownerId?: bigint | number | null
+    lastMessageId?: bigint | number | null
     lastMessageAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -12324,7 +12414,8 @@ export namespace Prisma {
     participants?: ConversationParticipantUpdateManyWithoutConversationNestedInput
     activeUsers?: UserUpdateManyWithoutActiveConversationNestedInput
     messages?: MessageUpdateManyWithoutConversationNestedInput
-    owner?: UserUpdateOneWithoutConversationsNestedInput
+    owner?: UserUpdateOneWithoutOwnedConversationsNestedInput
+    lastMessage?: MessageUpdateOneWithoutLastMessageOfNestedInput
   }
 
   export type ConversationUncheckedUpdateInput = {
@@ -12333,6 +12424,7 @@ export namespace Prisma {
     systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
     ownerId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    lastMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12348,6 +12440,7 @@ export namespace Prisma {
     systemPrompt?: string | null
     type?: $Enums.ConversationType
     ownerId?: bigint | number | null
+    lastMessageId?: bigint | number | null
     lastMessageAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -12371,6 +12464,7 @@ export namespace Prisma {
     systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
     ownerId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    lastMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12454,7 +12548,7 @@ export namespace Prisma {
 
   export type MessageCreateInput = {
     id?: bigint | number
-    role: $Enums.MessageRole
+    role?: $Enums.MessageRole | null
     content: string
     isEdited?: boolean
     deletedAt?: Date | string | null
@@ -12465,6 +12559,7 @@ export namespace Prisma {
     parentMessage?: MessageCreateNestedOneWithoutRepliesInput
     replies?: MessageCreateNestedManyWithoutParentMessageInput
     attachments?: MessageAttachmentCreateNestedManyWithoutMessageInput
+    lastMessageOf?: ConversationCreateNestedManyWithoutLastMessageInput
   }
 
   export type MessageUncheckedCreateInput = {
@@ -12472,7 +12567,7 @@ export namespace Prisma {
     conversationId: bigint | number
     parentMessageId?: bigint | number | null
     userId?: bigint | number | null
-    role: $Enums.MessageRole
+    role?: $Enums.MessageRole | null
     content: string
     isEdited?: boolean
     deletedAt?: Date | string | null
@@ -12480,11 +12575,12 @@ export namespace Prisma {
     updatedAt?: Date | string
     replies?: MessageUncheckedCreateNestedManyWithoutParentMessageInput
     attachments?: MessageAttachmentUncheckedCreateNestedManyWithoutMessageInput
+    lastMessageOf?: ConversationUncheckedCreateNestedManyWithoutLastMessageInput
   }
 
   export type MessageUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
+    role?: NullableEnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole | null
     content?: StringFieldUpdateOperationsInput | string
     isEdited?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -12495,6 +12591,7 @@ export namespace Prisma {
     parentMessage?: MessageUpdateOneWithoutRepliesNestedInput
     replies?: MessageUpdateManyWithoutParentMessageNestedInput
     attachments?: MessageAttachmentUpdateManyWithoutMessageNestedInput
+    lastMessageOf?: ConversationUpdateManyWithoutLastMessageNestedInput
   }
 
   export type MessageUncheckedUpdateInput = {
@@ -12502,7 +12599,7 @@ export namespace Prisma {
     conversationId?: BigIntFieldUpdateOperationsInput | bigint | number
     parentMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
+    role?: NullableEnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole | null
     content?: StringFieldUpdateOperationsInput | string
     isEdited?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -12510,6 +12607,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     replies?: MessageUncheckedUpdateManyWithoutParentMessageNestedInput
     attachments?: MessageAttachmentUncheckedUpdateManyWithoutMessageNestedInput
+    lastMessageOf?: ConversationUncheckedUpdateManyWithoutLastMessageNestedInput
   }
 
   export type MessageCreateManyInput = {
@@ -12517,7 +12615,7 @@ export namespace Prisma {
     conversationId: bigint | number
     parentMessageId?: bigint | number | null
     userId?: bigint | number | null
-    role: $Enums.MessageRole
+    role?: $Enums.MessageRole | null
     content: string
     isEdited?: boolean
     deletedAt?: Date | string | null
@@ -12527,7 +12625,7 @@ export namespace Prisma {
 
   export type MessageUpdateManyMutationInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
+    role?: NullableEnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole | null
     content?: StringFieldUpdateOperationsInput | string
     isEdited?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -12540,7 +12638,7 @@ export namespace Prisma {
     conversationId?: BigIntFieldUpdateOperationsInput | bigint | number
     parentMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
+    role?: NullableEnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole | null
     content?: StringFieldUpdateOperationsInput | string
     isEdited?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -13172,6 +13270,11 @@ export namespace Prisma {
     isNot?: UserWhereInput | null
   }
 
+  export type MessageNullableScalarRelationFilter = {
+    is?: MessageWhereInput | null
+    isNot?: MessageWhereInput | null
+  }
+
   export type UserOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -13188,6 +13291,7 @@ export namespace Prisma {
     systemPrompt?: SortOrder
     type?: SortOrder
     ownerId?: SortOrder
+    lastMessageId?: SortOrder
     lastMessageAt?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
@@ -13197,6 +13301,7 @@ export namespace Prisma {
   export type ConversationAvgOrderByAggregateInput = {
     id?: SortOrder
     ownerId?: SortOrder
+    lastMessageId?: SortOrder
   }
 
   export type ConversationMaxOrderByAggregateInput = {
@@ -13205,6 +13310,7 @@ export namespace Prisma {
     systemPrompt?: SortOrder
     type?: SortOrder
     ownerId?: SortOrder
+    lastMessageId?: SortOrder
     lastMessageAt?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
@@ -13217,6 +13323,7 @@ export namespace Prisma {
     systemPrompt?: SortOrder
     type?: SortOrder
     ownerId?: SortOrder
+    lastMessageId?: SortOrder
     lastMessageAt?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
@@ -13226,6 +13333,7 @@ export namespace Prisma {
   export type ConversationSumOrderByAggregateInput = {
     id?: SortOrder
     ownerId?: SortOrder
+    lastMessageId?: SortOrder
   }
 
   export type EnumConversationTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -13310,21 +13418,16 @@ export namespace Prisma {
     _max?: NestedEnumParticipantRoleFilter<$PrismaModel>
   }
 
-  export type EnumMessageRoleFilter<$PrismaModel = never> = {
-    equals?: $Enums.MessageRole | EnumMessageRoleFieldRefInput<$PrismaModel>
-    in?: $Enums.MessageRole[]
-    notIn?: $Enums.MessageRole[]
-    not?: NestedEnumMessageRoleFilter<$PrismaModel> | $Enums.MessageRole
+  export type EnumMessageRoleNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.MessageRole | EnumMessageRoleFieldRefInput<$PrismaModel> | null
+    in?: $Enums.MessageRole[] | null
+    notIn?: $Enums.MessageRole[] | null
+    not?: NestedEnumMessageRoleNullableFilter<$PrismaModel> | $Enums.MessageRole | null
   }
 
   export type BoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
-  export type MessageNullableScalarRelationFilter = {
-    is?: MessageWhereInput | null
-    isNot?: MessageWhereInput | null
   }
 
   export type MessageAttachmentListRelationFilter = {
@@ -13396,14 +13499,14 @@ export namespace Prisma {
     userId?: SortOrder
   }
 
-  export type EnumMessageRoleWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.MessageRole | EnumMessageRoleFieldRefInput<$PrismaModel>
-    in?: $Enums.MessageRole[]
-    notIn?: $Enums.MessageRole[]
-    not?: NestedEnumMessageRoleWithAggregatesFilter<$PrismaModel> | $Enums.MessageRole
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumMessageRoleFilter<$PrismaModel>
-    _max?: NestedEnumMessageRoleFilter<$PrismaModel>
+  export type EnumMessageRoleNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MessageRole | EnumMessageRoleFieldRefInput<$PrismaModel> | null
+    in?: $Enums.MessageRole[] | null
+    notIn?: $Enums.MessageRole[] | null
+    not?: NestedEnumMessageRoleNullableWithAggregatesFilter<$PrismaModel> | $Enums.MessageRole | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumMessageRoleNullableFilter<$PrismaModel>
+    _max?: NestedEnumMessageRoleNullableFilter<$PrismaModel>
   }
 
   export type BoolWithAggregatesFilter<$PrismaModel = never> = {
@@ -14073,10 +14176,16 @@ export namespace Prisma {
     connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
   }
 
-  export type UserCreateNestedOneWithoutConversationsInput = {
-    create?: XOR<UserCreateWithoutConversationsInput, UserUncheckedCreateWithoutConversationsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutConversationsInput
+  export type UserCreateNestedOneWithoutOwnedConversationsInput = {
+    create?: XOR<UserCreateWithoutOwnedConversationsInput, UserUncheckedCreateWithoutOwnedConversationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutOwnedConversationsInput
     connect?: UserWhereUniqueInput
+  }
+
+  export type MessageCreateNestedOneWithoutLastMessageOfInput = {
+    create?: XOR<MessageCreateWithoutLastMessageOfInput, MessageUncheckedCreateWithoutLastMessageOfInput>
+    connectOrCreate?: MessageCreateOrConnectWithoutLastMessageOfInput
+    connect?: MessageWhereUniqueInput
   }
 
   export type ConversationParticipantUncheckedCreateNestedManyWithoutConversationInput = {
@@ -14146,14 +14255,24 @@ export namespace Prisma {
     deleteMany?: MessageScalarWhereInput | MessageScalarWhereInput[]
   }
 
-  export type UserUpdateOneWithoutConversationsNestedInput = {
-    create?: XOR<UserCreateWithoutConversationsInput, UserUncheckedCreateWithoutConversationsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutConversationsInput
-    upsert?: UserUpsertWithoutConversationsInput
+  export type UserUpdateOneWithoutOwnedConversationsNestedInput = {
+    create?: XOR<UserCreateWithoutOwnedConversationsInput, UserUncheckedCreateWithoutOwnedConversationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutOwnedConversationsInput
+    upsert?: UserUpsertWithoutOwnedConversationsInput
     disconnect?: UserWhereInput | boolean
     delete?: UserWhereInput | boolean
     connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutConversationsInput, UserUpdateWithoutConversationsInput>, UserUncheckedUpdateWithoutConversationsInput>
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutOwnedConversationsInput, UserUpdateWithoutOwnedConversationsInput>, UserUncheckedUpdateWithoutOwnedConversationsInput>
+  }
+
+  export type MessageUpdateOneWithoutLastMessageOfNestedInput = {
+    create?: XOR<MessageCreateWithoutLastMessageOfInput, MessageUncheckedCreateWithoutLastMessageOfInput>
+    connectOrCreate?: MessageCreateOrConnectWithoutLastMessageOfInput
+    upsert?: MessageUpsertWithoutLastMessageOfInput
+    disconnect?: MessageWhereInput | boolean
+    delete?: MessageWhereInput | boolean
+    connect?: MessageWhereUniqueInput
+    update?: XOR<XOR<MessageUpdateToOneWithWhereWithoutLastMessageOfInput, MessageUpdateWithoutLastMessageOfInput>, MessageUncheckedUpdateWithoutLastMessageOfInput>
   }
 
   export type ConversationParticipantUncheckedUpdateManyWithoutConversationNestedInput = {
@@ -14262,6 +14381,13 @@ export namespace Prisma {
     connect?: MessageAttachmentWhereUniqueInput | MessageAttachmentWhereUniqueInput[]
   }
 
+  export type ConversationCreateNestedManyWithoutLastMessageInput = {
+    create?: XOR<ConversationCreateWithoutLastMessageInput, ConversationUncheckedCreateWithoutLastMessageInput> | ConversationCreateWithoutLastMessageInput[] | ConversationUncheckedCreateWithoutLastMessageInput[]
+    connectOrCreate?: ConversationCreateOrConnectWithoutLastMessageInput | ConversationCreateOrConnectWithoutLastMessageInput[]
+    createMany?: ConversationCreateManyLastMessageInputEnvelope
+    connect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+  }
+
   export type MessageUncheckedCreateNestedManyWithoutParentMessageInput = {
     create?: XOR<MessageCreateWithoutParentMessageInput, MessageUncheckedCreateWithoutParentMessageInput> | MessageCreateWithoutParentMessageInput[] | MessageUncheckedCreateWithoutParentMessageInput[]
     connectOrCreate?: MessageCreateOrConnectWithoutParentMessageInput | MessageCreateOrConnectWithoutParentMessageInput[]
@@ -14276,8 +14402,15 @@ export namespace Prisma {
     connect?: MessageAttachmentWhereUniqueInput | MessageAttachmentWhereUniqueInput[]
   }
 
-  export type EnumMessageRoleFieldUpdateOperationsInput = {
-    set?: $Enums.MessageRole
+  export type ConversationUncheckedCreateNestedManyWithoutLastMessageInput = {
+    create?: XOR<ConversationCreateWithoutLastMessageInput, ConversationUncheckedCreateWithoutLastMessageInput> | ConversationCreateWithoutLastMessageInput[] | ConversationUncheckedCreateWithoutLastMessageInput[]
+    connectOrCreate?: ConversationCreateOrConnectWithoutLastMessageInput | ConversationCreateOrConnectWithoutLastMessageInput[]
+    createMany?: ConversationCreateManyLastMessageInputEnvelope
+    connect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+  }
+
+  export type NullableEnumMessageRoleFieldUpdateOperationsInput = {
+    set?: $Enums.MessageRole | null
   }
 
   export type BoolFieldUpdateOperationsInput = {
@@ -14340,6 +14473,20 @@ export namespace Prisma {
     deleteMany?: MessageAttachmentScalarWhereInput | MessageAttachmentScalarWhereInput[]
   }
 
+  export type ConversationUpdateManyWithoutLastMessageNestedInput = {
+    create?: XOR<ConversationCreateWithoutLastMessageInput, ConversationUncheckedCreateWithoutLastMessageInput> | ConversationCreateWithoutLastMessageInput[] | ConversationUncheckedCreateWithoutLastMessageInput[]
+    connectOrCreate?: ConversationCreateOrConnectWithoutLastMessageInput | ConversationCreateOrConnectWithoutLastMessageInput[]
+    upsert?: ConversationUpsertWithWhereUniqueWithoutLastMessageInput | ConversationUpsertWithWhereUniqueWithoutLastMessageInput[]
+    createMany?: ConversationCreateManyLastMessageInputEnvelope
+    set?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    disconnect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    delete?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    connect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    update?: ConversationUpdateWithWhereUniqueWithoutLastMessageInput | ConversationUpdateWithWhereUniqueWithoutLastMessageInput[]
+    updateMany?: ConversationUpdateManyWithWhereWithoutLastMessageInput | ConversationUpdateManyWithWhereWithoutLastMessageInput[]
+    deleteMany?: ConversationScalarWhereInput | ConversationScalarWhereInput[]
+  }
+
   export type MessageUncheckedUpdateManyWithoutParentMessageNestedInput = {
     create?: XOR<MessageCreateWithoutParentMessageInput, MessageUncheckedCreateWithoutParentMessageInput> | MessageCreateWithoutParentMessageInput[] | MessageUncheckedCreateWithoutParentMessageInput[]
     connectOrCreate?: MessageCreateOrConnectWithoutParentMessageInput | MessageCreateOrConnectWithoutParentMessageInput[]
@@ -14366,6 +14513,20 @@ export namespace Prisma {
     update?: MessageAttachmentUpdateWithWhereUniqueWithoutMessageInput | MessageAttachmentUpdateWithWhereUniqueWithoutMessageInput[]
     updateMany?: MessageAttachmentUpdateManyWithWhereWithoutMessageInput | MessageAttachmentUpdateManyWithWhereWithoutMessageInput[]
     deleteMany?: MessageAttachmentScalarWhereInput | MessageAttachmentScalarWhereInput[]
+  }
+
+  export type ConversationUncheckedUpdateManyWithoutLastMessageNestedInput = {
+    create?: XOR<ConversationCreateWithoutLastMessageInput, ConversationUncheckedCreateWithoutLastMessageInput> | ConversationCreateWithoutLastMessageInput[] | ConversationUncheckedCreateWithoutLastMessageInput[]
+    connectOrCreate?: ConversationCreateOrConnectWithoutLastMessageInput | ConversationCreateOrConnectWithoutLastMessageInput[]
+    upsert?: ConversationUpsertWithWhereUniqueWithoutLastMessageInput | ConversationUpsertWithWhereUniqueWithoutLastMessageInput[]
+    createMany?: ConversationCreateManyLastMessageInputEnvelope
+    set?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    disconnect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    delete?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    connect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+    update?: ConversationUpdateWithWhereUniqueWithoutLastMessageInput | ConversationUpdateWithWhereUniqueWithoutLastMessageInput[]
+    updateMany?: ConversationUpdateManyWithWhereWithoutLastMessageInput | ConversationUpdateManyWithWhereWithoutLastMessageInput[]
+    deleteMany?: ConversationScalarWhereInput | ConversationScalarWhereInput[]
   }
 
   export type MessageCreateNestedOneWithoutAttachmentsInput = {
@@ -14684,11 +14845,11 @@ export namespace Prisma {
     _max?: NestedEnumParticipantRoleFilter<$PrismaModel>
   }
 
-  export type NestedEnumMessageRoleFilter<$PrismaModel = never> = {
-    equals?: $Enums.MessageRole | EnumMessageRoleFieldRefInput<$PrismaModel>
-    in?: $Enums.MessageRole[]
-    notIn?: $Enums.MessageRole[]
-    not?: NestedEnumMessageRoleFilter<$PrismaModel> | $Enums.MessageRole
+  export type NestedEnumMessageRoleNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.MessageRole | EnumMessageRoleFieldRefInput<$PrismaModel> | null
+    in?: $Enums.MessageRole[] | null
+    notIn?: $Enums.MessageRole[] | null
+    not?: NestedEnumMessageRoleNullableFilter<$PrismaModel> | $Enums.MessageRole | null
   }
 
   export type NestedBoolFilter<$PrismaModel = never> = {
@@ -14696,14 +14857,14 @@ export namespace Prisma {
     not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
-  export type NestedEnumMessageRoleWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.MessageRole | EnumMessageRoleFieldRefInput<$PrismaModel>
-    in?: $Enums.MessageRole[]
-    notIn?: $Enums.MessageRole[]
-    not?: NestedEnumMessageRoleWithAggregatesFilter<$PrismaModel> | $Enums.MessageRole
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumMessageRoleFilter<$PrismaModel>
-    _max?: NestedEnumMessageRoleFilter<$PrismaModel>
+  export type NestedEnumMessageRoleNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MessageRole | EnumMessageRoleFieldRefInput<$PrismaModel> | null
+    in?: $Enums.MessageRole[] | null
+    notIn?: $Enums.MessageRole[] | null
+    not?: NestedEnumMessageRoleNullableWithAggregatesFilter<$PrismaModel> | $Enums.MessageRole | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumMessageRoleNullableFilter<$PrismaModel>
+    _max?: NestedEnumMessageRoleNullableFilter<$PrismaModel>
   }
 
   export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
@@ -14837,7 +14998,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     participants?: ConversationParticipantCreateNestedManyWithoutConversationInput
     messages?: MessageCreateNestedManyWithoutConversationInput
-    owner?: UserCreateNestedOneWithoutConversationsInput
+    owner?: UserCreateNestedOneWithoutOwnedConversationsInput
+    lastMessage?: MessageCreateNestedOneWithoutLastMessageOfInput
   }
 
   export type ConversationUncheckedCreateWithoutActiveUsersInput = {
@@ -14846,6 +15008,7 @@ export namespace Prisma {
     systemPrompt?: string | null
     type?: $Enums.ConversationType
     ownerId?: bigint | number | null
+    lastMessageId?: bigint | number | null
     lastMessageAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -14861,7 +15024,7 @@ export namespace Prisma {
 
   export type MessageCreateWithoutUserInput = {
     id?: bigint | number
-    role: $Enums.MessageRole
+    role?: $Enums.MessageRole | null
     content: string
     isEdited?: boolean
     deletedAt?: Date | string | null
@@ -14871,13 +15034,14 @@ export namespace Prisma {
     parentMessage?: MessageCreateNestedOneWithoutRepliesInput
     replies?: MessageCreateNestedManyWithoutParentMessageInput
     attachments?: MessageAttachmentCreateNestedManyWithoutMessageInput
+    lastMessageOf?: ConversationCreateNestedManyWithoutLastMessageInput
   }
 
   export type MessageUncheckedCreateWithoutUserInput = {
     id?: bigint | number
     conversationId: bigint | number
     parentMessageId?: bigint | number | null
-    role: $Enums.MessageRole
+    role?: $Enums.MessageRole | null
     content: string
     isEdited?: boolean
     deletedAt?: Date | string | null
@@ -14885,6 +15049,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     replies?: MessageUncheckedCreateNestedManyWithoutParentMessageInput
     attachments?: MessageAttachmentUncheckedCreateNestedManyWithoutMessageInput
+    lastMessageOf?: ConversationUncheckedCreateNestedManyWithoutLastMessageInput
   }
 
   export type MessageCreateOrConnectWithoutUserInput = {
@@ -14983,6 +15148,7 @@ export namespace Prisma {
     participants?: ConversationParticipantCreateNestedManyWithoutConversationInput
     activeUsers?: UserCreateNestedManyWithoutActiveConversationInput
     messages?: MessageCreateNestedManyWithoutConversationInput
+    lastMessage?: MessageCreateNestedOneWithoutLastMessageOfInput
   }
 
   export type ConversationUncheckedCreateWithoutOwnerInput = {
@@ -14990,6 +15156,7 @@ export namespace Prisma {
     title?: string | null
     systemPrompt?: string | null
     type?: $Enums.ConversationType
+    lastMessageId?: bigint | number | null
     lastMessageAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -15089,7 +15256,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     participants?: ConversationParticipantUpdateManyWithoutConversationNestedInput
     messages?: MessageUpdateManyWithoutConversationNestedInput
-    owner?: UserUpdateOneWithoutConversationsNestedInput
+    owner?: UserUpdateOneWithoutOwnedConversationsNestedInput
+    lastMessage?: MessageUpdateOneWithoutLastMessageOfNestedInput
   }
 
   export type ConversationUncheckedUpdateWithoutActiveUsersInput = {
@@ -15098,6 +15266,7 @@ export namespace Prisma {
     systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
     ownerId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    lastMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15130,7 +15299,7 @@ export namespace Prisma {
     conversationId?: BigIntFilter<"Message"> | bigint | number
     parentMessageId?: BigIntNullableFilter<"Message"> | bigint | number | null
     userId?: BigIntNullableFilter<"Message"> | bigint | number | null
-    role?: EnumMessageRoleFilter<"Message"> | $Enums.MessageRole
+    role?: EnumMessageRoleNullableFilter<"Message"> | $Enums.MessageRole | null
     content?: StringFilter<"Message"> | string
     isEdited?: BoolFilter<"Message"> | boolean
     deletedAt?: DateTimeNullableFilter<"Message"> | Date | string | null
@@ -15234,6 +15403,7 @@ export namespace Prisma {
     systemPrompt?: StringNullableFilter<"Conversation"> | string | null
     type?: EnumConversationTypeFilter<"Conversation"> | $Enums.ConversationType
     ownerId?: BigIntNullableFilter<"Conversation"> | bigint | number | null
+    lastMessageId?: BigIntNullableFilter<"Conversation"> | bigint | number | null
     lastMessageAt?: DateTimeNullableFilter<"Conversation"> | Date | string | null
     deletedAt?: DateTimeNullableFilter<"Conversation"> | Date | string | null
     createdAt?: DateTimeFilter<"Conversation"> | Date | string
@@ -15254,7 +15424,7 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
     blockedBy?: UserBlockCreateNestedManyWithoutBlockedInput
-    conversations?: ConversationCreateNestedManyWithoutOwnerInput
+    ownedConversations?: ConversationCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutRefreshTokensInput = {
@@ -15271,7 +15441,7 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     blockedUsers?: UserBlockUncheckedCreateNestedManyWithoutBlockerInput
     blockedBy?: UserBlockUncheckedCreateNestedManyWithoutBlockedInput
-    conversations?: ConversationUncheckedCreateNestedManyWithoutOwnerInput
+    ownedConversations?: ConversationUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutRefreshTokensInput = {
@@ -15304,7 +15474,7 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
     blockedBy?: UserBlockUpdateManyWithoutBlockedNestedInput
-    conversations?: ConversationUpdateManyWithoutOwnerNestedInput
+    ownedConversations?: ConversationUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRefreshTokensInput = {
@@ -15321,7 +15491,7 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     blockedUsers?: UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
     blockedBy?: UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
-    conversations?: ConversationUncheckedUpdateManyWithoutOwnerNestedInput
+    ownedConversations?: ConversationUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type ConversationParticipantCreateWithoutConversationInput = {
@@ -15368,7 +15538,7 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
     blockedBy?: UserBlockCreateNestedManyWithoutBlockedInput
-    conversations?: ConversationCreateNestedManyWithoutOwnerInput
+    ownedConversations?: ConversationCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutActiveConversationInput = {
@@ -15385,7 +15555,7 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     blockedUsers?: UserBlockUncheckedCreateNestedManyWithoutBlockerInput
     blockedBy?: UserBlockUncheckedCreateNestedManyWithoutBlockedInput
-    conversations?: ConversationUncheckedCreateNestedManyWithoutOwnerInput
+    ownedConversations?: ConversationUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutActiveConversationInput = {
@@ -15400,7 +15570,7 @@ export namespace Prisma {
 
   export type MessageCreateWithoutConversationInput = {
     id?: bigint | number
-    role: $Enums.MessageRole
+    role?: $Enums.MessageRole | null
     content: string
     isEdited?: boolean
     deletedAt?: Date | string | null
@@ -15410,13 +15580,14 @@ export namespace Prisma {
     parentMessage?: MessageCreateNestedOneWithoutRepliesInput
     replies?: MessageCreateNestedManyWithoutParentMessageInput
     attachments?: MessageAttachmentCreateNestedManyWithoutMessageInput
+    lastMessageOf?: ConversationCreateNestedManyWithoutLastMessageInput
   }
 
   export type MessageUncheckedCreateWithoutConversationInput = {
     id?: bigint | number
     parentMessageId?: bigint | number | null
     userId?: bigint | number | null
-    role: $Enums.MessageRole
+    role?: $Enums.MessageRole | null
     content: string
     isEdited?: boolean
     deletedAt?: Date | string | null
@@ -15424,6 +15595,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     replies?: MessageUncheckedCreateNestedManyWithoutParentMessageInput
     attachments?: MessageAttachmentUncheckedCreateNestedManyWithoutMessageInput
+    lastMessageOf?: ConversationUncheckedCreateNestedManyWithoutLastMessageInput
   }
 
   export type MessageCreateOrConnectWithoutConversationInput = {
@@ -15436,7 +15608,7 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type UserCreateWithoutConversationsInput = {
+  export type UserCreateWithoutOwnedConversationsInput = {
     id?: bigint | number
     email: string
     name?: string | null
@@ -15453,7 +15625,7 @@ export namespace Prisma {
     blockedBy?: UserBlockCreateNestedManyWithoutBlockedInput
   }
 
-  export type UserUncheckedCreateWithoutConversationsInput = {
+  export type UserUncheckedCreateWithoutOwnedConversationsInput = {
     id?: bigint | number
     email: string
     name?: string | null
@@ -15470,9 +15642,44 @@ export namespace Prisma {
     blockedBy?: UserBlockUncheckedCreateNestedManyWithoutBlockedInput
   }
 
-  export type UserCreateOrConnectWithoutConversationsInput = {
+  export type UserCreateOrConnectWithoutOwnedConversationsInput = {
     where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutConversationsInput, UserUncheckedCreateWithoutConversationsInput>
+    create: XOR<UserCreateWithoutOwnedConversationsInput, UserUncheckedCreateWithoutOwnedConversationsInput>
+  }
+
+  export type MessageCreateWithoutLastMessageOfInput = {
+    id?: bigint | number
+    role?: $Enums.MessageRole | null
+    content: string
+    isEdited?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    conversation: ConversationCreateNestedOneWithoutMessagesInput
+    user?: UserCreateNestedOneWithoutMessagesInput
+    parentMessage?: MessageCreateNestedOneWithoutRepliesInput
+    replies?: MessageCreateNestedManyWithoutParentMessageInput
+    attachments?: MessageAttachmentCreateNestedManyWithoutMessageInput
+  }
+
+  export type MessageUncheckedCreateWithoutLastMessageOfInput = {
+    id?: bigint | number
+    conversationId: bigint | number
+    parentMessageId?: bigint | number | null
+    userId?: bigint | number | null
+    role?: $Enums.MessageRole | null
+    content: string
+    isEdited?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    replies?: MessageUncheckedCreateNestedManyWithoutParentMessageInput
+    attachments?: MessageAttachmentUncheckedCreateNestedManyWithoutMessageInput
+  }
+
+  export type MessageCreateOrConnectWithoutLastMessageOfInput = {
+    where: MessageWhereUniqueInput
+    create: XOR<MessageCreateWithoutLastMessageOfInput, MessageUncheckedCreateWithoutLastMessageOfInput>
   }
 
   export type ConversationParticipantUpsertWithWhereUniqueWithoutConversationInput = {
@@ -15537,18 +15744,18 @@ export namespace Prisma {
     data: XOR<MessageUpdateManyMutationInput, MessageUncheckedUpdateManyWithoutConversationInput>
   }
 
-  export type UserUpsertWithoutConversationsInput = {
-    update: XOR<UserUpdateWithoutConversationsInput, UserUncheckedUpdateWithoutConversationsInput>
-    create: XOR<UserCreateWithoutConversationsInput, UserUncheckedCreateWithoutConversationsInput>
+  export type UserUpsertWithoutOwnedConversationsInput = {
+    update: XOR<UserUpdateWithoutOwnedConversationsInput, UserUncheckedUpdateWithoutOwnedConversationsInput>
+    create: XOR<UserCreateWithoutOwnedConversationsInput, UserUncheckedCreateWithoutOwnedConversationsInput>
     where?: UserWhereInput
   }
 
-  export type UserUpdateToOneWithWhereWithoutConversationsInput = {
+  export type UserUpdateToOneWithWhereWithoutOwnedConversationsInput = {
     where?: UserWhereInput
-    data: XOR<UserUpdateWithoutConversationsInput, UserUncheckedUpdateWithoutConversationsInput>
+    data: XOR<UserUpdateWithoutOwnedConversationsInput, UserUncheckedUpdateWithoutOwnedConversationsInput>
   }
 
-  export type UserUpdateWithoutConversationsInput = {
+  export type UserUpdateWithoutOwnedConversationsInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
@@ -15565,7 +15772,7 @@ export namespace Prisma {
     blockedBy?: UserBlockUpdateManyWithoutBlockedNestedInput
   }
 
-  export type UserUncheckedUpdateWithoutConversationsInput = {
+  export type UserUncheckedUpdateWithoutOwnedConversationsInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
@@ -15582,6 +15789,47 @@ export namespace Prisma {
     blockedBy?: UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
   }
 
+  export type MessageUpsertWithoutLastMessageOfInput = {
+    update: XOR<MessageUpdateWithoutLastMessageOfInput, MessageUncheckedUpdateWithoutLastMessageOfInput>
+    create: XOR<MessageCreateWithoutLastMessageOfInput, MessageUncheckedCreateWithoutLastMessageOfInput>
+    where?: MessageWhereInput
+  }
+
+  export type MessageUpdateToOneWithWhereWithoutLastMessageOfInput = {
+    where?: MessageWhereInput
+    data: XOR<MessageUpdateWithoutLastMessageOfInput, MessageUncheckedUpdateWithoutLastMessageOfInput>
+  }
+
+  export type MessageUpdateWithoutLastMessageOfInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    role?: NullableEnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole | null
+    content?: StringFieldUpdateOperationsInput | string
+    isEdited?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    conversation?: ConversationUpdateOneRequiredWithoutMessagesNestedInput
+    user?: UserUpdateOneWithoutMessagesNestedInput
+    parentMessage?: MessageUpdateOneWithoutRepliesNestedInput
+    replies?: MessageUpdateManyWithoutParentMessageNestedInput
+    attachments?: MessageAttachmentUpdateManyWithoutMessageNestedInput
+  }
+
+  export type MessageUncheckedUpdateWithoutLastMessageOfInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    conversationId?: BigIntFieldUpdateOperationsInput | bigint | number
+    parentMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    role?: NullableEnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole | null
+    content?: StringFieldUpdateOperationsInput | string
+    isEdited?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    replies?: MessageUncheckedUpdateManyWithoutParentMessageNestedInput
+    attachments?: MessageAttachmentUncheckedUpdateManyWithoutMessageNestedInput
+  }
+
   export type ConversationCreateWithoutParticipantsInput = {
     id?: bigint | number
     title?: string | null
@@ -15593,7 +15841,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     activeUsers?: UserCreateNestedManyWithoutActiveConversationInput
     messages?: MessageCreateNestedManyWithoutConversationInput
-    owner?: UserCreateNestedOneWithoutConversationsInput
+    owner?: UserCreateNestedOneWithoutOwnedConversationsInput
+    lastMessage?: MessageCreateNestedOneWithoutLastMessageOfInput
   }
 
   export type ConversationUncheckedCreateWithoutParticipantsInput = {
@@ -15602,6 +15851,7 @@ export namespace Prisma {
     systemPrompt?: string | null
     type?: $Enums.ConversationType
     ownerId?: bigint | number | null
+    lastMessageId?: bigint | number | null
     lastMessageAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -15629,7 +15879,7 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
     blockedBy?: UserBlockCreateNestedManyWithoutBlockedInput
-    conversations?: ConversationCreateNestedManyWithoutOwnerInput
+    ownedConversations?: ConversationCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutConversationParticipantsInput = {
@@ -15646,7 +15896,7 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     blockedUsers?: UserBlockUncheckedCreateNestedManyWithoutBlockerInput
     blockedBy?: UserBlockUncheckedCreateNestedManyWithoutBlockedInput
-    conversations?: ConversationUncheckedCreateNestedManyWithoutOwnerInput
+    ownedConversations?: ConversationUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutConversationParticipantsInput = {
@@ -15676,7 +15926,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     activeUsers?: UserUpdateManyWithoutActiveConversationNestedInput
     messages?: MessageUpdateManyWithoutConversationNestedInput
-    owner?: UserUpdateOneWithoutConversationsNestedInput
+    owner?: UserUpdateOneWithoutOwnedConversationsNestedInput
+    lastMessage?: MessageUpdateOneWithoutLastMessageOfNestedInput
   }
 
   export type ConversationUncheckedUpdateWithoutParticipantsInput = {
@@ -15685,6 +15936,7 @@ export namespace Prisma {
     systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
     ownerId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    lastMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15718,7 +15970,7 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
     blockedBy?: UserBlockUpdateManyWithoutBlockedNestedInput
-    conversations?: ConversationUpdateManyWithoutOwnerNestedInput
+    ownedConversations?: ConversationUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutConversationParticipantsInput = {
@@ -15735,7 +15987,7 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     blockedUsers?: UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
     blockedBy?: UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
-    conversations?: ConversationUncheckedUpdateManyWithoutOwnerNestedInput
+    ownedConversations?: ConversationUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type ConversationCreateWithoutMessagesInput = {
@@ -15749,7 +16001,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     participants?: ConversationParticipantCreateNestedManyWithoutConversationInput
     activeUsers?: UserCreateNestedManyWithoutActiveConversationInput
-    owner?: UserCreateNestedOneWithoutConversationsInput
+    owner?: UserCreateNestedOneWithoutOwnedConversationsInput
+    lastMessage?: MessageCreateNestedOneWithoutLastMessageOfInput
   }
 
   export type ConversationUncheckedCreateWithoutMessagesInput = {
@@ -15758,6 +16011,7 @@ export namespace Prisma {
     systemPrompt?: string | null
     type?: $Enums.ConversationType
     ownerId?: bigint | number | null
+    lastMessageId?: bigint | number | null
     lastMessageAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -15785,7 +16039,7 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
     blockedBy?: UserBlockCreateNestedManyWithoutBlockedInput
-    conversations?: ConversationCreateNestedManyWithoutOwnerInput
+    ownedConversations?: ConversationCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutMessagesInput = {
@@ -15802,7 +16056,7 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     blockedUsers?: UserBlockUncheckedCreateNestedManyWithoutBlockerInput
     blockedBy?: UserBlockUncheckedCreateNestedManyWithoutBlockedInput
-    conversations?: ConversationUncheckedCreateNestedManyWithoutOwnerInput
+    ownedConversations?: ConversationUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutMessagesInput = {
@@ -15812,7 +16066,7 @@ export namespace Prisma {
 
   export type MessageCreateWithoutRepliesInput = {
     id?: bigint | number
-    role: $Enums.MessageRole
+    role?: $Enums.MessageRole | null
     content: string
     isEdited?: boolean
     deletedAt?: Date | string | null
@@ -15822,6 +16076,7 @@ export namespace Prisma {
     user?: UserCreateNestedOneWithoutMessagesInput
     parentMessage?: MessageCreateNestedOneWithoutRepliesInput
     attachments?: MessageAttachmentCreateNestedManyWithoutMessageInput
+    lastMessageOf?: ConversationCreateNestedManyWithoutLastMessageInput
   }
 
   export type MessageUncheckedCreateWithoutRepliesInput = {
@@ -15829,13 +16084,14 @@ export namespace Prisma {
     conversationId: bigint | number
     parentMessageId?: bigint | number | null
     userId?: bigint | number | null
-    role: $Enums.MessageRole
+    role?: $Enums.MessageRole | null
     content: string
     isEdited?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     attachments?: MessageAttachmentUncheckedCreateNestedManyWithoutMessageInput
+    lastMessageOf?: ConversationUncheckedCreateNestedManyWithoutLastMessageInput
   }
 
   export type MessageCreateOrConnectWithoutRepliesInput = {
@@ -15845,7 +16101,7 @@ export namespace Prisma {
 
   export type MessageCreateWithoutParentMessageInput = {
     id?: bigint | number
-    role: $Enums.MessageRole
+    role?: $Enums.MessageRole | null
     content: string
     isEdited?: boolean
     deletedAt?: Date | string | null
@@ -15855,13 +16111,14 @@ export namespace Prisma {
     user?: UserCreateNestedOneWithoutMessagesInput
     replies?: MessageCreateNestedManyWithoutParentMessageInput
     attachments?: MessageAttachmentCreateNestedManyWithoutMessageInput
+    lastMessageOf?: ConversationCreateNestedManyWithoutLastMessageInput
   }
 
   export type MessageUncheckedCreateWithoutParentMessageInput = {
     id?: bigint | number
     conversationId: bigint | number
     userId?: bigint | number | null
-    role: $Enums.MessageRole
+    role?: $Enums.MessageRole | null
     content: string
     isEdited?: boolean
     deletedAt?: Date | string | null
@@ -15869,6 +16126,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     replies?: MessageUncheckedCreateNestedManyWithoutParentMessageInput
     attachments?: MessageAttachmentUncheckedCreateNestedManyWithoutMessageInput
+    lastMessageOf?: ConversationUncheckedCreateNestedManyWithoutLastMessageInput
   }
 
   export type MessageCreateOrConnectWithoutParentMessageInput = {
@@ -15909,6 +16167,46 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ConversationCreateWithoutLastMessageInput = {
+    id?: bigint | number
+    title?: string | null
+    systemPrompt?: string | null
+    type?: $Enums.ConversationType
+    lastMessageAt?: Date | string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    participants?: ConversationParticipantCreateNestedManyWithoutConversationInput
+    activeUsers?: UserCreateNestedManyWithoutActiveConversationInput
+    messages?: MessageCreateNestedManyWithoutConversationInput
+    owner?: UserCreateNestedOneWithoutOwnedConversationsInput
+  }
+
+  export type ConversationUncheckedCreateWithoutLastMessageInput = {
+    id?: bigint | number
+    title?: string | null
+    systemPrompt?: string | null
+    type?: $Enums.ConversationType
+    ownerId?: bigint | number | null
+    lastMessageAt?: Date | string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    participants?: ConversationParticipantUncheckedCreateNestedManyWithoutConversationInput
+    activeUsers?: UserUncheckedCreateNestedManyWithoutActiveConversationInput
+    messages?: MessageUncheckedCreateNestedManyWithoutConversationInput
+  }
+
+  export type ConversationCreateOrConnectWithoutLastMessageInput = {
+    where: ConversationWhereUniqueInput
+    create: XOR<ConversationCreateWithoutLastMessageInput, ConversationUncheckedCreateWithoutLastMessageInput>
+  }
+
+  export type ConversationCreateManyLastMessageInputEnvelope = {
+    data: ConversationCreateManyLastMessageInput | ConversationCreateManyLastMessageInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ConversationUpsertWithoutMessagesInput = {
     update: XOR<ConversationUpdateWithoutMessagesInput, ConversationUncheckedUpdateWithoutMessagesInput>
     create: XOR<ConversationCreateWithoutMessagesInput, ConversationUncheckedCreateWithoutMessagesInput>
@@ -15931,7 +16229,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     participants?: ConversationParticipantUpdateManyWithoutConversationNestedInput
     activeUsers?: UserUpdateManyWithoutActiveConversationNestedInput
-    owner?: UserUpdateOneWithoutConversationsNestedInput
+    owner?: UserUpdateOneWithoutOwnedConversationsNestedInput
+    lastMessage?: MessageUpdateOneWithoutLastMessageOfNestedInput
   }
 
   export type ConversationUncheckedUpdateWithoutMessagesInput = {
@@ -15940,6 +16239,7 @@ export namespace Prisma {
     systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
     ownerId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    lastMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15973,7 +16273,7 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
     blockedBy?: UserBlockUpdateManyWithoutBlockedNestedInput
-    conversations?: ConversationUpdateManyWithoutOwnerNestedInput
+    ownedConversations?: ConversationUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMessagesInput = {
@@ -15990,7 +16290,7 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     blockedUsers?: UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
     blockedBy?: UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
-    conversations?: ConversationUncheckedUpdateManyWithoutOwnerNestedInput
+    ownedConversations?: ConversationUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type MessageUpsertWithoutRepliesInput = {
@@ -16006,7 +16306,7 @@ export namespace Prisma {
 
   export type MessageUpdateWithoutRepliesInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
+    role?: NullableEnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole | null
     content?: StringFieldUpdateOperationsInput | string
     isEdited?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16016,6 +16316,7 @@ export namespace Prisma {
     user?: UserUpdateOneWithoutMessagesNestedInput
     parentMessage?: MessageUpdateOneWithoutRepliesNestedInput
     attachments?: MessageAttachmentUpdateManyWithoutMessageNestedInput
+    lastMessageOf?: ConversationUpdateManyWithoutLastMessageNestedInput
   }
 
   export type MessageUncheckedUpdateWithoutRepliesInput = {
@@ -16023,13 +16324,14 @@ export namespace Prisma {
     conversationId?: BigIntFieldUpdateOperationsInput | bigint | number
     parentMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
+    role?: NullableEnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole | null
     content?: StringFieldUpdateOperationsInput | string
     isEdited?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attachments?: MessageAttachmentUncheckedUpdateManyWithoutMessageNestedInput
+    lastMessageOf?: ConversationUncheckedUpdateManyWithoutLastMessageNestedInput
   }
 
   export type MessageUpsertWithWhereUniqueWithoutParentMessageInput = {
@@ -16077,9 +16379,25 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"MessageAttachment"> | Date | string
   }
 
+  export type ConversationUpsertWithWhereUniqueWithoutLastMessageInput = {
+    where: ConversationWhereUniqueInput
+    update: XOR<ConversationUpdateWithoutLastMessageInput, ConversationUncheckedUpdateWithoutLastMessageInput>
+    create: XOR<ConversationCreateWithoutLastMessageInput, ConversationUncheckedCreateWithoutLastMessageInput>
+  }
+
+  export type ConversationUpdateWithWhereUniqueWithoutLastMessageInput = {
+    where: ConversationWhereUniqueInput
+    data: XOR<ConversationUpdateWithoutLastMessageInput, ConversationUncheckedUpdateWithoutLastMessageInput>
+  }
+
+  export type ConversationUpdateManyWithWhereWithoutLastMessageInput = {
+    where: ConversationScalarWhereInput
+    data: XOR<ConversationUpdateManyMutationInput, ConversationUncheckedUpdateManyWithoutLastMessageInput>
+  }
+
   export type MessageCreateWithoutAttachmentsInput = {
     id?: bigint | number
-    role: $Enums.MessageRole
+    role?: $Enums.MessageRole | null
     content: string
     isEdited?: boolean
     deletedAt?: Date | string | null
@@ -16089,6 +16407,7 @@ export namespace Prisma {
     user?: UserCreateNestedOneWithoutMessagesInput
     parentMessage?: MessageCreateNestedOneWithoutRepliesInput
     replies?: MessageCreateNestedManyWithoutParentMessageInput
+    lastMessageOf?: ConversationCreateNestedManyWithoutLastMessageInput
   }
 
   export type MessageUncheckedCreateWithoutAttachmentsInput = {
@@ -16096,13 +16415,14 @@ export namespace Prisma {
     conversationId: bigint | number
     parentMessageId?: bigint | number | null
     userId?: bigint | number | null
-    role: $Enums.MessageRole
+    role?: $Enums.MessageRole | null
     content: string
     isEdited?: boolean
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     replies?: MessageUncheckedCreateNestedManyWithoutParentMessageInput
+    lastMessageOf?: ConversationUncheckedCreateNestedManyWithoutLastMessageInput
   }
 
   export type MessageCreateOrConnectWithoutAttachmentsInput = {
@@ -16123,7 +16443,7 @@ export namespace Prisma {
 
   export type MessageUpdateWithoutAttachmentsInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
+    role?: NullableEnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole | null
     content?: StringFieldUpdateOperationsInput | string
     isEdited?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16133,6 +16453,7 @@ export namespace Prisma {
     user?: UserUpdateOneWithoutMessagesNestedInput
     parentMessage?: MessageUpdateOneWithoutRepliesNestedInput
     replies?: MessageUpdateManyWithoutParentMessageNestedInput
+    lastMessageOf?: ConversationUpdateManyWithoutLastMessageNestedInput
   }
 
   export type MessageUncheckedUpdateWithoutAttachmentsInput = {
@@ -16140,13 +16461,14 @@ export namespace Prisma {
     conversationId?: BigIntFieldUpdateOperationsInput | bigint | number
     parentMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
+    role?: NullableEnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole | null
     content?: StringFieldUpdateOperationsInput | string
     isEdited?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     replies?: MessageUncheckedUpdateManyWithoutParentMessageNestedInput
+    lastMessageOf?: ConversationUncheckedUpdateManyWithoutLastMessageNestedInput
   }
 
   export type UserCreateWithoutPasswordResetTokensInput = {
@@ -16163,7 +16485,7 @@ export namespace Prisma {
     messages?: MessageCreateNestedManyWithoutUserInput
     blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
     blockedBy?: UserBlockCreateNestedManyWithoutBlockedInput
-    conversations?: ConversationCreateNestedManyWithoutOwnerInput
+    ownedConversations?: ConversationCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
@@ -16180,7 +16502,7 @@ export namespace Prisma {
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     blockedUsers?: UserBlockUncheckedCreateNestedManyWithoutBlockerInput
     blockedBy?: UserBlockUncheckedCreateNestedManyWithoutBlockedInput
-    conversations?: ConversationUncheckedCreateNestedManyWithoutOwnerInput
+    ownedConversations?: ConversationUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutPasswordResetTokensInput = {
@@ -16213,7 +16535,7 @@ export namespace Prisma {
     messages?: MessageUpdateManyWithoutUserNestedInput
     blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
     blockedBy?: UserBlockUpdateManyWithoutBlockedNestedInput
-    conversations?: ConversationUpdateManyWithoutOwnerNestedInput
+    ownedConversations?: ConversationUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
@@ -16230,7 +16552,7 @@ export namespace Prisma {
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     blockedUsers?: UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
     blockedBy?: UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
-    conversations?: ConversationUncheckedUpdateManyWithoutOwnerNestedInput
+    ownedConversations?: ConversationUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserCreateWithoutBlockedUsersInput = {
@@ -16247,7 +16569,7 @@ export namespace Prisma {
     messages?: MessageCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     blockedBy?: UserBlockCreateNestedManyWithoutBlockedInput
-    conversations?: ConversationCreateNestedManyWithoutOwnerInput
+    ownedConversations?: ConversationCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutBlockedUsersInput = {
@@ -16264,7 +16586,7 @@ export namespace Prisma {
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     blockedBy?: UserBlockUncheckedCreateNestedManyWithoutBlockedInput
-    conversations?: ConversationUncheckedCreateNestedManyWithoutOwnerInput
+    ownedConversations?: ConversationUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutBlockedUsersInput = {
@@ -16286,7 +16608,7 @@ export namespace Prisma {
     messages?: MessageCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
-    conversations?: ConversationCreateNestedManyWithoutOwnerInput
+    ownedConversations?: ConversationCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutBlockedByInput = {
@@ -16303,7 +16625,7 @@ export namespace Prisma {
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     blockedUsers?: UserBlockUncheckedCreateNestedManyWithoutBlockerInput
-    conversations?: ConversationUncheckedCreateNestedManyWithoutOwnerInput
+    ownedConversations?: ConversationUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutBlockedByInput = {
@@ -16336,7 +16658,7 @@ export namespace Prisma {
     messages?: MessageUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     blockedBy?: UserBlockUpdateManyWithoutBlockedNestedInput
-    conversations?: ConversationUpdateManyWithoutOwnerNestedInput
+    ownedConversations?: ConversationUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBlockedUsersInput = {
@@ -16353,7 +16675,7 @@ export namespace Prisma {
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     blockedBy?: UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
-    conversations?: ConversationUncheckedUpdateManyWithoutOwnerNestedInput
+    ownedConversations?: ConversationUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUpsertWithoutBlockedByInput = {
@@ -16381,7 +16703,7 @@ export namespace Prisma {
     messages?: MessageUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
-    conversations?: ConversationUpdateManyWithoutOwnerNestedInput
+    ownedConversations?: ConversationUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBlockedByInput = {
@@ -16398,7 +16720,7 @@ export namespace Prisma {
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     blockedUsers?: UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
-    conversations?: ConversationUncheckedUpdateManyWithoutOwnerNestedInput
+    ownedConversations?: ConversationUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type RefreshTokenCreateManyUserInput = {
@@ -16423,7 +16745,7 @@ export namespace Prisma {
     id?: bigint | number
     conversationId: bigint | number
     parentMessageId?: bigint | number | null
-    role: $Enums.MessageRole
+    role?: $Enums.MessageRole | null
     content: string
     isEdited?: boolean
     deletedAt?: Date | string | null
@@ -16458,6 +16780,7 @@ export namespace Prisma {
     title?: string | null
     systemPrompt?: string | null
     type?: $Enums.ConversationType
+    lastMessageId?: bigint | number | null
     lastMessageAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -16520,7 +16843,7 @@ export namespace Prisma {
 
   export type MessageUpdateWithoutUserInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
+    role?: NullableEnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole | null
     content?: StringFieldUpdateOperationsInput | string
     isEdited?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16530,13 +16853,14 @@ export namespace Prisma {
     parentMessage?: MessageUpdateOneWithoutRepliesNestedInput
     replies?: MessageUpdateManyWithoutParentMessageNestedInput
     attachments?: MessageAttachmentUpdateManyWithoutMessageNestedInput
+    lastMessageOf?: ConversationUpdateManyWithoutLastMessageNestedInput
   }
 
   export type MessageUncheckedUpdateWithoutUserInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     conversationId?: BigIntFieldUpdateOperationsInput | bigint | number
     parentMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
+    role?: NullableEnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole | null
     content?: StringFieldUpdateOperationsInput | string
     isEdited?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16544,13 +16868,14 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     replies?: MessageUncheckedUpdateManyWithoutParentMessageNestedInput
     attachments?: MessageAttachmentUncheckedUpdateManyWithoutMessageNestedInput
+    lastMessageOf?: ConversationUncheckedUpdateManyWithoutLastMessageNestedInput
   }
 
   export type MessageUncheckedUpdateManyWithoutUserInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     conversationId?: BigIntFieldUpdateOperationsInput | bigint | number
     parentMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
+    role?: NullableEnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole | null
     content?: StringFieldUpdateOperationsInput | string
     isEdited?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16636,6 +16961,7 @@ export namespace Prisma {
     participants?: ConversationParticipantUpdateManyWithoutConversationNestedInput
     activeUsers?: UserUpdateManyWithoutActiveConversationNestedInput
     messages?: MessageUpdateManyWithoutConversationNestedInput
+    lastMessage?: MessageUpdateOneWithoutLastMessageOfNestedInput
   }
 
   export type ConversationUncheckedUpdateWithoutOwnerInput = {
@@ -16643,6 +16969,7 @@ export namespace Prisma {
     title?: NullableStringFieldUpdateOperationsInput | string | null
     systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
+    lastMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16657,6 +16984,7 @@ export namespace Prisma {
     title?: NullableStringFieldUpdateOperationsInput | string | null
     systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
+    lastMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16687,7 +17015,7 @@ export namespace Prisma {
     id?: bigint | number
     parentMessageId?: bigint | number | null
     userId?: bigint | number | null
-    role: $Enums.MessageRole
+    role?: $Enums.MessageRole | null
     content: string
     isEdited?: boolean
     deletedAt?: Date | string | null
@@ -16739,7 +17067,7 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
     blockedBy?: UserBlockUpdateManyWithoutBlockedNestedInput
-    conversations?: ConversationUpdateManyWithoutOwnerNestedInput
+    ownedConversations?: ConversationUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutActiveConversationInput = {
@@ -16756,7 +17084,7 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     blockedUsers?: UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
     blockedBy?: UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
-    conversations?: ConversationUncheckedUpdateManyWithoutOwnerNestedInput
+    ownedConversations?: ConversationUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutActiveConversationInput = {
@@ -16771,7 +17099,7 @@ export namespace Prisma {
 
   export type MessageUpdateWithoutConversationInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
+    role?: NullableEnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole | null
     content?: StringFieldUpdateOperationsInput | string
     isEdited?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16781,13 +17109,14 @@ export namespace Prisma {
     parentMessage?: MessageUpdateOneWithoutRepliesNestedInput
     replies?: MessageUpdateManyWithoutParentMessageNestedInput
     attachments?: MessageAttachmentUpdateManyWithoutMessageNestedInput
+    lastMessageOf?: ConversationUpdateManyWithoutLastMessageNestedInput
   }
 
   export type MessageUncheckedUpdateWithoutConversationInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     parentMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
+    role?: NullableEnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole | null
     content?: StringFieldUpdateOperationsInput | string
     isEdited?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16795,13 +17124,14 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     replies?: MessageUncheckedUpdateManyWithoutParentMessageNestedInput
     attachments?: MessageAttachmentUncheckedUpdateManyWithoutMessageNestedInput
+    lastMessageOf?: ConversationUncheckedUpdateManyWithoutLastMessageNestedInput
   }
 
   export type MessageUncheckedUpdateManyWithoutConversationInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     parentMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
+    role?: NullableEnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole | null
     content?: StringFieldUpdateOperationsInput | string
     isEdited?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16813,7 +17143,7 @@ export namespace Prisma {
     id?: bigint | number
     conversationId: bigint | number
     userId?: bigint | number | null
-    role: $Enums.MessageRole
+    role?: $Enums.MessageRole | null
     content: string
     isEdited?: boolean
     deletedAt?: Date | string | null
@@ -16830,9 +17160,21 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type ConversationCreateManyLastMessageInput = {
+    id?: bigint | number
+    title?: string | null
+    systemPrompt?: string | null
+    type?: $Enums.ConversationType
+    ownerId?: bigint | number | null
+    lastMessageAt?: Date | string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type MessageUpdateWithoutParentMessageInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
+    role?: NullableEnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole | null
     content?: StringFieldUpdateOperationsInput | string
     isEdited?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16842,13 +17184,14 @@ export namespace Prisma {
     user?: UserUpdateOneWithoutMessagesNestedInput
     replies?: MessageUpdateManyWithoutParentMessageNestedInput
     attachments?: MessageAttachmentUpdateManyWithoutMessageNestedInput
+    lastMessageOf?: ConversationUpdateManyWithoutLastMessageNestedInput
   }
 
   export type MessageUncheckedUpdateWithoutParentMessageInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     conversationId?: BigIntFieldUpdateOperationsInput | bigint | number
     userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
+    role?: NullableEnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole | null
     content?: StringFieldUpdateOperationsInput | string
     isEdited?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16856,13 +17199,14 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     replies?: MessageUncheckedUpdateManyWithoutParentMessageNestedInput
     attachments?: MessageAttachmentUncheckedUpdateManyWithoutMessageNestedInput
+    lastMessageOf?: ConversationUncheckedUpdateManyWithoutLastMessageNestedInput
   }
 
   export type MessageUncheckedUpdateManyWithoutParentMessageInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     conversationId?: BigIntFieldUpdateOperationsInput | bigint | number
     userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    role?: EnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole
+    role?: NullableEnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole | null
     content?: StringFieldUpdateOperationsInput | string
     isEdited?: BoolFieldUpdateOperationsInput | boolean
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16895,6 +17239,48 @@ export namespace Prisma {
     fileType?: StringFieldUpdateOperationsInput | string
     fileSize?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConversationUpdateWithoutLastMessageInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
+    lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    participants?: ConversationParticipantUpdateManyWithoutConversationNestedInput
+    activeUsers?: UserUpdateManyWithoutActiveConversationNestedInput
+    messages?: MessageUpdateManyWithoutConversationNestedInput
+    owner?: UserUpdateOneWithoutOwnedConversationsNestedInput
+  }
+
+  export type ConversationUncheckedUpdateWithoutLastMessageInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
+    ownerId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    participants?: ConversationParticipantUncheckedUpdateManyWithoutConversationNestedInput
+    activeUsers?: UserUncheckedUpdateManyWithoutActiveConversationNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutConversationNestedInput
+  }
+
+  export type ConversationUncheckedUpdateManyWithoutLastMessageInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
+    ownerId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

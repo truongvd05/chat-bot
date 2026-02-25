@@ -1,6 +1,8 @@
+import { HTTP_STATUS } from "#config/constants.js";
 import prisma from "#libs/prisma.js";
 import { serializeBigInt } from "#utils/serialize.js";
 import chatBotService from "./chatBot.service.js";
+import conversationService from "./conversation.service.js";
 
 class MessageService {
     // kiểm tra user có trong cuộc hội thoại hay không và cuộc hộc thoại đã bị xóa chưa
@@ -19,6 +21,7 @@ class MessageService {
             throw new AppError("CONVERSATION_NOT_FOUND_OR_FORBIDDEN");
         }
     }
+    // kiểm tra xem message có phải của user hay không
     async _assertUserOwnsActiveMessage(messageId, userId) {
         const message = await prisma.message.findFirst({
             where: {
@@ -89,14 +92,17 @@ class MessageService {
         role = "user",
     ) {
         if (user.id === targetUserId) {
-            throw new AppError("CANNOT_MESSAGE_SELF");
+            throw new AppError(
+                "cannot send message yourself",
+                HTTP_STATUS.BAD_REQUEST,
+            );
         }
         const targetUser = await prisma.user.findUnique({
             where: { id: targetUserId },
             select: { id: true },
         });
         if (!targetUser) {
-            throw new AppError("TARGET_USER_NOT_FOUND");
+            throw new AppError("target user not found", HTTP_STATUS.NOT_FOUND);
         }
         const isBlock = await prisma.userBlock.findFirst({
             where: {
@@ -106,34 +112,86 @@ class MessageService {
                 ],
             },
         });
-        if (isBlock) throw new AppError("USER_BLOCKED");
-        if (role === "user") {
-            await this._userInConversation(conversationId, user.id);
-        }
+        if (isBlock) throw new AppError("user block", HTTP_STATUS.BAD_REQUEST);
 
-        const conversation = await prisma.conversation.findUnique({
+        // check có conversation chưa
+        let conversation = await prisma.conversation.findUnique({
             where: { id: conversationId },
             include: {
                 participants: true,
             },
         });
+        // chưa có thì tạo
         if (!conversation) {
-            throw new AppError("CONVERSATION_NOT_FOUND");
+            conversation = await conversationService.createDirectConversation(
+                user.id,
+                targetUserId,
+            );
         }
-        if (conversation.type !== "DIRECT") {
-            throw new AppError("INVALID_DIRECT_CONVERSATION");
-        }
+        await this._userInConversation(conversation.id, user.id);
+        await this._userInConversation(conversation.id, targetUserId);
 
-        const newMessage = await prisma.message.create({
-            data: {
-                userId: role === "user" ? user.id : null,
-                conversationId,
-                content,
-                role,
-            },
-        });
-        return serializeBigInt(newMessage);
+        const payload = {
+            conversation,
+            userId: user.id,
+            content,
+            role,
+        };
+        switch (conversation.type) {
+            case "DIRECT":
+            case "GROUP": {
+                const newMessage = await this.handleDirectMessage(payload);
+                return serializeBigInt(newMessage);
+            }
+            case "BOT": {
+                const newMessage = await this.handleBotMessage(payload);
+                return serializeBigInt(newMessage);
+            }
+            default:
+                throw new AppError("Invalid conversation type", 400);
+        }
     }
+
+    async handleDirectMessage({ conversation, userId, content }) {
+        return this._createMessage({
+            conversationId: conversation.id,
+            userId,
+            content,
+            role: null,
+        });
+    }
+    async handleBotMessage({ conversation, userId, content, role }) {
+        return this._createMessage({
+            conversationId: conversation.id,
+            userId,
+            content,
+            role: role ?? "user",
+        });
+    }
+    async _createMessage({ conversationId, userId, content, role }) {
+        return prisma.$transaction(async (tx) => {
+            const message = await tx.message.create({
+                data: {
+                    userId: role === "user" ? userId : null,
+                    conversationId,
+                    content,
+                    role,
+                },
+            });
+
+            await tx.conversation.update({
+                where: { id: conversationId },
+                data: {
+                    lastMessageId: message.id,
+                    lastMessageAt: message.createdAt,
+                    updatedAt: message.createdAt,
+                },
+            });
+
+            return message;
+        });
+    }
+
     async getMessage(userId, conversationId, limit, offset) {
         await this._userInConversation(conversationId, userId);
         const participant = await prisma.conversationParticipant.findUnique({

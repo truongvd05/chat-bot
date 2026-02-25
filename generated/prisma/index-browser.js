@@ -146,6 +146,7 @@ exports.Prisma.ConversationScalarFieldEnum = {
   systemPrompt: 'systemPrompt',
   type: 'type',
   ownerId: 'ownerId',
+  lastMessageId: 'lastMessageId',
   lastMessageAt: 'lastMessageAt',
   deletedAt: 'deletedAt',
   createdAt: 'createdAt',
@@ -282,6 +283,7 @@ exports.ConversationType = exports.$Enums.ConversationType = {
 exports.ParticipantRole = exports.$Enums.ParticipantRole = {
   MEMBER: 'MEMBER',
   OWNER: 'OWNER',
+  ADMIN: 'ADMIN',
   BOT: 'BOT'
 };
 
