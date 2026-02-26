@@ -18,6 +18,7 @@ class AuthService {
                 id: true,
                 email: true,
                 password: true,
+                name: true,
             },
         });
     }
@@ -219,30 +220,25 @@ class AuthService {
         });
         return result;
     }
-    async _getRefreshTokenByUser(userId) {
-        return prisma.refreshToken.findUnique({
-            where: { userId },
+    async refreshAccessToken(refresh_token) {
+        const token = await prisma.refreshToken.findFirst({
+            where: { token: refresh_token },
         });
-    }
-    async refreshAccessToken() {
-        const payload = jwt.verify(refresh_token, jwtconfig.refresh_token);
 
-        const refreshToken = await this._getRefreshTokenByUser(payload.userId);
+        if (!token) throw new Error("Unauthorized", HTTP_STATUS.UNAUTHORIZED);
 
-        if (!refreshToken || refreshToken.token !== refresh_token) {
-            throw new AppError(
-                "Invalid refresh token",
-                HTTP_STATUS.UNAUTHORIZED,
-            );
+        if (token.expiresAt < new Date()) {
+            throw new Error("Unauthorized", HTTP_STATUS.UNAUTHORIZED);
         }
-        if (refreshToken.tokenExpiresAt <= new Date()) {
-            throw new AppError(
-                "Refresh token expired",
-                HTTP_STATUS.UNAUTHORIZED,
-            );
+
+        const user = await prisma.user.findUnique({
+            where: { id: token.userId },
+        });
+        if (!user) {
+            throw new Error("Unauthorized", HTTP_STATUS.UNAUTHORIZED);
         }
         const accessToken = responseTokenService.refreshAccessToken(
-            payload.userId,
+            token.userId,
         );
         return accessToken;
     }

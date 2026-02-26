@@ -2,8 +2,7 @@ import jwt from "jsonwebtoken";
 import { ERROR_MESSAGE, HTTP_STATUS, PRISMA_CODE } from "#config/constants.js";
 
 const errorHandle = (err, _, res, next) => {
-    console.log(err);
-    const status = err.statusCode || HTTP_STATUS.INTERNAL_SERVER_ERROR;
+    let status = err.statusCode || HTTP_STATUS.INTERNAL_SERVER_ERROR;
     let errorMessage = err.message || String(err);
     if (err?.code) {
         switch (err.code) {
@@ -44,7 +43,10 @@ const errorHandle = (err, _, res, next) => {
         );
     }
     if (err instanceof jwt.JsonWebTokenError) {
-        errorMessage = ERROR_MESSAGE.UNAUTHORIZED;
+        return res.error(
+            ERROR_MESSAGE.UNAUTHORIZED || "Invalid token",
+            HTTP_STATUS.UNAUTHORIZED,
+        );
     }
     if (err.isOperational) {
         return res.error(errorMessage, status);

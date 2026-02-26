@@ -49,8 +49,7 @@ class AuthController {
             email,
             password,
         );
-
-        return res.success(user, 201, token);
+        return res.success({ user, token }, 201);
     }
     async login(req, res) {
         const { email, password } = req.body;
@@ -72,7 +71,7 @@ class AuthController {
         }
         const { user, token } = await authService.login(email, password);
 
-        return res.success(user, 200, token);
+        return res.success({ user, token }, 200);
     }
     async logout(req, res) {
         const user = req.user;
@@ -131,10 +130,13 @@ class AuthController {
         }
 
         const accessToken = await authService.refreshAccessToken(refresh_token);
-        return res.success({
-            access_token: accessToken.access_token,
-            expires_in: accessToken.access_token_ttl,
-        });
+        return res.success(
+            {
+                access_token: accessToken.access_token,
+                expires_in: accessToken.access_token_ttl,
+            },
+            HTTP_STATUS.OK,
+        );
     }
     async changePassword(req, res) {
         const password = req.body.password;

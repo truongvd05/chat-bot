@@ -1,5 +1,6 @@
 import { HTTP_STATUS } from "#config/constants.js";
 import prisma from "#libs/prisma.js";
+import AppError from "#utils/AppError.js";
 import { serializeBigInt } from "#utils/serialize.js";
 import chatBotService from "./chatBot.service.js";
 import conversationService from "./conversation.service.js";
@@ -7,6 +8,19 @@ import conversationService from "./conversation.service.js";
 class MessageService {
     // kiểm tra user có trong cuộc hội thoại hay không và cuộc hộc thoại đã bị xóa chưa
     async _userInConversation(conversationId, userId) {
+        // check nếu conversation là bot thì không có bảng quan hệ với conversationParticipant
+        const conversation = await prisma.conversation.findUnique({
+            where: { id: conversationId },
+            select: { id: true, type: true },
+        });
+        if (!conversation) {
+            throw new AppError("Conversation not found", HTTP_STATUS.NOT_FOUND);
+        }
+
+        // ✅ Nếu là bot thì không cần check participant
+        if (conversation.type === "BOT") {
+            return true;
+        }
         const exists = await prisma.conversationParticipant.findFirst({
             where: {
                 conversationId,
@@ -18,7 +32,7 @@ class MessageService {
         });
 
         if (!exists) {
-            throw new AppError("CONVERSATION_NOT_FOUND_OR_FORBIDDEN");
+            throw new AppError("Conversation not found");
         }
     }
     // kiểm tra xem message có phải của user hay không
@@ -194,24 +208,10 @@ class MessageService {
 
     async getMessage(userId, conversationId, limit, offset) {
         await this._userInConversation(conversationId, userId);
-        const participant = await prisma.conversationParticipant.findUnique({
-            where: {
-                conversationId_userId: {
-                    conversationId,
-                    userId,
-                },
-            },
-        });
-        if (!participant) {
-            throw new AppError("CONVERSATION_PARTICIPANT_NOT_FOUND");
-        }
         const messages = await prisma.message.findMany({
             where: {
                 conversationId,
                 deletedAt: null,
-                createdAt: {
-                    gt: participant.deletedAt ?? new Date(0),
-                },
             },
             orderBy: {
                 createdAt: "desc",
@@ -219,7 +219,6 @@ class MessageService {
             take: limit,
             skip: offset,
         });
-        sendMessage;
         return messages.reverse().map(serializeBigInt);
     }
     async sendBotMessage(userId, conversationId, content, role = "user") {

@@ -67,6 +67,6 @@ router.post(
     rateLimitServce.validateEmailPerDay(),
     asyneHandle(authController.validateEmail),
 );
-router.get("/me", authMeRequired, authController.getMe);
+router.get("/me", authController.getMe);
 
 export default router;

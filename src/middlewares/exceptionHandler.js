@@ -1,5 +1,6 @@
 const exceptionHandler = (err, _, res, next) => {
-    console.error(err);
+    console.log(err);
+
     res.status(500).json({ error: "Internal server error" });
 };
 

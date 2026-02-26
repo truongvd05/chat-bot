@@ -46,18 +46,18 @@ class MessageController {
     }
     async getMessages(req, res) {
         const user = req.user;
-        const conversationId = req.rawConversationId;
+        const conversationId = req.conversationId;
 
         const limit = Math.min(Number(req.query.limit) || 5, 50);
         const offset = Math.max(Number(req.query.offset) || 0, 0);
 
         const messages = await messageService.getMessage(
-            user,
+            user.id,
             conversationId,
             limit,
             offset,
         );
-        return res.success(messages);
+        return res.success(messages, HTTP_STATUS.OK);
     }
     async editMessage(req, res) {
         const user = req.user;
@@ -72,14 +72,14 @@ class MessageController {
             messageId,
             content,
         );
-        return res.success(result, 200);
+        return res.success(result, HTTP_STATUS.CREATED);
     }
     async deleteMessage(req, res) {
         const user = req.user;
         const messageId = req.messageId;
 
         await messageService.deleteMessage(user.id, messageId);
-        return res.success("ok", 204);
+        return res.success(null, 204);
     }
 }
 

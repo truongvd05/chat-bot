@@ -9,14 +9,31 @@ const allowedRoles = ["OWNER"];
 class ConversationService {
     // kiểm tra user có trong cuộc hội thoại hay không
     async _userInConversation(conversationId, userId) {
+        // check nếu conversation là bot thì không có bảng quan hệ với conversationParticipant
+        const conversation = await prisma.conversation.findUnique({
+            where: { id: conversationId },
+            select: { id: true, type: true },
+        });
+
+        if (!conversation) {
+            throw new AppError("Conversation not found", HTTP_STATUS.NOT_FOUND);
+        }
+
+        // ✅ Nếu là bot thì không cần check participant
+        if (conversation.type === "BOT") {
+            return true;
+        }
+        // còn lại thì check
         const participant = await prisma.conversationParticipant.findUnique({
             where: {
                 conversationId_userId: { conversationId, userId },
             },
         });
+        console.log(participant);
+
         if (!participant || participant.leftAt) {
             throw new AppError(
-                "USER_NOT_FOUND_IN_CONVERSATION",
+                "User not found in conversation",
                 HTTP_STATUS.NOT_FOUND,
             );
         }
@@ -248,9 +265,6 @@ class ConversationService {
                 ownerId: userId,
                 deletedAt: null,
                 type: "BOT",
-            },
-            include: {
-                lastMessage: true,
             },
         });
         if (!conversation) {

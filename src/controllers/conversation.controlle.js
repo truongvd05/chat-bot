@@ -15,14 +15,14 @@ class ConversationController {
         const conversations = await conversationService.getConversations(
             user.id,
         );
-        return res.success(conversations);
+        return res.success(conversations, HTTP_STATUS.OK);
     }
     async getMyBotConversations(req, res) {
         const user = req.user;
 
         const conversations =
             await conversationService.getMyBotConversations(user);
-        return res.success(conversations);
+        return res.success(conversations, HTTP_STATUS.OK);
     }
     async getMyBotConversation(req, res) {
         const user = req.user;
@@ -33,7 +33,7 @@ class ConversationController {
             user.id,
             conversationId,
         );
-        return res.success(botConversation);
+        return res.success(botConversation, HTTP_STATUS.OK);
     }
 
     async createDirectConversation(req, res) {
@@ -72,7 +72,7 @@ class ConversationController {
             conversationId,
         );
 
-        return res.success(conversation);
+        return res.success(conversation, HTTP_STATUS.OK);
     }
     async renameConversation(req, res) {
         const title = req.body?.title?.trim();
@@ -92,7 +92,7 @@ class ConversationController {
             conversationId,
             title,
         );
-        return res.success(newConversation);
+        return res.success(newConversation, HTTP_STATUS.OK);
     }
     async deleteConversation(req, res) {
         const user = req.user;
@@ -100,7 +100,7 @@ class ConversationController {
         const conversationId = req.conversationId;
 
         await conversationService.deleteConversation(user.id, conversationId);
-        return res.success("ok", 204);
+        return res.success(null, 204);
     }
 
     async stream(req, res) {
@@ -130,7 +130,7 @@ class ConversationController {
         if (!q) throw new AppError("INVALID_OR_MISSING_QERRY");
 
         const result = await conversationService.searchConversation(user.id, q);
-        return res.success(result);
+        return res.success(result, HTTP_STATUS.OK);
     }
     async addParticipant(req, res) {
         const user = req.user;
