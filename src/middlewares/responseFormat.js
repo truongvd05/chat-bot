@@ -1,7 +1,7 @@
 import { HTTP_STATUS } from "#config/constants.js";
 
 const responseFormat = (_, res, next) => {
-    res.success = (data, status = HTTP_STATUS.ok, props = {}) => {
+    res.success = (data, status = HTTP_STATUS.OK, props = {}) => {
         res.status(status).json({
             status: "success",
             data,

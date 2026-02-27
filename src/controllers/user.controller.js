@@ -32,9 +32,9 @@ class UserController {
     }
     async searchUsers(req, res) {
         const { q } = req.query;
-        if (!q) throw new AppError("Invalid or missing querry");
+        if (!q.trim()) throw new AppError("Invalid or missing querry");
         const result = await userService.searchUsers(q);
-        return res.success(result);
+        return res.success(result, HTTP_STATUS.OK);
     }
 }
 

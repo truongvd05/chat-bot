@@ -70,25 +70,24 @@ class UserService {
         return serializeBigInt(existing);
     }
     async searchUsers(keyword) {
-        return await prisma.user.findMany({
+        const result = await prisma.user.findMany({
             where: {
                 OR: [
                     {
                         email: {
                             contains: keyword,
-                            mode: "insensitive",
                         },
                     },
                     {
                         name: {
                             contains: keyword,
-                            mode: "insensitive",
                         },
                     },
                 ],
             },
-            take: 20, // limit kết quả
+            take: 20,
         });
+        return serializeBigInt(result);
     }
 }
 
