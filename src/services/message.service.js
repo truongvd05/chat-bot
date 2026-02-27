@@ -241,7 +241,7 @@ class MessageService {
                 role,
             },
         });
-        chatBotService.reply(conversationId, content);
+        chatBotService.reply(conversationId);
 
         return serializeBigInt(message);
     }

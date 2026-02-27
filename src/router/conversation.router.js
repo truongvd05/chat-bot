@@ -77,10 +77,9 @@ router.delete(
 
 router.get(
     "/:conversationId/stream",
-    authMeRequired,
     rateLimitServce.defaultPerMinuteRateLimit(),
     parseConversationId,
-    conversationController.stream,
+    asyneHandle(conversationController.stream),
 );
 
 router.get(

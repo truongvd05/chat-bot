@@ -2,6 +2,9 @@ import { HTTP_STATUS } from "#config/constants.js";
 import conversationService from "#services/conversation.service.js";
 import messageService from "#services/message.service.js";
 import AppError from "#utils/AppError.js";
+import jwt from "jsonwebtoken";
+import jwtconfig from "#config/jwt.js";
+import { addClient, emit } from "#SSE/sseManager.js";
 
 class ConversationController {
     async createBotConversation(req, res) {
@@ -104,25 +107,20 @@ class ConversationController {
     }
 
     async stream(req, res) {
-        const user = req.user;
-
+        const token = req.query.token;
+        if (!token) throw new AppError("no token", HTTP_STATUS.BAD_REQUEST);
+        const payload = jwt.verify(token, jwtconfig.secret);
+        const user = payload;
         const conversationId = req.conversationId;
 
-        try {
-            await messageService.verifyAccess(conversationId, user.id);
-            res.setHeader("Content-Type", "text/event-stream");
-            res.setHeader("Cache-Control", "no-cache");
-            res.setHeader("Connection", "keep-alive");
-            res.flushHeaders();
-            addClient(conversationId, res);
-            res.write(`event: connected\ndata: "ok"\n\n`);
-        } catch (err) {
-            console.error(err);
-            if (err.message === "CONVERSATION_NOT_FOUND") {
-                return res.error("Conversation not found", 404);
-            }
-            return res.error("Failed to establish stream connection");
-        }
+        await messageService.verifyAccess(conversationId, user.id);
+        res.setHeader("Content-Type", "text/event-stream");
+        res.setHeader("Cache-Control", "no-cache");
+        res.setHeader("Connection", "keep-alive");
+        res.flushHeaders();
+        addClient(conversationId, res);
+        emit(conversationId, { test: "connected ok" });
+        res.write(`event: connected\ndata: "ok"\n\n`);
     }
     async searchConversation(req, res) {
         const user = req.user;

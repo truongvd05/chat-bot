@@ -2,7 +2,6 @@ import express from "express";
 import authController from "#controllers/auth.controller.js";
 import authMeRequired from "#middlewares/authRequired.js";
 import rateLimitServce from "#services/rateLimit.servce.js";
-import { limitRefreshAccessToken } from "#middlewares/limitRefreshAccessToken.js";
 import asyneHandle from "#middlewares/asyneHandle.js";
 
 const router = express.Router();
@@ -11,7 +10,7 @@ const router = express.Router();
 
 router.post(
     "/refresh",
-    limitRefreshAccessToken,
+    rateLimitServce.defaultPerMinuteRateLimit(),
     asyneHandle(authController.refreshAccessToken),
 );
 router.post(

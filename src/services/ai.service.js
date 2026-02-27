@@ -1,4 +1,4 @@
-import { gateway, generateText, streamText } from "ai";
+import { gateway, streamText } from "ai";
 import messageService from "./message.service.js";
 import { emit } from "#SSE/sseManager.js";
 
@@ -15,12 +15,16 @@ class AiService {
                 prompt: `Bạn là một chatbot hỗ trợ người dùng. Trả lời ngắn gọn, 
                 rõ ràng, đúng trọng tâm. Nếu có code, hãy giải thích từng dòng. 
                 đây là lịch sử cuộc hội thoại ${historyText} cũ với bạn. đây là câu mới của 
-                user: ${messages} nếu họ không hỏi đừng trả lời câu cũ. Trong đó ASSISTANT là bạn, USER là người dùng`,
+                user: ${messages} nếu họ không hỏi đừng trả lời câu cũ. Trong đó ASSISTANT là bạn, USER là người dùng.
+                chỉ tập trung vào câu hỏi mới`,
                 tools,
             });
             for await (const textPart of textStream) {
-                process.stdout.write(textPart);
                 fullAnswer += textPart;
+                emit(conversationId, {
+                    type: "bot_stream",
+                    content: textPart,
+                });
             }
             await messageService.createBotMessage(
                 conversationId,
@@ -28,10 +32,6 @@ class AiService {
                 fullAnswer,
                 "bot",
             );
-
-            emit(conversationId, {
-                type: "bot_done",
-            });
         } catch (err) {
             console.log(err);
             throw new Error("cannot connected");

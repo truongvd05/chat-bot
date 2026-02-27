@@ -8,6 +8,7 @@ import exceptionHandler from "#middlewares/exceptionHandler.js";
 import router from "#router/index.js";
 import { swaggerSetup } from "./src/docs/swagger.js";
 import helmet from "helmet";
+import cookieParser from "cookie-parser";
 
 var app = express();
 
@@ -38,6 +39,7 @@ app.use(cors(corsOptions));
 app.use("/docs", swaggerSetup.serve, swaggerSetup.setup);
 app.use(helmet());
 app.use(express.json());
+app.use(cookieParser());
 app.use(responseFormat);
 app.use("/api", router);
 app.use(notFoundHandler);
