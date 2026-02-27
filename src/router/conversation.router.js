@@ -74,18 +74,16 @@ router.delete(
     parseConversationId,
     asyneHandle(conversationController.deleteConversation),
 );
-
+router.get(
+    "/search",
+    authMeRequired,
+    asyneHandle(conversationController.searchConversation),
+);
 router.get(
     "/:conversationId/stream",
     rateLimitServce.defaultPerMinuteRateLimit(),
     parseConversationId,
     asyneHandle(conversationController.stream),
-);
-
-router.get(
-    "/search",
-    authMeRequired,
-    asyneHandle(conversationController.searchConversation),
 );
 
 export default router;

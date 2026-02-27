@@ -91,7 +91,7 @@ class AuthController {
             throw new AppError("Invalid email token", HTTP_STATUS.BAD_REQUEST);
         }
 
-        const user = await authService.verifyEmail(user, emailToken);
+        await authService.verifyEmail(emailToken);
         return res.success({ verified: true });
     }
     async resenVerifyEmail(req, res) {
@@ -105,7 +105,7 @@ class AuthController {
                 HTTP_STATUS.BAD_REQUEST,
             );
         }
-        await authService.resenVerifyEmail(user);
+        await authService.resenVerifyEmail(user.id);
 
         return res.success("Verification email has been resent");
     }

@@ -40,7 +40,7 @@ class AuthService {
         });
     }
     async _findValidPasswordResetToken(tokenHash) {
-        const result = await prisma.passwordResetToken.findFirst({
+        const resetToken = await prisma.passwordResetToken.findFirst({
             where: {
                 tokenHash,
                 usedAt: null,
@@ -55,7 +55,7 @@ class AuthService {
                 HTTP_STATUS.BAD_REQUEST,
             );
         }
-        return result;
+        return resetToken;
     }
     async _updateUserRefreshToken(userId, newRefreshToken, tokenExpiresAt) {
         await prisma.refreshToken.upsert({
@@ -102,7 +102,7 @@ class AuthService {
                 password: hashPassword,
             },
         });
-        const token = responseTokenService.loginAndRegister(user);
+        const token = responseTokenService.loginAndRegister(user.id);
         const emailtoken = jwtService(
             user.id,
             jwtconfig.emailSecret,
@@ -186,7 +186,7 @@ class AuthService {
         });
     }
     async logout(refresh_token, userId) {
-        const token = await this._findTokenRevoked(refresh_token, userId);
+        const token = await this._findTokenExpired(refresh_token, userId);
         if (!token) return;
         await this._revokedRefreshToken(refresh_token, token);
     }
@@ -205,9 +205,9 @@ class AuthService {
             return null;
         }
     }
-    async _findTokenRevoked(refresh_token, userId) {
+    async _findTokenExpired(refresh_token, userId) {
         const token = await prisma.refreshToken.findFirst({
-            where: { token: refresh_token, userId, isRevoked: false },
+            where: { token: refresh_token, userId },
         });
         return token;
     }
@@ -248,8 +248,7 @@ class AuthService {
             .update(token)
             .digest("hex");
 
-        const resetToken =
-            await authService._findValidPasswordResetToken(tokenHash);
+        const resetToken = await this._findValidPasswordResetToken(tokenHash);
 
         const hashedPassword = await bcrypt.hash(password, 10);
         await this._updatePassword(resetToken.userId, hashedPassword);
@@ -294,9 +293,9 @@ class AuthService {
         });
     }
 
-    async resenVerifyEmail() {
+    async resenVerifyEmail(userId) {
         const emailtoken = jwtService(
-            user.id,
+            userId,
             jwtconfig.emailSecret,
             jwtconfig.emailTokenTTL,
         );
@@ -308,7 +307,7 @@ class AuthService {
     }
     async getMe(userId) {
         return await prisma.user.findUnique({
-            where: { userId },
+            where: { id: userId },
             select: {
                 id: true,
                 email: true,

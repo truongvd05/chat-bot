@@ -4,6 +4,7 @@ import AppError from "#utils/AppError.js";
 
 class UserController {
     async blockUser(req, res) {
+        const user = req.user;
         const targetUserId = req.targetUserId;
 
         if (targetUserId === user.id) {
