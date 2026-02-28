@@ -171,7 +171,7 @@ class MessageService {
             conversationId: conversation.id,
             userId,
             content,
-            role: null,
+            role: "user",
         });
     }
     async handleBotMessage({ conversation, userId, content, role }) {
@@ -202,7 +202,7 @@ class MessageService {
                 },
             });
 
-            return message;
+            return serializeBigInt(message);
         });
     }
 

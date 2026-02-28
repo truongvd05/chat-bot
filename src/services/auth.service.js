@@ -185,31 +185,11 @@ class AuthService {
             token: passwordResetToken,
         });
     }
-    async logout(refresh_token, userId) {
-        const token = await this._findTokenExpired(refresh_token, userId);
-        if (!token) return;
-        await this._revokedRefreshToken(refresh_token, token);
-    }
-    async _revokedRefreshToken(refresh_token, token) {
-        const result = await prisma.refreshToken.updateMany({
-            where: {
-                id: token.id,
-                token: refresh_token,
-                isRevoked: false,
-            },
-            data: {
-                isRevoked: true,
-            },
+    async logout(userId) {
+        return prisma.refreshToken.update({
+            where: { userId },
+            data: { token: null },
         });
-        if (result.count === 0) {
-            return null;
-        }
-    }
-    async _findTokenExpired(refresh_token, userId) {
-        const token = await prisma.refreshToken.findFirst({
-            where: { token: refresh_token, userId },
-        });
-        return token;
     }
     async _updatePassword(userId, hashedPassword) {
         const result = await prisma.user.update({
@@ -221,10 +201,9 @@ class AuthService {
         return result;
     }
     async refreshAccessToken(refresh_token) {
-        const token = await prisma.refreshToken.findFirst({
+        const token = await prisma.refreshToken.findUnique({
             where: { token: refresh_token },
         });
-
         if (!token) throw new Error("Unauthorized", HTTP_STATUS.UNAUTHORIZED);
 
         if (token.expiresAt < new Date()) {

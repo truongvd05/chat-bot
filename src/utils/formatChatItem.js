@@ -7,8 +7,7 @@ function formatChatItem(conversation, meId) {
         return {
             id: conversation.id,
             type: "DIRECT",
-            title: other?.name ?? "Unknown",
-            avatar: other?.avatar ?? null,
+            title: conversation.title,
             lastMessage,
         };
     }
@@ -18,7 +17,6 @@ function formatChatItem(conversation, meId) {
         id: conversation.id,
         type: "GROUP",
         title: conversation.title,
-        avatar: conversation.avatar ?? null,
         lastMessage,
     };
 }

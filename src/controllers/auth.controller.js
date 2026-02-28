@@ -52,6 +52,8 @@ class AuthController {
         return res.success({ user, token }, 201);
     }
     async login(req, res) {
+        console.log(login);
+
         const { email, password } = req.body;
         if (!email || typeof email !== "string" || email.trim().length === 0) {
             throw new AppError(
@@ -75,11 +77,7 @@ class AuthController {
     }
     async logout(req, res) {
         const user = req.user;
-        const { refresh_token } = req.body;
-        if (!refresh_token) {
-            return res.success(null, 204);
-        }
-        await authService.logout(refresh_token, user.id);
+        await authService.logout(user.id);
         return res.success("logout", 200);
     }
     async verifyEmail(req, res) {

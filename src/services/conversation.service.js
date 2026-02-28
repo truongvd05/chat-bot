@@ -29,8 +29,6 @@ class ConversationService {
                 conversationId_userId: { conversationId, userId },
             },
         });
-        console.log(participant);
-
         if (!participant || participant.leftAt) {
             throw new AppError(
                 "User not found in conversation",
@@ -82,7 +80,7 @@ class ConversationService {
                     include: {
                         participants: {
                             where: {
-                                userId: { not: userId },
+                                leftAt: null,
                             },
                             include: {
                                 user: {
@@ -95,11 +93,14 @@ class ConversationService {
                             },
                         },
                         lastMessage: {
-                            select: {
-                                id: true,
-                                content: true,
-                                createdAt: true,
-                                userId: true,
+                            include: {
+                                user: {
+                                    select: {
+                                        id: true,
+                                        name: true,
+                                        email: true,
+                                    },
+                                },
                             },
                         },
                     },
@@ -111,15 +112,40 @@ class ConversationService {
                 },
             },
         });
-        const result = rows.map((row) =>
-            formatChatItem(row.conversation, userId),
-        );
-        return serializeBigInt(result);
+        const result = rows.map((row) => serializeBigInt(row.conversation));
+        return result;
     }
     async getConversation(userId, conversationId) {
         await this._userInConversation(conversationId, userId);
-        const result = await this._exitedConversation(conversationId);
-        return serializeBigInt(result);
+        const conversation = await prisma.conversation.findFirst({
+            where: {
+                id: conversationId,
+                deletedAt: null,
+            },
+            include: {
+                lastMessage: true,
+                participants: {
+                    where: {
+                        conversationId,
+                        leftAt: null,
+                    },
+                    include: {
+                        user: {
+                            select: {
+                                id: true,
+                                name: true,
+                                email: true,
+                            },
+                        },
+                    },
+                },
+            },
+        });
+
+        if (!conversation) {
+            throw new AppError("CONVERSATION_NOT_FOUND", HTTP_STATUS.NOT_FOUND);
+        }
+        return serializeBigInt(conversation);
     }
     async findDirectConversation(userId, targetUserId) {
         const conversation = await prisma.conversation.findFirst({
@@ -463,6 +489,13 @@ class ConversationService {
                 leftAt: new Date(),
             },
         });
+    }
+    async finDparticipants(conversationId) {
+        const result = await prisma.conversationParticipant.findMany({
+            where: { conversationId },
+            select: { userId: true },
+        });
+        return serializeBigInt(result);
     }
 }
 

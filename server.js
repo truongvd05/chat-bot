@@ -9,8 +9,14 @@ import router from "#router/index.js";
 import { swaggerSetup } from "./src/docs/swagger.js";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
+import { initSocket } from "#config/socket.js";
+import http from "http";
 
 var app = express();
+
+const server = http.createServer(app);
+
+initSocket(server);
 
 const port = process.env.PORT || 3000;
 
@@ -36,6 +42,7 @@ const corsOptions = {
     credentials: true,
     optionsSuccessStatus: 200,
 };
+
 app.use(cors(corsOptions));
 app.use("/docs", swaggerSetup.serve, swaggerSetup.setup);
 app.use(helmet());
@@ -47,6 +54,6 @@ app.use(notFoundHandler);
 app.use(errorHandle);
 app.use(exceptionHandler);
 
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 });

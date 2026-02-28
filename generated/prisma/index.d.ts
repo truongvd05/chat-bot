@@ -3153,7 +3153,7 @@ export namespace Prisma {
   export type RefreshTokenGroupByOutputType = {
     id: bigint
     userId: bigint
-    token: string
+    token: string | null
     tokenExpiresAt: Date
     createdAt: Date
     updatedAt: Date
@@ -3212,7 +3212,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
       userId: bigint
-      token: string
+      token: string | null
       tokenExpiresAt: Date
       createdAt: Date
       updatedAt: Date
@@ -11611,7 +11611,7 @@ export namespace Prisma {
     NOT?: RefreshTokenWhereInput | RefreshTokenWhereInput[]
     id?: BigIntFilter<"RefreshToken"> | bigint | number
     userId?: BigIntFilter<"RefreshToken"> | bigint | number
-    token?: StringFilter<"RefreshToken"> | string
+    token?: StringNullableFilter<"RefreshToken"> | string | null
     tokenExpiresAt?: DateTimeFilter<"RefreshToken"> | Date | string
     createdAt?: DateTimeFilter<"RefreshToken"> | Date | string
     updatedAt?: DateTimeFilter<"RefreshToken"> | Date | string
@@ -11621,7 +11621,7 @@ export namespace Prisma {
   export type RefreshTokenOrderByWithRelationInput = {
     id?: SortOrder
     userId?: SortOrder
-    token?: SortOrder
+    token?: SortOrderInput | SortOrder
     tokenExpiresAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -11645,7 +11645,7 @@ export namespace Prisma {
   export type RefreshTokenOrderByWithAggregationInput = {
     id?: SortOrder
     userId?: SortOrder
-    token?: SortOrder
+    token?: SortOrderInput | SortOrder
     tokenExpiresAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -11662,7 +11662,7 @@ export namespace Prisma {
     NOT?: RefreshTokenScalarWhereWithAggregatesInput | RefreshTokenScalarWhereWithAggregatesInput[]
     id?: BigIntWithAggregatesFilter<"RefreshToken"> | bigint | number
     userId?: BigIntWithAggregatesFilter<"RefreshToken"> | bigint | number
-    token?: StringWithAggregatesFilter<"RefreshToken"> | string
+    token?: StringNullableWithAggregatesFilter<"RefreshToken"> | string | null
     tokenExpiresAt?: DateTimeWithAggregatesFilter<"RefreshToken"> | Date | string
     createdAt?: DateTimeWithAggregatesFilter<"RefreshToken"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"RefreshToken"> | Date | string
@@ -12310,7 +12310,7 @@ export namespace Prisma {
 
   export type RefreshTokenCreateInput = {
     id?: bigint | number
-    token: string
+    token?: string | null
     tokenExpiresAt: Date | string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -12320,7 +12320,7 @@ export namespace Prisma {
   export type RefreshTokenUncheckedCreateInput = {
     id?: bigint | number
     userId: bigint | number
-    token: string
+    token?: string | null
     tokenExpiresAt: Date | string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -12328,7 +12328,7 @@ export namespace Prisma {
 
   export type RefreshTokenUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    token?: StringFieldUpdateOperationsInput | string
+    token?: NullableStringFieldUpdateOperationsInput | string | null
     tokenExpiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12338,7 +12338,7 @@ export namespace Prisma {
   export type RefreshTokenUncheckedUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    token?: StringFieldUpdateOperationsInput | string
+    token?: NullableStringFieldUpdateOperationsInput | string | null
     tokenExpiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12347,7 +12347,7 @@ export namespace Prisma {
   export type RefreshTokenCreateManyInput = {
     id?: bigint | number
     userId: bigint | number
-    token: string
+    token?: string | null
     tokenExpiresAt: Date | string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -12355,7 +12355,7 @@ export namespace Prisma {
 
   export type RefreshTokenUpdateManyMutationInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    token?: StringFieldUpdateOperationsInput | string
+    token?: NullableStringFieldUpdateOperationsInput | string | null
     tokenExpiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12364,7 +12364,7 @@ export namespace Prisma {
   export type RefreshTokenUncheckedUpdateManyInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     userId?: BigIntFieldUpdateOperationsInput | bigint | number
-    token?: StringFieldUpdateOperationsInput | string
+    token?: NullableStringFieldUpdateOperationsInput | string | null
     tokenExpiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14933,7 +14933,7 @@ export namespace Prisma {
 
   export type RefreshTokenCreateWithoutUserInput = {
     id?: bigint | number
-    token: string
+    token?: string | null
     tokenExpiresAt: Date | string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -14941,7 +14941,7 @@ export namespace Prisma {
 
   export type RefreshTokenUncheckedCreateWithoutUserInput = {
     id?: bigint | number
-    token: string
+    token?: string | null
     tokenExpiresAt: Date | string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -15198,7 +15198,7 @@ export namespace Prisma {
     NOT?: RefreshTokenScalarWhereInput | RefreshTokenScalarWhereInput[]
     id?: BigIntFilter<"RefreshToken"> | bigint | number
     userId?: BigIntFilter<"RefreshToken"> | bigint | number
-    token?: StringFilter<"RefreshToken"> | string
+    token?: StringNullableFilter<"RefreshToken"> | string | null
     tokenExpiresAt?: DateTimeFilter<"RefreshToken"> | Date | string
     createdAt?: DateTimeFilter<"RefreshToken"> | Date | string
     updatedAt?: DateTimeFilter<"RefreshToken"> | Date | string
@@ -16725,7 +16725,7 @@ export namespace Prisma {
 
   export type RefreshTokenCreateManyUserInput = {
     id?: bigint | number
-    token: string
+    token?: string | null
     tokenExpiresAt: Date | string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -16789,7 +16789,7 @@ export namespace Prisma {
 
   export type RefreshTokenUpdateWithoutUserInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    token?: StringFieldUpdateOperationsInput | string
+    token?: NullableStringFieldUpdateOperationsInput | string | null
     tokenExpiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16797,7 +16797,7 @@ export namespace Prisma {
 
   export type RefreshTokenUncheckedUpdateWithoutUserInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    token?: StringFieldUpdateOperationsInput | string
+    token?: NullableStringFieldUpdateOperationsInput | string | null
     tokenExpiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16805,7 +16805,7 @@ export namespace Prisma {
 
   export type RefreshTokenUncheckedUpdateManyWithoutUserInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
-    token?: StringFieldUpdateOperationsInput | string
+    token?: NullableStringFieldUpdateOperationsInput | string | null
     tokenExpiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
