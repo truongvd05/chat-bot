@@ -43,6 +43,10 @@ const corsOptions = {
     optionsSuccessStatus: 200,
 };
 
+app.get("/", (req, res) => {
+    res.send("hello");
+});
+
 app.use(cors(corsOptions));
 app.use("/docs", swaggerSetup.serve, swaggerSetup.setup);
 app.use(helmet());
