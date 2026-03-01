@@ -4,12 +4,24 @@ import conversationService from "#services/conversation.service.js";
 import messageService from "#services/message.service.js";
 import jwt from "jsonwebtoken";
 
+const onlineUsers = new Map();
+
 export default function registerChatSocket(io, socket) {
     const token = socket.handshake.auth.token;
+    let userId;
     try {
         const decoded = jwt.verify(token, jwtconfig.secret);
-        socket.user = decoded;
-        socket.join(`user_${socket.user?.sub}`);
+        userId = decoded.sub;
+        socket.userId = userId;
+
+        socket.join(`user_${userId}`);
+
+        if (!onlineUsers.has(userId)) {
+            onlineUsers.set(userId, 0);
+            io.emit("userOnline", userId);
+        }
+
+        onlineUsers.set(userId, onlineUsers.get(userId) + 1);
     } catch (err) {
         socket.disconnect();
         return;
@@ -20,7 +32,7 @@ export default function registerChatSocket(io, socket) {
             return socket.emit("error_message", "Tin nhắn không hợp lệ");
         }
         try {
-            const senderId = socket.user.sub;
+            const senderId = socket.userId;
             // check quyền
             const isParticipant =
                 await prisma.conversationParticipant.findFirst({
@@ -42,18 +54,67 @@ export default function registerChatSocket(io, socket) {
                 content,
                 role: "user",
             });
-
+            // update lassmessage
+            await prisma.conversation.update({
+                where: { id: conversationId },
+                data: {
+                    lastMessageId: message.id,
+                    lastMessageAt: message.createdAt,
+                },
+            });
             // lây thành viên
             const participants =
                 await conversationService.finDparticipants(conversationId);
 
-            // emit cho từng thành viên
-            participants.forEach((p) => {
-                io.to(`user_${p.userId}`).emit("receive_message", message);
+            // tăng unread cho người KHÔNG phải sender
+            await prisma.conversationParticipant.updateMany({
+                where: {
+                    conversationId,
+                    userId: {
+                        not: senderId,
+                    },
+                },
+                data: {
+                    unreadCount: { increment: 1 },
+                },
             });
+
+            for (const p of participants) {
+                // emit cho từng thành viên
+                io.to(`user_${p.userId}`).emit("receive_message", message);
+
+                // Emit để update conversation list (đẩy lên đầu)
+                io.to(`user_${p.userId}`).emit("conversation_updated", {
+                    conversationId,
+                    lastMessage: message,
+                });
+
+                // Emit notification
+                if (p.userId !== senderId) {
+                    io.to(`user_${p.userId}`).emit("new_notification", {
+                        type: "NEW_MESSAGE",
+                        conversationId,
+                        fromUserId: senderId,
+                    });
+                }
+            }
         } catch (err) {
             console.error("Send message error:", err);
             socket.emit("error_message", "Không gửi được tin nhắn");
+        }
+    });
+
+    socket.on("disconnect", () => {
+        const userId = socket.userId;
+        if (!userId) return;
+
+        const count = (onlineUsers.get(userId) || 1) - 1;
+
+        if (count <= 0) {
+            onlineUsers.delete(userId);
+            io.emit("userOffline", userId);
+        } else {
+            onlineUsers.set(userId, count);
         }
     });
 }

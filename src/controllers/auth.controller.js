@@ -52,7 +52,7 @@ class AuthController {
         return res.success({ user, token }, 201);
     }
     async login(req, res) {
-        console.log(login);
+        console.log("login");
 
         const { email, password } = req.body;
         if (!email || typeof email !== "string" || email.trim().length === 0) {

@@ -8,9 +8,14 @@ import { addClient, emit } from "#SSE/sseManager.js";
 
 class ConversationController {
     async createBotConversation(req, res) {
+        const { title } = req.body;
+        if (!title.trim())
+            throw new AppError("Invalid title", HTTP_STATUS.BAD_REQUEST);
         const user = req.user;
-        const newConversation =
-            await conversationService.createBotConversation(user);
+        const newConversation = await conversationService.createBotConversation(
+            user,
+            title,
+        );
         return res.success(newConversation, HTTP_STATUS.CREATED);
     }
     async getConversations(req, res) {

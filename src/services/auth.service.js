@@ -201,23 +201,24 @@ class AuthService {
         return result;
     }
     async refreshAccessToken(refresh_token) {
-        const token = await prisma.refreshToken.findUnique({
+        const refreshToken = await prisma.refreshToken.findUnique({
             where: { token: refresh_token },
         });
-        if (!token) throw new Error("Unauthorized", HTTP_STATUS.UNAUTHORIZED);
+        if (!refreshToken)
+            throw new Error("Unauthorized", HTTP_STATUS.UNAUTHORIZED);
 
-        if (token.expiresAt < new Date()) {
+        if (refreshToken.expiresAt < new Date()) {
             throw new Error("Unauthorized", HTTP_STATUS.UNAUTHORIZED);
         }
 
         const user = await prisma.user.findUnique({
-            where: { id: token.userId },
+            where: { id: refreshToken.userId },
         });
         if (!user) {
             throw new Error("Unauthorized", HTTP_STATUS.UNAUTHORIZED);
         }
         const accessToken = responseTokenService.refreshAccessToken(
-            token.userId,
+            refreshToken.userId,
         );
         return accessToken;
     }

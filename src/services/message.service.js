@@ -154,7 +154,7 @@ class MessageService {
         switch (conversation.type) {
             case "DIRECT":
             case "GROUP": {
-                const newMessage = await this.handleDirectMessage(payload);
+                const newMessage = await this.handleSendMessage(payload);
                 return serializeBigInt(newMessage);
             }
             case "BOT": {
@@ -166,12 +166,26 @@ class MessageService {
         }
     }
 
-    async handleDirectMessage({ conversation, userId, content }) {
-        return this._createMessage({
-            conversationId: conversation.id,
-            userId,
-            content,
-            role: "user",
+    async handleSendMessage({ conversation, userId, content }) {
+        return await prisma.$transaction(async (tx) => {
+            const message = await tx.message.create({
+                data: {
+                    conversationId: conversation.id,
+                    userId,
+                    content,
+                    role: "user",
+                },
+            });
+
+            await tx.conversation.update({
+                where: { id: conversation.id },
+                data: {
+                    lastMessageId: message.id,
+                    lastMessageAt: message.createdAt,
+                },
+            });
+
+            return message;
         });
     }
     async handleBotMessage({ conversation, userId, content, role }) {

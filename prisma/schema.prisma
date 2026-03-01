@@ -11,6 +11,7 @@ model User {
   id                   BigInt    @id @default(autoincrement())
   email                String    @unique
   name                 String?
+  avatarUrl            String?   @map("avatar_url")
   password             String // @note: Hashed password using bcrypt
   emailVerifiedAt      DateTime? @map("email_verified_at")
   createdAt            DateTime  @default(now()) @map("created_at")
@@ -25,6 +26,10 @@ model User {
   blockedUsers             UserBlock[]               @relation("Blocker")
   blockedBy                UserBlock[]               @relation("Blocked")
   ownedConversations       Conversation[]            @relation("ConversationOwner")
+  sentFriendRequests       Friend[]                  @relation("FriendRequester")
+  receivedFriendRequests   Friend[]                  @relation("FriendAddressee")
+  receivedNotifications    Notification[]            @relation("UserNotifications")
+  sentNotifications        Notification[]            @relation("SenderNotifications")
 
   @@map("users")
 }
@@ -56,11 +61,12 @@ model Conversation {
   createdAt     DateTime         @default(now()) @map("created_at")
   updatedAt     DateTime         @updatedAt @map("updated_at")
 
-  participants ConversationParticipant[]
-  activeUsers  User[]                    @relation("ActiveConversation")
-  messages     Message[]
-  owner        User?                     @relation("ConversationOwner", fields: [ownerId], references: [id])
-  lastMessage  Message?                  @relation("LastMessage", fields: [lastMessageId], references: [id])
+  participants  ConversationParticipant[]
+  activeUsers   User[]                    @relation("ActiveConversation")
+  messages      Message[]
+  owner         User?                     @relation("ConversationOwner", fields: [ownerId], references: [id])
+  lastMessage   Message?                  @relation("LastMessage", fields: [lastMessageId], references: [id])
+  notifications Notification[]
 
   @@index([ownerId])
   @@index([deletedAt])
@@ -81,6 +87,7 @@ model ConversationParticipant {
   role           ParticipantRole @default(MEMBER)
   joinedAt       DateTime        @default(now()) @map("joined_at")
   leftAt         DateTime?       @map("left_at")
+  unreadCount    Int             @default(0) @map("unread_count")
   lastReadAt     DateTime?       @map("last_read_at")
   deletedAt      DateTime?       @map("deleted_at")
 
@@ -119,6 +126,7 @@ model Message {
   replies       Message[]           @relation("MessageReplies")
   attachments   MessageAttachment[]
   lastMessageOf Conversation[]      @relation("LastMessage")
+  notifications Notification[]
 
   @@index([deletedAt])
   @@index([conversationId, createdAt])
@@ -200,4 +208,55 @@ model UserBlock {
   @@index([blockerId])
   @@index([blockedId])
   @@map("user_blocks")
+}
+
+model Friend {
+  id          BigInt       @id @default(autoincrement())
+  requesterId BigInt       @map("requester_id")
+  addresseeId BigInt       @map("addressee_id")
+  status      FriendStatus @default(PENDING)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  requester User @relation("FriendRequester", fields: [requesterId], references: [id], onDelete: Cascade)
+  addressee User @relation("FriendAddressee", fields: [addresseeId], references: [id], onDelete: Cascade)
+
+  @@unique([requesterId, addresseeId])
+  @@index([requesterId])
+  @@index([addresseeId])
+  @@map("friends")
+}
+
+enum FriendStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  BLOCKED
+}
+
+model Notification {
+  id             BigInt           @id @default(autoincrement())
+  receiverId     BigInt
+  senderId       BigInt?
+  conversationId BigInt?
+  messageId      BigInt?
+  type           NotificationType
+  isRead         Boolean          @default(false)
+  createdAt      DateTime         @default(now())
+
+  receiver     User          @relation("UserNotifications", fields: [receiverId], references: [id], onDelete: Cascade)
+  sender       User?         @relation("SenderNotifications", fields: [senderId], references: [id], onDelete: SetNull)
+  conversation Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  message      Message?      @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@index([receiverId])
+  @@index([senderId])
+}
+
+enum NotificationType {
+  NEW_MESSAGE
+  FRIEND_REQUEST
+  FRIEND_ACCEPTED
+  ADDED_TO_GROUP
 }

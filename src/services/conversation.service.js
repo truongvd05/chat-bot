@@ -54,11 +54,11 @@ class ConversationService {
         }
         return conversation;
     }
-    async createBotConversation(user) {
+    async createBotConversation(user, title) {
         const conversation = await prisma.conversation.create({
             data: {
                 ownerId: user.id,
-                title: "New Conversation",
+                title,
                 type: "BOT",
             },
         });

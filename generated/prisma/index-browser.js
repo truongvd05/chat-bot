@@ -124,6 +124,7 @@ exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
   name: 'name',
+  avatarUrl: 'avatarUrl',
   password: 'password',
   emailVerifiedAt: 'emailVerifiedAt',
   createdAt: 'createdAt',
@@ -160,6 +161,7 @@ exports.Prisma.ConversationParticipantScalarFieldEnum = {
   role: 'role',
   joinedAt: 'joinedAt',
   leftAt: 'leftAt',
+  unreadCount: 'unreadCount',
   lastReadAt: 'lastReadAt',
   deletedAt: 'deletedAt'
 };
@@ -216,6 +218,26 @@ exports.Prisma.UserBlockScalarFieldEnum = {
   deletedAt: 'deletedAt'
 };
 
+exports.Prisma.FriendScalarFieldEnum = {
+  id: 'id',
+  requesterId: 'requesterId',
+  addresseeId: 'addresseeId',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.NotificationScalarFieldEnum = {
+  id: 'id',
+  receiverId: 'receiverId',
+  senderId: 'senderId',
+  conversationId: 'conversationId',
+  messageId: 'messageId',
+  type: 'type',
+  isRead: 'isRead',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -233,6 +255,7 @@ exports.Prisma.NullsOrder = {
 exports.Prisma.UserOrderByRelevanceFieldEnum = {
   email: 'email',
   name: 'name',
+  avatarUrl: 'avatarUrl',
   password: 'password'
 };
 
@@ -299,6 +322,20 @@ exports.QueueStatus = exports.$Enums.QueueStatus = {
   failed: 'failed'
 };
 
+exports.FriendStatus = exports.$Enums.FriendStatus = {
+  PENDING: 'PENDING',
+  ACCEPTED: 'ACCEPTED',
+  REJECTED: 'REJECTED',
+  BLOCKED: 'BLOCKED'
+};
+
+exports.NotificationType = exports.$Enums.NotificationType = {
+  NEW_MESSAGE: 'NEW_MESSAGE',
+  FRIEND_REQUEST: 'FRIEND_REQUEST',
+  FRIEND_ACCEPTED: 'FRIEND_ACCEPTED',
+  ADDED_TO_GROUP: 'ADDED_TO_GROUP'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   RefreshToken: 'RefreshToken',
@@ -308,7 +345,9 @@ exports.Prisma.ModelName = {
   MessageAttachment: 'MessageAttachment',
   PasswordResetToken: 'PasswordResetToken',
   Queues: 'Queues',
-  UserBlock: 'UserBlock'
+  UserBlock: 'UserBlock',
+  Friend: 'Friend',
+  Notification: 'Notification'
 };
 
 /**

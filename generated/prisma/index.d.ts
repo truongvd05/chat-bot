@@ -58,6 +58,16 @@ export type Queues = $Result.DefaultSelection<Prisma.$QueuesPayload>
  * 
  */
 export type UserBlock = $Result.DefaultSelection<Prisma.$UserBlockPayload>
+/**
+ * Model Friend
+ * 
+ */
+export type Friend = $Result.DefaultSelection<Prisma.$FriendPayload>
+/**
+ * Model Notification
+ * 
+ */
+export type Notification = $Result.DefaultSelection<Prisma.$NotificationPayload>
 
 /**
  * Enums
@@ -99,6 +109,26 @@ export const QueueStatus: {
 
 export type QueueStatus = (typeof QueueStatus)[keyof typeof QueueStatus]
 
+
+export const FriendStatus: {
+  PENDING: 'PENDING',
+  ACCEPTED: 'ACCEPTED',
+  REJECTED: 'REJECTED',
+  BLOCKED: 'BLOCKED'
+};
+
+export type FriendStatus = (typeof FriendStatus)[keyof typeof FriendStatus]
+
+
+export const NotificationType: {
+  NEW_MESSAGE: 'NEW_MESSAGE',
+  FRIEND_REQUEST: 'FRIEND_REQUEST',
+  FRIEND_ACCEPTED: 'FRIEND_ACCEPTED',
+  ADDED_TO_GROUP: 'ADDED_TO_GROUP'
+};
+
+export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]
+
 }
 
 export type ConversationType = $Enums.ConversationType
@@ -116,6 +146,14 @@ export const MessageRole: typeof $Enums.MessageRole
 export type QueueStatus = $Enums.QueueStatus
 
 export const QueueStatus: typeof $Enums.QueueStatus
+
+export type FriendStatus = $Enums.FriendStatus
+
+export const FriendStatus: typeof $Enums.FriendStatus
+
+export type NotificationType = $Enums.NotificationType
+
+export const NotificationType: typeof $Enums.NotificationType
 
 /**
  * ##  Prisma Client ʲˢ
@@ -323,6 +361,26 @@ export class PrismaClient<
     * ```
     */
   get userBlock(): Prisma.UserBlockDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.friend`: Exposes CRUD operations for the **Friend** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Friends
+    * const friends = await prisma.friend.findMany()
+    * ```
+    */
+  get friend(): Prisma.FriendDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.notification`: Exposes CRUD operations for the **Notification** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Notifications
+    * const notifications = await prisma.notification.findMany()
+    * ```
+    */
+  get notification(): Prisma.NotificationDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -765,7 +823,9 @@ export namespace Prisma {
     MessageAttachment: 'MessageAttachment',
     PasswordResetToken: 'PasswordResetToken',
     Queues: 'Queues',
-    UserBlock: 'UserBlock'
+    UserBlock: 'UserBlock',
+    Friend: 'Friend',
+    Notification: 'Notification'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -781,7 +841,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "refreshToken" | "conversation" | "conversationParticipant" | "message" | "messageAttachment" | "passwordResetToken" | "queues" | "userBlock"
+      modelProps: "user" | "refreshToken" | "conversation" | "conversationParticipant" | "message" | "messageAttachment" | "passwordResetToken" | "queues" | "userBlock" | "friend" | "notification"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1379,6 +1439,138 @@ export namespace Prisma {
           }
         }
       }
+      Friend: {
+        payload: Prisma.$FriendPayload<ExtArgs>
+        fields: Prisma.FriendFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FriendFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FriendPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FriendFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FriendPayload>
+          }
+          findFirst: {
+            args: Prisma.FriendFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FriendPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FriendFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FriendPayload>
+          }
+          findMany: {
+            args: Prisma.FriendFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FriendPayload>[]
+          }
+          create: {
+            args: Prisma.FriendCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FriendPayload>
+          }
+          createMany: {
+            args: Prisma.FriendCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.FriendDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FriendPayload>
+          }
+          update: {
+            args: Prisma.FriendUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FriendPayload>
+          }
+          deleteMany: {
+            args: Prisma.FriendDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FriendUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.FriendUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FriendPayload>
+          }
+          aggregate: {
+            args: Prisma.FriendAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFriend>
+          }
+          groupBy: {
+            args: Prisma.FriendGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FriendGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FriendCountArgs<ExtArgs>
+            result: $Utils.Optional<FriendCountAggregateOutputType> | number
+          }
+        }
+      }
+      Notification: {
+        payload: Prisma.$NotificationPayload<ExtArgs>
+        fields: Prisma.NotificationFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.NotificationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.NotificationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload>
+          }
+          findFirst: {
+            args: Prisma.NotificationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.NotificationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload>
+          }
+          findMany: {
+            args: Prisma.NotificationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload>[]
+          }
+          create: {
+            args: Prisma.NotificationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload>
+          }
+          createMany: {
+            args: Prisma.NotificationCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.NotificationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload>
+          }
+          update: {
+            args: Prisma.NotificationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload>
+          }
+          deleteMany: {
+            args: Prisma.NotificationDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.NotificationUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.NotificationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NotificationPayload>
+          }
+          aggregate: {
+            args: Prisma.NotificationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateNotification>
+          }
+          groupBy: {
+            args: Prisma.NotificationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<NotificationGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.NotificationCountArgs<ExtArgs>
+            result: $Utils.Optional<NotificationCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1496,6 +1688,8 @@ export namespace Prisma {
     passwordResetToken?: PasswordResetTokenOmit
     queues?: QueuesOmit
     userBlock?: UserBlockOmit
+    friend?: FriendOmit
+    notification?: NotificationOmit
   }
 
   /* Types for Logging */
@@ -1583,6 +1777,10 @@ export namespace Prisma {
     blockedUsers: number
     blockedBy: number
     ownedConversations: number
+    sentFriendRequests: number
+    receivedFriendRequests: number
+    receivedNotifications: number
+    sentNotifications: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1593,6 +1791,10 @@ export namespace Prisma {
     blockedUsers?: boolean | UserCountOutputTypeCountBlockedUsersArgs
     blockedBy?: boolean | UserCountOutputTypeCountBlockedByArgs
     ownedConversations?: boolean | UserCountOutputTypeCountOwnedConversationsArgs
+    sentFriendRequests?: boolean | UserCountOutputTypeCountSentFriendRequestsArgs
+    receivedFriendRequests?: boolean | UserCountOutputTypeCountReceivedFriendRequestsArgs
+    receivedNotifications?: boolean | UserCountOutputTypeCountReceivedNotificationsArgs
+    sentNotifications?: boolean | UserCountOutputTypeCountSentNotificationsArgs
   }
 
   // Custom InputTypes
@@ -1655,6 +1857,34 @@ export namespace Prisma {
     where?: ConversationWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountSentFriendRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FriendWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountReceivedFriendRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FriendWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountReceivedNotificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NotificationWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountSentNotificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NotificationWhereInput
+  }
+
 
   /**
    * Count Type ConversationCountOutputType
@@ -1664,12 +1894,14 @@ export namespace Prisma {
     participants: number
     activeUsers: number
     messages: number
+    notifications: number
   }
 
   export type ConversationCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     participants?: boolean | ConversationCountOutputTypeCountParticipantsArgs
     activeUsers?: boolean | ConversationCountOutputTypeCountActiveUsersArgs
     messages?: boolean | ConversationCountOutputTypeCountMessagesArgs
+    notifications?: boolean | ConversationCountOutputTypeCountNotificationsArgs
   }
 
   // Custom InputTypes
@@ -1704,6 +1936,13 @@ export namespace Prisma {
     where?: MessageWhereInput
   }
 
+  /**
+   * ConversationCountOutputType without action
+   */
+  export type ConversationCountOutputTypeCountNotificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NotificationWhereInput
+  }
+
 
   /**
    * Count Type MessageCountOutputType
@@ -1713,12 +1952,14 @@ export namespace Prisma {
     replies: number
     attachments: number
     lastMessageOf: number
+    notifications: number
   }
 
   export type MessageCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     replies?: boolean | MessageCountOutputTypeCountRepliesArgs
     attachments?: boolean | MessageCountOutputTypeCountAttachmentsArgs
     lastMessageOf?: boolean | MessageCountOutputTypeCountLastMessageOfArgs
+    notifications?: boolean | MessageCountOutputTypeCountNotificationsArgs
   }
 
   // Custom InputTypes
@@ -1753,6 +1994,13 @@ export namespace Prisma {
     where?: ConversationWhereInput
   }
 
+  /**
+   * MessageCountOutputType without action
+   */
+  export type MessageCountOutputTypeCountNotificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NotificationWhereInput
+  }
+
 
   /**
    * Models
@@ -1784,6 +2032,7 @@ export namespace Prisma {
     id: bigint | null
     email: string | null
     name: string | null
+    avatarUrl: string | null
     password: string | null
     emailVerifiedAt: Date | null
     createdAt: Date | null
@@ -1795,6 +2044,7 @@ export namespace Prisma {
     id: bigint | null
     email: string | null
     name: string | null
+    avatarUrl: string | null
     password: string | null
     emailVerifiedAt: Date | null
     createdAt: Date | null
@@ -1806,6 +2056,7 @@ export namespace Prisma {
     id: number
     email: number
     name: number
+    avatarUrl: number
     password: number
     emailVerifiedAt: number
     createdAt: number
@@ -1829,6 +2080,7 @@ export namespace Prisma {
     id?: true
     email?: true
     name?: true
+    avatarUrl?: true
     password?: true
     emailVerifiedAt?: true
     createdAt?: true
@@ -1840,6 +2092,7 @@ export namespace Prisma {
     id?: true
     email?: true
     name?: true
+    avatarUrl?: true
     password?: true
     emailVerifiedAt?: true
     createdAt?: true
@@ -1851,6 +2104,7 @@ export namespace Prisma {
     id?: true
     email?: true
     name?: true
+    avatarUrl?: true
     password?: true
     emailVerifiedAt?: true
     createdAt?: true
@@ -1949,6 +2203,7 @@ export namespace Prisma {
     id: bigint
     email: string
     name: string | null
+    avatarUrl: string | null
     password: string
     emailVerifiedAt: Date | null
     createdAt: Date
@@ -1979,6 +2234,7 @@ export namespace Prisma {
     id?: boolean
     email?: boolean
     name?: boolean
+    avatarUrl?: boolean
     password?: boolean
     emailVerifiedAt?: boolean
     createdAt?: boolean
@@ -1992,6 +2248,10 @@ export namespace Prisma {
     blockedUsers?: boolean | User$blockedUsersArgs<ExtArgs>
     blockedBy?: boolean | User$blockedByArgs<ExtArgs>
     ownedConversations?: boolean | User$ownedConversationsArgs<ExtArgs>
+    sentFriendRequests?: boolean | User$sentFriendRequestsArgs<ExtArgs>
+    receivedFriendRequests?: boolean | User$receivedFriendRequestsArgs<ExtArgs>
+    receivedNotifications?: boolean | User$receivedNotificationsArgs<ExtArgs>
+    sentNotifications?: boolean | User$sentNotificationsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -2001,6 +2261,7 @@ export namespace Prisma {
     id?: boolean
     email?: boolean
     name?: boolean
+    avatarUrl?: boolean
     password?: boolean
     emailVerifiedAt?: boolean
     createdAt?: boolean
@@ -2008,7 +2269,7 @@ export namespace Prisma {
     activeConversationId?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "name" | "password" | "emailVerifiedAt" | "createdAt" | "updatedAt" | "activeConversationId", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "name" | "avatarUrl" | "password" | "emailVerifiedAt" | "createdAt" | "updatedAt" | "activeConversationId", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     refreshTokens?: boolean | User$refreshTokensArgs<ExtArgs>
     conversationParticipants?: boolean | User$conversationParticipantsArgs<ExtArgs>
@@ -2018,6 +2279,10 @@ export namespace Prisma {
     blockedUsers?: boolean | User$blockedUsersArgs<ExtArgs>
     blockedBy?: boolean | User$blockedByArgs<ExtArgs>
     ownedConversations?: boolean | User$ownedConversationsArgs<ExtArgs>
+    sentFriendRequests?: boolean | User$sentFriendRequestsArgs<ExtArgs>
+    receivedFriendRequests?: boolean | User$receivedFriendRequestsArgs<ExtArgs>
+    receivedNotifications?: boolean | User$receivedNotificationsArgs<ExtArgs>
+    sentNotifications?: boolean | User$sentNotificationsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -2032,11 +2297,16 @@ export namespace Prisma {
       blockedUsers: Prisma.$UserBlockPayload<ExtArgs>[]
       blockedBy: Prisma.$UserBlockPayload<ExtArgs>[]
       ownedConversations: Prisma.$ConversationPayload<ExtArgs>[]
+      sentFriendRequests: Prisma.$FriendPayload<ExtArgs>[]
+      receivedFriendRequests: Prisma.$FriendPayload<ExtArgs>[]
+      receivedNotifications: Prisma.$NotificationPayload<ExtArgs>[]
+      sentNotifications: Prisma.$NotificationPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
       email: string
       name: string | null
+      avatarUrl: string | null
       password: string
       emailVerifiedAt: Date | null
       createdAt: Date
@@ -2390,6 +2660,10 @@ export namespace Prisma {
     blockedUsers<T extends User$blockedUsersArgs<ExtArgs> = {}>(args?: Subset<T, User$blockedUsersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserBlockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     blockedBy<T extends User$blockedByArgs<ExtArgs> = {}>(args?: Subset<T, User$blockedByArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserBlockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     ownedConversations<T extends User$ownedConversationsArgs<ExtArgs> = {}>(args?: Subset<T, User$ownedConversationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    sentFriendRequests<T extends User$sentFriendRequestsArgs<ExtArgs> = {}>(args?: Subset<T, User$sentFriendRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FriendPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    receivedFriendRequests<T extends User$receivedFriendRequestsArgs<ExtArgs> = {}>(args?: Subset<T, User$receivedFriendRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FriendPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    receivedNotifications<T extends User$receivedNotificationsArgs<ExtArgs> = {}>(args?: Subset<T, User$receivedNotificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    sentNotifications<T extends User$sentNotificationsArgs<ExtArgs> = {}>(args?: Subset<T, User$sentNotificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2422,6 +2696,7 @@ export namespace Prisma {
     readonly id: FieldRef<"User", 'BigInt'>
     readonly email: FieldRef<"User", 'String'>
     readonly name: FieldRef<"User", 'String'>
+    readonly avatarUrl: FieldRef<"User", 'String'>
     readonly password: FieldRef<"User", 'String'>
     readonly emailVerifiedAt: FieldRef<"User", 'DateTime'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
@@ -2954,6 +3229,102 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ConversationScalarFieldEnum | ConversationScalarFieldEnum[]
+  }
+
+  /**
+   * User.sentFriendRequests
+   */
+  export type User$sentFriendRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Friend
+     */
+    select?: FriendSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Friend
+     */
+    omit?: FriendOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FriendInclude<ExtArgs> | null
+    where?: FriendWhereInput
+    orderBy?: FriendOrderByWithRelationInput | FriendOrderByWithRelationInput[]
+    cursor?: FriendWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FriendScalarFieldEnum | FriendScalarFieldEnum[]
+  }
+
+  /**
+   * User.receivedFriendRequests
+   */
+  export type User$receivedFriendRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Friend
+     */
+    select?: FriendSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Friend
+     */
+    omit?: FriendOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FriendInclude<ExtArgs> | null
+    where?: FriendWhereInput
+    orderBy?: FriendOrderByWithRelationInput | FriendOrderByWithRelationInput[]
+    cursor?: FriendWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FriendScalarFieldEnum | FriendScalarFieldEnum[]
+  }
+
+  /**
+   * User.receivedNotifications
+   */
+  export type User$receivedNotificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notification
+     */
+    omit?: NotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    where?: NotificationWhereInput
+    orderBy?: NotificationOrderByWithRelationInput | NotificationOrderByWithRelationInput[]
+    cursor?: NotificationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: NotificationScalarFieldEnum | NotificationScalarFieldEnum[]
+  }
+
+  /**
+   * User.sentNotifications
+   */
+  export type User$sentNotificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notification
+     */
+    omit?: NotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    where?: NotificationWhereInput
+    orderBy?: NotificationOrderByWithRelationInput | NotificationOrderByWithRelationInput[]
+    cursor?: NotificationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: NotificationScalarFieldEnum | NotificationScalarFieldEnum[]
   }
 
   /**
@@ -4204,6 +4575,7 @@ export namespace Prisma {
     messages?: boolean | Conversation$messagesArgs<ExtArgs>
     owner?: boolean | Conversation$ownerArgs<ExtArgs>
     lastMessage?: boolean | Conversation$lastMessageArgs<ExtArgs>
+    notifications?: boolean | Conversation$notificationsArgs<ExtArgs>
     _count?: boolean | ConversationCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["conversation"]>
 
@@ -4229,6 +4601,7 @@ export namespace Prisma {
     messages?: boolean | Conversation$messagesArgs<ExtArgs>
     owner?: boolean | Conversation$ownerArgs<ExtArgs>
     lastMessage?: boolean | Conversation$lastMessageArgs<ExtArgs>
+    notifications?: boolean | Conversation$notificationsArgs<ExtArgs>
     _count?: boolean | ConversationCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -4240,6 +4613,7 @@ export namespace Prisma {
       messages: Prisma.$MessagePayload<ExtArgs>[]
       owner: Prisma.$UserPayload<ExtArgs> | null
       lastMessage: Prisma.$MessagePayload<ExtArgs> | null
+      notifications: Prisma.$NotificationPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
@@ -4597,6 +4971,7 @@ export namespace Prisma {
     messages<T extends Conversation$messagesArgs<ExtArgs> = {}>(args?: Subset<T, Conversation$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     owner<T extends Conversation$ownerArgs<ExtArgs> = {}>(args?: Subset<T, Conversation$ownerArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     lastMessage<T extends Conversation$lastMessageArgs<ExtArgs> = {}>(args?: Subset<T, Conversation$lastMessageArgs<ExtArgs>>): Prisma__MessageClient<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    notifications<T extends Conversation$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, Conversation$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5089,6 +5464,30 @@ export namespace Prisma {
   }
 
   /**
+   * Conversation.notifications
+   */
+  export type Conversation$notificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notification
+     */
+    omit?: NotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    where?: NotificationWhereInput
+    orderBy?: NotificationOrderByWithRelationInput | NotificationOrderByWithRelationInput[]
+    cursor?: NotificationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: NotificationScalarFieldEnum | NotificationScalarFieldEnum[]
+  }
+
+  /**
    * Conversation without action
    */
   export type ConversationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5123,12 +5522,14 @@ export namespace Prisma {
     id: number | null
     conversationId: number | null
     userId: number | null
+    unreadCount: number | null
   }
 
   export type ConversationParticipantSumAggregateOutputType = {
     id: bigint | null
     conversationId: bigint | null
     userId: bigint | null
+    unreadCount: number | null
   }
 
   export type ConversationParticipantMinAggregateOutputType = {
@@ -5138,6 +5539,7 @@ export namespace Prisma {
     role: $Enums.ParticipantRole | null
     joinedAt: Date | null
     leftAt: Date | null
+    unreadCount: number | null
     lastReadAt: Date | null
     deletedAt: Date | null
   }
@@ -5149,6 +5551,7 @@ export namespace Prisma {
     role: $Enums.ParticipantRole | null
     joinedAt: Date | null
     leftAt: Date | null
+    unreadCount: number | null
     lastReadAt: Date | null
     deletedAt: Date | null
   }
@@ -5160,6 +5563,7 @@ export namespace Prisma {
     role: number
     joinedAt: number
     leftAt: number
+    unreadCount: number
     lastReadAt: number
     deletedAt: number
     _all: number
@@ -5170,12 +5574,14 @@ export namespace Prisma {
     id?: true
     conversationId?: true
     userId?: true
+    unreadCount?: true
   }
 
   export type ConversationParticipantSumAggregateInputType = {
     id?: true
     conversationId?: true
     userId?: true
+    unreadCount?: true
   }
 
   export type ConversationParticipantMinAggregateInputType = {
@@ -5185,6 +5591,7 @@ export namespace Prisma {
     role?: true
     joinedAt?: true
     leftAt?: true
+    unreadCount?: true
     lastReadAt?: true
     deletedAt?: true
   }
@@ -5196,6 +5603,7 @@ export namespace Prisma {
     role?: true
     joinedAt?: true
     leftAt?: true
+    unreadCount?: true
     lastReadAt?: true
     deletedAt?: true
   }
@@ -5207,6 +5615,7 @@ export namespace Prisma {
     role?: true
     joinedAt?: true
     leftAt?: true
+    unreadCount?: true
     lastReadAt?: true
     deletedAt?: true
     _all?: true
@@ -5305,6 +5714,7 @@ export namespace Prisma {
     role: $Enums.ParticipantRole
     joinedAt: Date
     leftAt: Date | null
+    unreadCount: number
     lastReadAt: Date | null
     deletedAt: Date | null
     _count: ConversationParticipantCountAggregateOutputType | null
@@ -5335,6 +5745,7 @@ export namespace Prisma {
     role?: boolean
     joinedAt?: boolean
     leftAt?: boolean
+    unreadCount?: boolean
     lastReadAt?: boolean
     deletedAt?: boolean
     conversation?: boolean | ConversationDefaultArgs<ExtArgs>
@@ -5350,11 +5761,12 @@ export namespace Prisma {
     role?: boolean
     joinedAt?: boolean
     leftAt?: boolean
+    unreadCount?: boolean
     lastReadAt?: boolean
     deletedAt?: boolean
   }
 
-  export type ConversationParticipantOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "conversationId" | "userId" | "role" | "joinedAt" | "leftAt" | "lastReadAt" | "deletedAt", ExtArgs["result"]["conversationParticipant"]>
+  export type ConversationParticipantOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "conversationId" | "userId" | "role" | "joinedAt" | "leftAt" | "unreadCount" | "lastReadAt" | "deletedAt", ExtArgs["result"]["conversationParticipant"]>
   export type ConversationParticipantInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     conversation?: boolean | ConversationDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -5373,6 +5785,7 @@ export namespace Prisma {
       role: $Enums.ParticipantRole
       joinedAt: Date
       leftAt: Date | null
+      unreadCount: number
       lastReadAt: Date | null
       deletedAt: Date | null
     }, ExtArgs["result"]["conversationParticipant"]>
@@ -5752,6 +6165,7 @@ export namespace Prisma {
     readonly role: FieldRef<"ConversationParticipant", 'ParticipantRole'>
     readonly joinedAt: FieldRef<"ConversationParticipant", 'DateTime'>
     readonly leftAt: FieldRef<"ConversationParticipant", 'DateTime'>
+    readonly unreadCount: FieldRef<"ConversationParticipant", 'Int'>
     readonly lastReadAt: FieldRef<"ConversationParticipant", 'DateTime'>
     readonly deletedAt: FieldRef<"ConversationParticipant", 'DateTime'>
   }
@@ -6371,6 +6785,7 @@ export namespace Prisma {
     replies?: boolean | Message$repliesArgs<ExtArgs>
     attachments?: boolean | Message$attachmentsArgs<ExtArgs>
     lastMessageOf?: boolean | Message$lastMessageOfArgs<ExtArgs>
+    notifications?: boolean | Message$notificationsArgs<ExtArgs>
     _count?: boolean | MessageCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["message"]>
 
@@ -6397,6 +6812,7 @@ export namespace Prisma {
     replies?: boolean | Message$repliesArgs<ExtArgs>
     attachments?: boolean | Message$attachmentsArgs<ExtArgs>
     lastMessageOf?: boolean | Message$lastMessageOfArgs<ExtArgs>
+    notifications?: boolean | Message$notificationsArgs<ExtArgs>
     _count?: boolean | MessageCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -6409,6 +6825,7 @@ export namespace Prisma {
       replies: Prisma.$MessagePayload<ExtArgs>[]
       attachments: Prisma.$MessageAttachmentPayload<ExtArgs>[]
       lastMessageOf: Prisma.$ConversationPayload<ExtArgs>[]
+      notifications: Prisma.$NotificationPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
@@ -6767,6 +7184,7 @@ export namespace Prisma {
     replies<T extends Message$repliesArgs<ExtArgs> = {}>(args?: Subset<T, Message$repliesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     attachments<T extends Message$attachmentsArgs<ExtArgs> = {}>(args?: Subset<T, Message$attachmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessageAttachmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     lastMessageOf<T extends Message$lastMessageOfArgs<ExtArgs> = {}>(args?: Subset<T, Message$lastMessageOfArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    notifications<T extends Message$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, Message$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7256,6 +7674,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ConversationScalarFieldEnum | ConversationScalarFieldEnum[]
+  }
+
+  /**
+   * Message.notifications
+   */
+  export type Message$notificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notification
+     */
+    omit?: NotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    where?: NotificationWhereInput
+    orderBy?: NotificationOrderByWithRelationInput | NotificationOrderByWithRelationInput[]
+    cursor?: NotificationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: NotificationScalarFieldEnum | NotificationScalarFieldEnum[]
   }
 
   /**
@@ -11188,6 +11630,2073 @@ export namespace Prisma {
 
 
   /**
+   * Model Friend
+   */
+
+  export type AggregateFriend = {
+    _count: FriendCountAggregateOutputType | null
+    _avg: FriendAvgAggregateOutputType | null
+    _sum: FriendSumAggregateOutputType | null
+    _min: FriendMinAggregateOutputType | null
+    _max: FriendMaxAggregateOutputType | null
+  }
+
+  export type FriendAvgAggregateOutputType = {
+    id: number | null
+    requesterId: number | null
+    addresseeId: number | null
+  }
+
+  export type FriendSumAggregateOutputType = {
+    id: bigint | null
+    requesterId: bigint | null
+    addresseeId: bigint | null
+  }
+
+  export type FriendMinAggregateOutputType = {
+    id: bigint | null
+    requesterId: bigint | null
+    addresseeId: bigint | null
+    status: $Enums.FriendStatus | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type FriendMaxAggregateOutputType = {
+    id: bigint | null
+    requesterId: bigint | null
+    addresseeId: bigint | null
+    status: $Enums.FriendStatus | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type FriendCountAggregateOutputType = {
+    id: number
+    requesterId: number
+    addresseeId: number
+    status: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type FriendAvgAggregateInputType = {
+    id?: true
+    requesterId?: true
+    addresseeId?: true
+  }
+
+  export type FriendSumAggregateInputType = {
+    id?: true
+    requesterId?: true
+    addresseeId?: true
+  }
+
+  export type FriendMinAggregateInputType = {
+    id?: true
+    requesterId?: true
+    addresseeId?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type FriendMaxAggregateInputType = {
+    id?: true
+    requesterId?: true
+    addresseeId?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type FriendCountAggregateInputType = {
+    id?: true
+    requesterId?: true
+    addresseeId?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type FriendAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Friend to aggregate.
+     */
+    where?: FriendWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Friends to fetch.
+     */
+    orderBy?: FriendOrderByWithRelationInput | FriendOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FriendWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Friends from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Friends.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Friends
+    **/
+    _count?: true | FriendCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: FriendAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: FriendSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FriendMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FriendMaxAggregateInputType
+  }
+
+  export type GetFriendAggregateType<T extends FriendAggregateArgs> = {
+        [P in keyof T & keyof AggregateFriend]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFriend[P]>
+      : GetScalarType<T[P], AggregateFriend[P]>
+  }
+
+
+
+
+  export type FriendGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FriendWhereInput
+    orderBy?: FriendOrderByWithAggregationInput | FriendOrderByWithAggregationInput[]
+    by: FriendScalarFieldEnum[] | FriendScalarFieldEnum
+    having?: FriendScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FriendCountAggregateInputType | true
+    _avg?: FriendAvgAggregateInputType
+    _sum?: FriendSumAggregateInputType
+    _min?: FriendMinAggregateInputType
+    _max?: FriendMaxAggregateInputType
+  }
+
+  export type FriendGroupByOutputType = {
+    id: bigint
+    requesterId: bigint
+    addresseeId: bigint
+    status: $Enums.FriendStatus
+    createdAt: Date
+    updatedAt: Date
+    _count: FriendCountAggregateOutputType | null
+    _avg: FriendAvgAggregateOutputType | null
+    _sum: FriendSumAggregateOutputType | null
+    _min: FriendMinAggregateOutputType | null
+    _max: FriendMaxAggregateOutputType | null
+  }
+
+  type GetFriendGroupByPayload<T extends FriendGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FriendGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FriendGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FriendGroupByOutputType[P]>
+            : GetScalarType<T[P], FriendGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FriendSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    requesterId?: boolean
+    addresseeId?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    requester?: boolean | UserDefaultArgs<ExtArgs>
+    addressee?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["friend"]>
+
+
+
+  export type FriendSelectScalar = {
+    id?: boolean
+    requesterId?: boolean
+    addresseeId?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type FriendOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "requesterId" | "addresseeId" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["friend"]>
+  export type FriendInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    requester?: boolean | UserDefaultArgs<ExtArgs>
+    addressee?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $FriendPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Friend"
+    objects: {
+      requester: Prisma.$UserPayload<ExtArgs>
+      addressee: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: bigint
+      requesterId: bigint
+      addresseeId: bigint
+      status: $Enums.FriendStatus
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["friend"]>
+    composites: {}
+  }
+
+  type FriendGetPayload<S extends boolean | null | undefined | FriendDefaultArgs> = $Result.GetResult<Prisma.$FriendPayload, S>
+
+  type FriendCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FriendFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FriendCountAggregateInputType | true
+    }
+
+  export interface FriendDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Friend'], meta: { name: 'Friend' } }
+    /**
+     * Find zero or one Friend that matches the filter.
+     * @param {FriendFindUniqueArgs} args - Arguments to find a Friend
+     * @example
+     * // Get one Friend
+     * const friend = await prisma.friend.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FriendFindUniqueArgs>(args: SelectSubset<T, FriendFindUniqueArgs<ExtArgs>>): Prisma__FriendClient<$Result.GetResult<Prisma.$FriendPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Friend that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FriendFindUniqueOrThrowArgs} args - Arguments to find a Friend
+     * @example
+     * // Get one Friend
+     * const friend = await prisma.friend.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FriendFindUniqueOrThrowArgs>(args: SelectSubset<T, FriendFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FriendClient<$Result.GetResult<Prisma.$FriendPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Friend that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FriendFindFirstArgs} args - Arguments to find a Friend
+     * @example
+     * // Get one Friend
+     * const friend = await prisma.friend.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FriendFindFirstArgs>(args?: SelectSubset<T, FriendFindFirstArgs<ExtArgs>>): Prisma__FriendClient<$Result.GetResult<Prisma.$FriendPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Friend that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FriendFindFirstOrThrowArgs} args - Arguments to find a Friend
+     * @example
+     * // Get one Friend
+     * const friend = await prisma.friend.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FriendFindFirstOrThrowArgs>(args?: SelectSubset<T, FriendFindFirstOrThrowArgs<ExtArgs>>): Prisma__FriendClient<$Result.GetResult<Prisma.$FriendPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Friends that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FriendFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Friends
+     * const friends = await prisma.friend.findMany()
+     * 
+     * // Get first 10 Friends
+     * const friends = await prisma.friend.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const friendWithIdOnly = await prisma.friend.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FriendFindManyArgs>(args?: SelectSubset<T, FriendFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FriendPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Friend.
+     * @param {FriendCreateArgs} args - Arguments to create a Friend.
+     * @example
+     * // Create one Friend
+     * const Friend = await prisma.friend.create({
+     *   data: {
+     *     // ... data to create a Friend
+     *   }
+     * })
+     * 
+     */
+    create<T extends FriendCreateArgs>(args: SelectSubset<T, FriendCreateArgs<ExtArgs>>): Prisma__FriendClient<$Result.GetResult<Prisma.$FriendPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Friends.
+     * @param {FriendCreateManyArgs} args - Arguments to create many Friends.
+     * @example
+     * // Create many Friends
+     * const friend = await prisma.friend.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FriendCreateManyArgs>(args?: SelectSubset<T, FriendCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Friend.
+     * @param {FriendDeleteArgs} args - Arguments to delete one Friend.
+     * @example
+     * // Delete one Friend
+     * const Friend = await prisma.friend.delete({
+     *   where: {
+     *     // ... filter to delete one Friend
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FriendDeleteArgs>(args: SelectSubset<T, FriendDeleteArgs<ExtArgs>>): Prisma__FriendClient<$Result.GetResult<Prisma.$FriendPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Friend.
+     * @param {FriendUpdateArgs} args - Arguments to update one Friend.
+     * @example
+     * // Update one Friend
+     * const friend = await prisma.friend.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FriendUpdateArgs>(args: SelectSubset<T, FriendUpdateArgs<ExtArgs>>): Prisma__FriendClient<$Result.GetResult<Prisma.$FriendPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Friends.
+     * @param {FriendDeleteManyArgs} args - Arguments to filter Friends to delete.
+     * @example
+     * // Delete a few Friends
+     * const { count } = await prisma.friend.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FriendDeleteManyArgs>(args?: SelectSubset<T, FriendDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Friends.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FriendUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Friends
+     * const friend = await prisma.friend.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FriendUpdateManyArgs>(args: SelectSubset<T, FriendUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Friend.
+     * @param {FriendUpsertArgs} args - Arguments to update or create a Friend.
+     * @example
+     * // Update or create a Friend
+     * const friend = await prisma.friend.upsert({
+     *   create: {
+     *     // ... data to create a Friend
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Friend we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FriendUpsertArgs>(args: SelectSubset<T, FriendUpsertArgs<ExtArgs>>): Prisma__FriendClient<$Result.GetResult<Prisma.$FriendPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Friends.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FriendCountArgs} args - Arguments to filter Friends to count.
+     * @example
+     * // Count the number of Friends
+     * const count = await prisma.friend.count({
+     *   where: {
+     *     // ... the filter for the Friends we want to count
+     *   }
+     * })
+    **/
+    count<T extends FriendCountArgs>(
+      args?: Subset<T, FriendCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FriendCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Friend.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FriendAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FriendAggregateArgs>(args: Subset<T, FriendAggregateArgs>): Prisma.PrismaPromise<GetFriendAggregateType<T>>
+
+    /**
+     * Group by Friend.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FriendGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FriendGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FriendGroupByArgs['orderBy'] }
+        : { orderBy?: FriendGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FriendGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFriendGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Friend model
+   */
+  readonly fields: FriendFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Friend.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FriendClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    requester<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    addressee<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Friend model
+   */
+  interface FriendFieldRefs {
+    readonly id: FieldRef<"Friend", 'BigInt'>
+    readonly requesterId: FieldRef<"Friend", 'BigInt'>
+    readonly addresseeId: FieldRef<"Friend", 'BigInt'>
+    readonly status: FieldRef<"Friend", 'FriendStatus'>
+    readonly createdAt: FieldRef<"Friend", 'DateTime'>
+    readonly updatedAt: FieldRef<"Friend", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Friend findUnique
+   */
+  export type FriendFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Friend
+     */
+    select?: FriendSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Friend
+     */
+    omit?: FriendOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FriendInclude<ExtArgs> | null
+    /**
+     * Filter, which Friend to fetch.
+     */
+    where: FriendWhereUniqueInput
+  }
+
+  /**
+   * Friend findUniqueOrThrow
+   */
+  export type FriendFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Friend
+     */
+    select?: FriendSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Friend
+     */
+    omit?: FriendOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FriendInclude<ExtArgs> | null
+    /**
+     * Filter, which Friend to fetch.
+     */
+    where: FriendWhereUniqueInput
+  }
+
+  /**
+   * Friend findFirst
+   */
+  export type FriendFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Friend
+     */
+    select?: FriendSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Friend
+     */
+    omit?: FriendOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FriendInclude<ExtArgs> | null
+    /**
+     * Filter, which Friend to fetch.
+     */
+    where?: FriendWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Friends to fetch.
+     */
+    orderBy?: FriendOrderByWithRelationInput | FriendOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Friends.
+     */
+    cursor?: FriendWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Friends from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Friends.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Friends.
+     */
+    distinct?: FriendScalarFieldEnum | FriendScalarFieldEnum[]
+  }
+
+  /**
+   * Friend findFirstOrThrow
+   */
+  export type FriendFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Friend
+     */
+    select?: FriendSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Friend
+     */
+    omit?: FriendOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FriendInclude<ExtArgs> | null
+    /**
+     * Filter, which Friend to fetch.
+     */
+    where?: FriendWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Friends to fetch.
+     */
+    orderBy?: FriendOrderByWithRelationInput | FriendOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Friends.
+     */
+    cursor?: FriendWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Friends from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Friends.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Friends.
+     */
+    distinct?: FriendScalarFieldEnum | FriendScalarFieldEnum[]
+  }
+
+  /**
+   * Friend findMany
+   */
+  export type FriendFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Friend
+     */
+    select?: FriendSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Friend
+     */
+    omit?: FriendOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FriendInclude<ExtArgs> | null
+    /**
+     * Filter, which Friends to fetch.
+     */
+    where?: FriendWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Friends to fetch.
+     */
+    orderBy?: FriendOrderByWithRelationInput | FriendOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Friends.
+     */
+    cursor?: FriendWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Friends from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Friends.
+     */
+    skip?: number
+    distinct?: FriendScalarFieldEnum | FriendScalarFieldEnum[]
+  }
+
+  /**
+   * Friend create
+   */
+  export type FriendCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Friend
+     */
+    select?: FriendSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Friend
+     */
+    omit?: FriendOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FriendInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Friend.
+     */
+    data: XOR<FriendCreateInput, FriendUncheckedCreateInput>
+  }
+
+  /**
+   * Friend createMany
+   */
+  export type FriendCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Friends.
+     */
+    data: FriendCreateManyInput | FriendCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Friend update
+   */
+  export type FriendUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Friend
+     */
+    select?: FriendSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Friend
+     */
+    omit?: FriendOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FriendInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Friend.
+     */
+    data: XOR<FriendUpdateInput, FriendUncheckedUpdateInput>
+    /**
+     * Choose, which Friend to update.
+     */
+    where: FriendWhereUniqueInput
+  }
+
+  /**
+   * Friend updateMany
+   */
+  export type FriendUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Friends.
+     */
+    data: XOR<FriendUpdateManyMutationInput, FriendUncheckedUpdateManyInput>
+    /**
+     * Filter which Friends to update
+     */
+    where?: FriendWhereInput
+    /**
+     * Limit how many Friends to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Friend upsert
+   */
+  export type FriendUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Friend
+     */
+    select?: FriendSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Friend
+     */
+    omit?: FriendOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FriendInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Friend to update in case it exists.
+     */
+    where: FriendWhereUniqueInput
+    /**
+     * In case the Friend found by the `where` argument doesn't exist, create a new Friend with this data.
+     */
+    create: XOR<FriendCreateInput, FriendUncheckedCreateInput>
+    /**
+     * In case the Friend was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FriendUpdateInput, FriendUncheckedUpdateInput>
+  }
+
+  /**
+   * Friend delete
+   */
+  export type FriendDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Friend
+     */
+    select?: FriendSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Friend
+     */
+    omit?: FriendOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FriendInclude<ExtArgs> | null
+    /**
+     * Filter which Friend to delete.
+     */
+    where: FriendWhereUniqueInput
+  }
+
+  /**
+   * Friend deleteMany
+   */
+  export type FriendDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Friends to delete
+     */
+    where?: FriendWhereInput
+    /**
+     * Limit how many Friends to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Friend without action
+   */
+  export type FriendDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Friend
+     */
+    select?: FriendSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Friend
+     */
+    omit?: FriendOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FriendInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Notification
+   */
+
+  export type AggregateNotification = {
+    _count: NotificationCountAggregateOutputType | null
+    _avg: NotificationAvgAggregateOutputType | null
+    _sum: NotificationSumAggregateOutputType | null
+    _min: NotificationMinAggregateOutputType | null
+    _max: NotificationMaxAggregateOutputType | null
+  }
+
+  export type NotificationAvgAggregateOutputType = {
+    id: number | null
+    receiverId: number | null
+    senderId: number | null
+    conversationId: number | null
+    messageId: number | null
+  }
+
+  export type NotificationSumAggregateOutputType = {
+    id: bigint | null
+    receiverId: bigint | null
+    senderId: bigint | null
+    conversationId: bigint | null
+    messageId: bigint | null
+  }
+
+  export type NotificationMinAggregateOutputType = {
+    id: bigint | null
+    receiverId: bigint | null
+    senderId: bigint | null
+    conversationId: bigint | null
+    messageId: bigint | null
+    type: $Enums.NotificationType | null
+    isRead: boolean | null
+    createdAt: Date | null
+  }
+
+  export type NotificationMaxAggregateOutputType = {
+    id: bigint | null
+    receiverId: bigint | null
+    senderId: bigint | null
+    conversationId: bigint | null
+    messageId: bigint | null
+    type: $Enums.NotificationType | null
+    isRead: boolean | null
+    createdAt: Date | null
+  }
+
+  export type NotificationCountAggregateOutputType = {
+    id: number
+    receiverId: number
+    senderId: number
+    conversationId: number
+    messageId: number
+    type: number
+    isRead: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type NotificationAvgAggregateInputType = {
+    id?: true
+    receiverId?: true
+    senderId?: true
+    conversationId?: true
+    messageId?: true
+  }
+
+  export type NotificationSumAggregateInputType = {
+    id?: true
+    receiverId?: true
+    senderId?: true
+    conversationId?: true
+    messageId?: true
+  }
+
+  export type NotificationMinAggregateInputType = {
+    id?: true
+    receiverId?: true
+    senderId?: true
+    conversationId?: true
+    messageId?: true
+    type?: true
+    isRead?: true
+    createdAt?: true
+  }
+
+  export type NotificationMaxAggregateInputType = {
+    id?: true
+    receiverId?: true
+    senderId?: true
+    conversationId?: true
+    messageId?: true
+    type?: true
+    isRead?: true
+    createdAt?: true
+  }
+
+  export type NotificationCountAggregateInputType = {
+    id?: true
+    receiverId?: true
+    senderId?: true
+    conversationId?: true
+    messageId?: true
+    type?: true
+    isRead?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type NotificationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Notification to aggregate.
+     */
+    where?: NotificationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Notifications to fetch.
+     */
+    orderBy?: NotificationOrderByWithRelationInput | NotificationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: NotificationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Notifications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Notifications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Notifications
+    **/
+    _count?: true | NotificationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: NotificationAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: NotificationSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: NotificationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: NotificationMaxAggregateInputType
+  }
+
+  export type GetNotificationAggregateType<T extends NotificationAggregateArgs> = {
+        [P in keyof T & keyof AggregateNotification]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateNotification[P]>
+      : GetScalarType<T[P], AggregateNotification[P]>
+  }
+
+
+
+
+  export type NotificationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NotificationWhereInput
+    orderBy?: NotificationOrderByWithAggregationInput | NotificationOrderByWithAggregationInput[]
+    by: NotificationScalarFieldEnum[] | NotificationScalarFieldEnum
+    having?: NotificationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: NotificationCountAggregateInputType | true
+    _avg?: NotificationAvgAggregateInputType
+    _sum?: NotificationSumAggregateInputType
+    _min?: NotificationMinAggregateInputType
+    _max?: NotificationMaxAggregateInputType
+  }
+
+  export type NotificationGroupByOutputType = {
+    id: bigint
+    receiverId: bigint
+    senderId: bigint | null
+    conversationId: bigint | null
+    messageId: bigint | null
+    type: $Enums.NotificationType
+    isRead: boolean
+    createdAt: Date
+    _count: NotificationCountAggregateOutputType | null
+    _avg: NotificationAvgAggregateOutputType | null
+    _sum: NotificationSumAggregateOutputType | null
+    _min: NotificationMinAggregateOutputType | null
+    _max: NotificationMaxAggregateOutputType | null
+  }
+
+  type GetNotificationGroupByPayload<T extends NotificationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<NotificationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof NotificationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], NotificationGroupByOutputType[P]>
+            : GetScalarType<T[P], NotificationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type NotificationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    receiverId?: boolean
+    senderId?: boolean
+    conversationId?: boolean
+    messageId?: boolean
+    type?: boolean
+    isRead?: boolean
+    createdAt?: boolean
+    receiver?: boolean | UserDefaultArgs<ExtArgs>
+    sender?: boolean | Notification$senderArgs<ExtArgs>
+    conversation?: boolean | Notification$conversationArgs<ExtArgs>
+    message?: boolean | Notification$messageArgs<ExtArgs>
+  }, ExtArgs["result"]["notification"]>
+
+
+
+  export type NotificationSelectScalar = {
+    id?: boolean
+    receiverId?: boolean
+    senderId?: boolean
+    conversationId?: boolean
+    messageId?: boolean
+    type?: boolean
+    isRead?: boolean
+    createdAt?: boolean
+  }
+
+  export type NotificationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "receiverId" | "senderId" | "conversationId" | "messageId" | "type" | "isRead" | "createdAt", ExtArgs["result"]["notification"]>
+  export type NotificationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    receiver?: boolean | UserDefaultArgs<ExtArgs>
+    sender?: boolean | Notification$senderArgs<ExtArgs>
+    conversation?: boolean | Notification$conversationArgs<ExtArgs>
+    message?: boolean | Notification$messageArgs<ExtArgs>
+  }
+
+  export type $NotificationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Notification"
+    objects: {
+      receiver: Prisma.$UserPayload<ExtArgs>
+      sender: Prisma.$UserPayload<ExtArgs> | null
+      conversation: Prisma.$ConversationPayload<ExtArgs> | null
+      message: Prisma.$MessagePayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: bigint
+      receiverId: bigint
+      senderId: bigint | null
+      conversationId: bigint | null
+      messageId: bigint | null
+      type: $Enums.NotificationType
+      isRead: boolean
+      createdAt: Date
+    }, ExtArgs["result"]["notification"]>
+    composites: {}
+  }
+
+  type NotificationGetPayload<S extends boolean | null | undefined | NotificationDefaultArgs> = $Result.GetResult<Prisma.$NotificationPayload, S>
+
+  type NotificationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<NotificationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: NotificationCountAggregateInputType | true
+    }
+
+  export interface NotificationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Notification'], meta: { name: 'Notification' } }
+    /**
+     * Find zero or one Notification that matches the filter.
+     * @param {NotificationFindUniqueArgs} args - Arguments to find a Notification
+     * @example
+     * // Get one Notification
+     * const notification = await prisma.notification.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends NotificationFindUniqueArgs>(args: SelectSubset<T, NotificationFindUniqueArgs<ExtArgs>>): Prisma__NotificationClient<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Notification that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {NotificationFindUniqueOrThrowArgs} args - Arguments to find a Notification
+     * @example
+     * // Get one Notification
+     * const notification = await prisma.notification.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends NotificationFindUniqueOrThrowArgs>(args: SelectSubset<T, NotificationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__NotificationClient<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Notification that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationFindFirstArgs} args - Arguments to find a Notification
+     * @example
+     * // Get one Notification
+     * const notification = await prisma.notification.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends NotificationFindFirstArgs>(args?: SelectSubset<T, NotificationFindFirstArgs<ExtArgs>>): Prisma__NotificationClient<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Notification that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationFindFirstOrThrowArgs} args - Arguments to find a Notification
+     * @example
+     * // Get one Notification
+     * const notification = await prisma.notification.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends NotificationFindFirstOrThrowArgs>(args?: SelectSubset<T, NotificationFindFirstOrThrowArgs<ExtArgs>>): Prisma__NotificationClient<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Notifications that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Notifications
+     * const notifications = await prisma.notification.findMany()
+     * 
+     * // Get first 10 Notifications
+     * const notifications = await prisma.notification.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const notificationWithIdOnly = await prisma.notification.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends NotificationFindManyArgs>(args?: SelectSubset<T, NotificationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Notification.
+     * @param {NotificationCreateArgs} args - Arguments to create a Notification.
+     * @example
+     * // Create one Notification
+     * const Notification = await prisma.notification.create({
+     *   data: {
+     *     // ... data to create a Notification
+     *   }
+     * })
+     * 
+     */
+    create<T extends NotificationCreateArgs>(args: SelectSubset<T, NotificationCreateArgs<ExtArgs>>): Prisma__NotificationClient<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Notifications.
+     * @param {NotificationCreateManyArgs} args - Arguments to create many Notifications.
+     * @example
+     * // Create many Notifications
+     * const notification = await prisma.notification.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends NotificationCreateManyArgs>(args?: SelectSubset<T, NotificationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Notification.
+     * @param {NotificationDeleteArgs} args - Arguments to delete one Notification.
+     * @example
+     * // Delete one Notification
+     * const Notification = await prisma.notification.delete({
+     *   where: {
+     *     // ... filter to delete one Notification
+     *   }
+     * })
+     * 
+     */
+    delete<T extends NotificationDeleteArgs>(args: SelectSubset<T, NotificationDeleteArgs<ExtArgs>>): Prisma__NotificationClient<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Notification.
+     * @param {NotificationUpdateArgs} args - Arguments to update one Notification.
+     * @example
+     * // Update one Notification
+     * const notification = await prisma.notification.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends NotificationUpdateArgs>(args: SelectSubset<T, NotificationUpdateArgs<ExtArgs>>): Prisma__NotificationClient<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Notifications.
+     * @param {NotificationDeleteManyArgs} args - Arguments to filter Notifications to delete.
+     * @example
+     * // Delete a few Notifications
+     * const { count } = await prisma.notification.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends NotificationDeleteManyArgs>(args?: SelectSubset<T, NotificationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Notifications.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Notifications
+     * const notification = await prisma.notification.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends NotificationUpdateManyArgs>(args: SelectSubset<T, NotificationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Notification.
+     * @param {NotificationUpsertArgs} args - Arguments to update or create a Notification.
+     * @example
+     * // Update or create a Notification
+     * const notification = await prisma.notification.upsert({
+     *   create: {
+     *     // ... data to create a Notification
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Notification we want to update
+     *   }
+     * })
+     */
+    upsert<T extends NotificationUpsertArgs>(args: SelectSubset<T, NotificationUpsertArgs<ExtArgs>>): Prisma__NotificationClient<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Notifications.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationCountArgs} args - Arguments to filter Notifications to count.
+     * @example
+     * // Count the number of Notifications
+     * const count = await prisma.notification.count({
+     *   where: {
+     *     // ... the filter for the Notifications we want to count
+     *   }
+     * })
+    **/
+    count<T extends NotificationCountArgs>(
+      args?: Subset<T, NotificationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], NotificationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Notification.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends NotificationAggregateArgs>(args: Subset<T, NotificationAggregateArgs>): Prisma.PrismaPromise<GetNotificationAggregateType<T>>
+
+    /**
+     * Group by Notification.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends NotificationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: NotificationGroupByArgs['orderBy'] }
+        : { orderBy?: NotificationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, NotificationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetNotificationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Notification model
+   */
+  readonly fields: NotificationFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Notification.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__NotificationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    receiver<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    sender<T extends Notification$senderArgs<ExtArgs> = {}>(args?: Subset<T, Notification$senderArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    conversation<T extends Notification$conversationArgs<ExtArgs> = {}>(args?: Subset<T, Notification$conversationArgs<ExtArgs>>): Prisma__ConversationClient<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    message<T extends Notification$messageArgs<ExtArgs> = {}>(args?: Subset<T, Notification$messageArgs<ExtArgs>>): Prisma__MessageClient<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Notification model
+   */
+  interface NotificationFieldRefs {
+    readonly id: FieldRef<"Notification", 'BigInt'>
+    readonly receiverId: FieldRef<"Notification", 'BigInt'>
+    readonly senderId: FieldRef<"Notification", 'BigInt'>
+    readonly conversationId: FieldRef<"Notification", 'BigInt'>
+    readonly messageId: FieldRef<"Notification", 'BigInt'>
+    readonly type: FieldRef<"Notification", 'NotificationType'>
+    readonly isRead: FieldRef<"Notification", 'Boolean'>
+    readonly createdAt: FieldRef<"Notification", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Notification findUnique
+   */
+  export type NotificationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notification
+     */
+    omit?: NotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    /**
+     * Filter, which Notification to fetch.
+     */
+    where: NotificationWhereUniqueInput
+  }
+
+  /**
+   * Notification findUniqueOrThrow
+   */
+  export type NotificationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notification
+     */
+    omit?: NotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    /**
+     * Filter, which Notification to fetch.
+     */
+    where: NotificationWhereUniqueInput
+  }
+
+  /**
+   * Notification findFirst
+   */
+  export type NotificationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notification
+     */
+    omit?: NotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    /**
+     * Filter, which Notification to fetch.
+     */
+    where?: NotificationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Notifications to fetch.
+     */
+    orderBy?: NotificationOrderByWithRelationInput | NotificationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Notifications.
+     */
+    cursor?: NotificationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Notifications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Notifications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Notifications.
+     */
+    distinct?: NotificationScalarFieldEnum | NotificationScalarFieldEnum[]
+  }
+
+  /**
+   * Notification findFirstOrThrow
+   */
+  export type NotificationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notification
+     */
+    omit?: NotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    /**
+     * Filter, which Notification to fetch.
+     */
+    where?: NotificationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Notifications to fetch.
+     */
+    orderBy?: NotificationOrderByWithRelationInput | NotificationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Notifications.
+     */
+    cursor?: NotificationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Notifications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Notifications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Notifications.
+     */
+    distinct?: NotificationScalarFieldEnum | NotificationScalarFieldEnum[]
+  }
+
+  /**
+   * Notification findMany
+   */
+  export type NotificationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notification
+     */
+    omit?: NotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    /**
+     * Filter, which Notifications to fetch.
+     */
+    where?: NotificationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Notifications to fetch.
+     */
+    orderBy?: NotificationOrderByWithRelationInput | NotificationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Notifications.
+     */
+    cursor?: NotificationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Notifications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Notifications.
+     */
+    skip?: number
+    distinct?: NotificationScalarFieldEnum | NotificationScalarFieldEnum[]
+  }
+
+  /**
+   * Notification create
+   */
+  export type NotificationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notification
+     */
+    omit?: NotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Notification.
+     */
+    data: XOR<NotificationCreateInput, NotificationUncheckedCreateInput>
+  }
+
+  /**
+   * Notification createMany
+   */
+  export type NotificationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Notifications.
+     */
+    data: NotificationCreateManyInput | NotificationCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Notification update
+   */
+  export type NotificationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notification
+     */
+    omit?: NotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Notification.
+     */
+    data: XOR<NotificationUpdateInput, NotificationUncheckedUpdateInput>
+    /**
+     * Choose, which Notification to update.
+     */
+    where: NotificationWhereUniqueInput
+  }
+
+  /**
+   * Notification updateMany
+   */
+  export type NotificationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Notifications.
+     */
+    data: XOR<NotificationUpdateManyMutationInput, NotificationUncheckedUpdateManyInput>
+    /**
+     * Filter which Notifications to update
+     */
+    where?: NotificationWhereInput
+    /**
+     * Limit how many Notifications to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Notification upsert
+   */
+  export type NotificationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notification
+     */
+    omit?: NotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Notification to update in case it exists.
+     */
+    where: NotificationWhereUniqueInput
+    /**
+     * In case the Notification found by the `where` argument doesn't exist, create a new Notification with this data.
+     */
+    create: XOR<NotificationCreateInput, NotificationUncheckedCreateInput>
+    /**
+     * In case the Notification was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<NotificationUpdateInput, NotificationUncheckedUpdateInput>
+  }
+
+  /**
+   * Notification delete
+   */
+  export type NotificationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notification
+     */
+    omit?: NotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+    /**
+     * Filter which Notification to delete.
+     */
+    where: NotificationWhereUniqueInput
+  }
+
+  /**
+   * Notification deleteMany
+   */
+  export type NotificationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Notifications to delete
+     */
+    where?: NotificationWhereInput
+    /**
+     * Limit how many Notifications to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Notification.sender
+   */
+  export type Notification$senderArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * Notification.conversation
+   */
+  export type Notification$conversationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conversation
+     */
+    select?: ConversationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conversation
+     */
+    omit?: ConversationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationInclude<ExtArgs> | null
+    where?: ConversationWhereInput
+  }
+
+  /**
+   * Notification.message
+   */
+  export type Notification$messageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Message
+     */
+    select?: MessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Message
+     */
+    omit?: MessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageInclude<ExtArgs> | null
+    where?: MessageWhereInput
+  }
+
+  /**
+   * Notification without action
+   */
+  export type NotificationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notification
+     */
+    select?: NotificationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notification
+     */
+    omit?: NotificationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NotificationInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -11205,6 +13714,7 @@ export namespace Prisma {
     id: 'id',
     email: 'email',
     name: 'name',
+    avatarUrl: 'avatarUrl',
     password: 'password',
     emailVerifiedAt: 'emailVerifiedAt',
     createdAt: 'createdAt',
@@ -11250,6 +13760,7 @@ export namespace Prisma {
     role: 'role',
     joinedAt: 'joinedAt',
     leftAt: 'leftAt',
+    unreadCount: 'unreadCount',
     lastReadAt: 'lastReadAt',
     deletedAt: 'deletedAt'
   };
@@ -11324,6 +13835,32 @@ export namespace Prisma {
   export type UserBlockScalarFieldEnum = (typeof UserBlockScalarFieldEnum)[keyof typeof UserBlockScalarFieldEnum]
 
 
+  export const FriendScalarFieldEnum: {
+    id: 'id',
+    requesterId: 'requesterId',
+    addresseeId: 'addresseeId',
+    status: 'status',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type FriendScalarFieldEnum = (typeof FriendScalarFieldEnum)[keyof typeof FriendScalarFieldEnum]
+
+
+  export const NotificationScalarFieldEnum: {
+    id: 'id',
+    receiverId: 'receiverId',
+    senderId: 'senderId',
+    conversationId: 'conversationId',
+    messageId: 'messageId',
+    type: 'type',
+    isRead: 'isRead',
+    createdAt: 'createdAt'
+  };
+
+  export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -11350,6 +13887,7 @@ export namespace Prisma {
   export const UserOrderByRelevanceFieldEnum: {
     email: 'email',
     name: 'name',
+    avatarUrl: 'avatarUrl',
     password: 'password'
   };
 
@@ -11460,6 +13998,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Int'
+   */
+  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+  /**
    * Reference to a field of type 'MessageRole'
    */
   export type EnumMessageRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MessageRole'>
@@ -11470,13 +14015,6 @@ export namespace Prisma {
    * Reference to a field of type 'Boolean'
    */
   export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-    
-
-
-  /**
-   * Reference to a field of type 'Int'
-   */
-  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
     
 
 
@@ -11502,6 +14040,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'FriendStatus'
+   */
+  export type EnumFriendStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FriendStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'NotificationType'
+   */
+  export type EnumNotificationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NotificationType'>
+    
+
+
+  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -11518,6 +14070,7 @@ export namespace Prisma {
     id?: BigIntFilter<"User"> | bigint | number
     email?: StringFilter<"User"> | string
     name?: StringNullableFilter<"User"> | string | null
+    avatarUrl?: StringNullableFilter<"User"> | string | null
     password?: StringFilter<"User"> | string
     emailVerifiedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
@@ -11531,12 +14084,17 @@ export namespace Prisma {
     blockedUsers?: UserBlockListRelationFilter
     blockedBy?: UserBlockListRelationFilter
     ownedConversations?: ConversationListRelationFilter
+    sentFriendRequests?: FriendListRelationFilter
+    receivedFriendRequests?: FriendListRelationFilter
+    receivedNotifications?: NotificationListRelationFilter
+    sentNotifications?: NotificationListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
     id?: SortOrder
     email?: SortOrder
     name?: SortOrderInput | SortOrder
+    avatarUrl?: SortOrderInput | SortOrder
     password?: SortOrder
     emailVerifiedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -11550,6 +14108,10 @@ export namespace Prisma {
     blockedUsers?: UserBlockOrderByRelationAggregateInput
     blockedBy?: UserBlockOrderByRelationAggregateInput
     ownedConversations?: ConversationOrderByRelationAggregateInput
+    sentFriendRequests?: FriendOrderByRelationAggregateInput
+    receivedFriendRequests?: FriendOrderByRelationAggregateInput
+    receivedNotifications?: NotificationOrderByRelationAggregateInput
+    sentNotifications?: NotificationOrderByRelationAggregateInput
     _relevance?: UserOrderByRelevanceInput
   }
 
@@ -11560,6 +14122,7 @@ export namespace Prisma {
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
     name?: StringNullableFilter<"User"> | string | null
+    avatarUrl?: StringNullableFilter<"User"> | string | null
     password?: StringFilter<"User"> | string
     emailVerifiedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
@@ -11573,12 +14136,17 @@ export namespace Prisma {
     blockedUsers?: UserBlockListRelationFilter
     blockedBy?: UserBlockListRelationFilter
     ownedConversations?: ConversationListRelationFilter
+    sentFriendRequests?: FriendListRelationFilter
+    receivedFriendRequests?: FriendListRelationFilter
+    receivedNotifications?: NotificationListRelationFilter
+    sentNotifications?: NotificationListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
     email?: SortOrder
     name?: SortOrderInput | SortOrder
+    avatarUrl?: SortOrderInput | SortOrder
     password?: SortOrder
     emailVerifiedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -11598,6 +14166,7 @@ export namespace Prisma {
     id?: BigIntWithAggregatesFilter<"User"> | bigint | number
     email?: StringWithAggregatesFilter<"User"> | string
     name?: StringNullableWithAggregatesFilter<"User"> | string | null
+    avatarUrl?: StringNullableWithAggregatesFilter<"User"> | string | null
     password?: StringWithAggregatesFilter<"User"> | string
     emailVerifiedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
@@ -11687,6 +14256,7 @@ export namespace Prisma {
     messages?: MessageListRelationFilter
     owner?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     lastMessage?: XOR<MessageNullableScalarRelationFilter, MessageWhereInput> | null
+    notifications?: NotificationListRelationFilter
   }
 
   export type ConversationOrderByWithRelationInput = {
@@ -11705,6 +14275,7 @@ export namespace Prisma {
     messages?: MessageOrderByRelationAggregateInput
     owner?: UserOrderByWithRelationInput
     lastMessage?: MessageOrderByWithRelationInput
+    notifications?: NotificationOrderByRelationAggregateInput
     _relevance?: ConversationOrderByRelevanceInput
   }
 
@@ -11727,6 +14298,7 @@ export namespace Prisma {
     messages?: MessageListRelationFilter
     owner?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     lastMessage?: XOR<MessageNullableScalarRelationFilter, MessageWhereInput> | null
+    notifications?: NotificationListRelationFilter
   }, "id">
 
   export type ConversationOrderByWithAggregationInput = {
@@ -11773,6 +14345,7 @@ export namespace Prisma {
     role?: EnumParticipantRoleFilter<"ConversationParticipant"> | $Enums.ParticipantRole
     joinedAt?: DateTimeFilter<"ConversationParticipant"> | Date | string
     leftAt?: DateTimeNullableFilter<"ConversationParticipant"> | Date | string | null
+    unreadCount?: IntFilter<"ConversationParticipant"> | number
     lastReadAt?: DateTimeNullableFilter<"ConversationParticipant"> | Date | string | null
     deletedAt?: DateTimeNullableFilter<"ConversationParticipant"> | Date | string | null
     conversation?: XOR<ConversationScalarRelationFilter, ConversationWhereInput>
@@ -11786,6 +14359,7 @@ export namespace Prisma {
     role?: SortOrder
     joinedAt?: SortOrder
     leftAt?: SortOrderInput | SortOrder
+    unreadCount?: SortOrder
     lastReadAt?: SortOrderInput | SortOrder
     deletedAt?: SortOrderInput | SortOrder
     conversation?: ConversationOrderByWithRelationInput
@@ -11803,6 +14377,7 @@ export namespace Prisma {
     role?: EnumParticipantRoleFilter<"ConversationParticipant"> | $Enums.ParticipantRole
     joinedAt?: DateTimeFilter<"ConversationParticipant"> | Date | string
     leftAt?: DateTimeNullableFilter<"ConversationParticipant"> | Date | string | null
+    unreadCount?: IntFilter<"ConversationParticipant"> | number
     lastReadAt?: DateTimeNullableFilter<"ConversationParticipant"> | Date | string | null
     deletedAt?: DateTimeNullableFilter<"ConversationParticipant"> | Date | string | null
     conversation?: XOR<ConversationScalarRelationFilter, ConversationWhereInput>
@@ -11816,6 +14391,7 @@ export namespace Prisma {
     role?: SortOrder
     joinedAt?: SortOrder
     leftAt?: SortOrderInput | SortOrder
+    unreadCount?: SortOrder
     lastReadAt?: SortOrderInput | SortOrder
     deletedAt?: SortOrderInput | SortOrder
     _count?: ConversationParticipantCountOrderByAggregateInput
@@ -11835,6 +14411,7 @@ export namespace Prisma {
     role?: EnumParticipantRoleWithAggregatesFilter<"ConversationParticipant"> | $Enums.ParticipantRole
     joinedAt?: DateTimeWithAggregatesFilter<"ConversationParticipant"> | Date | string
     leftAt?: DateTimeNullableWithAggregatesFilter<"ConversationParticipant"> | Date | string | null
+    unreadCount?: IntWithAggregatesFilter<"ConversationParticipant"> | number
     lastReadAt?: DateTimeNullableWithAggregatesFilter<"ConversationParticipant"> | Date | string | null
     deletedAt?: DateTimeNullableWithAggregatesFilter<"ConversationParticipant"> | Date | string | null
   }
@@ -11859,6 +14436,7 @@ export namespace Prisma {
     replies?: MessageListRelationFilter
     attachments?: MessageAttachmentListRelationFilter
     lastMessageOf?: ConversationListRelationFilter
+    notifications?: NotificationListRelationFilter
   }
 
   export type MessageOrderByWithRelationInput = {
@@ -11878,6 +14456,7 @@ export namespace Prisma {
     replies?: MessageOrderByRelationAggregateInput
     attachments?: MessageAttachmentOrderByRelationAggregateInput
     lastMessageOf?: ConversationOrderByRelationAggregateInput
+    notifications?: NotificationOrderByRelationAggregateInput
     _relevance?: MessageOrderByRelevanceInput
   }
 
@@ -11901,6 +14480,7 @@ export namespace Prisma {
     replies?: MessageListRelationFilter
     attachments?: MessageAttachmentListRelationFilter
     lastMessageOf?: ConversationListRelationFilter
+    notifications?: NotificationListRelationFilter
   }, "id">
 
   export type MessageOrderByWithAggregationInput = {
@@ -12204,10 +14784,158 @@ export namespace Prisma {
     deletedAt?: DateTimeNullableWithAggregatesFilter<"UserBlock"> | Date | string | null
   }
 
+  export type FriendWhereInput = {
+    AND?: FriendWhereInput | FriendWhereInput[]
+    OR?: FriendWhereInput[]
+    NOT?: FriendWhereInput | FriendWhereInput[]
+    id?: BigIntFilter<"Friend"> | bigint | number
+    requesterId?: BigIntFilter<"Friend"> | bigint | number
+    addresseeId?: BigIntFilter<"Friend"> | bigint | number
+    status?: EnumFriendStatusFilter<"Friend"> | $Enums.FriendStatus
+    createdAt?: DateTimeFilter<"Friend"> | Date | string
+    updatedAt?: DateTimeFilter<"Friend"> | Date | string
+    requester?: XOR<UserScalarRelationFilter, UserWhereInput>
+    addressee?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type FriendOrderByWithRelationInput = {
+    id?: SortOrder
+    requesterId?: SortOrder
+    addresseeId?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    requester?: UserOrderByWithRelationInput
+    addressee?: UserOrderByWithRelationInput
+  }
+
+  export type FriendWhereUniqueInput = Prisma.AtLeast<{
+    id?: bigint | number
+    requesterId_addresseeId?: FriendRequesterIdAddresseeIdCompoundUniqueInput
+    AND?: FriendWhereInput | FriendWhereInput[]
+    OR?: FriendWhereInput[]
+    NOT?: FriendWhereInput | FriendWhereInput[]
+    requesterId?: BigIntFilter<"Friend"> | bigint | number
+    addresseeId?: BigIntFilter<"Friend"> | bigint | number
+    status?: EnumFriendStatusFilter<"Friend"> | $Enums.FriendStatus
+    createdAt?: DateTimeFilter<"Friend"> | Date | string
+    updatedAt?: DateTimeFilter<"Friend"> | Date | string
+    requester?: XOR<UserScalarRelationFilter, UserWhereInput>
+    addressee?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "requesterId_addresseeId">
+
+  export type FriendOrderByWithAggregationInput = {
+    id?: SortOrder
+    requesterId?: SortOrder
+    addresseeId?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: FriendCountOrderByAggregateInput
+    _avg?: FriendAvgOrderByAggregateInput
+    _max?: FriendMaxOrderByAggregateInput
+    _min?: FriendMinOrderByAggregateInput
+    _sum?: FriendSumOrderByAggregateInput
+  }
+
+  export type FriendScalarWhereWithAggregatesInput = {
+    AND?: FriendScalarWhereWithAggregatesInput | FriendScalarWhereWithAggregatesInput[]
+    OR?: FriendScalarWhereWithAggregatesInput[]
+    NOT?: FriendScalarWhereWithAggregatesInput | FriendScalarWhereWithAggregatesInput[]
+    id?: BigIntWithAggregatesFilter<"Friend"> | bigint | number
+    requesterId?: BigIntWithAggregatesFilter<"Friend"> | bigint | number
+    addresseeId?: BigIntWithAggregatesFilter<"Friend"> | bigint | number
+    status?: EnumFriendStatusWithAggregatesFilter<"Friend"> | $Enums.FriendStatus
+    createdAt?: DateTimeWithAggregatesFilter<"Friend"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Friend"> | Date | string
+  }
+
+  export type NotificationWhereInput = {
+    AND?: NotificationWhereInput | NotificationWhereInput[]
+    OR?: NotificationWhereInput[]
+    NOT?: NotificationWhereInput | NotificationWhereInput[]
+    id?: BigIntFilter<"Notification"> | bigint | number
+    receiverId?: BigIntFilter<"Notification"> | bigint | number
+    senderId?: BigIntNullableFilter<"Notification"> | bigint | number | null
+    conversationId?: BigIntNullableFilter<"Notification"> | bigint | number | null
+    messageId?: BigIntNullableFilter<"Notification"> | bigint | number | null
+    type?: EnumNotificationTypeFilter<"Notification"> | $Enums.NotificationType
+    isRead?: BoolFilter<"Notification"> | boolean
+    createdAt?: DateTimeFilter<"Notification"> | Date | string
+    receiver?: XOR<UserScalarRelationFilter, UserWhereInput>
+    sender?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    conversation?: XOR<ConversationNullableScalarRelationFilter, ConversationWhereInput> | null
+    message?: XOR<MessageNullableScalarRelationFilter, MessageWhereInput> | null
+  }
+
+  export type NotificationOrderByWithRelationInput = {
+    id?: SortOrder
+    receiverId?: SortOrder
+    senderId?: SortOrderInput | SortOrder
+    conversationId?: SortOrderInput | SortOrder
+    messageId?: SortOrderInput | SortOrder
+    type?: SortOrder
+    isRead?: SortOrder
+    createdAt?: SortOrder
+    receiver?: UserOrderByWithRelationInput
+    sender?: UserOrderByWithRelationInput
+    conversation?: ConversationOrderByWithRelationInput
+    message?: MessageOrderByWithRelationInput
+  }
+
+  export type NotificationWhereUniqueInput = Prisma.AtLeast<{
+    id?: bigint | number
+    AND?: NotificationWhereInput | NotificationWhereInput[]
+    OR?: NotificationWhereInput[]
+    NOT?: NotificationWhereInput | NotificationWhereInput[]
+    receiverId?: BigIntFilter<"Notification"> | bigint | number
+    senderId?: BigIntNullableFilter<"Notification"> | bigint | number | null
+    conversationId?: BigIntNullableFilter<"Notification"> | bigint | number | null
+    messageId?: BigIntNullableFilter<"Notification"> | bigint | number | null
+    type?: EnumNotificationTypeFilter<"Notification"> | $Enums.NotificationType
+    isRead?: BoolFilter<"Notification"> | boolean
+    createdAt?: DateTimeFilter<"Notification"> | Date | string
+    receiver?: XOR<UserScalarRelationFilter, UserWhereInput>
+    sender?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    conversation?: XOR<ConversationNullableScalarRelationFilter, ConversationWhereInput> | null
+    message?: XOR<MessageNullableScalarRelationFilter, MessageWhereInput> | null
+  }, "id">
+
+  export type NotificationOrderByWithAggregationInput = {
+    id?: SortOrder
+    receiverId?: SortOrder
+    senderId?: SortOrderInput | SortOrder
+    conversationId?: SortOrderInput | SortOrder
+    messageId?: SortOrderInput | SortOrder
+    type?: SortOrder
+    isRead?: SortOrder
+    createdAt?: SortOrder
+    _count?: NotificationCountOrderByAggregateInput
+    _avg?: NotificationAvgOrderByAggregateInput
+    _max?: NotificationMaxOrderByAggregateInput
+    _min?: NotificationMinOrderByAggregateInput
+    _sum?: NotificationSumOrderByAggregateInput
+  }
+
+  export type NotificationScalarWhereWithAggregatesInput = {
+    AND?: NotificationScalarWhereWithAggregatesInput | NotificationScalarWhereWithAggregatesInput[]
+    OR?: NotificationScalarWhereWithAggregatesInput[]
+    NOT?: NotificationScalarWhereWithAggregatesInput | NotificationScalarWhereWithAggregatesInput[]
+    id?: BigIntWithAggregatesFilter<"Notification"> | bigint | number
+    receiverId?: BigIntWithAggregatesFilter<"Notification"> | bigint | number
+    senderId?: BigIntNullableWithAggregatesFilter<"Notification"> | bigint | number | null
+    conversationId?: BigIntNullableWithAggregatesFilter<"Notification"> | bigint | number | null
+    messageId?: BigIntNullableWithAggregatesFilter<"Notification"> | bigint | number | null
+    type?: EnumNotificationTypeWithAggregatesFilter<"Notification"> | $Enums.NotificationType
+    isRead?: BoolWithAggregatesFilter<"Notification"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"Notification"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: bigint | number
     email: string
     name?: string | null
+    avatarUrl?: string | null
     password: string
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
@@ -12220,12 +14948,17 @@ export namespace Prisma {
     blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
     blockedBy?: UserBlockCreateNestedManyWithoutBlockedInput
     ownedConversations?: ConversationCreateNestedManyWithoutOwnerInput
+    sentFriendRequests?: FriendCreateNestedManyWithoutRequesterInput
+    receivedFriendRequests?: FriendCreateNestedManyWithoutAddresseeInput
+    receivedNotifications?: NotificationCreateNestedManyWithoutReceiverInput
+    sentNotifications?: NotificationCreateNestedManyWithoutSenderInput
   }
 
   export type UserUncheckedCreateInput = {
     id?: bigint | number
     email: string
     name?: string | null
+    avatarUrl?: string | null
     password: string
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
@@ -12238,12 +14971,17 @@ export namespace Prisma {
     blockedUsers?: UserBlockUncheckedCreateNestedManyWithoutBlockerInput
     blockedBy?: UserBlockUncheckedCreateNestedManyWithoutBlockedInput
     ownedConversations?: ConversationUncheckedCreateNestedManyWithoutOwnerInput
+    sentFriendRequests?: FriendUncheckedCreateNestedManyWithoutRequesterInput
+    receivedFriendRequests?: FriendUncheckedCreateNestedManyWithoutAddresseeInput
+    receivedNotifications?: NotificationUncheckedCreateNestedManyWithoutReceiverInput
+    sentNotifications?: NotificationUncheckedCreateNestedManyWithoutSenderInput
   }
 
   export type UserUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12256,12 +14994,17 @@ export namespace Prisma {
     blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
     blockedBy?: UserBlockUpdateManyWithoutBlockedNestedInput
     ownedConversations?: ConversationUpdateManyWithoutOwnerNestedInput
+    sentFriendRequests?: FriendUpdateManyWithoutRequesterNestedInput
+    receivedFriendRequests?: FriendUpdateManyWithoutAddresseeNestedInput
+    receivedNotifications?: NotificationUpdateManyWithoutReceiverNestedInput
+    sentNotifications?: NotificationUpdateManyWithoutSenderNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12274,12 +15017,17 @@ export namespace Prisma {
     blockedUsers?: UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
     blockedBy?: UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
     ownedConversations?: ConversationUncheckedUpdateManyWithoutOwnerNestedInput
+    sentFriendRequests?: FriendUncheckedUpdateManyWithoutRequesterNestedInput
+    receivedFriendRequests?: FriendUncheckedUpdateManyWithoutAddresseeNestedInput
+    receivedNotifications?: NotificationUncheckedUpdateManyWithoutReceiverNestedInput
+    sentNotifications?: NotificationUncheckedUpdateManyWithoutSenderNestedInput
   }
 
   export type UserCreateManyInput = {
     id?: bigint | number
     email: string
     name?: string | null
+    avatarUrl?: string | null
     password: string
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
@@ -12291,6 +15039,7 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12301,6 +15050,7 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12384,6 +15134,7 @@ export namespace Prisma {
     messages?: MessageCreateNestedManyWithoutConversationInput
     owner?: UserCreateNestedOneWithoutOwnedConversationsInput
     lastMessage?: MessageCreateNestedOneWithoutLastMessageOfInput
+    notifications?: NotificationCreateNestedManyWithoutConversationInput
   }
 
   export type ConversationUncheckedCreateInput = {
@@ -12400,6 +15151,7 @@ export namespace Prisma {
     participants?: ConversationParticipantUncheckedCreateNestedManyWithoutConversationInput
     activeUsers?: UserUncheckedCreateNestedManyWithoutActiveConversationInput
     messages?: MessageUncheckedCreateNestedManyWithoutConversationInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutConversationInput
   }
 
   export type ConversationUpdateInput = {
@@ -12416,6 +15168,7 @@ export namespace Prisma {
     messages?: MessageUpdateManyWithoutConversationNestedInput
     owner?: UserUpdateOneWithoutOwnedConversationsNestedInput
     lastMessage?: MessageUpdateOneWithoutLastMessageOfNestedInput
+    notifications?: NotificationUpdateManyWithoutConversationNestedInput
   }
 
   export type ConversationUncheckedUpdateInput = {
@@ -12432,6 +15185,7 @@ export namespace Prisma {
     participants?: ConversationParticipantUncheckedUpdateManyWithoutConversationNestedInput
     activeUsers?: UserUncheckedUpdateManyWithoutActiveConversationNestedInput
     messages?: MessageUncheckedUpdateManyWithoutConversationNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutConversationNestedInput
   }
 
   export type ConversationCreateManyInput = {
@@ -12476,6 +15230,7 @@ export namespace Prisma {
     role?: $Enums.ParticipantRole
     joinedAt?: Date | string
     leftAt?: Date | string | null
+    unreadCount?: number
     lastReadAt?: Date | string | null
     deletedAt?: Date | string | null
     conversation: ConversationCreateNestedOneWithoutParticipantsInput
@@ -12489,6 +15244,7 @@ export namespace Prisma {
     role?: $Enums.ParticipantRole
     joinedAt?: Date | string
     leftAt?: Date | string | null
+    unreadCount?: number
     lastReadAt?: Date | string | null
     deletedAt?: Date | string | null
   }
@@ -12498,6 +15254,7 @@ export namespace Prisma {
     role?: EnumParticipantRoleFieldUpdateOperationsInput | $Enums.ParticipantRole
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leftAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unreadCount?: IntFieldUpdateOperationsInput | number
     lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     conversation?: ConversationUpdateOneRequiredWithoutParticipantsNestedInput
@@ -12511,6 +15268,7 @@ export namespace Prisma {
     role?: EnumParticipantRoleFieldUpdateOperationsInput | $Enums.ParticipantRole
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leftAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unreadCount?: IntFieldUpdateOperationsInput | number
     lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -12522,6 +15280,7 @@ export namespace Prisma {
     role?: $Enums.ParticipantRole
     joinedAt?: Date | string
     leftAt?: Date | string | null
+    unreadCount?: number
     lastReadAt?: Date | string | null
     deletedAt?: Date | string | null
   }
@@ -12531,6 +15290,7 @@ export namespace Prisma {
     role?: EnumParticipantRoleFieldUpdateOperationsInput | $Enums.ParticipantRole
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leftAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unreadCount?: IntFieldUpdateOperationsInput | number
     lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -12542,6 +15302,7 @@ export namespace Prisma {
     role?: EnumParticipantRoleFieldUpdateOperationsInput | $Enums.ParticipantRole
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leftAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unreadCount?: IntFieldUpdateOperationsInput | number
     lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -12560,6 +15321,7 @@ export namespace Prisma {
     replies?: MessageCreateNestedManyWithoutParentMessageInput
     attachments?: MessageAttachmentCreateNestedManyWithoutMessageInput
     lastMessageOf?: ConversationCreateNestedManyWithoutLastMessageInput
+    notifications?: NotificationCreateNestedManyWithoutMessageInput
   }
 
   export type MessageUncheckedCreateInput = {
@@ -12576,6 +15338,7 @@ export namespace Prisma {
     replies?: MessageUncheckedCreateNestedManyWithoutParentMessageInput
     attachments?: MessageAttachmentUncheckedCreateNestedManyWithoutMessageInput
     lastMessageOf?: ConversationUncheckedCreateNestedManyWithoutLastMessageInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutMessageInput
   }
 
   export type MessageUpdateInput = {
@@ -12592,6 +15355,7 @@ export namespace Prisma {
     replies?: MessageUpdateManyWithoutParentMessageNestedInput
     attachments?: MessageAttachmentUpdateManyWithoutMessageNestedInput
     lastMessageOf?: ConversationUpdateManyWithoutLastMessageNestedInput
+    notifications?: NotificationUpdateManyWithoutMessageNestedInput
   }
 
   export type MessageUncheckedUpdateInput = {
@@ -12608,6 +15372,7 @@ export namespace Prisma {
     replies?: MessageUncheckedUpdateManyWithoutParentMessageNestedInput
     attachments?: MessageAttachmentUncheckedUpdateManyWithoutMessageNestedInput
     lastMessageOf?: ConversationUncheckedUpdateManyWithoutLastMessageNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutMessageNestedInput
   }
 
   export type MessageCreateManyInput = {
@@ -12915,6 +15680,140 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
+  export type FriendCreateInput = {
+    id?: bigint | number
+    status?: $Enums.FriendStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    requester: UserCreateNestedOneWithoutSentFriendRequestsInput
+    addressee: UserCreateNestedOneWithoutReceivedFriendRequestsInput
+  }
+
+  export type FriendUncheckedCreateInput = {
+    id?: bigint | number
+    requesterId: bigint | number
+    addresseeId: bigint | number
+    status?: $Enums.FriendStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FriendUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    status?: EnumFriendStatusFieldUpdateOperationsInput | $Enums.FriendStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    requester?: UserUpdateOneRequiredWithoutSentFriendRequestsNestedInput
+    addressee?: UserUpdateOneRequiredWithoutReceivedFriendRequestsNestedInput
+  }
+
+  export type FriendUncheckedUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    requesterId?: BigIntFieldUpdateOperationsInput | bigint | number
+    addresseeId?: BigIntFieldUpdateOperationsInput | bigint | number
+    status?: EnumFriendStatusFieldUpdateOperationsInput | $Enums.FriendStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FriendCreateManyInput = {
+    id?: bigint | number
+    requesterId: bigint | number
+    addresseeId: bigint | number
+    status?: $Enums.FriendStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FriendUpdateManyMutationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    status?: EnumFriendStatusFieldUpdateOperationsInput | $Enums.FriendStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FriendUncheckedUpdateManyInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    requesterId?: BigIntFieldUpdateOperationsInput | bigint | number
+    addresseeId?: BigIntFieldUpdateOperationsInput | bigint | number
+    status?: EnumFriendStatusFieldUpdateOperationsInput | $Enums.FriendStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationCreateInput = {
+    id?: bigint | number
+    type: $Enums.NotificationType
+    isRead?: boolean
+    createdAt?: Date | string
+    receiver: UserCreateNestedOneWithoutReceivedNotificationsInput
+    sender?: UserCreateNestedOneWithoutSentNotificationsInput
+    conversation?: ConversationCreateNestedOneWithoutNotificationsInput
+    message?: MessageCreateNestedOneWithoutNotificationsInput
+  }
+
+  export type NotificationUncheckedCreateInput = {
+    id?: bigint | number
+    receiverId: bigint | number
+    senderId?: bigint | number | null
+    conversationId?: bigint | number | null
+    messageId?: bigint | number | null
+    type: $Enums.NotificationType
+    isRead?: boolean
+    createdAt?: Date | string
+  }
+
+  export type NotificationUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    receiver?: UserUpdateOneRequiredWithoutReceivedNotificationsNestedInput
+    sender?: UserUpdateOneWithoutSentNotificationsNestedInput
+    conversation?: ConversationUpdateOneWithoutNotificationsNestedInput
+    message?: MessageUpdateOneWithoutNotificationsNestedInput
+  }
+
+  export type NotificationUncheckedUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    receiverId?: BigIntFieldUpdateOperationsInput | bigint | number
+    senderId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    conversationId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    messageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationCreateManyInput = {
+    id?: bigint | number
+    receiverId: bigint | number
+    senderId?: bigint | number | null
+    conversationId?: bigint | number | null
+    messageId?: bigint | number | null
+    type: $Enums.NotificationType
+    isRead?: boolean
+    createdAt?: Date | string
+  }
+
+  export type NotificationUpdateManyMutationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationUncheckedUpdateManyInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    receiverId?: BigIntFieldUpdateOperationsInput | bigint | number
+    senderId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    conversationId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    messageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type BigIntFilter<$PrismaModel = never> = {
     equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
     in?: bigint[] | number[]
@@ -13030,6 +15929,18 @@ export namespace Prisma {
     none?: ConversationWhereInput
   }
 
+  export type FriendListRelationFilter = {
+    every?: FriendWhereInput
+    some?: FriendWhereInput
+    none?: FriendWhereInput
+  }
+
+  export type NotificationListRelationFilter = {
+    every?: NotificationWhereInput
+    some?: NotificationWhereInput
+    none?: NotificationWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -13059,6 +15970,14 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type FriendOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type NotificationOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type UserOrderByRelevanceInput = {
     fields: UserOrderByRelevanceFieldEnum | UserOrderByRelevanceFieldEnum[]
     sort: SortOrder
@@ -13069,6 +15988,7 @@ export namespace Prisma {
     id?: SortOrder
     email?: SortOrder
     name?: SortOrder
+    avatarUrl?: SortOrder
     password?: SortOrder
     emailVerifiedAt?: SortOrder
     createdAt?: SortOrder
@@ -13085,6 +16005,7 @@ export namespace Prisma {
     id?: SortOrder
     email?: SortOrder
     name?: SortOrder
+    avatarUrl?: SortOrder
     password?: SortOrder
     emailVerifiedAt?: SortOrder
     createdAt?: SortOrder
@@ -13096,6 +16017,7 @@ export namespace Prisma {
     id?: SortOrder
     email?: SortOrder
     name?: SortOrder
+    avatarUrl?: SortOrder
     password?: SortOrder
     emailVerifiedAt?: SortOrder
     createdAt?: SortOrder
@@ -13353,6 +16275,17 @@ export namespace Prisma {
     not?: NestedEnumParticipantRoleFilter<$PrismaModel> | $Enums.ParticipantRole
   }
 
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[]
+    notIn?: number[]
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
   export type ConversationScalarRelationFilter = {
     is?: ConversationWhereInput
     isNot?: ConversationWhereInput
@@ -13370,6 +16303,7 @@ export namespace Prisma {
     role?: SortOrder
     joinedAt?: SortOrder
     leftAt?: SortOrder
+    unreadCount?: SortOrder
     lastReadAt?: SortOrder
     deletedAt?: SortOrder
   }
@@ -13378,6 +16312,7 @@ export namespace Prisma {
     id?: SortOrder
     conversationId?: SortOrder
     userId?: SortOrder
+    unreadCount?: SortOrder
   }
 
   export type ConversationParticipantMaxOrderByAggregateInput = {
@@ -13387,6 +16322,7 @@ export namespace Prisma {
     role?: SortOrder
     joinedAt?: SortOrder
     leftAt?: SortOrder
+    unreadCount?: SortOrder
     lastReadAt?: SortOrder
     deletedAt?: SortOrder
   }
@@ -13398,6 +16334,7 @@ export namespace Prisma {
     role?: SortOrder
     joinedAt?: SortOrder
     leftAt?: SortOrder
+    unreadCount?: SortOrder
     lastReadAt?: SortOrder
     deletedAt?: SortOrder
   }
@@ -13406,6 +16343,7 @@ export namespace Prisma {
     id?: SortOrder
     conversationId?: SortOrder
     userId?: SortOrder
+    unreadCount?: SortOrder
   }
 
   export type EnumParticipantRoleWithAggregatesFilter<$PrismaModel = never> = {
@@ -13416,6 +16354,22 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumParticipantRoleFilter<$PrismaModel>
     _max?: NestedEnumParticipantRoleFilter<$PrismaModel>
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[]
+    notIn?: number[]
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type EnumMessageRoleNullableFilter<$PrismaModel = never> = {
@@ -13517,17 +16471,6 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
-  }
-
   export type MessageScalarRelationFilter = {
     is?: MessageWhereInput
     isNot?: MessageWhereInput
@@ -13579,22 +16522,6 @@ export namespace Prisma {
     id?: SortOrder
     messageId?: SortOrder
     fileSize?: SortOrder
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type PasswordResetTokenOrderByRelevanceInput = {
@@ -13799,6 +16726,133 @@ export namespace Prisma {
     blockedId?: SortOrder
   }
 
+  export type EnumFriendStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.FriendStatus | EnumFriendStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.FriendStatus[]
+    notIn?: $Enums.FriendStatus[]
+    not?: NestedEnumFriendStatusFilter<$PrismaModel> | $Enums.FriendStatus
+  }
+
+  export type FriendRequesterIdAddresseeIdCompoundUniqueInput = {
+    requesterId: bigint | number
+    addresseeId: bigint | number
+  }
+
+  export type FriendCountOrderByAggregateInput = {
+    id?: SortOrder
+    requesterId?: SortOrder
+    addresseeId?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FriendAvgOrderByAggregateInput = {
+    id?: SortOrder
+    requesterId?: SortOrder
+    addresseeId?: SortOrder
+  }
+
+  export type FriendMaxOrderByAggregateInput = {
+    id?: SortOrder
+    requesterId?: SortOrder
+    addresseeId?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FriendMinOrderByAggregateInput = {
+    id?: SortOrder
+    requesterId?: SortOrder
+    addresseeId?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FriendSumOrderByAggregateInput = {
+    id?: SortOrder
+    requesterId?: SortOrder
+    addresseeId?: SortOrder
+  }
+
+  export type EnumFriendStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FriendStatus | EnumFriendStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.FriendStatus[]
+    notIn?: $Enums.FriendStatus[]
+    not?: NestedEnumFriendStatusWithAggregatesFilter<$PrismaModel> | $Enums.FriendStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumFriendStatusFilter<$PrismaModel>
+    _max?: NestedEnumFriendStatusFilter<$PrismaModel>
+  }
+
+  export type EnumNotificationTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.NotificationType | EnumNotificationTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.NotificationType[]
+    notIn?: $Enums.NotificationType[]
+    not?: NestedEnumNotificationTypeFilter<$PrismaModel> | $Enums.NotificationType
+  }
+
+  export type NotificationCountOrderByAggregateInput = {
+    id?: SortOrder
+    receiverId?: SortOrder
+    senderId?: SortOrder
+    conversationId?: SortOrder
+    messageId?: SortOrder
+    type?: SortOrder
+    isRead?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type NotificationAvgOrderByAggregateInput = {
+    id?: SortOrder
+    receiverId?: SortOrder
+    senderId?: SortOrder
+    conversationId?: SortOrder
+    messageId?: SortOrder
+  }
+
+  export type NotificationMaxOrderByAggregateInput = {
+    id?: SortOrder
+    receiverId?: SortOrder
+    senderId?: SortOrder
+    conversationId?: SortOrder
+    messageId?: SortOrder
+    type?: SortOrder
+    isRead?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type NotificationMinOrderByAggregateInput = {
+    id?: SortOrder
+    receiverId?: SortOrder
+    senderId?: SortOrder
+    conversationId?: SortOrder
+    messageId?: SortOrder
+    type?: SortOrder
+    isRead?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type NotificationSumOrderByAggregateInput = {
+    id?: SortOrder
+    receiverId?: SortOrder
+    senderId?: SortOrder
+    conversationId?: SortOrder
+    messageId?: SortOrder
+  }
+
+  export type EnumNotificationTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.NotificationType | EnumNotificationTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.NotificationType[]
+    notIn?: $Enums.NotificationType[]
+    not?: NestedEnumNotificationTypeWithAggregatesFilter<$PrismaModel> | $Enums.NotificationType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumNotificationTypeFilter<$PrismaModel>
+    _max?: NestedEnumNotificationTypeFilter<$PrismaModel>
+  }
+
   export type RefreshTokenCreateNestedManyWithoutUserInput = {
     create?: XOR<RefreshTokenCreateWithoutUserInput, RefreshTokenUncheckedCreateWithoutUserInput> | RefreshTokenCreateWithoutUserInput[] | RefreshTokenUncheckedCreateWithoutUserInput[]
     connectOrCreate?: RefreshTokenCreateOrConnectWithoutUserInput | RefreshTokenCreateOrConnectWithoutUserInput[]
@@ -13854,6 +16908,34 @@ export namespace Prisma {
     connect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
   }
 
+  export type FriendCreateNestedManyWithoutRequesterInput = {
+    create?: XOR<FriendCreateWithoutRequesterInput, FriendUncheckedCreateWithoutRequesterInput> | FriendCreateWithoutRequesterInput[] | FriendUncheckedCreateWithoutRequesterInput[]
+    connectOrCreate?: FriendCreateOrConnectWithoutRequesterInput | FriendCreateOrConnectWithoutRequesterInput[]
+    createMany?: FriendCreateManyRequesterInputEnvelope
+    connect?: FriendWhereUniqueInput | FriendWhereUniqueInput[]
+  }
+
+  export type FriendCreateNestedManyWithoutAddresseeInput = {
+    create?: XOR<FriendCreateWithoutAddresseeInput, FriendUncheckedCreateWithoutAddresseeInput> | FriendCreateWithoutAddresseeInput[] | FriendUncheckedCreateWithoutAddresseeInput[]
+    connectOrCreate?: FriendCreateOrConnectWithoutAddresseeInput | FriendCreateOrConnectWithoutAddresseeInput[]
+    createMany?: FriendCreateManyAddresseeInputEnvelope
+    connect?: FriendWhereUniqueInput | FriendWhereUniqueInput[]
+  }
+
+  export type NotificationCreateNestedManyWithoutReceiverInput = {
+    create?: XOR<NotificationCreateWithoutReceiverInput, NotificationUncheckedCreateWithoutReceiverInput> | NotificationCreateWithoutReceiverInput[] | NotificationUncheckedCreateWithoutReceiverInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutReceiverInput | NotificationCreateOrConnectWithoutReceiverInput[]
+    createMany?: NotificationCreateManyReceiverInputEnvelope
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+  }
+
+  export type NotificationCreateNestedManyWithoutSenderInput = {
+    create?: XOR<NotificationCreateWithoutSenderInput, NotificationUncheckedCreateWithoutSenderInput> | NotificationCreateWithoutSenderInput[] | NotificationUncheckedCreateWithoutSenderInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutSenderInput | NotificationCreateOrConnectWithoutSenderInput[]
+    createMany?: NotificationCreateManySenderInputEnvelope
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+  }
+
   export type RefreshTokenUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<RefreshTokenCreateWithoutUserInput, RefreshTokenUncheckedCreateWithoutUserInput> | RefreshTokenCreateWithoutUserInput[] | RefreshTokenUncheckedCreateWithoutUserInput[]
     connectOrCreate?: RefreshTokenCreateOrConnectWithoutUserInput | RefreshTokenCreateOrConnectWithoutUserInput[]
@@ -13901,6 +16983,34 @@ export namespace Prisma {
     connectOrCreate?: ConversationCreateOrConnectWithoutOwnerInput | ConversationCreateOrConnectWithoutOwnerInput[]
     createMany?: ConversationCreateManyOwnerInputEnvelope
     connect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+  }
+
+  export type FriendUncheckedCreateNestedManyWithoutRequesterInput = {
+    create?: XOR<FriendCreateWithoutRequesterInput, FriendUncheckedCreateWithoutRequesterInput> | FriendCreateWithoutRequesterInput[] | FriendUncheckedCreateWithoutRequesterInput[]
+    connectOrCreate?: FriendCreateOrConnectWithoutRequesterInput | FriendCreateOrConnectWithoutRequesterInput[]
+    createMany?: FriendCreateManyRequesterInputEnvelope
+    connect?: FriendWhereUniqueInput | FriendWhereUniqueInput[]
+  }
+
+  export type FriendUncheckedCreateNestedManyWithoutAddresseeInput = {
+    create?: XOR<FriendCreateWithoutAddresseeInput, FriendUncheckedCreateWithoutAddresseeInput> | FriendCreateWithoutAddresseeInput[] | FriendUncheckedCreateWithoutAddresseeInput[]
+    connectOrCreate?: FriendCreateOrConnectWithoutAddresseeInput | FriendCreateOrConnectWithoutAddresseeInput[]
+    createMany?: FriendCreateManyAddresseeInputEnvelope
+    connect?: FriendWhereUniqueInput | FriendWhereUniqueInput[]
+  }
+
+  export type NotificationUncheckedCreateNestedManyWithoutReceiverInput = {
+    create?: XOR<NotificationCreateWithoutReceiverInput, NotificationUncheckedCreateWithoutReceiverInput> | NotificationCreateWithoutReceiverInput[] | NotificationUncheckedCreateWithoutReceiverInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutReceiverInput | NotificationCreateOrConnectWithoutReceiverInput[]
+    createMany?: NotificationCreateManyReceiverInputEnvelope
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+  }
+
+  export type NotificationUncheckedCreateNestedManyWithoutSenderInput = {
+    create?: XOR<NotificationCreateWithoutSenderInput, NotificationUncheckedCreateWithoutSenderInput> | NotificationCreateWithoutSenderInput[] | NotificationUncheckedCreateWithoutSenderInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutSenderInput | NotificationCreateOrConnectWithoutSenderInput[]
+    createMany?: NotificationCreateManySenderInputEnvelope
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
   }
 
   export type BigIntFieldUpdateOperationsInput = {
@@ -14035,6 +17145,62 @@ export namespace Prisma {
     deleteMany?: ConversationScalarWhereInput | ConversationScalarWhereInput[]
   }
 
+  export type FriendUpdateManyWithoutRequesterNestedInput = {
+    create?: XOR<FriendCreateWithoutRequesterInput, FriendUncheckedCreateWithoutRequesterInput> | FriendCreateWithoutRequesterInput[] | FriendUncheckedCreateWithoutRequesterInput[]
+    connectOrCreate?: FriendCreateOrConnectWithoutRequesterInput | FriendCreateOrConnectWithoutRequesterInput[]
+    upsert?: FriendUpsertWithWhereUniqueWithoutRequesterInput | FriendUpsertWithWhereUniqueWithoutRequesterInput[]
+    createMany?: FriendCreateManyRequesterInputEnvelope
+    set?: FriendWhereUniqueInput | FriendWhereUniqueInput[]
+    disconnect?: FriendWhereUniqueInput | FriendWhereUniqueInput[]
+    delete?: FriendWhereUniqueInput | FriendWhereUniqueInput[]
+    connect?: FriendWhereUniqueInput | FriendWhereUniqueInput[]
+    update?: FriendUpdateWithWhereUniqueWithoutRequesterInput | FriendUpdateWithWhereUniqueWithoutRequesterInput[]
+    updateMany?: FriendUpdateManyWithWhereWithoutRequesterInput | FriendUpdateManyWithWhereWithoutRequesterInput[]
+    deleteMany?: FriendScalarWhereInput | FriendScalarWhereInput[]
+  }
+
+  export type FriendUpdateManyWithoutAddresseeNestedInput = {
+    create?: XOR<FriendCreateWithoutAddresseeInput, FriendUncheckedCreateWithoutAddresseeInput> | FriendCreateWithoutAddresseeInput[] | FriendUncheckedCreateWithoutAddresseeInput[]
+    connectOrCreate?: FriendCreateOrConnectWithoutAddresseeInput | FriendCreateOrConnectWithoutAddresseeInput[]
+    upsert?: FriendUpsertWithWhereUniqueWithoutAddresseeInput | FriendUpsertWithWhereUniqueWithoutAddresseeInput[]
+    createMany?: FriendCreateManyAddresseeInputEnvelope
+    set?: FriendWhereUniqueInput | FriendWhereUniqueInput[]
+    disconnect?: FriendWhereUniqueInput | FriendWhereUniqueInput[]
+    delete?: FriendWhereUniqueInput | FriendWhereUniqueInput[]
+    connect?: FriendWhereUniqueInput | FriendWhereUniqueInput[]
+    update?: FriendUpdateWithWhereUniqueWithoutAddresseeInput | FriendUpdateWithWhereUniqueWithoutAddresseeInput[]
+    updateMany?: FriendUpdateManyWithWhereWithoutAddresseeInput | FriendUpdateManyWithWhereWithoutAddresseeInput[]
+    deleteMany?: FriendScalarWhereInput | FriendScalarWhereInput[]
+  }
+
+  export type NotificationUpdateManyWithoutReceiverNestedInput = {
+    create?: XOR<NotificationCreateWithoutReceiverInput, NotificationUncheckedCreateWithoutReceiverInput> | NotificationCreateWithoutReceiverInput[] | NotificationUncheckedCreateWithoutReceiverInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutReceiverInput | NotificationCreateOrConnectWithoutReceiverInput[]
+    upsert?: NotificationUpsertWithWhereUniqueWithoutReceiverInput | NotificationUpsertWithWhereUniqueWithoutReceiverInput[]
+    createMany?: NotificationCreateManyReceiverInputEnvelope
+    set?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    disconnect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    delete?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    update?: NotificationUpdateWithWhereUniqueWithoutReceiverInput | NotificationUpdateWithWhereUniqueWithoutReceiverInput[]
+    updateMany?: NotificationUpdateManyWithWhereWithoutReceiverInput | NotificationUpdateManyWithWhereWithoutReceiverInput[]
+    deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
+  }
+
+  export type NotificationUpdateManyWithoutSenderNestedInput = {
+    create?: XOR<NotificationCreateWithoutSenderInput, NotificationUncheckedCreateWithoutSenderInput> | NotificationCreateWithoutSenderInput[] | NotificationUncheckedCreateWithoutSenderInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutSenderInput | NotificationCreateOrConnectWithoutSenderInput[]
+    upsert?: NotificationUpsertWithWhereUniqueWithoutSenderInput | NotificationUpsertWithWhereUniqueWithoutSenderInput[]
+    createMany?: NotificationCreateManySenderInputEnvelope
+    set?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    disconnect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    delete?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    update?: NotificationUpdateWithWhereUniqueWithoutSenderInput | NotificationUpdateWithWhereUniqueWithoutSenderInput[]
+    updateMany?: NotificationUpdateManyWithWhereWithoutSenderInput | NotificationUpdateManyWithWhereWithoutSenderInput[]
+    deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
+  }
+
   export type NullableBigIntFieldUpdateOperationsInput = {
     set?: bigint | number | null
     increment?: bigint | number
@@ -14141,6 +17307,62 @@ export namespace Prisma {
     deleteMany?: ConversationScalarWhereInput | ConversationScalarWhereInput[]
   }
 
+  export type FriendUncheckedUpdateManyWithoutRequesterNestedInput = {
+    create?: XOR<FriendCreateWithoutRequesterInput, FriendUncheckedCreateWithoutRequesterInput> | FriendCreateWithoutRequesterInput[] | FriendUncheckedCreateWithoutRequesterInput[]
+    connectOrCreate?: FriendCreateOrConnectWithoutRequesterInput | FriendCreateOrConnectWithoutRequesterInput[]
+    upsert?: FriendUpsertWithWhereUniqueWithoutRequesterInput | FriendUpsertWithWhereUniqueWithoutRequesterInput[]
+    createMany?: FriendCreateManyRequesterInputEnvelope
+    set?: FriendWhereUniqueInput | FriendWhereUniqueInput[]
+    disconnect?: FriendWhereUniqueInput | FriendWhereUniqueInput[]
+    delete?: FriendWhereUniqueInput | FriendWhereUniqueInput[]
+    connect?: FriendWhereUniqueInput | FriendWhereUniqueInput[]
+    update?: FriendUpdateWithWhereUniqueWithoutRequesterInput | FriendUpdateWithWhereUniqueWithoutRequesterInput[]
+    updateMany?: FriendUpdateManyWithWhereWithoutRequesterInput | FriendUpdateManyWithWhereWithoutRequesterInput[]
+    deleteMany?: FriendScalarWhereInput | FriendScalarWhereInput[]
+  }
+
+  export type FriendUncheckedUpdateManyWithoutAddresseeNestedInput = {
+    create?: XOR<FriendCreateWithoutAddresseeInput, FriendUncheckedCreateWithoutAddresseeInput> | FriendCreateWithoutAddresseeInput[] | FriendUncheckedCreateWithoutAddresseeInput[]
+    connectOrCreate?: FriendCreateOrConnectWithoutAddresseeInput | FriendCreateOrConnectWithoutAddresseeInput[]
+    upsert?: FriendUpsertWithWhereUniqueWithoutAddresseeInput | FriendUpsertWithWhereUniqueWithoutAddresseeInput[]
+    createMany?: FriendCreateManyAddresseeInputEnvelope
+    set?: FriendWhereUniqueInput | FriendWhereUniqueInput[]
+    disconnect?: FriendWhereUniqueInput | FriendWhereUniqueInput[]
+    delete?: FriendWhereUniqueInput | FriendWhereUniqueInput[]
+    connect?: FriendWhereUniqueInput | FriendWhereUniqueInput[]
+    update?: FriendUpdateWithWhereUniqueWithoutAddresseeInput | FriendUpdateWithWhereUniqueWithoutAddresseeInput[]
+    updateMany?: FriendUpdateManyWithWhereWithoutAddresseeInput | FriendUpdateManyWithWhereWithoutAddresseeInput[]
+    deleteMany?: FriendScalarWhereInput | FriendScalarWhereInput[]
+  }
+
+  export type NotificationUncheckedUpdateManyWithoutReceiverNestedInput = {
+    create?: XOR<NotificationCreateWithoutReceiverInput, NotificationUncheckedCreateWithoutReceiverInput> | NotificationCreateWithoutReceiverInput[] | NotificationUncheckedCreateWithoutReceiverInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutReceiverInput | NotificationCreateOrConnectWithoutReceiverInput[]
+    upsert?: NotificationUpsertWithWhereUniqueWithoutReceiverInput | NotificationUpsertWithWhereUniqueWithoutReceiverInput[]
+    createMany?: NotificationCreateManyReceiverInputEnvelope
+    set?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    disconnect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    delete?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    update?: NotificationUpdateWithWhereUniqueWithoutReceiverInput | NotificationUpdateWithWhereUniqueWithoutReceiverInput[]
+    updateMany?: NotificationUpdateManyWithWhereWithoutReceiverInput | NotificationUpdateManyWithWhereWithoutReceiverInput[]
+    deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
+  }
+
+  export type NotificationUncheckedUpdateManyWithoutSenderNestedInput = {
+    create?: XOR<NotificationCreateWithoutSenderInput, NotificationUncheckedCreateWithoutSenderInput> | NotificationCreateWithoutSenderInput[] | NotificationUncheckedCreateWithoutSenderInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutSenderInput | NotificationCreateOrConnectWithoutSenderInput[]
+    upsert?: NotificationUpsertWithWhereUniqueWithoutSenderInput | NotificationUpsertWithWhereUniqueWithoutSenderInput[]
+    createMany?: NotificationCreateManySenderInputEnvelope
+    set?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    disconnect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    delete?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    update?: NotificationUpdateWithWhereUniqueWithoutSenderInput | NotificationUpdateWithWhereUniqueWithoutSenderInput[]
+    updateMany?: NotificationUpdateManyWithWhereWithoutSenderInput | NotificationUpdateManyWithWhereWithoutSenderInput[]
+    deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutRefreshTokensInput = {
     create?: XOR<UserCreateWithoutRefreshTokensInput, UserUncheckedCreateWithoutRefreshTokensInput>
     connectOrCreate?: UserCreateOrConnectWithoutRefreshTokensInput
@@ -14188,6 +17410,13 @@ export namespace Prisma {
     connect?: MessageWhereUniqueInput
   }
 
+  export type NotificationCreateNestedManyWithoutConversationInput = {
+    create?: XOR<NotificationCreateWithoutConversationInput, NotificationUncheckedCreateWithoutConversationInput> | NotificationCreateWithoutConversationInput[] | NotificationUncheckedCreateWithoutConversationInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutConversationInput | NotificationCreateOrConnectWithoutConversationInput[]
+    createMany?: NotificationCreateManyConversationInputEnvelope
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+  }
+
   export type ConversationParticipantUncheckedCreateNestedManyWithoutConversationInput = {
     create?: XOR<ConversationParticipantCreateWithoutConversationInput, ConversationParticipantUncheckedCreateWithoutConversationInput> | ConversationParticipantCreateWithoutConversationInput[] | ConversationParticipantUncheckedCreateWithoutConversationInput[]
     connectOrCreate?: ConversationParticipantCreateOrConnectWithoutConversationInput | ConversationParticipantCreateOrConnectWithoutConversationInput[]
@@ -14207,6 +17436,13 @@ export namespace Prisma {
     connectOrCreate?: MessageCreateOrConnectWithoutConversationInput | MessageCreateOrConnectWithoutConversationInput[]
     createMany?: MessageCreateManyConversationInputEnvelope
     connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+  }
+
+  export type NotificationUncheckedCreateNestedManyWithoutConversationInput = {
+    create?: XOR<NotificationCreateWithoutConversationInput, NotificationUncheckedCreateWithoutConversationInput> | NotificationCreateWithoutConversationInput[] | NotificationUncheckedCreateWithoutConversationInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutConversationInput | NotificationCreateOrConnectWithoutConversationInput[]
+    createMany?: NotificationCreateManyConversationInputEnvelope
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
   }
 
   export type EnumConversationTypeFieldUpdateOperationsInput = {
@@ -14275,6 +17511,20 @@ export namespace Prisma {
     update?: XOR<XOR<MessageUpdateToOneWithWhereWithoutLastMessageOfInput, MessageUpdateWithoutLastMessageOfInput>, MessageUncheckedUpdateWithoutLastMessageOfInput>
   }
 
+  export type NotificationUpdateManyWithoutConversationNestedInput = {
+    create?: XOR<NotificationCreateWithoutConversationInput, NotificationUncheckedCreateWithoutConversationInput> | NotificationCreateWithoutConversationInput[] | NotificationUncheckedCreateWithoutConversationInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutConversationInput | NotificationCreateOrConnectWithoutConversationInput[]
+    upsert?: NotificationUpsertWithWhereUniqueWithoutConversationInput | NotificationUpsertWithWhereUniqueWithoutConversationInput[]
+    createMany?: NotificationCreateManyConversationInputEnvelope
+    set?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    disconnect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    delete?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    update?: NotificationUpdateWithWhereUniqueWithoutConversationInput | NotificationUpdateWithWhereUniqueWithoutConversationInput[]
+    updateMany?: NotificationUpdateManyWithWhereWithoutConversationInput | NotificationUpdateManyWithWhereWithoutConversationInput[]
+    deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
+  }
+
   export type ConversationParticipantUncheckedUpdateManyWithoutConversationNestedInput = {
     create?: XOR<ConversationParticipantCreateWithoutConversationInput, ConversationParticipantUncheckedCreateWithoutConversationInput> | ConversationParticipantCreateWithoutConversationInput[] | ConversationParticipantUncheckedCreateWithoutConversationInput[]
     connectOrCreate?: ConversationParticipantCreateOrConnectWithoutConversationInput | ConversationParticipantCreateOrConnectWithoutConversationInput[]
@@ -14317,6 +17567,20 @@ export namespace Prisma {
     deleteMany?: MessageScalarWhereInput | MessageScalarWhereInput[]
   }
 
+  export type NotificationUncheckedUpdateManyWithoutConversationNestedInput = {
+    create?: XOR<NotificationCreateWithoutConversationInput, NotificationUncheckedCreateWithoutConversationInput> | NotificationCreateWithoutConversationInput[] | NotificationUncheckedCreateWithoutConversationInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutConversationInput | NotificationCreateOrConnectWithoutConversationInput[]
+    upsert?: NotificationUpsertWithWhereUniqueWithoutConversationInput | NotificationUpsertWithWhereUniqueWithoutConversationInput[]
+    createMany?: NotificationCreateManyConversationInputEnvelope
+    set?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    disconnect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    delete?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    update?: NotificationUpdateWithWhereUniqueWithoutConversationInput | NotificationUpdateWithWhereUniqueWithoutConversationInput[]
+    updateMany?: NotificationUpdateManyWithWhereWithoutConversationInput | NotificationUpdateManyWithWhereWithoutConversationInput[]
+    deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
+  }
+
   export type ConversationCreateNestedOneWithoutParticipantsInput = {
     create?: XOR<ConversationCreateWithoutParticipantsInput, ConversationUncheckedCreateWithoutParticipantsInput>
     connectOrCreate?: ConversationCreateOrConnectWithoutParticipantsInput
@@ -14331,6 +17595,14 @@ export namespace Prisma {
 
   export type EnumParticipantRoleFieldUpdateOperationsInput = {
     set?: $Enums.ParticipantRole
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type ConversationUpdateOneRequiredWithoutParticipantsNestedInput = {
@@ -14388,6 +17660,13 @@ export namespace Prisma {
     connect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
   }
 
+  export type NotificationCreateNestedManyWithoutMessageInput = {
+    create?: XOR<NotificationCreateWithoutMessageInput, NotificationUncheckedCreateWithoutMessageInput> | NotificationCreateWithoutMessageInput[] | NotificationUncheckedCreateWithoutMessageInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutMessageInput | NotificationCreateOrConnectWithoutMessageInput[]
+    createMany?: NotificationCreateManyMessageInputEnvelope
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+  }
+
   export type MessageUncheckedCreateNestedManyWithoutParentMessageInput = {
     create?: XOR<MessageCreateWithoutParentMessageInput, MessageUncheckedCreateWithoutParentMessageInput> | MessageCreateWithoutParentMessageInput[] | MessageUncheckedCreateWithoutParentMessageInput[]
     connectOrCreate?: MessageCreateOrConnectWithoutParentMessageInput | MessageCreateOrConnectWithoutParentMessageInput[]
@@ -14407,6 +17686,13 @@ export namespace Prisma {
     connectOrCreate?: ConversationCreateOrConnectWithoutLastMessageInput | ConversationCreateOrConnectWithoutLastMessageInput[]
     createMany?: ConversationCreateManyLastMessageInputEnvelope
     connect?: ConversationWhereUniqueInput | ConversationWhereUniqueInput[]
+  }
+
+  export type NotificationUncheckedCreateNestedManyWithoutMessageInput = {
+    create?: XOR<NotificationCreateWithoutMessageInput, NotificationUncheckedCreateWithoutMessageInput> | NotificationCreateWithoutMessageInput[] | NotificationUncheckedCreateWithoutMessageInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutMessageInput | NotificationCreateOrConnectWithoutMessageInput[]
+    createMany?: NotificationCreateManyMessageInputEnvelope
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
   }
 
   export type NullableEnumMessageRoleFieldUpdateOperationsInput = {
@@ -14487,6 +17773,20 @@ export namespace Prisma {
     deleteMany?: ConversationScalarWhereInput | ConversationScalarWhereInput[]
   }
 
+  export type NotificationUpdateManyWithoutMessageNestedInput = {
+    create?: XOR<NotificationCreateWithoutMessageInput, NotificationUncheckedCreateWithoutMessageInput> | NotificationCreateWithoutMessageInput[] | NotificationUncheckedCreateWithoutMessageInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutMessageInput | NotificationCreateOrConnectWithoutMessageInput[]
+    upsert?: NotificationUpsertWithWhereUniqueWithoutMessageInput | NotificationUpsertWithWhereUniqueWithoutMessageInput[]
+    createMany?: NotificationCreateManyMessageInputEnvelope
+    set?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    disconnect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    delete?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    update?: NotificationUpdateWithWhereUniqueWithoutMessageInput | NotificationUpdateWithWhereUniqueWithoutMessageInput[]
+    updateMany?: NotificationUpdateManyWithWhereWithoutMessageInput | NotificationUpdateManyWithWhereWithoutMessageInput[]
+    deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
+  }
+
   export type MessageUncheckedUpdateManyWithoutParentMessageNestedInput = {
     create?: XOR<MessageCreateWithoutParentMessageInput, MessageUncheckedCreateWithoutParentMessageInput> | MessageCreateWithoutParentMessageInput[] | MessageUncheckedCreateWithoutParentMessageInput[]
     connectOrCreate?: MessageCreateOrConnectWithoutParentMessageInput | MessageCreateOrConnectWithoutParentMessageInput[]
@@ -14529,18 +17829,24 @@ export namespace Prisma {
     deleteMany?: ConversationScalarWhereInput | ConversationScalarWhereInput[]
   }
 
+  export type NotificationUncheckedUpdateManyWithoutMessageNestedInput = {
+    create?: XOR<NotificationCreateWithoutMessageInput, NotificationUncheckedCreateWithoutMessageInput> | NotificationCreateWithoutMessageInput[] | NotificationUncheckedCreateWithoutMessageInput[]
+    connectOrCreate?: NotificationCreateOrConnectWithoutMessageInput | NotificationCreateOrConnectWithoutMessageInput[]
+    upsert?: NotificationUpsertWithWhereUniqueWithoutMessageInput | NotificationUpsertWithWhereUniqueWithoutMessageInput[]
+    createMany?: NotificationCreateManyMessageInputEnvelope
+    set?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    disconnect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    delete?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    connect?: NotificationWhereUniqueInput | NotificationWhereUniqueInput[]
+    update?: NotificationUpdateWithWhereUniqueWithoutMessageInput | NotificationUpdateWithWhereUniqueWithoutMessageInput[]
+    updateMany?: NotificationUpdateManyWithWhereWithoutMessageInput | NotificationUpdateManyWithWhereWithoutMessageInput[]
+    deleteMany?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
+  }
+
   export type MessageCreateNestedOneWithoutAttachmentsInput = {
     create?: XOR<MessageCreateWithoutAttachmentsInput, MessageUncheckedCreateWithoutAttachmentsInput>
     connectOrCreate?: MessageCreateOrConnectWithoutAttachmentsInput
     connect?: MessageWhereUniqueInput
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type MessageUpdateOneRequiredWithoutAttachmentsNestedInput = {
@@ -14595,6 +17901,104 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutBlockedByInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutBlockedByInput, UserUpdateWithoutBlockedByInput>, UserUncheckedUpdateWithoutBlockedByInput>
+  }
+
+  export type UserCreateNestedOneWithoutSentFriendRequestsInput = {
+    create?: XOR<UserCreateWithoutSentFriendRequestsInput, UserUncheckedCreateWithoutSentFriendRequestsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSentFriendRequestsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutReceivedFriendRequestsInput = {
+    create?: XOR<UserCreateWithoutReceivedFriendRequestsInput, UserUncheckedCreateWithoutReceivedFriendRequestsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutReceivedFriendRequestsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumFriendStatusFieldUpdateOperationsInput = {
+    set?: $Enums.FriendStatus
+  }
+
+  export type UserUpdateOneRequiredWithoutSentFriendRequestsNestedInput = {
+    create?: XOR<UserCreateWithoutSentFriendRequestsInput, UserUncheckedCreateWithoutSentFriendRequestsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSentFriendRequestsInput
+    upsert?: UserUpsertWithoutSentFriendRequestsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSentFriendRequestsInput, UserUpdateWithoutSentFriendRequestsInput>, UserUncheckedUpdateWithoutSentFriendRequestsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutReceivedFriendRequestsNestedInput = {
+    create?: XOR<UserCreateWithoutReceivedFriendRequestsInput, UserUncheckedCreateWithoutReceivedFriendRequestsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutReceivedFriendRequestsInput
+    upsert?: UserUpsertWithoutReceivedFriendRequestsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutReceivedFriendRequestsInput, UserUpdateWithoutReceivedFriendRequestsInput>, UserUncheckedUpdateWithoutReceivedFriendRequestsInput>
+  }
+
+  export type UserCreateNestedOneWithoutReceivedNotificationsInput = {
+    create?: XOR<UserCreateWithoutReceivedNotificationsInput, UserUncheckedCreateWithoutReceivedNotificationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutReceivedNotificationsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutSentNotificationsInput = {
+    create?: XOR<UserCreateWithoutSentNotificationsInput, UserUncheckedCreateWithoutSentNotificationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSentNotificationsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type ConversationCreateNestedOneWithoutNotificationsInput = {
+    create?: XOR<ConversationCreateWithoutNotificationsInput, ConversationUncheckedCreateWithoutNotificationsInput>
+    connectOrCreate?: ConversationCreateOrConnectWithoutNotificationsInput
+    connect?: ConversationWhereUniqueInput
+  }
+
+  export type MessageCreateNestedOneWithoutNotificationsInput = {
+    create?: XOR<MessageCreateWithoutNotificationsInput, MessageUncheckedCreateWithoutNotificationsInput>
+    connectOrCreate?: MessageCreateOrConnectWithoutNotificationsInput
+    connect?: MessageWhereUniqueInput
+  }
+
+  export type EnumNotificationTypeFieldUpdateOperationsInput = {
+    set?: $Enums.NotificationType
+  }
+
+  export type UserUpdateOneRequiredWithoutReceivedNotificationsNestedInput = {
+    create?: XOR<UserCreateWithoutReceivedNotificationsInput, UserUncheckedCreateWithoutReceivedNotificationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutReceivedNotificationsInput
+    upsert?: UserUpsertWithoutReceivedNotificationsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutReceivedNotificationsInput, UserUpdateWithoutReceivedNotificationsInput>, UserUncheckedUpdateWithoutReceivedNotificationsInput>
+  }
+
+  export type UserUpdateOneWithoutSentNotificationsNestedInput = {
+    create?: XOR<UserCreateWithoutSentNotificationsInput, UserUncheckedCreateWithoutSentNotificationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSentNotificationsInput
+    upsert?: UserUpsertWithoutSentNotificationsInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSentNotificationsInput, UserUpdateWithoutSentNotificationsInput>, UserUncheckedUpdateWithoutSentNotificationsInput>
+  }
+
+  export type ConversationUpdateOneWithoutNotificationsNestedInput = {
+    create?: XOR<ConversationCreateWithoutNotificationsInput, ConversationUncheckedCreateWithoutNotificationsInput>
+    connectOrCreate?: ConversationCreateOrConnectWithoutNotificationsInput
+    upsert?: ConversationUpsertWithoutNotificationsInput
+    disconnect?: ConversationWhereInput | boolean
+    delete?: ConversationWhereInput | boolean
+    connect?: ConversationWhereUniqueInput
+    update?: XOR<XOR<ConversationUpdateToOneWithWhereWithoutNotificationsInput, ConversationUpdateWithoutNotificationsInput>, ConversationUncheckedUpdateWithoutNotificationsInput>
+  }
+
+  export type MessageUpdateOneWithoutNotificationsNestedInput = {
+    create?: XOR<MessageCreateWithoutNotificationsInput, MessageUncheckedCreateWithoutNotificationsInput>
+    connectOrCreate?: MessageCreateOrConnectWithoutNotificationsInput
+    upsert?: MessageUpsertWithoutNotificationsInput
+    disconnect?: MessageWhereInput | boolean
+    delete?: MessageWhereInput | boolean
+    connect?: MessageWhereUniqueInput
+    update?: XOR<XOR<MessageUpdateToOneWithWhereWithoutNotificationsInput, MessageUpdateWithoutNotificationsInput>, MessageUncheckedUpdateWithoutNotificationsInput>
   }
 
   export type NestedBigIntFilter<$PrismaModel = never> = {
@@ -14845,6 +18249,22 @@ export namespace Prisma {
     _max?: NestedEnumParticipantRoleFilter<$PrismaModel>
   }
 
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[]
+    notIn?: number[]
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
   export type NestedEnumMessageRoleNullableFilter<$PrismaModel = never> = {
     equals?: $Enums.MessageRole | EnumMessageRoleFieldRefInput<$PrismaModel> | null
     in?: $Enums.MessageRole[] | null
@@ -14873,22 +18293,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedBoolFilter<$PrismaModel>
     _max?: NestedBoolFilter<$PrismaModel>
-  }
-
-  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type NestedEnumQueueStatusFilter<$PrismaModel = never> = {
@@ -14931,6 +18335,40 @@ export namespace Prisma {
     _max?: NestedEnumQueueStatusFilter<$PrismaModel>
   }
 
+  export type NestedEnumFriendStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.FriendStatus | EnumFriendStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.FriendStatus[]
+    notIn?: $Enums.FriendStatus[]
+    not?: NestedEnumFriendStatusFilter<$PrismaModel> | $Enums.FriendStatus
+  }
+
+  export type NestedEnumFriendStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FriendStatus | EnumFriendStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.FriendStatus[]
+    notIn?: $Enums.FriendStatus[]
+    not?: NestedEnumFriendStatusWithAggregatesFilter<$PrismaModel> | $Enums.FriendStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumFriendStatusFilter<$PrismaModel>
+    _max?: NestedEnumFriendStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumNotificationTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.NotificationType | EnumNotificationTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.NotificationType[]
+    notIn?: $Enums.NotificationType[]
+    not?: NestedEnumNotificationTypeFilter<$PrismaModel> | $Enums.NotificationType
+  }
+
+  export type NestedEnumNotificationTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.NotificationType | EnumNotificationTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.NotificationType[]
+    notIn?: $Enums.NotificationType[]
+    not?: NestedEnumNotificationTypeWithAggregatesFilter<$PrismaModel> | $Enums.NotificationType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumNotificationTypeFilter<$PrismaModel>
+    _max?: NestedEnumNotificationTypeFilter<$PrismaModel>
+  }
+
   export type RefreshTokenCreateWithoutUserInput = {
     id?: bigint | number
     token?: string | null
@@ -14962,6 +18400,7 @@ export namespace Prisma {
     role?: $Enums.ParticipantRole
     joinedAt?: Date | string
     leftAt?: Date | string | null
+    unreadCount?: number
     lastReadAt?: Date | string | null
     deletedAt?: Date | string | null
     conversation: ConversationCreateNestedOneWithoutParticipantsInput
@@ -14973,6 +18412,7 @@ export namespace Prisma {
     role?: $Enums.ParticipantRole
     joinedAt?: Date | string
     leftAt?: Date | string | null
+    unreadCount?: number
     lastReadAt?: Date | string | null
     deletedAt?: Date | string | null
   }
@@ -15000,6 +18440,7 @@ export namespace Prisma {
     messages?: MessageCreateNestedManyWithoutConversationInput
     owner?: UserCreateNestedOneWithoutOwnedConversationsInput
     lastMessage?: MessageCreateNestedOneWithoutLastMessageOfInput
+    notifications?: NotificationCreateNestedManyWithoutConversationInput
   }
 
   export type ConversationUncheckedCreateWithoutActiveUsersInput = {
@@ -15015,6 +18456,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     participants?: ConversationParticipantUncheckedCreateNestedManyWithoutConversationInput
     messages?: MessageUncheckedCreateNestedManyWithoutConversationInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutConversationInput
   }
 
   export type ConversationCreateOrConnectWithoutActiveUsersInput = {
@@ -15035,6 +18477,7 @@ export namespace Prisma {
     replies?: MessageCreateNestedManyWithoutParentMessageInput
     attachments?: MessageAttachmentCreateNestedManyWithoutMessageInput
     lastMessageOf?: ConversationCreateNestedManyWithoutLastMessageInput
+    notifications?: NotificationCreateNestedManyWithoutMessageInput
   }
 
   export type MessageUncheckedCreateWithoutUserInput = {
@@ -15050,6 +18493,7 @@ export namespace Prisma {
     replies?: MessageUncheckedCreateNestedManyWithoutParentMessageInput
     attachments?: MessageAttachmentUncheckedCreateNestedManyWithoutMessageInput
     lastMessageOf?: ConversationUncheckedCreateNestedManyWithoutLastMessageInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutMessageInput
   }
 
   export type MessageCreateOrConnectWithoutUserInput = {
@@ -15149,6 +18593,7 @@ export namespace Prisma {
     activeUsers?: UserCreateNestedManyWithoutActiveConversationInput
     messages?: MessageCreateNestedManyWithoutConversationInput
     lastMessage?: MessageCreateNestedOneWithoutLastMessageOfInput
+    notifications?: NotificationCreateNestedManyWithoutConversationInput
   }
 
   export type ConversationUncheckedCreateWithoutOwnerInput = {
@@ -15164,6 +18609,7 @@ export namespace Prisma {
     participants?: ConversationParticipantUncheckedCreateNestedManyWithoutConversationInput
     activeUsers?: UserUncheckedCreateNestedManyWithoutActiveConversationInput
     messages?: MessageUncheckedCreateNestedManyWithoutConversationInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutConversationInput
   }
 
   export type ConversationCreateOrConnectWithoutOwnerInput = {
@@ -15173,6 +18619,118 @@ export namespace Prisma {
 
   export type ConversationCreateManyOwnerInputEnvelope = {
     data: ConversationCreateManyOwnerInput | ConversationCreateManyOwnerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type FriendCreateWithoutRequesterInput = {
+    id?: bigint | number
+    status?: $Enums.FriendStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    addressee: UserCreateNestedOneWithoutReceivedFriendRequestsInput
+  }
+
+  export type FriendUncheckedCreateWithoutRequesterInput = {
+    id?: bigint | number
+    addresseeId: bigint | number
+    status?: $Enums.FriendStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FriendCreateOrConnectWithoutRequesterInput = {
+    where: FriendWhereUniqueInput
+    create: XOR<FriendCreateWithoutRequesterInput, FriendUncheckedCreateWithoutRequesterInput>
+  }
+
+  export type FriendCreateManyRequesterInputEnvelope = {
+    data: FriendCreateManyRequesterInput | FriendCreateManyRequesterInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type FriendCreateWithoutAddresseeInput = {
+    id?: bigint | number
+    status?: $Enums.FriendStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    requester: UserCreateNestedOneWithoutSentFriendRequestsInput
+  }
+
+  export type FriendUncheckedCreateWithoutAddresseeInput = {
+    id?: bigint | number
+    requesterId: bigint | number
+    status?: $Enums.FriendStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FriendCreateOrConnectWithoutAddresseeInput = {
+    where: FriendWhereUniqueInput
+    create: XOR<FriendCreateWithoutAddresseeInput, FriendUncheckedCreateWithoutAddresseeInput>
+  }
+
+  export type FriendCreateManyAddresseeInputEnvelope = {
+    data: FriendCreateManyAddresseeInput | FriendCreateManyAddresseeInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type NotificationCreateWithoutReceiverInput = {
+    id?: bigint | number
+    type: $Enums.NotificationType
+    isRead?: boolean
+    createdAt?: Date | string
+    sender?: UserCreateNestedOneWithoutSentNotificationsInput
+    conversation?: ConversationCreateNestedOneWithoutNotificationsInput
+    message?: MessageCreateNestedOneWithoutNotificationsInput
+  }
+
+  export type NotificationUncheckedCreateWithoutReceiverInput = {
+    id?: bigint | number
+    senderId?: bigint | number | null
+    conversationId?: bigint | number | null
+    messageId?: bigint | number | null
+    type: $Enums.NotificationType
+    isRead?: boolean
+    createdAt?: Date | string
+  }
+
+  export type NotificationCreateOrConnectWithoutReceiverInput = {
+    where: NotificationWhereUniqueInput
+    create: XOR<NotificationCreateWithoutReceiverInput, NotificationUncheckedCreateWithoutReceiverInput>
+  }
+
+  export type NotificationCreateManyReceiverInputEnvelope = {
+    data: NotificationCreateManyReceiverInput | NotificationCreateManyReceiverInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type NotificationCreateWithoutSenderInput = {
+    id?: bigint | number
+    type: $Enums.NotificationType
+    isRead?: boolean
+    createdAt?: Date | string
+    receiver: UserCreateNestedOneWithoutReceivedNotificationsInput
+    conversation?: ConversationCreateNestedOneWithoutNotificationsInput
+    message?: MessageCreateNestedOneWithoutNotificationsInput
+  }
+
+  export type NotificationUncheckedCreateWithoutSenderInput = {
+    id?: bigint | number
+    receiverId: bigint | number
+    conversationId?: bigint | number | null
+    messageId?: bigint | number | null
+    type: $Enums.NotificationType
+    isRead?: boolean
+    createdAt?: Date | string
+  }
+
+  export type NotificationCreateOrConnectWithoutSenderInput = {
+    where: NotificationWhereUniqueInput
+    create: XOR<NotificationCreateWithoutSenderInput, NotificationUncheckedCreateWithoutSenderInput>
+  }
+
+  export type NotificationCreateManySenderInputEnvelope = {
+    data: NotificationCreateManySenderInput | NotificationCreateManySenderInput[]
     skipDuplicates?: boolean
   }
 
@@ -15230,6 +18788,7 @@ export namespace Prisma {
     role?: EnumParticipantRoleFilter<"ConversationParticipant"> | $Enums.ParticipantRole
     joinedAt?: DateTimeFilter<"ConversationParticipant"> | Date | string
     leftAt?: DateTimeNullableFilter<"ConversationParticipant"> | Date | string | null
+    unreadCount?: IntFilter<"ConversationParticipant"> | number
     lastReadAt?: DateTimeNullableFilter<"ConversationParticipant"> | Date | string | null
     deletedAt?: DateTimeNullableFilter<"ConversationParticipant"> | Date | string | null
   }
@@ -15258,6 +18817,7 @@ export namespace Prisma {
     messages?: MessageUpdateManyWithoutConversationNestedInput
     owner?: UserUpdateOneWithoutOwnedConversationsNestedInput
     lastMessage?: MessageUpdateOneWithoutLastMessageOfNestedInput
+    notifications?: NotificationUpdateManyWithoutConversationNestedInput
   }
 
   export type ConversationUncheckedUpdateWithoutActiveUsersInput = {
@@ -15273,6 +18833,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     participants?: ConversationParticipantUncheckedUpdateManyWithoutConversationNestedInput
     messages?: MessageUncheckedUpdateManyWithoutConversationNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutConversationNestedInput
   }
 
   export type MessageUpsertWithWhereUniqueWithoutUserInput = {
@@ -15410,10 +18971,101 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Conversation"> | Date | string
   }
 
+  export type FriendUpsertWithWhereUniqueWithoutRequesterInput = {
+    where: FriendWhereUniqueInput
+    update: XOR<FriendUpdateWithoutRequesterInput, FriendUncheckedUpdateWithoutRequesterInput>
+    create: XOR<FriendCreateWithoutRequesterInput, FriendUncheckedCreateWithoutRequesterInput>
+  }
+
+  export type FriendUpdateWithWhereUniqueWithoutRequesterInput = {
+    where: FriendWhereUniqueInput
+    data: XOR<FriendUpdateWithoutRequesterInput, FriendUncheckedUpdateWithoutRequesterInput>
+  }
+
+  export type FriendUpdateManyWithWhereWithoutRequesterInput = {
+    where: FriendScalarWhereInput
+    data: XOR<FriendUpdateManyMutationInput, FriendUncheckedUpdateManyWithoutRequesterInput>
+  }
+
+  export type FriendScalarWhereInput = {
+    AND?: FriendScalarWhereInput | FriendScalarWhereInput[]
+    OR?: FriendScalarWhereInput[]
+    NOT?: FriendScalarWhereInput | FriendScalarWhereInput[]
+    id?: BigIntFilter<"Friend"> | bigint | number
+    requesterId?: BigIntFilter<"Friend"> | bigint | number
+    addresseeId?: BigIntFilter<"Friend"> | bigint | number
+    status?: EnumFriendStatusFilter<"Friend"> | $Enums.FriendStatus
+    createdAt?: DateTimeFilter<"Friend"> | Date | string
+    updatedAt?: DateTimeFilter<"Friend"> | Date | string
+  }
+
+  export type FriendUpsertWithWhereUniqueWithoutAddresseeInput = {
+    where: FriendWhereUniqueInput
+    update: XOR<FriendUpdateWithoutAddresseeInput, FriendUncheckedUpdateWithoutAddresseeInput>
+    create: XOR<FriendCreateWithoutAddresseeInput, FriendUncheckedCreateWithoutAddresseeInput>
+  }
+
+  export type FriendUpdateWithWhereUniqueWithoutAddresseeInput = {
+    where: FriendWhereUniqueInput
+    data: XOR<FriendUpdateWithoutAddresseeInput, FriendUncheckedUpdateWithoutAddresseeInput>
+  }
+
+  export type FriendUpdateManyWithWhereWithoutAddresseeInput = {
+    where: FriendScalarWhereInput
+    data: XOR<FriendUpdateManyMutationInput, FriendUncheckedUpdateManyWithoutAddresseeInput>
+  }
+
+  export type NotificationUpsertWithWhereUniqueWithoutReceiverInput = {
+    where: NotificationWhereUniqueInput
+    update: XOR<NotificationUpdateWithoutReceiverInput, NotificationUncheckedUpdateWithoutReceiverInput>
+    create: XOR<NotificationCreateWithoutReceiverInput, NotificationUncheckedCreateWithoutReceiverInput>
+  }
+
+  export type NotificationUpdateWithWhereUniqueWithoutReceiverInput = {
+    where: NotificationWhereUniqueInput
+    data: XOR<NotificationUpdateWithoutReceiverInput, NotificationUncheckedUpdateWithoutReceiverInput>
+  }
+
+  export type NotificationUpdateManyWithWhereWithoutReceiverInput = {
+    where: NotificationScalarWhereInput
+    data: XOR<NotificationUpdateManyMutationInput, NotificationUncheckedUpdateManyWithoutReceiverInput>
+  }
+
+  export type NotificationScalarWhereInput = {
+    AND?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
+    OR?: NotificationScalarWhereInput[]
+    NOT?: NotificationScalarWhereInput | NotificationScalarWhereInput[]
+    id?: BigIntFilter<"Notification"> | bigint | number
+    receiverId?: BigIntFilter<"Notification"> | bigint | number
+    senderId?: BigIntNullableFilter<"Notification"> | bigint | number | null
+    conversationId?: BigIntNullableFilter<"Notification"> | bigint | number | null
+    messageId?: BigIntNullableFilter<"Notification"> | bigint | number | null
+    type?: EnumNotificationTypeFilter<"Notification"> | $Enums.NotificationType
+    isRead?: BoolFilter<"Notification"> | boolean
+    createdAt?: DateTimeFilter<"Notification"> | Date | string
+  }
+
+  export type NotificationUpsertWithWhereUniqueWithoutSenderInput = {
+    where: NotificationWhereUniqueInput
+    update: XOR<NotificationUpdateWithoutSenderInput, NotificationUncheckedUpdateWithoutSenderInput>
+    create: XOR<NotificationCreateWithoutSenderInput, NotificationUncheckedCreateWithoutSenderInput>
+  }
+
+  export type NotificationUpdateWithWhereUniqueWithoutSenderInput = {
+    where: NotificationWhereUniqueInput
+    data: XOR<NotificationUpdateWithoutSenderInput, NotificationUncheckedUpdateWithoutSenderInput>
+  }
+
+  export type NotificationUpdateManyWithWhereWithoutSenderInput = {
+    where: NotificationScalarWhereInput
+    data: XOR<NotificationUpdateManyMutationInput, NotificationUncheckedUpdateManyWithoutSenderInput>
+  }
+
   export type UserCreateWithoutRefreshTokensInput = {
     id?: bigint | number
     email: string
     name?: string | null
+    avatarUrl?: string | null
     password: string
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
@@ -15425,12 +19077,17 @@ export namespace Prisma {
     blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
     blockedBy?: UserBlockCreateNestedManyWithoutBlockedInput
     ownedConversations?: ConversationCreateNestedManyWithoutOwnerInput
+    sentFriendRequests?: FriendCreateNestedManyWithoutRequesterInput
+    receivedFriendRequests?: FriendCreateNestedManyWithoutAddresseeInput
+    receivedNotifications?: NotificationCreateNestedManyWithoutReceiverInput
+    sentNotifications?: NotificationCreateNestedManyWithoutSenderInput
   }
 
   export type UserUncheckedCreateWithoutRefreshTokensInput = {
     id?: bigint | number
     email: string
     name?: string | null
+    avatarUrl?: string | null
     password: string
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
@@ -15442,6 +19099,10 @@ export namespace Prisma {
     blockedUsers?: UserBlockUncheckedCreateNestedManyWithoutBlockerInput
     blockedBy?: UserBlockUncheckedCreateNestedManyWithoutBlockedInput
     ownedConversations?: ConversationUncheckedCreateNestedManyWithoutOwnerInput
+    sentFriendRequests?: FriendUncheckedCreateNestedManyWithoutRequesterInput
+    receivedFriendRequests?: FriendUncheckedCreateNestedManyWithoutAddresseeInput
+    receivedNotifications?: NotificationUncheckedCreateNestedManyWithoutReceiverInput
+    sentNotifications?: NotificationUncheckedCreateNestedManyWithoutSenderInput
   }
 
   export type UserCreateOrConnectWithoutRefreshTokensInput = {
@@ -15464,6 +19125,7 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15475,12 +19137,17 @@ export namespace Prisma {
     blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
     blockedBy?: UserBlockUpdateManyWithoutBlockedNestedInput
     ownedConversations?: ConversationUpdateManyWithoutOwnerNestedInput
+    sentFriendRequests?: FriendUpdateManyWithoutRequesterNestedInput
+    receivedFriendRequests?: FriendUpdateManyWithoutAddresseeNestedInput
+    receivedNotifications?: NotificationUpdateManyWithoutReceiverNestedInput
+    sentNotifications?: NotificationUpdateManyWithoutSenderNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRefreshTokensInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15492,6 +19159,10 @@ export namespace Prisma {
     blockedUsers?: UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
     blockedBy?: UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
     ownedConversations?: ConversationUncheckedUpdateManyWithoutOwnerNestedInput
+    sentFriendRequests?: FriendUncheckedUpdateManyWithoutRequesterNestedInput
+    receivedFriendRequests?: FriendUncheckedUpdateManyWithoutAddresseeNestedInput
+    receivedNotifications?: NotificationUncheckedUpdateManyWithoutReceiverNestedInput
+    sentNotifications?: NotificationUncheckedUpdateManyWithoutSenderNestedInput
   }
 
   export type ConversationParticipantCreateWithoutConversationInput = {
@@ -15499,6 +19170,7 @@ export namespace Prisma {
     role?: $Enums.ParticipantRole
     joinedAt?: Date | string
     leftAt?: Date | string | null
+    unreadCount?: number
     lastReadAt?: Date | string | null
     deletedAt?: Date | string | null
     user: UserCreateNestedOneWithoutConversationParticipantsInput
@@ -15510,6 +19182,7 @@ export namespace Prisma {
     role?: $Enums.ParticipantRole
     joinedAt?: Date | string
     leftAt?: Date | string | null
+    unreadCount?: number
     lastReadAt?: Date | string | null
     deletedAt?: Date | string | null
   }
@@ -15528,6 +19201,7 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name?: string | null
+    avatarUrl?: string | null
     password: string
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
@@ -15539,12 +19213,17 @@ export namespace Prisma {
     blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
     blockedBy?: UserBlockCreateNestedManyWithoutBlockedInput
     ownedConversations?: ConversationCreateNestedManyWithoutOwnerInput
+    sentFriendRequests?: FriendCreateNestedManyWithoutRequesterInput
+    receivedFriendRequests?: FriendCreateNestedManyWithoutAddresseeInput
+    receivedNotifications?: NotificationCreateNestedManyWithoutReceiverInput
+    sentNotifications?: NotificationCreateNestedManyWithoutSenderInput
   }
 
   export type UserUncheckedCreateWithoutActiveConversationInput = {
     id?: bigint | number
     email: string
     name?: string | null
+    avatarUrl?: string | null
     password: string
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
@@ -15556,6 +19235,10 @@ export namespace Prisma {
     blockedUsers?: UserBlockUncheckedCreateNestedManyWithoutBlockerInput
     blockedBy?: UserBlockUncheckedCreateNestedManyWithoutBlockedInput
     ownedConversations?: ConversationUncheckedCreateNestedManyWithoutOwnerInput
+    sentFriendRequests?: FriendUncheckedCreateNestedManyWithoutRequesterInput
+    receivedFriendRequests?: FriendUncheckedCreateNestedManyWithoutAddresseeInput
+    receivedNotifications?: NotificationUncheckedCreateNestedManyWithoutReceiverInput
+    sentNotifications?: NotificationUncheckedCreateNestedManyWithoutSenderInput
   }
 
   export type UserCreateOrConnectWithoutActiveConversationInput = {
@@ -15581,6 +19264,7 @@ export namespace Prisma {
     replies?: MessageCreateNestedManyWithoutParentMessageInput
     attachments?: MessageAttachmentCreateNestedManyWithoutMessageInput
     lastMessageOf?: ConversationCreateNestedManyWithoutLastMessageInput
+    notifications?: NotificationCreateNestedManyWithoutMessageInput
   }
 
   export type MessageUncheckedCreateWithoutConversationInput = {
@@ -15596,6 +19280,7 @@ export namespace Prisma {
     replies?: MessageUncheckedCreateNestedManyWithoutParentMessageInput
     attachments?: MessageAttachmentUncheckedCreateNestedManyWithoutMessageInput
     lastMessageOf?: ConversationUncheckedCreateNestedManyWithoutLastMessageInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutMessageInput
   }
 
   export type MessageCreateOrConnectWithoutConversationInput = {
@@ -15612,6 +19297,7 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name?: string | null
+    avatarUrl?: string | null
     password: string
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
@@ -15623,12 +19309,17 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
     blockedBy?: UserBlockCreateNestedManyWithoutBlockedInput
+    sentFriendRequests?: FriendCreateNestedManyWithoutRequesterInput
+    receivedFriendRequests?: FriendCreateNestedManyWithoutAddresseeInput
+    receivedNotifications?: NotificationCreateNestedManyWithoutReceiverInput
+    sentNotifications?: NotificationCreateNestedManyWithoutSenderInput
   }
 
   export type UserUncheckedCreateWithoutOwnedConversationsInput = {
     id?: bigint | number
     email: string
     name?: string | null
+    avatarUrl?: string | null
     password: string
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
@@ -15640,6 +19331,10 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     blockedUsers?: UserBlockUncheckedCreateNestedManyWithoutBlockerInput
     blockedBy?: UserBlockUncheckedCreateNestedManyWithoutBlockedInput
+    sentFriendRequests?: FriendUncheckedCreateNestedManyWithoutRequesterInput
+    receivedFriendRequests?: FriendUncheckedCreateNestedManyWithoutAddresseeInput
+    receivedNotifications?: NotificationUncheckedCreateNestedManyWithoutReceiverInput
+    sentNotifications?: NotificationUncheckedCreateNestedManyWithoutSenderInput
   }
 
   export type UserCreateOrConnectWithoutOwnedConversationsInput = {
@@ -15660,6 +19355,7 @@ export namespace Prisma {
     parentMessage?: MessageCreateNestedOneWithoutRepliesInput
     replies?: MessageCreateNestedManyWithoutParentMessageInput
     attachments?: MessageAttachmentCreateNestedManyWithoutMessageInput
+    notifications?: NotificationCreateNestedManyWithoutMessageInput
   }
 
   export type MessageUncheckedCreateWithoutLastMessageOfInput = {
@@ -15675,11 +19371,42 @@ export namespace Prisma {
     updatedAt?: Date | string
     replies?: MessageUncheckedCreateNestedManyWithoutParentMessageInput
     attachments?: MessageAttachmentUncheckedCreateNestedManyWithoutMessageInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutMessageInput
   }
 
   export type MessageCreateOrConnectWithoutLastMessageOfInput = {
     where: MessageWhereUniqueInput
     create: XOR<MessageCreateWithoutLastMessageOfInput, MessageUncheckedCreateWithoutLastMessageOfInput>
+  }
+
+  export type NotificationCreateWithoutConversationInput = {
+    id?: bigint | number
+    type: $Enums.NotificationType
+    isRead?: boolean
+    createdAt?: Date | string
+    receiver: UserCreateNestedOneWithoutReceivedNotificationsInput
+    sender?: UserCreateNestedOneWithoutSentNotificationsInput
+    message?: MessageCreateNestedOneWithoutNotificationsInput
+  }
+
+  export type NotificationUncheckedCreateWithoutConversationInput = {
+    id?: bigint | number
+    receiverId: bigint | number
+    senderId?: bigint | number | null
+    messageId?: bigint | number | null
+    type: $Enums.NotificationType
+    isRead?: boolean
+    createdAt?: Date | string
+  }
+
+  export type NotificationCreateOrConnectWithoutConversationInput = {
+    where: NotificationWhereUniqueInput
+    create: XOR<NotificationCreateWithoutConversationInput, NotificationUncheckedCreateWithoutConversationInput>
+  }
+
+  export type NotificationCreateManyConversationInputEnvelope = {
+    data: NotificationCreateManyConversationInput | NotificationCreateManyConversationInput[]
+    skipDuplicates?: boolean
   }
 
   export type ConversationParticipantUpsertWithWhereUniqueWithoutConversationInput = {
@@ -15721,6 +19448,7 @@ export namespace Prisma {
     id?: BigIntFilter<"User"> | bigint | number
     email?: StringFilter<"User"> | string
     name?: StringNullableFilter<"User"> | string | null
+    avatarUrl?: StringNullableFilter<"User"> | string | null
     password?: StringFilter<"User"> | string
     emailVerifiedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
@@ -15759,6 +19487,7 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15770,12 +19499,17 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
     blockedBy?: UserBlockUpdateManyWithoutBlockedNestedInput
+    sentFriendRequests?: FriendUpdateManyWithoutRequesterNestedInput
+    receivedFriendRequests?: FriendUpdateManyWithoutAddresseeNestedInput
+    receivedNotifications?: NotificationUpdateManyWithoutReceiverNestedInput
+    sentNotifications?: NotificationUpdateManyWithoutSenderNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOwnedConversationsInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15787,6 +19521,10 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     blockedUsers?: UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
     blockedBy?: UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
+    sentFriendRequests?: FriendUncheckedUpdateManyWithoutRequesterNestedInput
+    receivedFriendRequests?: FriendUncheckedUpdateManyWithoutAddresseeNestedInput
+    receivedNotifications?: NotificationUncheckedUpdateManyWithoutReceiverNestedInput
+    sentNotifications?: NotificationUncheckedUpdateManyWithoutSenderNestedInput
   }
 
   export type MessageUpsertWithoutLastMessageOfInput = {
@@ -15813,6 +19551,7 @@ export namespace Prisma {
     parentMessage?: MessageUpdateOneWithoutRepliesNestedInput
     replies?: MessageUpdateManyWithoutParentMessageNestedInput
     attachments?: MessageAttachmentUpdateManyWithoutMessageNestedInput
+    notifications?: NotificationUpdateManyWithoutMessageNestedInput
   }
 
   export type MessageUncheckedUpdateWithoutLastMessageOfInput = {
@@ -15828,6 +19567,23 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     replies?: MessageUncheckedUpdateManyWithoutParentMessageNestedInput
     attachments?: MessageAttachmentUncheckedUpdateManyWithoutMessageNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutMessageNestedInput
+  }
+
+  export type NotificationUpsertWithWhereUniqueWithoutConversationInput = {
+    where: NotificationWhereUniqueInput
+    update: XOR<NotificationUpdateWithoutConversationInput, NotificationUncheckedUpdateWithoutConversationInput>
+    create: XOR<NotificationCreateWithoutConversationInput, NotificationUncheckedCreateWithoutConversationInput>
+  }
+
+  export type NotificationUpdateWithWhereUniqueWithoutConversationInput = {
+    where: NotificationWhereUniqueInput
+    data: XOR<NotificationUpdateWithoutConversationInput, NotificationUncheckedUpdateWithoutConversationInput>
+  }
+
+  export type NotificationUpdateManyWithWhereWithoutConversationInput = {
+    where: NotificationScalarWhereInput
+    data: XOR<NotificationUpdateManyMutationInput, NotificationUncheckedUpdateManyWithoutConversationInput>
   }
 
   export type ConversationCreateWithoutParticipantsInput = {
@@ -15843,6 +19599,7 @@ export namespace Prisma {
     messages?: MessageCreateNestedManyWithoutConversationInput
     owner?: UserCreateNestedOneWithoutOwnedConversationsInput
     lastMessage?: MessageCreateNestedOneWithoutLastMessageOfInput
+    notifications?: NotificationCreateNestedManyWithoutConversationInput
   }
 
   export type ConversationUncheckedCreateWithoutParticipantsInput = {
@@ -15858,6 +19615,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     activeUsers?: UserUncheckedCreateNestedManyWithoutActiveConversationInput
     messages?: MessageUncheckedCreateNestedManyWithoutConversationInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutConversationInput
   }
 
   export type ConversationCreateOrConnectWithoutParticipantsInput = {
@@ -15869,6 +19627,7 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name?: string | null
+    avatarUrl?: string | null
     password: string
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
@@ -15880,12 +19639,17 @@ export namespace Prisma {
     blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
     blockedBy?: UserBlockCreateNestedManyWithoutBlockedInput
     ownedConversations?: ConversationCreateNestedManyWithoutOwnerInput
+    sentFriendRequests?: FriendCreateNestedManyWithoutRequesterInput
+    receivedFriendRequests?: FriendCreateNestedManyWithoutAddresseeInput
+    receivedNotifications?: NotificationCreateNestedManyWithoutReceiverInput
+    sentNotifications?: NotificationCreateNestedManyWithoutSenderInput
   }
 
   export type UserUncheckedCreateWithoutConversationParticipantsInput = {
     id?: bigint | number
     email: string
     name?: string | null
+    avatarUrl?: string | null
     password: string
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
@@ -15897,6 +19661,10 @@ export namespace Prisma {
     blockedUsers?: UserBlockUncheckedCreateNestedManyWithoutBlockerInput
     blockedBy?: UserBlockUncheckedCreateNestedManyWithoutBlockedInput
     ownedConversations?: ConversationUncheckedCreateNestedManyWithoutOwnerInput
+    sentFriendRequests?: FriendUncheckedCreateNestedManyWithoutRequesterInput
+    receivedFriendRequests?: FriendUncheckedCreateNestedManyWithoutAddresseeInput
+    receivedNotifications?: NotificationUncheckedCreateNestedManyWithoutReceiverInput
+    sentNotifications?: NotificationUncheckedCreateNestedManyWithoutSenderInput
   }
 
   export type UserCreateOrConnectWithoutConversationParticipantsInput = {
@@ -15928,6 +19696,7 @@ export namespace Prisma {
     messages?: MessageUpdateManyWithoutConversationNestedInput
     owner?: UserUpdateOneWithoutOwnedConversationsNestedInput
     lastMessage?: MessageUpdateOneWithoutLastMessageOfNestedInput
+    notifications?: NotificationUpdateManyWithoutConversationNestedInput
   }
 
   export type ConversationUncheckedUpdateWithoutParticipantsInput = {
@@ -15943,6 +19712,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     activeUsers?: UserUncheckedUpdateManyWithoutActiveConversationNestedInput
     messages?: MessageUncheckedUpdateManyWithoutConversationNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutConversationNestedInput
   }
 
   export type UserUpsertWithoutConversationParticipantsInput = {
@@ -15960,6 +19730,7 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15971,12 +19742,17 @@ export namespace Prisma {
     blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
     blockedBy?: UserBlockUpdateManyWithoutBlockedNestedInput
     ownedConversations?: ConversationUpdateManyWithoutOwnerNestedInput
+    sentFriendRequests?: FriendUpdateManyWithoutRequesterNestedInput
+    receivedFriendRequests?: FriendUpdateManyWithoutAddresseeNestedInput
+    receivedNotifications?: NotificationUpdateManyWithoutReceiverNestedInput
+    sentNotifications?: NotificationUpdateManyWithoutSenderNestedInput
   }
 
   export type UserUncheckedUpdateWithoutConversationParticipantsInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15988,6 +19764,10 @@ export namespace Prisma {
     blockedUsers?: UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
     blockedBy?: UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
     ownedConversations?: ConversationUncheckedUpdateManyWithoutOwnerNestedInput
+    sentFriendRequests?: FriendUncheckedUpdateManyWithoutRequesterNestedInput
+    receivedFriendRequests?: FriendUncheckedUpdateManyWithoutAddresseeNestedInput
+    receivedNotifications?: NotificationUncheckedUpdateManyWithoutReceiverNestedInput
+    sentNotifications?: NotificationUncheckedUpdateManyWithoutSenderNestedInput
   }
 
   export type ConversationCreateWithoutMessagesInput = {
@@ -16003,6 +19783,7 @@ export namespace Prisma {
     activeUsers?: UserCreateNestedManyWithoutActiveConversationInput
     owner?: UserCreateNestedOneWithoutOwnedConversationsInput
     lastMessage?: MessageCreateNestedOneWithoutLastMessageOfInput
+    notifications?: NotificationCreateNestedManyWithoutConversationInput
   }
 
   export type ConversationUncheckedCreateWithoutMessagesInput = {
@@ -16018,6 +19799,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     participants?: ConversationParticipantUncheckedCreateNestedManyWithoutConversationInput
     activeUsers?: UserUncheckedCreateNestedManyWithoutActiveConversationInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutConversationInput
   }
 
   export type ConversationCreateOrConnectWithoutMessagesInput = {
@@ -16029,6 +19811,7 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name?: string | null
+    avatarUrl?: string | null
     password: string
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
@@ -16040,12 +19823,17 @@ export namespace Prisma {
     blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
     blockedBy?: UserBlockCreateNestedManyWithoutBlockedInput
     ownedConversations?: ConversationCreateNestedManyWithoutOwnerInput
+    sentFriendRequests?: FriendCreateNestedManyWithoutRequesterInput
+    receivedFriendRequests?: FriendCreateNestedManyWithoutAddresseeInput
+    receivedNotifications?: NotificationCreateNestedManyWithoutReceiverInput
+    sentNotifications?: NotificationCreateNestedManyWithoutSenderInput
   }
 
   export type UserUncheckedCreateWithoutMessagesInput = {
     id?: bigint | number
     email: string
     name?: string | null
+    avatarUrl?: string | null
     password: string
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
@@ -16057,6 +19845,10 @@ export namespace Prisma {
     blockedUsers?: UserBlockUncheckedCreateNestedManyWithoutBlockerInput
     blockedBy?: UserBlockUncheckedCreateNestedManyWithoutBlockedInput
     ownedConversations?: ConversationUncheckedCreateNestedManyWithoutOwnerInput
+    sentFriendRequests?: FriendUncheckedCreateNestedManyWithoutRequesterInput
+    receivedFriendRequests?: FriendUncheckedCreateNestedManyWithoutAddresseeInput
+    receivedNotifications?: NotificationUncheckedCreateNestedManyWithoutReceiverInput
+    sentNotifications?: NotificationUncheckedCreateNestedManyWithoutSenderInput
   }
 
   export type UserCreateOrConnectWithoutMessagesInput = {
@@ -16077,6 +19869,7 @@ export namespace Prisma {
     parentMessage?: MessageCreateNestedOneWithoutRepliesInput
     attachments?: MessageAttachmentCreateNestedManyWithoutMessageInput
     lastMessageOf?: ConversationCreateNestedManyWithoutLastMessageInput
+    notifications?: NotificationCreateNestedManyWithoutMessageInput
   }
 
   export type MessageUncheckedCreateWithoutRepliesInput = {
@@ -16092,6 +19885,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     attachments?: MessageAttachmentUncheckedCreateNestedManyWithoutMessageInput
     lastMessageOf?: ConversationUncheckedCreateNestedManyWithoutLastMessageInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutMessageInput
   }
 
   export type MessageCreateOrConnectWithoutRepliesInput = {
@@ -16112,6 +19906,7 @@ export namespace Prisma {
     replies?: MessageCreateNestedManyWithoutParentMessageInput
     attachments?: MessageAttachmentCreateNestedManyWithoutMessageInput
     lastMessageOf?: ConversationCreateNestedManyWithoutLastMessageInput
+    notifications?: NotificationCreateNestedManyWithoutMessageInput
   }
 
   export type MessageUncheckedCreateWithoutParentMessageInput = {
@@ -16127,6 +19922,7 @@ export namespace Prisma {
     replies?: MessageUncheckedCreateNestedManyWithoutParentMessageInput
     attachments?: MessageAttachmentUncheckedCreateNestedManyWithoutMessageInput
     lastMessageOf?: ConversationUncheckedCreateNestedManyWithoutLastMessageInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutMessageInput
   }
 
   export type MessageCreateOrConnectWithoutParentMessageInput = {
@@ -16180,6 +19976,7 @@ export namespace Prisma {
     activeUsers?: UserCreateNestedManyWithoutActiveConversationInput
     messages?: MessageCreateNestedManyWithoutConversationInput
     owner?: UserCreateNestedOneWithoutOwnedConversationsInput
+    notifications?: NotificationCreateNestedManyWithoutConversationInput
   }
 
   export type ConversationUncheckedCreateWithoutLastMessageInput = {
@@ -16195,6 +19992,7 @@ export namespace Prisma {
     participants?: ConversationParticipantUncheckedCreateNestedManyWithoutConversationInput
     activeUsers?: UserUncheckedCreateNestedManyWithoutActiveConversationInput
     messages?: MessageUncheckedCreateNestedManyWithoutConversationInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutConversationInput
   }
 
   export type ConversationCreateOrConnectWithoutLastMessageInput = {
@@ -16204,6 +20002,36 @@ export namespace Prisma {
 
   export type ConversationCreateManyLastMessageInputEnvelope = {
     data: ConversationCreateManyLastMessageInput | ConversationCreateManyLastMessageInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type NotificationCreateWithoutMessageInput = {
+    id?: bigint | number
+    type: $Enums.NotificationType
+    isRead?: boolean
+    createdAt?: Date | string
+    receiver: UserCreateNestedOneWithoutReceivedNotificationsInput
+    sender?: UserCreateNestedOneWithoutSentNotificationsInput
+    conversation?: ConversationCreateNestedOneWithoutNotificationsInput
+  }
+
+  export type NotificationUncheckedCreateWithoutMessageInput = {
+    id?: bigint | number
+    receiverId: bigint | number
+    senderId?: bigint | number | null
+    conversationId?: bigint | number | null
+    type: $Enums.NotificationType
+    isRead?: boolean
+    createdAt?: Date | string
+  }
+
+  export type NotificationCreateOrConnectWithoutMessageInput = {
+    where: NotificationWhereUniqueInput
+    create: XOR<NotificationCreateWithoutMessageInput, NotificationUncheckedCreateWithoutMessageInput>
+  }
+
+  export type NotificationCreateManyMessageInputEnvelope = {
+    data: NotificationCreateManyMessageInput | NotificationCreateManyMessageInput[]
     skipDuplicates?: boolean
   }
 
@@ -16231,6 +20059,7 @@ export namespace Prisma {
     activeUsers?: UserUpdateManyWithoutActiveConversationNestedInput
     owner?: UserUpdateOneWithoutOwnedConversationsNestedInput
     lastMessage?: MessageUpdateOneWithoutLastMessageOfNestedInput
+    notifications?: NotificationUpdateManyWithoutConversationNestedInput
   }
 
   export type ConversationUncheckedUpdateWithoutMessagesInput = {
@@ -16246,6 +20075,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     participants?: ConversationParticipantUncheckedUpdateManyWithoutConversationNestedInput
     activeUsers?: UserUncheckedUpdateManyWithoutActiveConversationNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutConversationNestedInput
   }
 
   export type UserUpsertWithoutMessagesInput = {
@@ -16263,6 +20093,7 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16274,12 +20105,17 @@ export namespace Prisma {
     blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
     blockedBy?: UserBlockUpdateManyWithoutBlockedNestedInput
     ownedConversations?: ConversationUpdateManyWithoutOwnerNestedInput
+    sentFriendRequests?: FriendUpdateManyWithoutRequesterNestedInput
+    receivedFriendRequests?: FriendUpdateManyWithoutAddresseeNestedInput
+    receivedNotifications?: NotificationUpdateManyWithoutReceiverNestedInput
+    sentNotifications?: NotificationUpdateManyWithoutSenderNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMessagesInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16291,6 +20127,10 @@ export namespace Prisma {
     blockedUsers?: UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
     blockedBy?: UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
     ownedConversations?: ConversationUncheckedUpdateManyWithoutOwnerNestedInput
+    sentFriendRequests?: FriendUncheckedUpdateManyWithoutRequesterNestedInput
+    receivedFriendRequests?: FriendUncheckedUpdateManyWithoutAddresseeNestedInput
+    receivedNotifications?: NotificationUncheckedUpdateManyWithoutReceiverNestedInput
+    sentNotifications?: NotificationUncheckedUpdateManyWithoutSenderNestedInput
   }
 
   export type MessageUpsertWithoutRepliesInput = {
@@ -16317,6 +20157,7 @@ export namespace Prisma {
     parentMessage?: MessageUpdateOneWithoutRepliesNestedInput
     attachments?: MessageAttachmentUpdateManyWithoutMessageNestedInput
     lastMessageOf?: ConversationUpdateManyWithoutLastMessageNestedInput
+    notifications?: NotificationUpdateManyWithoutMessageNestedInput
   }
 
   export type MessageUncheckedUpdateWithoutRepliesInput = {
@@ -16332,6 +20173,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attachments?: MessageAttachmentUncheckedUpdateManyWithoutMessageNestedInput
     lastMessageOf?: ConversationUncheckedUpdateManyWithoutLastMessageNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutMessageNestedInput
   }
 
   export type MessageUpsertWithWhereUniqueWithoutParentMessageInput = {
@@ -16395,6 +20237,22 @@ export namespace Prisma {
     data: XOR<ConversationUpdateManyMutationInput, ConversationUncheckedUpdateManyWithoutLastMessageInput>
   }
 
+  export type NotificationUpsertWithWhereUniqueWithoutMessageInput = {
+    where: NotificationWhereUniqueInput
+    update: XOR<NotificationUpdateWithoutMessageInput, NotificationUncheckedUpdateWithoutMessageInput>
+    create: XOR<NotificationCreateWithoutMessageInput, NotificationUncheckedCreateWithoutMessageInput>
+  }
+
+  export type NotificationUpdateWithWhereUniqueWithoutMessageInput = {
+    where: NotificationWhereUniqueInput
+    data: XOR<NotificationUpdateWithoutMessageInput, NotificationUncheckedUpdateWithoutMessageInput>
+  }
+
+  export type NotificationUpdateManyWithWhereWithoutMessageInput = {
+    where: NotificationScalarWhereInput
+    data: XOR<NotificationUpdateManyMutationInput, NotificationUncheckedUpdateManyWithoutMessageInput>
+  }
+
   export type MessageCreateWithoutAttachmentsInput = {
     id?: bigint | number
     role?: $Enums.MessageRole | null
@@ -16408,6 +20266,7 @@ export namespace Prisma {
     parentMessage?: MessageCreateNestedOneWithoutRepliesInput
     replies?: MessageCreateNestedManyWithoutParentMessageInput
     lastMessageOf?: ConversationCreateNestedManyWithoutLastMessageInput
+    notifications?: NotificationCreateNestedManyWithoutMessageInput
   }
 
   export type MessageUncheckedCreateWithoutAttachmentsInput = {
@@ -16423,6 +20282,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     replies?: MessageUncheckedCreateNestedManyWithoutParentMessageInput
     lastMessageOf?: ConversationUncheckedCreateNestedManyWithoutLastMessageInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutMessageInput
   }
 
   export type MessageCreateOrConnectWithoutAttachmentsInput = {
@@ -16454,6 +20314,7 @@ export namespace Prisma {
     parentMessage?: MessageUpdateOneWithoutRepliesNestedInput
     replies?: MessageUpdateManyWithoutParentMessageNestedInput
     lastMessageOf?: ConversationUpdateManyWithoutLastMessageNestedInput
+    notifications?: NotificationUpdateManyWithoutMessageNestedInput
   }
 
   export type MessageUncheckedUpdateWithoutAttachmentsInput = {
@@ -16469,12 +20330,14 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     replies?: MessageUncheckedUpdateManyWithoutParentMessageNestedInput
     lastMessageOf?: ConversationUncheckedUpdateManyWithoutLastMessageNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutMessageNestedInput
   }
 
   export type UserCreateWithoutPasswordResetTokensInput = {
     id?: bigint | number
     email: string
     name?: string | null
+    avatarUrl?: string | null
     password: string
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
@@ -16486,12 +20349,17 @@ export namespace Prisma {
     blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
     blockedBy?: UserBlockCreateNestedManyWithoutBlockedInput
     ownedConversations?: ConversationCreateNestedManyWithoutOwnerInput
+    sentFriendRequests?: FriendCreateNestedManyWithoutRequesterInput
+    receivedFriendRequests?: FriendCreateNestedManyWithoutAddresseeInput
+    receivedNotifications?: NotificationCreateNestedManyWithoutReceiverInput
+    sentNotifications?: NotificationCreateNestedManyWithoutSenderInput
   }
 
   export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
     id?: bigint | number
     email: string
     name?: string | null
+    avatarUrl?: string | null
     password: string
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
@@ -16503,6 +20371,10 @@ export namespace Prisma {
     blockedUsers?: UserBlockUncheckedCreateNestedManyWithoutBlockerInput
     blockedBy?: UserBlockUncheckedCreateNestedManyWithoutBlockedInput
     ownedConversations?: ConversationUncheckedCreateNestedManyWithoutOwnerInput
+    sentFriendRequests?: FriendUncheckedCreateNestedManyWithoutRequesterInput
+    receivedFriendRequests?: FriendUncheckedCreateNestedManyWithoutAddresseeInput
+    receivedNotifications?: NotificationUncheckedCreateNestedManyWithoutReceiverInput
+    sentNotifications?: NotificationUncheckedCreateNestedManyWithoutSenderInput
   }
 
   export type UserCreateOrConnectWithoutPasswordResetTokensInput = {
@@ -16525,6 +20397,7 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16536,12 +20409,17 @@ export namespace Prisma {
     blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
     blockedBy?: UserBlockUpdateManyWithoutBlockedNestedInput
     ownedConversations?: ConversationUpdateManyWithoutOwnerNestedInput
+    sentFriendRequests?: FriendUpdateManyWithoutRequesterNestedInput
+    receivedFriendRequests?: FriendUpdateManyWithoutAddresseeNestedInput
+    receivedNotifications?: NotificationUpdateManyWithoutReceiverNestedInput
+    sentNotifications?: NotificationUpdateManyWithoutSenderNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16553,12 +20431,17 @@ export namespace Prisma {
     blockedUsers?: UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
     blockedBy?: UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
     ownedConversations?: ConversationUncheckedUpdateManyWithoutOwnerNestedInput
+    sentFriendRequests?: FriendUncheckedUpdateManyWithoutRequesterNestedInput
+    receivedFriendRequests?: FriendUncheckedUpdateManyWithoutAddresseeNestedInput
+    receivedNotifications?: NotificationUncheckedUpdateManyWithoutReceiverNestedInput
+    sentNotifications?: NotificationUncheckedUpdateManyWithoutSenderNestedInput
   }
 
   export type UserCreateWithoutBlockedUsersInput = {
     id?: bigint | number
     email: string
     name?: string | null
+    avatarUrl?: string | null
     password: string
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
@@ -16570,12 +20453,17 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     blockedBy?: UserBlockCreateNestedManyWithoutBlockedInput
     ownedConversations?: ConversationCreateNestedManyWithoutOwnerInput
+    sentFriendRequests?: FriendCreateNestedManyWithoutRequesterInput
+    receivedFriendRequests?: FriendCreateNestedManyWithoutAddresseeInput
+    receivedNotifications?: NotificationCreateNestedManyWithoutReceiverInput
+    sentNotifications?: NotificationCreateNestedManyWithoutSenderInput
   }
 
   export type UserUncheckedCreateWithoutBlockedUsersInput = {
     id?: bigint | number
     email: string
     name?: string | null
+    avatarUrl?: string | null
     password: string
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
@@ -16587,6 +20475,10 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     blockedBy?: UserBlockUncheckedCreateNestedManyWithoutBlockedInput
     ownedConversations?: ConversationUncheckedCreateNestedManyWithoutOwnerInput
+    sentFriendRequests?: FriendUncheckedCreateNestedManyWithoutRequesterInput
+    receivedFriendRequests?: FriendUncheckedCreateNestedManyWithoutAddresseeInput
+    receivedNotifications?: NotificationUncheckedCreateNestedManyWithoutReceiverInput
+    sentNotifications?: NotificationUncheckedCreateNestedManyWithoutSenderInput
   }
 
   export type UserCreateOrConnectWithoutBlockedUsersInput = {
@@ -16598,6 +20490,7 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name?: string | null
+    avatarUrl?: string | null
     password: string
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
@@ -16609,12 +20502,17 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
     ownedConversations?: ConversationCreateNestedManyWithoutOwnerInput
+    sentFriendRequests?: FriendCreateNestedManyWithoutRequesterInput
+    receivedFriendRequests?: FriendCreateNestedManyWithoutAddresseeInput
+    receivedNotifications?: NotificationCreateNestedManyWithoutReceiverInput
+    sentNotifications?: NotificationCreateNestedManyWithoutSenderInput
   }
 
   export type UserUncheckedCreateWithoutBlockedByInput = {
     id?: bigint | number
     email: string
     name?: string | null
+    avatarUrl?: string | null
     password: string
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
@@ -16626,6 +20524,10 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     blockedUsers?: UserBlockUncheckedCreateNestedManyWithoutBlockerInput
     ownedConversations?: ConversationUncheckedCreateNestedManyWithoutOwnerInput
+    sentFriendRequests?: FriendUncheckedCreateNestedManyWithoutRequesterInput
+    receivedFriendRequests?: FriendUncheckedCreateNestedManyWithoutAddresseeInput
+    receivedNotifications?: NotificationUncheckedCreateNestedManyWithoutReceiverInput
+    sentNotifications?: NotificationUncheckedCreateNestedManyWithoutSenderInput
   }
 
   export type UserCreateOrConnectWithoutBlockedByInput = {
@@ -16648,6 +20550,7 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16659,12 +20562,17 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     blockedBy?: UserBlockUpdateManyWithoutBlockedNestedInput
     ownedConversations?: ConversationUpdateManyWithoutOwnerNestedInput
+    sentFriendRequests?: FriendUpdateManyWithoutRequesterNestedInput
+    receivedFriendRequests?: FriendUpdateManyWithoutAddresseeNestedInput
+    receivedNotifications?: NotificationUpdateManyWithoutReceiverNestedInput
+    sentNotifications?: NotificationUpdateManyWithoutSenderNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBlockedUsersInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16676,6 +20584,10 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     blockedBy?: UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
     ownedConversations?: ConversationUncheckedUpdateManyWithoutOwnerNestedInput
+    sentFriendRequests?: FriendUncheckedUpdateManyWithoutRequesterNestedInput
+    receivedFriendRequests?: FriendUncheckedUpdateManyWithoutAddresseeNestedInput
+    receivedNotifications?: NotificationUncheckedUpdateManyWithoutReceiverNestedInput
+    sentNotifications?: NotificationUncheckedUpdateManyWithoutSenderNestedInput
   }
 
   export type UserUpsertWithoutBlockedByInput = {
@@ -16693,6 +20605,7 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16704,12 +20617,17 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
     ownedConversations?: ConversationUpdateManyWithoutOwnerNestedInput
+    sentFriendRequests?: FriendUpdateManyWithoutRequesterNestedInput
+    receivedFriendRequests?: FriendUpdateManyWithoutAddresseeNestedInput
+    receivedNotifications?: NotificationUpdateManyWithoutReceiverNestedInput
+    sentNotifications?: NotificationUpdateManyWithoutSenderNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBlockedByInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16721,6 +20639,586 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     blockedUsers?: UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
     ownedConversations?: ConversationUncheckedUpdateManyWithoutOwnerNestedInput
+    sentFriendRequests?: FriendUncheckedUpdateManyWithoutRequesterNestedInput
+    receivedFriendRequests?: FriendUncheckedUpdateManyWithoutAddresseeNestedInput
+    receivedNotifications?: NotificationUncheckedUpdateManyWithoutReceiverNestedInput
+    sentNotifications?: NotificationUncheckedUpdateManyWithoutSenderNestedInput
+  }
+
+  export type UserCreateWithoutSentFriendRequestsInput = {
+    id?: bigint | number
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    emailVerifiedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
+    conversationParticipants?: ConversationParticipantCreateNestedManyWithoutUserInput
+    activeConversation?: ConversationCreateNestedOneWithoutActiveUsersInput
+    messages?: MessageCreateNestedManyWithoutUserInput
+    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
+    blockedBy?: UserBlockCreateNestedManyWithoutBlockedInput
+    ownedConversations?: ConversationCreateNestedManyWithoutOwnerInput
+    receivedFriendRequests?: FriendCreateNestedManyWithoutAddresseeInput
+    receivedNotifications?: NotificationCreateNestedManyWithoutReceiverInput
+    sentNotifications?: NotificationCreateNestedManyWithoutSenderInput
+  }
+
+  export type UserUncheckedCreateWithoutSentFriendRequestsInput = {
+    id?: bigint | number
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    emailVerifiedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    activeConversationId?: bigint | number | null
+    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+    conversationParticipants?: ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
+    messages?: MessageUncheckedCreateNestedManyWithoutUserInput
+    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    blockedUsers?: UserBlockUncheckedCreateNestedManyWithoutBlockerInput
+    blockedBy?: UserBlockUncheckedCreateNestedManyWithoutBlockedInput
+    ownedConversations?: ConversationUncheckedCreateNestedManyWithoutOwnerInput
+    receivedFriendRequests?: FriendUncheckedCreateNestedManyWithoutAddresseeInput
+    receivedNotifications?: NotificationUncheckedCreateNestedManyWithoutReceiverInput
+    sentNotifications?: NotificationUncheckedCreateNestedManyWithoutSenderInput
+  }
+
+  export type UserCreateOrConnectWithoutSentFriendRequestsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSentFriendRequestsInput, UserUncheckedCreateWithoutSentFriendRequestsInput>
+  }
+
+  export type UserCreateWithoutReceivedFriendRequestsInput = {
+    id?: bigint | number
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    emailVerifiedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
+    conversationParticipants?: ConversationParticipantCreateNestedManyWithoutUserInput
+    activeConversation?: ConversationCreateNestedOneWithoutActiveUsersInput
+    messages?: MessageCreateNestedManyWithoutUserInput
+    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
+    blockedBy?: UserBlockCreateNestedManyWithoutBlockedInput
+    ownedConversations?: ConversationCreateNestedManyWithoutOwnerInput
+    sentFriendRequests?: FriendCreateNestedManyWithoutRequesterInput
+    receivedNotifications?: NotificationCreateNestedManyWithoutReceiverInput
+    sentNotifications?: NotificationCreateNestedManyWithoutSenderInput
+  }
+
+  export type UserUncheckedCreateWithoutReceivedFriendRequestsInput = {
+    id?: bigint | number
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    emailVerifiedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    activeConversationId?: bigint | number | null
+    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+    conversationParticipants?: ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
+    messages?: MessageUncheckedCreateNestedManyWithoutUserInput
+    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    blockedUsers?: UserBlockUncheckedCreateNestedManyWithoutBlockerInput
+    blockedBy?: UserBlockUncheckedCreateNestedManyWithoutBlockedInput
+    ownedConversations?: ConversationUncheckedCreateNestedManyWithoutOwnerInput
+    sentFriendRequests?: FriendUncheckedCreateNestedManyWithoutRequesterInput
+    receivedNotifications?: NotificationUncheckedCreateNestedManyWithoutReceiverInput
+    sentNotifications?: NotificationUncheckedCreateNestedManyWithoutSenderInput
+  }
+
+  export type UserCreateOrConnectWithoutReceivedFriendRequestsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutReceivedFriendRequestsInput, UserUncheckedCreateWithoutReceivedFriendRequestsInput>
+  }
+
+  export type UserUpsertWithoutSentFriendRequestsInput = {
+    update: XOR<UserUpdateWithoutSentFriendRequestsInput, UserUncheckedUpdateWithoutSentFriendRequestsInput>
+    create: XOR<UserCreateWithoutSentFriendRequestsInput, UserUncheckedCreateWithoutSentFriendRequestsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSentFriendRequestsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSentFriendRequestsInput, UserUncheckedUpdateWithoutSentFriendRequestsInput>
+  }
+
+  export type UserUpdateWithoutSentFriendRequestsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
+    conversationParticipants?: ConversationParticipantUpdateManyWithoutUserNestedInput
+    activeConversation?: ConversationUpdateOneWithoutActiveUsersNestedInput
+    messages?: MessageUpdateManyWithoutUserNestedInput
+    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
+    blockedBy?: UserBlockUpdateManyWithoutBlockedNestedInput
+    ownedConversations?: ConversationUpdateManyWithoutOwnerNestedInput
+    receivedFriendRequests?: FriendUpdateManyWithoutAddresseeNestedInput
+    receivedNotifications?: NotificationUpdateManyWithoutReceiverNestedInput
+    sentNotifications?: NotificationUpdateManyWithoutSenderNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSentFriendRequestsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activeConversationId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+    conversationParticipants?: ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    blockedUsers?: UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
+    blockedBy?: UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
+    ownedConversations?: ConversationUncheckedUpdateManyWithoutOwnerNestedInput
+    receivedFriendRequests?: FriendUncheckedUpdateManyWithoutAddresseeNestedInput
+    receivedNotifications?: NotificationUncheckedUpdateManyWithoutReceiverNestedInput
+    sentNotifications?: NotificationUncheckedUpdateManyWithoutSenderNestedInput
+  }
+
+  export type UserUpsertWithoutReceivedFriendRequestsInput = {
+    update: XOR<UserUpdateWithoutReceivedFriendRequestsInput, UserUncheckedUpdateWithoutReceivedFriendRequestsInput>
+    create: XOR<UserCreateWithoutReceivedFriendRequestsInput, UserUncheckedCreateWithoutReceivedFriendRequestsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutReceivedFriendRequestsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutReceivedFriendRequestsInput, UserUncheckedUpdateWithoutReceivedFriendRequestsInput>
+  }
+
+  export type UserUpdateWithoutReceivedFriendRequestsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
+    conversationParticipants?: ConversationParticipantUpdateManyWithoutUserNestedInput
+    activeConversation?: ConversationUpdateOneWithoutActiveUsersNestedInput
+    messages?: MessageUpdateManyWithoutUserNestedInput
+    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
+    blockedBy?: UserBlockUpdateManyWithoutBlockedNestedInput
+    ownedConversations?: ConversationUpdateManyWithoutOwnerNestedInput
+    sentFriendRequests?: FriendUpdateManyWithoutRequesterNestedInput
+    receivedNotifications?: NotificationUpdateManyWithoutReceiverNestedInput
+    sentNotifications?: NotificationUpdateManyWithoutSenderNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutReceivedFriendRequestsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activeConversationId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+    conversationParticipants?: ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    blockedUsers?: UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
+    blockedBy?: UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
+    ownedConversations?: ConversationUncheckedUpdateManyWithoutOwnerNestedInput
+    sentFriendRequests?: FriendUncheckedUpdateManyWithoutRequesterNestedInput
+    receivedNotifications?: NotificationUncheckedUpdateManyWithoutReceiverNestedInput
+    sentNotifications?: NotificationUncheckedUpdateManyWithoutSenderNestedInput
+  }
+
+  export type UserCreateWithoutReceivedNotificationsInput = {
+    id?: bigint | number
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    emailVerifiedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
+    conversationParticipants?: ConversationParticipantCreateNestedManyWithoutUserInput
+    activeConversation?: ConversationCreateNestedOneWithoutActiveUsersInput
+    messages?: MessageCreateNestedManyWithoutUserInput
+    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
+    blockedBy?: UserBlockCreateNestedManyWithoutBlockedInput
+    ownedConversations?: ConversationCreateNestedManyWithoutOwnerInput
+    sentFriendRequests?: FriendCreateNestedManyWithoutRequesterInput
+    receivedFriendRequests?: FriendCreateNestedManyWithoutAddresseeInput
+    sentNotifications?: NotificationCreateNestedManyWithoutSenderInput
+  }
+
+  export type UserUncheckedCreateWithoutReceivedNotificationsInput = {
+    id?: bigint | number
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    emailVerifiedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    activeConversationId?: bigint | number | null
+    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+    conversationParticipants?: ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
+    messages?: MessageUncheckedCreateNestedManyWithoutUserInput
+    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    blockedUsers?: UserBlockUncheckedCreateNestedManyWithoutBlockerInput
+    blockedBy?: UserBlockUncheckedCreateNestedManyWithoutBlockedInput
+    ownedConversations?: ConversationUncheckedCreateNestedManyWithoutOwnerInput
+    sentFriendRequests?: FriendUncheckedCreateNestedManyWithoutRequesterInput
+    receivedFriendRequests?: FriendUncheckedCreateNestedManyWithoutAddresseeInput
+    sentNotifications?: NotificationUncheckedCreateNestedManyWithoutSenderInput
+  }
+
+  export type UserCreateOrConnectWithoutReceivedNotificationsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutReceivedNotificationsInput, UserUncheckedCreateWithoutReceivedNotificationsInput>
+  }
+
+  export type UserCreateWithoutSentNotificationsInput = {
+    id?: bigint | number
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    emailVerifiedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
+    conversationParticipants?: ConversationParticipantCreateNestedManyWithoutUserInput
+    activeConversation?: ConversationCreateNestedOneWithoutActiveUsersInput
+    messages?: MessageCreateNestedManyWithoutUserInput
+    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
+    blockedBy?: UserBlockCreateNestedManyWithoutBlockedInput
+    ownedConversations?: ConversationCreateNestedManyWithoutOwnerInput
+    sentFriendRequests?: FriendCreateNestedManyWithoutRequesterInput
+    receivedFriendRequests?: FriendCreateNestedManyWithoutAddresseeInput
+    receivedNotifications?: NotificationCreateNestedManyWithoutReceiverInput
+  }
+
+  export type UserUncheckedCreateWithoutSentNotificationsInput = {
+    id?: bigint | number
+    email: string
+    name?: string | null
+    avatarUrl?: string | null
+    password: string
+    emailVerifiedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    activeConversationId?: bigint | number | null
+    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+    conversationParticipants?: ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
+    messages?: MessageUncheckedCreateNestedManyWithoutUserInput
+    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    blockedUsers?: UserBlockUncheckedCreateNestedManyWithoutBlockerInput
+    blockedBy?: UserBlockUncheckedCreateNestedManyWithoutBlockedInput
+    ownedConversations?: ConversationUncheckedCreateNestedManyWithoutOwnerInput
+    sentFriendRequests?: FriendUncheckedCreateNestedManyWithoutRequesterInput
+    receivedFriendRequests?: FriendUncheckedCreateNestedManyWithoutAddresseeInput
+    receivedNotifications?: NotificationUncheckedCreateNestedManyWithoutReceiverInput
+  }
+
+  export type UserCreateOrConnectWithoutSentNotificationsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSentNotificationsInput, UserUncheckedCreateWithoutSentNotificationsInput>
+  }
+
+  export type ConversationCreateWithoutNotificationsInput = {
+    id?: bigint | number
+    title?: string | null
+    systemPrompt?: string | null
+    type?: $Enums.ConversationType
+    lastMessageAt?: Date | string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    participants?: ConversationParticipantCreateNestedManyWithoutConversationInput
+    activeUsers?: UserCreateNestedManyWithoutActiveConversationInput
+    messages?: MessageCreateNestedManyWithoutConversationInput
+    owner?: UserCreateNestedOneWithoutOwnedConversationsInput
+    lastMessage?: MessageCreateNestedOneWithoutLastMessageOfInput
+  }
+
+  export type ConversationUncheckedCreateWithoutNotificationsInput = {
+    id?: bigint | number
+    title?: string | null
+    systemPrompt?: string | null
+    type?: $Enums.ConversationType
+    ownerId?: bigint | number | null
+    lastMessageId?: bigint | number | null
+    lastMessageAt?: Date | string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    participants?: ConversationParticipantUncheckedCreateNestedManyWithoutConversationInput
+    activeUsers?: UserUncheckedCreateNestedManyWithoutActiveConversationInput
+    messages?: MessageUncheckedCreateNestedManyWithoutConversationInput
+  }
+
+  export type ConversationCreateOrConnectWithoutNotificationsInput = {
+    where: ConversationWhereUniqueInput
+    create: XOR<ConversationCreateWithoutNotificationsInput, ConversationUncheckedCreateWithoutNotificationsInput>
+  }
+
+  export type MessageCreateWithoutNotificationsInput = {
+    id?: bigint | number
+    role?: $Enums.MessageRole | null
+    content: string
+    isEdited?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    conversation: ConversationCreateNestedOneWithoutMessagesInput
+    user?: UserCreateNestedOneWithoutMessagesInput
+    parentMessage?: MessageCreateNestedOneWithoutRepliesInput
+    replies?: MessageCreateNestedManyWithoutParentMessageInput
+    attachments?: MessageAttachmentCreateNestedManyWithoutMessageInput
+    lastMessageOf?: ConversationCreateNestedManyWithoutLastMessageInput
+  }
+
+  export type MessageUncheckedCreateWithoutNotificationsInput = {
+    id?: bigint | number
+    conversationId: bigint | number
+    parentMessageId?: bigint | number | null
+    userId?: bigint | number | null
+    role?: $Enums.MessageRole | null
+    content: string
+    isEdited?: boolean
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    replies?: MessageUncheckedCreateNestedManyWithoutParentMessageInput
+    attachments?: MessageAttachmentUncheckedCreateNestedManyWithoutMessageInput
+    lastMessageOf?: ConversationUncheckedCreateNestedManyWithoutLastMessageInput
+  }
+
+  export type MessageCreateOrConnectWithoutNotificationsInput = {
+    where: MessageWhereUniqueInput
+    create: XOR<MessageCreateWithoutNotificationsInput, MessageUncheckedCreateWithoutNotificationsInput>
+  }
+
+  export type UserUpsertWithoutReceivedNotificationsInput = {
+    update: XOR<UserUpdateWithoutReceivedNotificationsInput, UserUncheckedUpdateWithoutReceivedNotificationsInput>
+    create: XOR<UserCreateWithoutReceivedNotificationsInput, UserUncheckedCreateWithoutReceivedNotificationsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutReceivedNotificationsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutReceivedNotificationsInput, UserUncheckedUpdateWithoutReceivedNotificationsInput>
+  }
+
+  export type UserUpdateWithoutReceivedNotificationsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
+    conversationParticipants?: ConversationParticipantUpdateManyWithoutUserNestedInput
+    activeConversation?: ConversationUpdateOneWithoutActiveUsersNestedInput
+    messages?: MessageUpdateManyWithoutUserNestedInput
+    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
+    blockedBy?: UserBlockUpdateManyWithoutBlockedNestedInput
+    ownedConversations?: ConversationUpdateManyWithoutOwnerNestedInput
+    sentFriendRequests?: FriendUpdateManyWithoutRequesterNestedInput
+    receivedFriendRequests?: FriendUpdateManyWithoutAddresseeNestedInput
+    sentNotifications?: NotificationUpdateManyWithoutSenderNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutReceivedNotificationsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activeConversationId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+    conversationParticipants?: ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    blockedUsers?: UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
+    blockedBy?: UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
+    ownedConversations?: ConversationUncheckedUpdateManyWithoutOwnerNestedInput
+    sentFriendRequests?: FriendUncheckedUpdateManyWithoutRequesterNestedInput
+    receivedFriendRequests?: FriendUncheckedUpdateManyWithoutAddresseeNestedInput
+    sentNotifications?: NotificationUncheckedUpdateManyWithoutSenderNestedInput
+  }
+
+  export type UserUpsertWithoutSentNotificationsInput = {
+    update: XOR<UserUpdateWithoutSentNotificationsInput, UserUncheckedUpdateWithoutSentNotificationsInput>
+    create: XOR<UserCreateWithoutSentNotificationsInput, UserUncheckedCreateWithoutSentNotificationsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSentNotificationsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSentNotificationsInput, UserUncheckedUpdateWithoutSentNotificationsInput>
+  }
+
+  export type UserUpdateWithoutSentNotificationsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
+    conversationParticipants?: ConversationParticipantUpdateManyWithoutUserNestedInput
+    activeConversation?: ConversationUpdateOneWithoutActiveUsersNestedInput
+    messages?: MessageUpdateManyWithoutUserNestedInput
+    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
+    blockedBy?: UserBlockUpdateManyWithoutBlockedNestedInput
+    ownedConversations?: ConversationUpdateManyWithoutOwnerNestedInput
+    sentFriendRequests?: FriendUpdateManyWithoutRequesterNestedInput
+    receivedFriendRequests?: FriendUpdateManyWithoutAddresseeNestedInput
+    receivedNotifications?: NotificationUpdateManyWithoutReceiverNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSentNotificationsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activeConversationId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+    conversationParticipants?: ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
+    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    blockedUsers?: UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
+    blockedBy?: UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
+    ownedConversations?: ConversationUncheckedUpdateManyWithoutOwnerNestedInput
+    sentFriendRequests?: FriendUncheckedUpdateManyWithoutRequesterNestedInput
+    receivedFriendRequests?: FriendUncheckedUpdateManyWithoutAddresseeNestedInput
+    receivedNotifications?: NotificationUncheckedUpdateManyWithoutReceiverNestedInput
+  }
+
+  export type ConversationUpsertWithoutNotificationsInput = {
+    update: XOR<ConversationUpdateWithoutNotificationsInput, ConversationUncheckedUpdateWithoutNotificationsInput>
+    create: XOR<ConversationCreateWithoutNotificationsInput, ConversationUncheckedCreateWithoutNotificationsInput>
+    where?: ConversationWhereInput
+  }
+
+  export type ConversationUpdateToOneWithWhereWithoutNotificationsInput = {
+    where?: ConversationWhereInput
+    data: XOR<ConversationUpdateWithoutNotificationsInput, ConversationUncheckedUpdateWithoutNotificationsInput>
+  }
+
+  export type ConversationUpdateWithoutNotificationsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
+    lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    participants?: ConversationParticipantUpdateManyWithoutConversationNestedInput
+    activeUsers?: UserUpdateManyWithoutActiveConversationNestedInput
+    messages?: MessageUpdateManyWithoutConversationNestedInput
+    owner?: UserUpdateOneWithoutOwnedConversationsNestedInput
+    lastMessage?: MessageUpdateOneWithoutLastMessageOfNestedInput
+  }
+
+  export type ConversationUncheckedUpdateWithoutNotificationsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
+    ownerId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    lastMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    participants?: ConversationParticipantUncheckedUpdateManyWithoutConversationNestedInput
+    activeUsers?: UserUncheckedUpdateManyWithoutActiveConversationNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutConversationNestedInput
+  }
+
+  export type MessageUpsertWithoutNotificationsInput = {
+    update: XOR<MessageUpdateWithoutNotificationsInput, MessageUncheckedUpdateWithoutNotificationsInput>
+    create: XOR<MessageCreateWithoutNotificationsInput, MessageUncheckedCreateWithoutNotificationsInput>
+    where?: MessageWhereInput
+  }
+
+  export type MessageUpdateToOneWithWhereWithoutNotificationsInput = {
+    where?: MessageWhereInput
+    data: XOR<MessageUpdateWithoutNotificationsInput, MessageUncheckedUpdateWithoutNotificationsInput>
+  }
+
+  export type MessageUpdateWithoutNotificationsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    role?: NullableEnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole | null
+    content?: StringFieldUpdateOperationsInput | string
+    isEdited?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    conversation?: ConversationUpdateOneRequiredWithoutMessagesNestedInput
+    user?: UserUpdateOneWithoutMessagesNestedInput
+    parentMessage?: MessageUpdateOneWithoutRepliesNestedInput
+    replies?: MessageUpdateManyWithoutParentMessageNestedInput
+    attachments?: MessageAttachmentUpdateManyWithoutMessageNestedInput
+    lastMessageOf?: ConversationUpdateManyWithoutLastMessageNestedInput
+  }
+
+  export type MessageUncheckedUpdateWithoutNotificationsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    conversationId?: BigIntFieldUpdateOperationsInput | bigint | number
+    parentMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    userId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    role?: NullableEnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole | null
+    content?: StringFieldUpdateOperationsInput | string
+    isEdited?: BoolFieldUpdateOperationsInput | boolean
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    replies?: MessageUncheckedUpdateManyWithoutParentMessageNestedInput
+    attachments?: MessageAttachmentUncheckedUpdateManyWithoutMessageNestedInput
+    lastMessageOf?: ConversationUncheckedUpdateManyWithoutLastMessageNestedInput
   }
 
   export type RefreshTokenCreateManyUserInput = {
@@ -16737,6 +21235,7 @@ export namespace Prisma {
     role?: $Enums.ParticipantRole
     joinedAt?: Date | string
     leftAt?: Date | string | null
+    unreadCount?: number
     lastReadAt?: Date | string | null
     deletedAt?: Date | string | null
   }
@@ -16787,6 +21286,42 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type FriendCreateManyRequesterInput = {
+    id?: bigint | number
+    addresseeId: bigint | number
+    status?: $Enums.FriendStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FriendCreateManyAddresseeInput = {
+    id?: bigint | number
+    requesterId: bigint | number
+    status?: $Enums.FriendStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type NotificationCreateManyReceiverInput = {
+    id?: bigint | number
+    senderId?: bigint | number | null
+    conversationId?: bigint | number | null
+    messageId?: bigint | number | null
+    type: $Enums.NotificationType
+    isRead?: boolean
+    createdAt?: Date | string
+  }
+
+  export type NotificationCreateManySenderInput = {
+    id?: bigint | number
+    receiverId: bigint | number
+    conversationId?: bigint | number | null
+    messageId?: bigint | number | null
+    type: $Enums.NotificationType
+    isRead?: boolean
+    createdAt?: Date | string
+  }
+
   export type RefreshTokenUpdateWithoutUserInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     token?: NullableStringFieldUpdateOperationsInput | string | null
@@ -16816,6 +21351,7 @@ export namespace Prisma {
     role?: EnumParticipantRoleFieldUpdateOperationsInput | $Enums.ParticipantRole
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leftAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unreadCount?: IntFieldUpdateOperationsInput | number
     lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     conversation?: ConversationUpdateOneRequiredWithoutParticipantsNestedInput
@@ -16827,6 +21363,7 @@ export namespace Prisma {
     role?: EnumParticipantRoleFieldUpdateOperationsInput | $Enums.ParticipantRole
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leftAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unreadCount?: IntFieldUpdateOperationsInput | number
     lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -16837,6 +21374,7 @@ export namespace Prisma {
     role?: EnumParticipantRoleFieldUpdateOperationsInput | $Enums.ParticipantRole
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leftAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unreadCount?: IntFieldUpdateOperationsInput | number
     lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -16854,6 +21392,7 @@ export namespace Prisma {
     replies?: MessageUpdateManyWithoutParentMessageNestedInput
     attachments?: MessageAttachmentUpdateManyWithoutMessageNestedInput
     lastMessageOf?: ConversationUpdateManyWithoutLastMessageNestedInput
+    notifications?: NotificationUpdateManyWithoutMessageNestedInput
   }
 
   export type MessageUncheckedUpdateWithoutUserInput = {
@@ -16869,6 +21408,7 @@ export namespace Prisma {
     replies?: MessageUncheckedUpdateManyWithoutParentMessageNestedInput
     attachments?: MessageAttachmentUncheckedUpdateManyWithoutMessageNestedInput
     lastMessageOf?: ConversationUncheckedUpdateManyWithoutLastMessageNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutMessageNestedInput
   }
 
   export type MessageUncheckedUpdateManyWithoutUserInput = {
@@ -16962,6 +21502,7 @@ export namespace Prisma {
     activeUsers?: UserUpdateManyWithoutActiveConversationNestedInput
     messages?: MessageUpdateManyWithoutConversationNestedInput
     lastMessage?: MessageUpdateOneWithoutLastMessageOfNestedInput
+    notifications?: NotificationUpdateManyWithoutConversationNestedInput
   }
 
   export type ConversationUncheckedUpdateWithoutOwnerInput = {
@@ -16977,6 +21518,7 @@ export namespace Prisma {
     participants?: ConversationParticipantUncheckedUpdateManyWithoutConversationNestedInput
     activeUsers?: UserUncheckedUpdateManyWithoutActiveConversationNestedInput
     messages?: MessageUncheckedUpdateManyWithoutConversationNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutConversationNestedInput
   }
 
   export type ConversationUncheckedUpdateManyWithoutOwnerInput = {
@@ -16991,12 +21533,121 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type FriendUpdateWithoutRequesterInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    status?: EnumFriendStatusFieldUpdateOperationsInput | $Enums.FriendStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    addressee?: UserUpdateOneRequiredWithoutReceivedFriendRequestsNestedInput
+  }
+
+  export type FriendUncheckedUpdateWithoutRequesterInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    addresseeId?: BigIntFieldUpdateOperationsInput | bigint | number
+    status?: EnumFriendStatusFieldUpdateOperationsInput | $Enums.FriendStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FriendUncheckedUpdateManyWithoutRequesterInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    addresseeId?: BigIntFieldUpdateOperationsInput | bigint | number
+    status?: EnumFriendStatusFieldUpdateOperationsInput | $Enums.FriendStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FriendUpdateWithoutAddresseeInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    status?: EnumFriendStatusFieldUpdateOperationsInput | $Enums.FriendStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    requester?: UserUpdateOneRequiredWithoutSentFriendRequestsNestedInput
+  }
+
+  export type FriendUncheckedUpdateWithoutAddresseeInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    requesterId?: BigIntFieldUpdateOperationsInput | bigint | number
+    status?: EnumFriendStatusFieldUpdateOperationsInput | $Enums.FriendStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FriendUncheckedUpdateManyWithoutAddresseeInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    requesterId?: BigIntFieldUpdateOperationsInput | bigint | number
+    status?: EnumFriendStatusFieldUpdateOperationsInput | $Enums.FriendStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationUpdateWithoutReceiverInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sender?: UserUpdateOneWithoutSentNotificationsNestedInput
+    conversation?: ConversationUpdateOneWithoutNotificationsNestedInput
+    message?: MessageUpdateOneWithoutNotificationsNestedInput
+  }
+
+  export type NotificationUncheckedUpdateWithoutReceiverInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    senderId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    conversationId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    messageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationUncheckedUpdateManyWithoutReceiverInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    senderId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    conversationId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    messageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationUpdateWithoutSenderInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    receiver?: UserUpdateOneRequiredWithoutReceivedNotificationsNestedInput
+    conversation?: ConversationUpdateOneWithoutNotificationsNestedInput
+    message?: MessageUpdateOneWithoutNotificationsNestedInput
+  }
+
+  export type NotificationUncheckedUpdateWithoutSenderInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    receiverId?: BigIntFieldUpdateOperationsInput | bigint | number
+    conversationId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    messageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationUncheckedUpdateManyWithoutSenderInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    receiverId?: BigIntFieldUpdateOperationsInput | bigint | number
+    conversationId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    messageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ConversationParticipantCreateManyConversationInput = {
     id?: bigint | number
     userId: bigint | number
     role?: $Enums.ParticipantRole
     joinedAt?: Date | string
     leftAt?: Date | string | null
+    unreadCount?: number
     lastReadAt?: Date | string | null
     deletedAt?: Date | string | null
   }
@@ -17005,6 +21656,7 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name?: string | null
+    avatarUrl?: string | null
     password: string
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
@@ -17023,11 +21675,22 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type NotificationCreateManyConversationInput = {
+    id?: bigint | number
+    receiverId: bigint | number
+    senderId?: bigint | number | null
+    messageId?: bigint | number | null
+    type: $Enums.NotificationType
+    isRead?: boolean
+    createdAt?: Date | string
+  }
+
   export type ConversationParticipantUpdateWithoutConversationInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     role?: EnumParticipantRoleFieldUpdateOperationsInput | $Enums.ParticipantRole
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leftAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unreadCount?: IntFieldUpdateOperationsInput | number
     lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user?: UserUpdateOneRequiredWithoutConversationParticipantsNestedInput
@@ -17039,6 +21702,7 @@ export namespace Prisma {
     role?: EnumParticipantRoleFieldUpdateOperationsInput | $Enums.ParticipantRole
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leftAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unreadCount?: IntFieldUpdateOperationsInput | number
     lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -17049,6 +21713,7 @@ export namespace Prisma {
     role?: EnumParticipantRoleFieldUpdateOperationsInput | $Enums.ParticipantRole
     joinedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     leftAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    unreadCount?: IntFieldUpdateOperationsInput | number
     lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -17057,6 +21722,7 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17068,12 +21734,17 @@ export namespace Prisma {
     blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
     blockedBy?: UserBlockUpdateManyWithoutBlockedNestedInput
     ownedConversations?: ConversationUpdateManyWithoutOwnerNestedInput
+    sentFriendRequests?: FriendUpdateManyWithoutRequesterNestedInput
+    receivedFriendRequests?: FriendUpdateManyWithoutAddresseeNestedInput
+    receivedNotifications?: NotificationUpdateManyWithoutReceiverNestedInput
+    sentNotifications?: NotificationUpdateManyWithoutSenderNestedInput
   }
 
   export type UserUncheckedUpdateWithoutActiveConversationInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17085,12 +21756,17 @@ export namespace Prisma {
     blockedUsers?: UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
     blockedBy?: UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
     ownedConversations?: ConversationUncheckedUpdateManyWithoutOwnerNestedInput
+    sentFriendRequests?: FriendUncheckedUpdateManyWithoutRequesterNestedInput
+    receivedFriendRequests?: FriendUncheckedUpdateManyWithoutAddresseeNestedInput
+    receivedNotifications?: NotificationUncheckedUpdateManyWithoutReceiverNestedInput
+    sentNotifications?: NotificationUncheckedUpdateManyWithoutSenderNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutActiveConversationInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     password?: StringFieldUpdateOperationsInput | string
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17110,6 +21786,7 @@ export namespace Prisma {
     replies?: MessageUpdateManyWithoutParentMessageNestedInput
     attachments?: MessageAttachmentUpdateManyWithoutMessageNestedInput
     lastMessageOf?: ConversationUpdateManyWithoutLastMessageNestedInput
+    notifications?: NotificationUpdateManyWithoutMessageNestedInput
   }
 
   export type MessageUncheckedUpdateWithoutConversationInput = {
@@ -17125,6 +21802,7 @@ export namespace Prisma {
     replies?: MessageUncheckedUpdateManyWithoutParentMessageNestedInput
     attachments?: MessageAttachmentUncheckedUpdateManyWithoutMessageNestedInput
     lastMessageOf?: ConversationUncheckedUpdateManyWithoutLastMessageNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutMessageNestedInput
   }
 
   export type MessageUncheckedUpdateManyWithoutConversationInput = {
@@ -17137,6 +21815,36 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationUpdateWithoutConversationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    receiver?: UserUpdateOneRequiredWithoutReceivedNotificationsNestedInput
+    sender?: UserUpdateOneWithoutSentNotificationsNestedInput
+    message?: MessageUpdateOneWithoutNotificationsNestedInput
+  }
+
+  export type NotificationUncheckedUpdateWithoutConversationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    receiverId?: BigIntFieldUpdateOperationsInput | bigint | number
+    senderId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    messageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationUncheckedUpdateManyWithoutConversationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    receiverId?: BigIntFieldUpdateOperationsInput | bigint | number
+    senderId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    messageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type MessageCreateManyParentMessageInput = {
@@ -17172,6 +21880,16 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type NotificationCreateManyMessageInput = {
+    id?: bigint | number
+    receiverId: bigint | number
+    senderId?: bigint | number | null
+    conversationId?: bigint | number | null
+    type: $Enums.NotificationType
+    isRead?: boolean
+    createdAt?: Date | string
+  }
+
   export type MessageUpdateWithoutParentMessageInput = {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     role?: NullableEnumMessageRoleFieldUpdateOperationsInput | $Enums.MessageRole | null
@@ -17185,6 +21903,7 @@ export namespace Prisma {
     replies?: MessageUpdateManyWithoutParentMessageNestedInput
     attachments?: MessageAttachmentUpdateManyWithoutMessageNestedInput
     lastMessageOf?: ConversationUpdateManyWithoutLastMessageNestedInput
+    notifications?: NotificationUpdateManyWithoutMessageNestedInput
   }
 
   export type MessageUncheckedUpdateWithoutParentMessageInput = {
@@ -17200,6 +21919,7 @@ export namespace Prisma {
     replies?: MessageUncheckedUpdateManyWithoutParentMessageNestedInput
     attachments?: MessageAttachmentUncheckedUpdateManyWithoutMessageNestedInput
     lastMessageOf?: ConversationUncheckedUpdateManyWithoutLastMessageNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutMessageNestedInput
   }
 
   export type MessageUncheckedUpdateManyWithoutParentMessageInput = {
@@ -17254,6 +21974,7 @@ export namespace Prisma {
     activeUsers?: UserUpdateManyWithoutActiveConversationNestedInput
     messages?: MessageUpdateManyWithoutConversationNestedInput
     owner?: UserUpdateOneWithoutOwnedConversationsNestedInput
+    notifications?: NotificationUpdateManyWithoutConversationNestedInput
   }
 
   export type ConversationUncheckedUpdateWithoutLastMessageInput = {
@@ -17269,6 +21990,7 @@ export namespace Prisma {
     participants?: ConversationParticipantUncheckedUpdateManyWithoutConversationNestedInput
     activeUsers?: UserUncheckedUpdateManyWithoutActiveConversationNestedInput
     messages?: MessageUncheckedUpdateManyWithoutConversationNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutConversationNestedInput
   }
 
   export type ConversationUncheckedUpdateManyWithoutLastMessageInput = {
@@ -17281,6 +22003,36 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationUpdateWithoutMessageInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    receiver?: UserUpdateOneRequiredWithoutReceivedNotificationsNestedInput
+    sender?: UserUpdateOneWithoutSentNotificationsNestedInput
+    conversation?: ConversationUpdateOneWithoutNotificationsNestedInput
+  }
+
+  export type NotificationUncheckedUpdateWithoutMessageInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    receiverId?: BigIntFieldUpdateOperationsInput | bigint | number
+    senderId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    conversationId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NotificationUncheckedUpdateManyWithoutMessageInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    receiverId?: BigIntFieldUpdateOperationsInput | bigint | number
+    senderId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    conversationId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    type?: EnumNotificationTypeFieldUpdateOperationsInput | $Enums.NotificationType
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 
