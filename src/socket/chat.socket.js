@@ -54,6 +54,11 @@ export default function registerChatSocket(io, socket) {
                 content,
                 role: "user",
             });
+            const conversation =
+                await conversationService.findConversationSocket(
+                    conversationId,
+                );
+
             // update lassmessage
             await prisma.conversation.update({
                 where: { id: conversationId },
@@ -82,13 +87,12 @@ export default function registerChatSocket(io, socket) {
             for (const p of participants) {
                 // emit cho từng thành viên
                 io.to(`user_${p.userId}`).emit("receive_message", message);
-
-                // Emit để update conversation list (đẩy lên đầu)
-                io.to(`user_${p.userId}`).emit("conversation_updated", {
-                    conversationId,
-                    lastMessage: message,
-                });
-
+                io.to(`user_${p.userId}`).emit("unread_count", conversation);
+                // emit conversation tạo mới
+                io.to(`user_${p.userId}`).emit(
+                    "conversation_updated",
+                    conversation,
+                );
                 // Emit notification
                 if (p.userId !== senderId) {
                     io.to(`user_${p.userId}`).emit("new_notification", {

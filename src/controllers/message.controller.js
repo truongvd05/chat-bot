@@ -1,5 +1,6 @@
 import { HTTP_STATUS } from "#config/constants.js";
 import messageService from "#services/message.service.js";
+import { serializeBigInt } from "#utils/serialize.js";
 
 class MessageController {
     async sendMessage(req, res) {
@@ -80,6 +81,20 @@ class MessageController {
 
         await messageService.deleteMessage(user.id, messageId);
         return res.success(null, 204);
+    }
+    async unreadCount(userId, conversationId) {
+        const count = await prisma.message.count({
+            where: {
+                conversationId,
+                createdAt: {
+                    gt: participant.lastReadAt,
+                },
+                senderId: {
+                    not: userId,
+                },
+            },
+        });
+        return serializeBigInt(count);
     }
 }
 

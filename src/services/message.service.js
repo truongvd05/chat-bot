@@ -247,16 +247,28 @@ class MessageService {
         if (!conversation) {
             throw new AppError("CONVERSATION_NOT_FOUND");
         }
-        const message = await prisma.message.create({
-            data: {
-                conversationId,
-                userId,
-                content,
-                role,
-            },
+
+        const message = await prisma.$transaction(async (tx) => {
+            const newMessage = await tx.message.create({
+                data: {
+                    conversationId,
+                    userId,
+                    content,
+                    role,
+                },
+            });
+
+            await tx.conversation.update({
+                where: { id: conversation.id },
+                data: {
+                    lastMessageId: newMessage.id,
+                    lastMessageAt: newMessage.createdAt,
+                },
+            });
+
+            return newMessage;
         });
         chatBotService.reply(conversationId);
-
         return serializeBigInt(message);
     }
     async createBotMessage(conversationId, userId, content, role) {

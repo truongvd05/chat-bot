@@ -82,7 +82,8 @@ class ConversationService {
                             where: {
                                 leftAt: null,
                             },
-                            include: {
+                            select: {
+                                unreadCount: true,
                                 user: {
                                     select: {
                                         id: true,
@@ -145,6 +146,19 @@ class ConversationService {
         if (!conversation) {
             throw new AppError("CONVERSATION_NOT_FOUND", HTTP_STATUS.NOT_FOUND);
         }
+
+        await prisma.conversationParticipant.update({
+            where: {
+                conversationId_userId: {
+                    userId: userId,
+                    conversationId: conversationId,
+                },
+            },
+            data: {
+                unreadCount: 0,
+                lastReadAt: new Date(),
+            },
+        });
         return serializeBigInt(conversation);
     }
     async findDirectConversation(userId, targetUserId) {
@@ -496,6 +510,41 @@ class ConversationService {
             select: { userId: true },
         });
         return serializeBigInt(result);
+    }
+    async findConversationSocket(conversationId) {
+        const conversation = await prisma.conversation.findUnique({
+            where: { id: conversationId },
+            include: {
+                lastMessage: {
+                    include: {
+                        user: {
+                            select: {
+                                id: true,
+                                name: true,
+                                email: true,
+                            },
+                        },
+                    },
+                },
+                participants: {
+                    where: {
+                        leftAt: null,
+                    },
+                    select: {
+                        unreadCount: true,
+                        user: {
+                            select: {
+                                id: true,
+                                name: true,
+                                email: true,
+                            },
+                        },
+                    },
+                },
+            },
+        });
+
+        return serializeBigInt(conversation);
     }
 }
 

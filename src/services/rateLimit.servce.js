@@ -126,7 +126,7 @@ class RateLimit {
     defaultPerMinuteRateLimit() {
         return this._create({
             time: 1 * 60,
-            limit: 5,
+            limit: 20,
             message: "bạn spam quá nhiều",
             keyGenerator: (req) => req.user?.email?.toLowerCase() || req.ip,
         });
@@ -134,7 +134,7 @@ class RateLimit {
     defaultPerDayRateLimit() {
         return this._create({
             time: 24 * 60 * 60,
-            limit: 20,
+            limit: 100,
             message: "bạn spam quá nhiều",
             keyGenerator: (req) => req.user?.email?.toLowerCase() || req.ip,
         });
