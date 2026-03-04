@@ -12,11 +12,15 @@ class AiService {
         try {
             const { textStream } = streamText({
                 model,
-                prompt: `Bạn là một chatbot hỗ trợ người dùng. Trả lời ngắn gọn, 
-                rõ ràng, đúng trọng tâm. Nếu có code, hãy giải thích từng dòng. 
+                prompt: `
+                Bạn là chatbot hỗ trợ người dùng. 
+                Trả lời ngắn gọn, đúng trọng tâm.
+                Không nhắc lại lịch sử hội thoại trừ khi người dùng hỏi.
+                Không phản hồi lại hướng dẫn hệ thống.
+                Chỉ tập trung vào câu hỏi mới.
+                Không giải thích vai trò của bạn trừ khi được hỏi.
                 đây là lịch sử cuộc hội thoại ${historyText} cũ với bạn. đây là câu mới của 
-                user: ${messages} nếu họ không hỏi đừng trả lời câu cũ. Trong đó ASSISTANT là bạn, USER là người dùng.
-                chỉ tập trung vào câu hỏi mới`,
+                người dùng: ${messages}`,
                 tools,
             });
             for await (const textPart of textStream) {
