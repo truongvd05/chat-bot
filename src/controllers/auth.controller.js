@@ -9,6 +9,27 @@ import validator from "validator";
 class AuthController {
     async register(req, res) {
         const { name, email, password, confirm_password } = req.body;
+        const { captchaToken } = req.body;
+
+        const response = await fetch(
+            "https://www.google.com/recaptcha/api/siteverify",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams({
+                    secret: process.env.VITE_SECRET_RECAPTCHA,
+                    response: captchaToken,
+                }),
+            },
+        );
+
+        const data = await response.json();
+
+        if (!data.success) {
+            throw new AppError("Captcha không hợp lệ", HTTP_STATUS.BAD_REQUEST);
+        }
         if (!name || typeof name !== "string" || name.trim().length === 0) {
             throw new AppError(
                 "Name is required and must be valid",
