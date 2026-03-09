@@ -13,7 +13,6 @@ import { initSocket } from "#config/socket.js";
 import http from "http";
 
 var app = express();
-console.log("KEY:", process.env.AI_GATEWAY_API_KEY);
 const server = http.createServer(app);
 
 initSocket(server);
@@ -44,17 +43,17 @@ const corsOptions = {
     optionsSuccessStatus: 200,
 };
 
-app.get("/", (req, res) => {
-    res.send("hello");
-});
-
 app.use(cors(corsOptions));
-app.use("/docs", swaggerSetup.serve, swaggerSetup.setup);
 app.use(helmet());
 app.use(express.json());
 app.use(cookieParser());
 app.use(responseFormat);
+
+app.use("/docs", swaggerSetup.serve, swaggerSetup.setup);
 app.use("/api", router);
+app.get("/", (req, res) => {
+    res.send("hello");
+});
 app.use(notFoundHandler);
 app.use(errorHandle);
 app.use(exceptionHandler);
