@@ -220,18 +220,22 @@ class MessageService {
         });
     }
 
-    async getMessage(userId, conversationId, limit, offset) {
+    async getMessage(userId, conversationId, cursor, limit) {
         await this._userInConversation(conversationId, userId);
         const messages = await prisma.message.findMany({
             where: {
                 conversationId,
                 deletedAt: null,
+                ...(cursor && {
+                    createdAt: {
+                        lt: new Date(cursor),
+                    },
+                }),
             },
             orderBy: {
-                createdAt: "desc",
+                id: "desc",
             },
             take: limit,
-            skip: offset,
         });
         return messages.reverse().map(serializeBigInt);
     }

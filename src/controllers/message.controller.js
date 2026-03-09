@@ -48,15 +48,14 @@ class MessageController {
     async getMessages(req, res) {
         const user = req.user;
         const conversationId = req.conversationId;
-
-        const limit = Math.min(Number(req.query.limit) || 5, 50);
-        const offset = Math.max(Number(req.query.offset) || 0, 0);
+        const cursor = req.query.c;
+        const limit = Number(req.query.limit) || 10;
 
         const messages = await messageService.getMessage(
             user.id,
             conversationId,
+            cursor,
             limit,
-            offset,
         );
         return res.success(messages, HTTP_STATUS.OK);
     }

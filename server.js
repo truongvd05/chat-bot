@@ -13,7 +13,7 @@ import { initSocket } from "#config/socket.js";
 import http from "http";
 
 var app = express();
-
+console.log("KEY:", process.env.AI_GATEWAY_API_KEY);
 const server = http.createServer(app);
 
 initSocket(server);
@@ -25,6 +25,7 @@ const ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://localhost:3000",
     "https://truongvd05.github.io",
+    "http://103.118.29.46",
     process.env.CLIENT_URL,
 ];
 const allowMethods = ["GET", "POST", "PUT", "DELETE", "OPTIONS"];
