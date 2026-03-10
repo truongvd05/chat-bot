@@ -2,8 +2,7 @@ import transporter from "#config/nodemailer.js";
 
 class EmailService {
     async sendVerifyEmail(payload) {
-        const url = process.env.FRONTEND_URL;
-        const verifyUrl = `${url}/verify-email?token=${payload.token}`;
+        const verifyUrl = `http://chatdemo.site/verify-email?token=${payload.token}`;
         const info = await transporter.sendMail({
             from: process.env.EMAIL_FROM || "thanh090800@gmail.com",
             to: payload.email,
@@ -25,8 +24,7 @@ class EmailService {
         console.log("Message sent: %s", info.messageId);
     }
     async sendPasswordResetToken(payload) {
-        const url = process.env.FRONTEND_URL;
-        const verifyUrl = `${url}/reset-password?token=${payload.token}`;
+        const verifyUrl = `http://chatdemo.site/reset-password?token=${payload.token}`;
         const info = await transporter.sendMail({
             from: process.env.EMAIL_FROM || "thanh090800@gmail.com",
             to: payload.email,
