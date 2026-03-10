@@ -11,39 +11,46 @@ const router = express.Router();
 router.post(
     "/refresh",
     rateLimitServce.defaultPerMinuteRateLimit(),
+    rateLimitServce.defaultPerDayRateLimit(),
     asyneHandle(authController.refreshAccessToken),
 );
 router.post(
     "/register",
     rateLimitServce.login(),
+    rateLimitServce.defaultPerDayRateLimit(),
     asyneHandle(authController.register),
 );
 router.post(
     "/login",
     rateLimitServce.login(),
+    rateLimitServce.defaultPerDayRateLimit(),
     asyneHandle(authController.login),
 );
 router.post(
     "/forgot-password",
-    rateLimitServce.defaultAuthRateLimit(),
+    rateLimitServce.defaultPerMinuteRateLimit(),
+    rateLimitServce.defaultPerDayRateLimit(),
     asyneHandle(authController.forgotPassword),
 );
 router.post(
     "/reset-password",
-    rateLimitServce.defaultAuthRateLimit(),
+    rateLimitServce.defaultPerMinuteRateLimit(),
+    rateLimitServce.defaultPerDayRateLimit(),
     asyneHandle(authController.resetPassword),
 );
 
 router.post(
     "/logout",
     authMeRequired,
-    rateLimitServce.defaultAuthRateLimit(),
+    rateLimitServce.defaultPerMinuteRateLimit(),
+    rateLimitServce.defaultPerDayRateLimit(),
     asyneHandle(authController.logout),
 );
 router.post(
     "/change-password",
     authMeRequired,
-    rateLimitServce.defaultAuthRateLimit(),
+    rateLimitServce.defaultPerMinuteRateLimit(),
+    rateLimitServce.defaultPerDayRateLimit(),
     asyneHandle(authController.changePassword),
 );
 router.post(
