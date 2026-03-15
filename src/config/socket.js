@@ -5,10 +5,10 @@ export function initSocket(server) {
     const io = new Server(server, {
         cors: {
             origin: [
-                "https://truongvd05.github.io",
                 "http://103.118.29.46",
                 "http://chatdemo.site",
                 "https://chatdemo.site",
+                "http://localhost:5173",
                 process.env.CLIENT_URL,
             ],
             methods: ["GET", "POST"],

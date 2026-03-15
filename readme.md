@@ -20,7 +20,7 @@ Sử dụng SSE (Server-Sent Events) để xử lý streaming response theo th�
 
 ## Token Strategy
 
-- Access token: short-lived, dùng cho API & SSE
+- Access token: short-lived(15m), dùng cho API & SSE
 - Refresh token: lưu trong database gắn với user
 - Khi logout, refresh token được xóa để chặn tái sử dụng
 
@@ -107,8 +107,10 @@ Base path:
 
 ```json
 {
+    "name": "yourname",
     "email": "user@gmail.com",
-    "password": "123456"
+    "password": "123456",
+    "confirm_password": "123456"
 }
 ```
 
@@ -423,7 +425,7 @@ src/
 
 ```
 
-- **controllers**: nhận request / response
+- **controllers**: nhận request, sử lí validate / response
 - **services**: xử lý business logic
 - **middlewares**: auth, rate limit
 - **utils**: helper functions
@@ -434,7 +436,6 @@ src/
 
 - gửi được anh, emoji
 - Input validation (Zod)
-- Centralized error handler
 - Unit / integration test
 - Docker + CI/CD
 

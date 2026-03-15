@@ -24,6 +24,7 @@ const ALLOWED_ORIGINS = [
     "http://103.118.29.46",
     "http://chatdemo.site",
     "https://chatdemo.site",
+    "http://localhost:5173",
     process.env.CLIENT_URL,
 ];
 
