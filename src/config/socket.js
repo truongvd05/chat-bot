@@ -3,6 +3,8 @@ import registerChatSocket from "#socket/chat.socket.js";
 
 export function initSocket(server) {
     const io = new Server(server, {
+        pingInterval: 25000,
+        pingTimeout: 60000,
         cors: {
             origin: [
                 "http://103.118.29.46",
