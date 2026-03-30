@@ -60,17 +60,31 @@ class ConversationController {
     }
     async createGroupConversation(req, res) {
         const user = req.user;
-        const name = req.body.name;
-        if (!name || typeof name !== "string" || name.trim().length === 0) {
+        const title = req.body.name;
+        const members = req.body.members;
+        console.log(members);
+
+        if (!Array.isArray(members) || members.length === 0) {
+            throw new AppError(
+                "Group phải có ít nhất 1 member",
+                HTTP_STATUS.BAD_REQUEST,
+            );
+        }
+
+        const memberIds = members.map((id) => BigInt(id));
+
+        if (!title || typeof title !== "string" || title.trim().length === 0) {
             throw new AppError("INVALID_name", HTTP_STATUS.BAD_REQUEST);
         }
-        if (name.length > 255) {
+        if (title.length > 255) {
             throw new AppError("TITLE_TOO_LONG", HTTP_STATUS.BAD_REQUEST);
         }
         const conversation = await conversationService.createGroupConversation(
             user.id,
-            name,
+            title,
+            memberIds,
         );
+
         return res.success(conversation, HTTP_STATUS.CREATED);
     }
     async getConversation(req, res) {
@@ -153,7 +167,7 @@ class ConversationController {
     }
     async removeParticipant(req, res) {
         const user = req.user;
-        const conversationId = req.id;
+        const conversationId = req.conversationId;
         const targetUserId = req.targetUserId;
 
         const result = await conversationService.removeParticipant(

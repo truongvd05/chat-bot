@@ -10,6 +10,8 @@
         "lint:fix": "eslint src/**/*.{js,cjs,mjs} --fix"
     },
     "dependencies": {
+        "@ai-sdk/openai": "^3.0.48",
+        "@openrouter/sdk": "^0.10.2",
         "@prisma/adapter-mariadb": "^7.3.0",
         "@prisma/client": "^7.3.0",
         "ai": "^6.0.69",

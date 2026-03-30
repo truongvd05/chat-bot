@@ -180,23 +180,28 @@ class ConversationService {
         }
         return serializeBigInt(conversation);
     }
-    async createGroupConversation(userId, title) {
-        return prisma.$transaction(async (tx) => {
-            const conversation = await tx.conversation.create({
-                data: {
-                    ownerId: userId,
-                    title,
-                    type: "GROUP",
+    async createGroupConversation(userId, title, memberIds) {
+        const uniqueMembers = [...new Set(memberIds)].filter(
+            (id) => id !== userId,
+        );
+        return prisma.conversation.create({
+            data: {
+                title,
+                type: "GROUP",
+                ownerId: userId,
+                participants: {
+                    create: [
+                        {
+                            userId,
+                            role: "ADMIN",
+                        },
+                        ...uniqueMembers.map((id) => ({
+                            userId: id,
+                            role: "MEMBER",
+                        })),
+                    ],
                 },
-            });
-            await tx.conversationParticipant.create({
-                data: {
-                    conversationId: conversation.id,
-                    userId,
-                    role: "OWNER",
-                },
-            });
-            return serializeBigInt(conversation);
+            },
         });
     }
     async createDirectConversation(userId, targetUserId) {

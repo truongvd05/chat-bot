@@ -5,6 +5,7 @@ import validateChangePassword from "#utils/validateChangePassword.js";
 import { HTTP_STATUS } from "#config/constants.js";
 import AppError from "#utils/AppError.js";
 import validator from "validator";
+import { extractAccessToken } from "#utils/extractAccessToken.js";
 
 class AuthController {
     async register(req, res) {
@@ -40,7 +41,7 @@ class AuthController {
         }
         if (password !== confirm_password) {
             throw new AppError(
-                "Password must be at least 6 characters",
+                "Passwords do not match",
                 HTTP_STATUS.BAD_REQUEST,
             );
         }
@@ -104,7 +105,7 @@ class AuthController {
                 HTTP_STATUS.BAD_REQUEST,
             );
         }
-        await authService.resenVerifyEmail(user.id);
+        await authService.resenVerifyEmail(user);
 
         return res.success("Verification email has been resent");
     }
@@ -151,7 +152,10 @@ class AuthController {
     async forgotPassword(req, res) {
         const email = req.body.email;
         if (!email || typeof email !== "string" || email.trim().length === 0) {
-            return res.error("Invalid or misssing email");
+            throw new AppError(
+                "Invalid or misssing email",
+                HTTP_STATUS.BAD_REQUEST,
+            );
         }
         await authService.forgotPassword(email);
 
@@ -167,22 +171,22 @@ class AuthController {
         if (!password || password.trim().length === 0) {
             throw new AppError(
                 "Missing password fields",
-                HTTP_STATUS.UNAUTHORIZED,
+                HTTP_STATUS.BAD_REQUEST,
             );
         }
         if (newPassword.trim().length < 6) {
             throw new AppError(
                 "Mật khẩu phải ít nhất 6 ký tự",
-                HTTP_STATUS.UNAUTHORIZED,
+                HTTP_STATUS.BAD_REQUEST,
             );
         }
         if (password !== newPassword) {
-            throw new AppError("Mật khẩu Không khớp", HTTP_STATUS.UNAUTHORIZED);
+            throw new AppError("Mật khẩu Không khớp", HTTP_STATUS.BAD_REQUEST);
         }
         if (!token) {
             throw new AppError(
                 "Invalit or missing token",
-                HTTP_STATUS.UNAUTHORIZED,
+                HTTP_STATUS.BAD_REQUEST,
             );
         }
         await authService.resetPassword(token, password, newPassword);

@@ -5,7 +5,7 @@ class ChatbotService {
     async reply(conversationId) {
         const history = await messageService.getForAi(conversationId);
         return await aiService.chat(
-            "openai/gpt-5-nano",
+            "stepfun/step-3.5-flash:free",
             history,
             history[history.length - 1].content,
             conversationId,

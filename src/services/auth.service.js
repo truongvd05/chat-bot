@@ -206,17 +206,17 @@ class AuthService {
             where: { token: refresh_token },
         });
         if (!refreshToken)
-            throw new Error("Unauthorized", HTTP_STATUS.UNAUTHORIZED);
+            throw new AppError("Unauthorized", HTTP_STATUS.UNAUTHORIZED);
 
-        if (refreshToken.expiresAt < new Date()) {
-            throw new Error("Unauthorized", HTTP_STATUS.UNAUTHORIZED);
+        if (refreshToken.tokenExpiresAt < new Date()) {
+            throw new AppError("Unauthorized", HTTP_STATUS.UNAUTHORIZED);
         }
 
         const user = await prisma.user.findUnique({
             where: { id: refreshToken.userId },
         });
         if (!user) {
-            throw new Error("Unauthorized", HTTP_STATUS.UNAUTHORIZED);
+            throw new AppError("Unauthorized", HTTP_STATUS.UNAUTHORIZED);
         }
         const accessToken = responseTokenService.refreshAccessToken(
             refreshToken.userId,
@@ -231,7 +231,7 @@ class AuthService {
 
         const resetToken = await this._findValidPasswordResetToken(tokenHash);
 
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
         await this._updatePassword(resetToken.userId, hashedPassword);
         await this._markPasswordResetTokenUsed(resetToken.id);
         await this._revokeAllRefreshTokens(resetToken.userId);
@@ -274,9 +274,9 @@ class AuthService {
         });
     }
 
-    async resenVerifyEmail(userId) {
+    async resenVerifyEmail(user) {
         const emailtoken = jwtService(
-            userId,
+            user.id,
             jwtconfig.emailSecret,
             jwtconfig.emailTokenTTL,
         );
