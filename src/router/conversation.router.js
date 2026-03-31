@@ -86,4 +86,12 @@ router.get(
     asyneHandle(conversationController.stream),
 );
 
+router.get(
+    "/:conversationId/available-users",
+    rateLimitServce.defaultPerMinuteRateLimit(),
+    authMeRequired,
+    parseConversationId,
+    asyneHandle(conversationController.searchAvailableUsers),
+);
+
 export default router;

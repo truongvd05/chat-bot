@@ -1,10 +1,9 @@
 import { HTTP_STATUS } from "#config/constants.js";
 import prisma from "#libs/prisma.js";
 import AppError from "#utils/AppError.js";
-import formatChatItem from "#utils/formatChatItem.js";
 import { serializeBigInt } from "#utils/serialize.js";
 
-const allowedRoles = ["OWNER"];
+const allowedRoles = ["OWNER", "ADMIN"];
 
 class ConversationService {
     // kiểm tra user có trong cuộc hội thoại hay không
@@ -19,7 +18,7 @@ class ConversationService {
             throw new AppError("Conversation not found", HTTP_STATUS.NOT_FOUND);
         }
 
-        // ✅ Nếu là bot thì không cần check participant
+        // Nếu là bot thì không cần check participant
         if (conversation.type === "BOT") {
             return true;
         }
@@ -184,7 +183,7 @@ class ConversationService {
         const uniqueMembers = [...new Set(memberIds)].filter(
             (id) => id !== userId,
         );
-        return prisma.conversation.create({
+        const newGroupConversation = await prisma.conversation.create({
             data: {
                 title,
                 type: "GROUP",
@@ -203,6 +202,7 @@ class ConversationService {
                 },
             },
         });
+        return serializeBigInt(newGroupConversation);
     }
     async createDirectConversation(userId, targetUserId) {
         if (userId === targetUserId) {
@@ -409,104 +409,142 @@ class ConversationService {
             }
         }
     }
-    async addParticipant(userId, conversationId, targetUserId) {
-        if (userId === targetUserId) {
-            throw new AppError("CANNOT_ADD_YOURSELF", HTTP_STATUS.BAD_REQUEST);
-        }
-        const target = await prisma.conversationParticipant.findUnique({
-            where: {
-                conversationId_userId: { conversationId, userId: targetUserId },
-            },
-        });
-        if (!target)
-            throw new AppError("TARGET_NOT_FOUND", HTTP_STATUS.NOT_FOUND);
-
-        const user = await this._userInConversation(conversationId, userId);
-
-        const conversation = await this._exitedConversation(conversationId);
-        if (conversation.type === "DIRECT")
-            throw new AppError(
-                "CANNOT_ADD_DIRECT_CHAT",
-                HTTP_STATUS.BAD_REQUEST,
-            );
-
-        if (!allowedRoles.includes(user.role))
-            throw new AppError("FORBIDDEN", HTTP_STATUS.FORBIDDEN);
-
-        const existing = await prisma.conversationParticipant.findUnique({
-            where: {
-                conversationId_userId: {
-                    conversationId,
-                    userId: targetUserId,
-                },
-            },
-        });
-
-        if (existing && existing.leftAt === null) {
-            throw new AppError(
-                "USER_ALREADY_IN_GROUP",
-                HTTP_STATUS.BAD_REQUEST,
-            );
-        }
-        // thêm lại thì update leftAt, vào lần đầu thi tạo mới
-        const participant = await prisma.conversationParticipant.upsert({
-            where: {
-                conversationId_userId: {
-                    conversationId,
-                    userId: targetUserId,
-                },
-            },
-            update: {
-                leftAt: null,
-                joinedAt: new Date(),
-            },
-            create: {
+    async addParticipant(userId, conversationId, memberIds) {
+        return await prisma.$transaction(async (tx) => {
+            const requester = await this._userInConversation(
                 conversationId,
-                userId: targetUserId,
-                role: "MEMBER",
-                joinedAt: new Date(),
-            },
-        });
-        return participant;
-    }
-    async removeParticipant(userId, conversationId, targetUserId) {
-        if (userId === targetUserId) {
-            throw new AppError("CANNOT_KICK_YOURSELF", HTTP_STATUS.BAD_REQUEST);
-        }
-        const user = await this._userInConversation(conversationId, userId);
-        const target = await prisma.conversationParticipant.findUnique({
-            where: {
-                conversationId_userId: {
-                    conversationId,
-                    userId: targetUserId,
-                },
-            },
-        });
-        if (!target || target.leftAt)
-            throw new AppError("TARGET_NOT_IN_CONVERSATION");
-
-        if (!allowedRoles.includes(user.role))
-            throw new AppError("FORBIDDEN", HTTP_STATUS.FORBIDDEN);
-
-        const conversation = await this._exitedConversation(conversationId);
-
-        if (conversation.type === "DIRECT") {
-            throw new AppError(
-                "Cannot kick in direct chat",
-                HTTP_STATUS.BAD_REQUEST,
+                userId,
             );
-        }
 
-        return prisma.conversationParticipant.update({
-            where: {
-                conversationId_userId: {
+            // 2. Check quyền (chỉ admin được add)
+            if (!allowedRoles.includes(requester.role)) {
+                throw new AppError("FORBIDDEN", HTTP_STATUS.FORBIDDEN);
+            }
+
+            const conversation = await this._exitedConversation(conversationId);
+
+            if (conversation.type === "DIRECT") {
+                throw new AppError(
+                    "Cannot add member to direct chat",
+                    HTTP_STATUS.BAD_REQUEST,
+                );
+            }
+
+            const uniqueMembers = [...new Set(memberIds)].filter(
+                (id) => id !== userId,
+            );
+
+            // lấy member đã trong conversation
+            const existingMembers = await tx.conversationParticipant.findMany({
+                where: {
                     conversationId,
-                    userId: targetUserId,
+                    userId: { in: uniqueMembers },
                 },
-            },
-            data: {
-                leftAt: new Date(),
-            },
+            });
+
+            const existingMap = new Map(
+                existingMembers.map((m) => [m.userId, m]),
+            );
+
+            const results = [];
+
+            for (const memberId of uniqueMembers) {
+                const existing = existingMap.get(memberId);
+
+                // nếu đã trong group thì skip
+                if (existing && existing.leftAt === null) continue;
+
+                const participant = await tx.conversationParticipant.upsert({
+                    where: {
+                        conversationId_userId: {
+                            conversationId,
+                            userId: memberId,
+                        },
+                    },
+                    update: {
+                        leftAt: null,
+                        joinedAt: new Date(),
+                    },
+                    create: {
+                        conversationId,
+                        userId: memberId,
+                        role: "MEMBER",
+                        joinedAt: new Date(),
+                    },
+                });
+
+                results.push(participant);
+            }
+            return serializeBigInt(results);
+        });
+    }
+
+    async removeParticipant(userId, conversationId, memberIds) {
+        return await prisma.$transaction(async (tx) => {
+            const requester = await this._userInConversation(
+                conversationId,
+                userId,
+            );
+
+            // 2. Check quyền (chỉ admin được kick)
+            if (!allowedRoles.includes(requester.role)) {
+                throw new AppError("FORBIDDEN", HTTP_STATUS.FORBIDDEN);
+            }
+
+            // ko kick bản thân
+            const uniqueMembers = [...new Set(memberIds)].filter(
+                (id) => id !== userId,
+            );
+
+            const conversation = await this._exitedConversation(conversationId);
+
+            if (conversation.type === "DIRECT") {
+                throw new AppError(
+                    "Cannot kick in direct chat",
+                    HTTP_STATUS.BAD_REQUEST,
+                );
+            }
+
+            // lấy member đã trong conversation
+            const existingMembers = await tx.conversationParticipant.findMany({
+                where: {
+                    conversationId,
+                    userId: { in: uniqueMembers },
+                },
+            });
+
+            const existingMap = new Map(
+                existingMembers.map((m) => [m.userId, m]),
+            );
+
+            const results = [];
+
+            for (const memberId of uniqueMembers) {
+                const existing = existingMap.get(memberId);
+
+                // nếu đã left rồi thì skip
+                if (!existing || existing.leftAt) continue;
+
+                if (existing.role === "ADMIN") {
+                    throw new AppError("Cannot kick admin", 400);
+                }
+
+                const participant = await tx.conversationParticipant.update({
+                    where: {
+                        conversationId_userId: {
+                            conversationId,
+                            userId: memberId,
+                        },
+                    },
+                    data: {
+                        leftAt: new Date(),
+                    },
+                });
+
+                results.push(participant);
+            }
+
+            return serializeBigInt(results);
         });
     }
     async finDparticipants(conversationId) {
@@ -550,6 +588,31 @@ class ConversationService {
         });
 
         return serializeBigInt(conversation);
+    }
+    async searchAvailableUsers(userId, conversationId, q) {
+        await this._userInConversation(conversationId, userId);
+
+        // Lấy tất cả member đang còn trong nhóm (leftAt = null)
+        const members = await prisma.conversationParticipant.findMany({
+            where: { conversationId, leftAt: null },
+            select: { userId: true },
+        });
+
+        const memberIds = members.map((m) => m.userId);
+
+        const users = await prisma.user.findMany({
+            where: {
+                OR: [{ name: { contains: q } }, { email: { contains: q } }],
+                id: { notIn: [...memberIds, userId] },
+            },
+            take: 20,
+            select: {
+                id: true,
+                name: true,
+                email: true,
+            },
+        });
+        return serializeBigInt(users);
     }
 }
 

@@ -69,7 +69,7 @@ class UserService {
         });
         return serializeBigInt(existing);
     }
-    async searchUsers(keyword) {
+    async searchUsers(userId, keyword) {
         const result = await prisma.user.findMany({
             where: {
                 OR: [
@@ -84,9 +84,16 @@ class UserService {
                         },
                     },
                 ],
+                id: { notIn: [userId] },
             },
             take: 20,
+            select: {
+                id: true,
+                name: true,
+                email: true,
+            },
         });
+
         return serializeBigInt(result);
     }
 }

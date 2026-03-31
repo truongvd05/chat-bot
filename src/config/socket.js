@@ -11,6 +11,7 @@ export function initSocket(server) {
                 "http://chatdemo.site",
                 "https://chatdemo.site",
                 "http://localhost:5173",
+                "http://localhost:5174",
                 process.env.CLIENT_URL,
             ],
             methods: ["GET", "POST"],

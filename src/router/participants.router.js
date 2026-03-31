@@ -13,15 +13,13 @@ router.post(
     authMeRequired,
     rateLimitServce.defaultPerMinuteRateLimit(),
     parseConversationId,
-    parseTargetId,
     asyneHandle(conversationController.addParticipant),
 );
 
 router.delete(
-    "/:conversationId/:userId",
+    "/:conversationId/",
     authMeRequired,
     parseConversationId,
-    parseTargetId,
     asyneHandle(conversationController.removeParticipant),
 );
 

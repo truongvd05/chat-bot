@@ -62,7 +62,6 @@ class ConversationController {
         const user = req.user;
         const title = req.body.name;
         const members = req.body.members;
-        console.log(members);
 
         if (!Array.isArray(members) || members.length === 0) {
             throw new AppError(
@@ -154,30 +153,62 @@ class ConversationController {
     }
     async addParticipant(req, res) {
         const user = req.user;
-
         const conversationId = req.conversationId;
-        const targetUserId = req.targetUserId;
+        const members = req.body.members;
+
+        if (!Array.isArray(members) || members.length === 0) {
+            throw new AppError(
+                "Phải thêm ít nhất 1 thành viên",
+                HTTP_STATUS.BAD_REQUEST,
+            );
+        }
+
+        const memberIds = members.map((id) => BigInt(id));
 
         const result = await conversationService.addParticipant(
             user.id,
             conversationId,
-            targetUserId,
+            memberIds,
         );
         return res.success(result, HTTP_STATUS.CREATED);
     }
     async removeParticipant(req, res) {
         const user = req.user;
         const conversationId = req.conversationId;
-        const targetUserId = req.targetUserId;
+        const members = req.body.members;
+
+        if (!Array.isArray(members) || members.length === 0) {
+            throw new AppError(
+                "Phải thêm ít nhất 1 thành viên",
+                HTTP_STATUS.BAD_REQUEST,
+            );
+        }
+
+        const memberIds = members.map((id) => BigInt(id));
 
         const result = await conversationService.removeParticipant(
             user.id,
             conversationId,
-            targetUserId,
+            memberIds,
+        );
+
+        return res.success(result, HTTP_STATUS.OK);
+    }
+
+    async listParticipants(req, res) {}
+    async searchAvailableUsers(req, res) {
+        const user = req.user;
+        const { q } = req.query;
+        const conversationId = req.conversationId;
+
+        if (!q.trim()) throw new AppError("Invalid or missing querry");
+        const result = await conversationService.searchAvailableUsers(
+            user.id,
+            conversationId,
+            q,
         );
         return res.success(result, HTTP_STATUS.CREATED);
     }
-    async listParticipants(req, res) {}
 }
 
 export default new ConversationController();
