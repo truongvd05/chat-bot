@@ -94,4 +94,12 @@ router.get(
     asyneHandle(conversationController.searchAvailableUsers),
 );
 
+router.post(
+    "/:conversationId/promoteToAdmin",
+    rateLimitServce.defaultPerMinuteRateLimit(),
+    authMeRequired,
+    parseConversationId,
+    asyneHandle(conversationController.promoteToAdmin),
+);
+
 export default router;

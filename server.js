@@ -21,7 +21,7 @@ const port = process.env.PORT || 3000;
 
 const ALLOWED_ORIGINS = [
     "https://truongvd05.github.io",
-    "http://103.118.29.46",
+    "http://103.195.239.195",
     "http://chatdemo.site",
     "https://chatdemo.site",
     "http://localhost:5173",

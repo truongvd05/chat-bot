@@ -7,7 +7,7 @@ export function initSocket(server) {
         pingTimeout: 60000,
         cors: {
             origin: [
-                "http://103.118.29.46",
+                "http://103.195.239.195",
                 "http://chatdemo.site",
                 "https://chatdemo.site",
                 "http://localhost:5173",

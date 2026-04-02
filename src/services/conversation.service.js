@@ -486,7 +486,7 @@ class ConversationService {
                 userId,
             );
 
-            // 2. Check quyền (chỉ admin được kick)
+            // 2. Check quyền (chỉ owner và admin được kick)
             if (!allowedRoles.includes(requester.role)) {
                 throw new AppError("FORBIDDEN", HTTP_STATUS.FORBIDDEN);
             }
@@ -525,8 +525,8 @@ class ConversationService {
                 // nếu đã left rồi thì skip
                 if (!existing || existing.leftAt) continue;
 
-                if (existing.role === "ADMIN") {
-                    throw new AppError("Cannot kick admin", 400);
+                if (allowedRoles.includes(requester.role)) {
+                    throw new AppError("FORBIDDEN", HTTP_STATUS.FORBIDDEN);
                 }
 
                 const participant = await tx.conversationParticipant.update({
@@ -547,6 +547,72 @@ class ConversationService {
             return serializeBigInt(results);
         });
     }
+    async promoteToAdmin(userId, conversationId, memberIds) {
+        return await prisma.$transaction(async (tx) => {
+            const requester = await this._userInConversation(
+                conversationId,
+                userId,
+            );
+
+            // 2. Check quyền (chỉ admin được update admin)
+            if (!allowedRoles.includes(requester.role)) {
+                throw new AppError("FORBIDDEN", HTTP_STATUS.FORBIDDEN);
+            }
+
+            // ko update bản thân
+            const uniqueMembers = [...new Set(memberIds)].filter(
+                (id) => id !== userId,
+            );
+
+            const conversation = await this._exitedConversation(conversationId);
+
+            if (conversation.type === "DIRECT") {
+                throw new AppError(
+                    "Cannot update in direct chat",
+                    HTTP_STATUS.BAD_REQUEST,
+                );
+            }
+
+            // lấy member đã trong conversation
+            const existingMembers = await tx.conversationParticipant.findMany({
+                where: {
+                    conversationId,
+                    userId: { in: uniqueMembers },
+                },
+            });
+
+            const existingMap = new Map(
+                existingMembers.map((m) => [m.userId, m]),
+            );
+
+            const results = [];
+
+            for (const memberId of uniqueMembers) {
+                const existing = existingMap.get(memberId);
+
+                // nếu đã là admin và rời nhóm rồi thì skip
+                if (!existing || existing.role === "ADMIN" || existing.leftAt)
+                    continue;
+
+                const participant = await tx.conversationParticipant.update({
+                    where: {
+                        conversationId_userId: {
+                            conversationId,
+                            userId: memberId,
+                        },
+                    },
+                    data: {
+                        role: "ADMIN",
+                    },
+                });
+
+                results.push(participant);
+            }
+
+            return serializeBigInt(results);
+        });
+    }
+
     async finDparticipants(conversationId) {
         const result = await prisma.conversationParticipant.findMany({
             where: { conversationId },
@@ -589,6 +655,7 @@ class ConversationService {
 
         return serializeBigInt(conversation);
     }
+
     async searchAvailableUsers(userId, conversationId, q) {
         await this._userInConversation(conversationId, userId);
 

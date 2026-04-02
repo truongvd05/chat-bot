@@ -209,6 +209,28 @@ class ConversationController {
         );
         return res.success(result, HTTP_STATUS.CREATED);
     }
+    async promoteToAdmin(req, res) {
+        const user = req.user;
+        const conversationId = req.conversationId;
+
+        const members = req.body.members;
+
+        if (!Array.isArray(members) || members.length === 0) {
+            throw new AppError(
+                "Phải thêm ít nhất 1 thành viên",
+                HTTP_STATUS.BAD_REQUEST,
+            );
+        }
+
+        const memberIds = members.map((id) => BigInt(id));
+
+        const result = await conversationService.promoteToAdmin(
+            user.id,
+            conversationId,
+            memberIds,
+        );
+        return res.success(result, HTTP_STATUS.CREATED);
+    }
 }
 
 export default new ConversationController();
