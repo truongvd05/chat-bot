@@ -102,4 +102,12 @@ router.post(
     asyneHandle(conversationController.promoteToAdmin),
 );
 
+router.post(
+    "/:conversationId/leaveGroup",
+    rateLimitServce.defaultPerMinuteRateLimit(),
+    authMeRequired,
+    parseConversationId,
+    asyneHandle(conversationController.leaveGroup),
+);
+
 export default router;

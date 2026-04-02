@@ -662,7 +662,7 @@ class ConversationService {
         // Lấy tất cả member đang còn trong nhóm (leftAt = null)
         const members = await prisma.conversationParticipant.findMany({
             where: { conversationId, leftAt: null },
-            select: { userId: true },
+            select: { userId: true, role: true },
         });
 
         const memberIds = members.map((m) => m.userId);
@@ -680,6 +680,37 @@ class ConversationService {
             },
         });
         return serializeBigInt(users);
+    }
+    async leaveGroup(userId, conversationId) {
+        const user = await this._userInConversation(conversationId, userId);
+
+        const members = await prisma.conversationParticipant.findMany({
+            where: { conversationId, leftAt: null },
+            select: { userId: true, role: true },
+        });
+
+        const adminCount = members.filter((m) => m.role === "admin").length;
+
+        if (user.role === "admin" && adminCount <= 1) {
+            throw new AppError(
+                "Bạn là admin duy nhất",
+                HTTP_STATUS.BAD_REQUEST,
+            );
+        }
+
+        const leave = await prisma.conversationParticipant.update({
+            where: {
+                conversationId_userId: {
+                    userId,
+                    conversationId,
+                },
+            },
+            data: {
+                leftAt: new Date(),
+            },
+        });
+
+        return serializeBigInt(leave);
     }
 }
 

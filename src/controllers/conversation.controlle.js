@@ -231,6 +231,17 @@ class ConversationController {
         );
         return res.success(result, HTTP_STATUS.CREATED);
     }
+    async leaveGroup(req, res) {
+        const user = req.user;
+        const conversationId = req.conversationId;
+
+        const result = await conversationService.leaveGroup(
+            user.id,
+            conversationId,
+        );
+
+        return res.success(result, HTTP_STATUS.OK);
+    }
 }
 
 export default new ConversationController();
