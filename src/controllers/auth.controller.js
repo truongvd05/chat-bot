@@ -58,6 +58,7 @@ class AuthController {
     }
     async verifyEmail(req, res) {
         const emailToken = req.body?.token;
+
         if (!emailToken) {
             throw new AppError("Missing token", HTTP_STATUS.BAD_REQUEST);
         }
@@ -73,7 +74,7 @@ class AuthController {
         if (!user) {
             throw new AppError("Invalid credentials", HTTP_STATUS.UNAUTHORIZED);
         }
-        if (user.verified_at) {
+        if (user.emailVerifiedAt) {
             throw new AppError(
                 "Email already verified",
                 HTTP_STATUS.BAD_REQUEST,

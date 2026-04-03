@@ -259,6 +259,7 @@ class AuthService {
     }
     async verifyEmail(emailToken) {
         const payload = jwt.verify(emailToken, jwtconfig.emailSecret);
+
         if (!payload?.sub) {
             throw new AppError(
                 "Invalid token payload",
@@ -270,7 +271,7 @@ class AuthService {
             throw new AppError("Invalid token user", HTTP_STATUS.BAD_REQUEST);
         }
         if (user.emailVerifiedAt) return;
-        return await prisma.user.update({
+        const result = await prisma.user.update({
             where: {
                 id: user.id,
             },
@@ -278,6 +279,7 @@ class AuthService {
                 emailVerifiedAt: new Date(),
             },
         });
+        return serializeBigInt(result);
     }
 
     async resenVerifyEmail(user) {

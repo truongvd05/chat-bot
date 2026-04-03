@@ -7,7 +7,7 @@ class EmailService {
             from: process.env.EMAIL_FROM || "thanh090800@gmail.com",
             to: payload.email,
             subject: "Xác thực email của bạn",
-            html: `<p>Click vào đây để verify email <a href="${verifyUrl} <b>link hết hạn sau 1h</b>" target="_blank">${verifyUrl}</a></p>`,
+            html: `<p>Click vào đây để verify email <a href="${verifyUrl}" target="_blank">${verifyUrl}</a> <b>link hết hạn sau 1h</b></p>`,
         });
         console.log("Message sent: %s", info.messageId);
     }
