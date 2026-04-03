@@ -247,7 +247,7 @@ class AuthService {
         if (!isMatch) {
             throw new AppError(
                 "Mật khẩu hiện tại không đúng",
-                HTTP_STATUS.UNAUTHORIZED,
+                HTTP_STATUS.BAD_REQUEST,
             );
         }
         const hashedPassword = await bcrypt.hash(newPassword, 10);

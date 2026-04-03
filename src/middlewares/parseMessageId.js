@@ -1,11 +1,19 @@
+import { z } from "zod";
 import AppError from "#utils/AppError.js";
 
+const messageIdSchema = z
+    .string()
+    .regex(/^\d+$/)
+    .transform((val) => BigInt(val));
+
 function parseMessageId(req, res, next) {
-    const rawMessageId = req.params.messageId;
-    if (!rawMessageId || !/^\d+$/.test(rawMessageId)) {
+    const result = messageIdSchema.safeParse(req.params.messageId);
+
+    if (!result.success) {
         throw new AppError("INVALID_MESSAGE_ID", 400);
     }
-    req.messageId = BigInt(rawMessageId);
+
+    req.messageId = result.data;
     next();
 }
 

@@ -6,6 +6,31 @@ import { serializeBigInt } from "#utils/serialize.js";
 const allowedRoles = ["OWNER", "ADMIN"];
 
 class ConversationService {
+    async _getExistingMembersMap(tx, conversationId, memberIds) {
+        const existing = await tx.conversationParticipant.findMany({
+            where: { conversationId, userId: { in: memberIds } },
+        });
+        return new Map(existing.map((m) => [m.userId, m]));
+    }
+    // lọc members
+    _filterMembers(memberIds, excludeId) {
+        return [...new Set(memberIds)].filter((id) => id !== excludeId);
+    }
+    // check quyền
+    async _requireRole(conversationId, userId) {
+        const user = await this._userInConversation(conversationId, userId);
+        if (!allowedRoles.includes(user.role)) {
+            throw new AppError("FORBIDDEN", HTTP_STATUS.FORBIDDEN);
+        }
+        const conversation = await this._exitedConversation(conversationId);
+        if (conversation.type === "DIRECT") {
+            throw new AppError(
+                "NOT_ALLOWED_IN_DIRECT",
+                HTTP_STATUS.BAD_REQUEST,
+            );
+        }
+        return { user, conversation };
+    }
     // kiểm tra user có trong cuộc hội thoại hay không
     async _userInConversation(conversationId, userId) {
         // check nếu conversation là bot thì không có bảng quan hệ với conversationParticipant
@@ -180,9 +205,8 @@ class ConversationService {
         return serializeBigInt(conversation);
     }
     async createGroupConversation(userId, title, memberIds) {
-        const uniqueMembers = [...new Set(memberIds)].filter(
-            (id) => id !== userId,
-        );
+        const uniqueMembers = this._filterMembers(memberIds, userId);
+
         const newGroupConversation = await prisma.conversation.create({
             data: {
                 title,
@@ -411,41 +435,13 @@ class ConversationService {
     }
     async addParticipant(userId, conversationId, memberIds) {
         return await prisma.$transaction(async (tx) => {
-            const requester = await this._userInConversation(
+            await this._requireRole(conversationId, userId);
+            const uniqueMembers = this._filterMembers(memberIds, userId);
+            const existingMap = await this._getExistingMembersMap(
+                tx,
                 conversationId,
-                userId,
+                uniqueMembers,
             );
-
-            // 2. Check quyền (chỉ admin được add)
-            if (!allowedRoles.includes(requester.role)) {
-                throw new AppError("FORBIDDEN", HTTP_STATUS.FORBIDDEN);
-            }
-
-            const conversation = await this._exitedConversation(conversationId);
-
-            if (conversation.type === "DIRECT") {
-                throw new AppError(
-                    "Cannot add member to direct chat",
-                    HTTP_STATUS.BAD_REQUEST,
-                );
-            }
-
-            const uniqueMembers = [...new Set(memberIds)].filter(
-                (id) => id !== userId,
-            );
-
-            // lấy member đã trong conversation
-            const existingMembers = await tx.conversationParticipant.findMany({
-                where: {
-                    conversationId,
-                    userId: { in: uniqueMembers },
-                },
-            });
-
-            const existingMap = new Map(
-                existingMembers.map((m) => [m.userId, m]),
-            );
-
             const results = [];
 
             for (const memberId of uniqueMembers) {
@@ -481,42 +477,13 @@ class ConversationService {
 
     async removeParticipant(userId, conversationId, memberIds) {
         return await prisma.$transaction(async (tx) => {
-            const requester = await this._userInConversation(
+            await this._requireRole(conversationId, userId);
+            const uniqueMembers = this._filterMembers(memberIds, userId);
+            const existingMap = await this._getExistingMembersMap(
+                tx,
                 conversationId,
-                userId,
+                uniqueMembers,
             );
-
-            // 2. Check quyền (chỉ owner và admin được kick)
-            if (!allowedRoles.includes(requester.role)) {
-                throw new AppError("FORBIDDEN", HTTP_STATUS.FORBIDDEN);
-            }
-
-            // ko kick bản thân
-            const uniqueMembers = [...new Set(memberIds)].filter(
-                (id) => id !== userId,
-            );
-
-            const conversation = await this._exitedConversation(conversationId);
-
-            if (conversation.type === "DIRECT") {
-                throw new AppError(
-                    "Cannot kick in direct chat",
-                    HTTP_STATUS.BAD_REQUEST,
-                );
-            }
-
-            // lấy member đã trong conversation
-            const existingMembers = await tx.conversationParticipant.findMany({
-                where: {
-                    conversationId,
-                    userId: { in: uniqueMembers },
-                },
-            });
-
-            const existingMap = new Map(
-                existingMembers.map((m) => [m.userId, m]),
-            );
-
             const results = [];
 
             for (const memberId of uniqueMembers) {
@@ -524,10 +491,6 @@ class ConversationService {
 
                 // nếu đã left rồi thì skip
                 if (!existing || existing.leftAt) continue;
-
-                if (allowedRoles.includes(requester.role)) {
-                    throw new AppError("FORBIDDEN", HTTP_STATUS.FORBIDDEN);
-                }
 
                 const participant = await tx.conversationParticipant.update({
                     where: {
@@ -549,42 +512,13 @@ class ConversationService {
     }
     async promoteToAdmin(userId, conversationId, memberIds) {
         return await prisma.$transaction(async (tx) => {
-            const requester = await this._userInConversation(
+            await this._requireRole(conversationId, userId);
+            const uniqueMembers = this._filterMembers(memberIds, userId);
+            const existingMap = await this._getExistingMembersMap(
+                tx,
                 conversationId,
-                userId,
+                uniqueMembers,
             );
-
-            // 2. Check quyền (chỉ admin được update admin)
-            if (!allowedRoles.includes(requester.role)) {
-                throw new AppError("FORBIDDEN", HTTP_STATUS.FORBIDDEN);
-            }
-
-            // ko update bản thân
-            const uniqueMembers = [...new Set(memberIds)].filter(
-                (id) => id !== userId,
-            );
-
-            const conversation = await this._exitedConversation(conversationId);
-
-            if (conversation.type === "DIRECT") {
-                throw new AppError(
-                    "Cannot update in direct chat",
-                    HTTP_STATUS.BAD_REQUEST,
-                );
-            }
-
-            // lấy member đã trong conversation
-            const existingMembers = await tx.conversationParticipant.findMany({
-                where: {
-                    conversationId,
-                    userId: { in: uniqueMembers },
-                },
-            });
-
-            const existingMap = new Map(
-                existingMembers.map((m) => [m.userId, m]),
-            );
-
             const results = [];
 
             for (const memberId of uniqueMembers) {
@@ -689,7 +623,7 @@ class ConversationService {
             select: { userId: true, role: true },
         });
 
-        const adminCount = members.filter((m) => m.role === "admin").length;
+        const adminCount = members.filter((m) => m.role === "ADMIN").length;
 
         if (user.role === "admin" && adminCount <= 1) {
             throw new AppError(

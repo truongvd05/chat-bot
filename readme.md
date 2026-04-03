@@ -422,6 +422,8 @@ src/
  └─ schedules/
  └─ service/
  └─ utils/
+ └─ schemas/
+
 
 ```
 
@@ -429,13 +431,13 @@ src/
 - **services**: xử lý business logic
 - **middlewares**: auth, rate limit
 - **utils**: helper functions
+- **schema**: validate input
 
 ---
 
 ## 9. Định hướng nâng cấp
 
 - gửi được anh, emoji
-- Input validation (Zod)
 - Unit / integration test
 - Docker + CI/CD
 

@@ -1,76 +1,52 @@
 import authService from "#services/auth.service.js";
 import jwtconfig from "#config/jwt.js";
 import jwt from "jsonwebtoken";
-import validateChangePassword from "#utils/validateChangePassword.js";
 import { HTTP_STATUS } from "#config/constants.js";
 import AppError from "#utils/AppError.js";
-import validator from "validator";
 import { extractAccessToken } from "#utils/extractAccessToken.js";
+import {
+    changePasswordSchema,
+    forgotPasswordSchema,
+    loginSchema,
+    refreshTokenSchema,
+    registerSchema,
+    resetPasswordSchema,
+    validateEmailSchema,
+} from "#schemas/auth.schema.js";
 
 class AuthController {
     async register(req, res) {
-        const { name, email, password, confirm_password } = req.body;
+        const result = registerSchema.safeParse(req.body);
 
-        if (!name || typeof name !== "string" || name.trim().length === 0) {
+        if (!result.success) {
             throw new AppError(
-                "Name is required and must be valid",
+                result.error.errors[0].message,
                 HTTP_STATUS.BAD_REQUEST,
             );
         }
-        if (name.trim().length < 2) {
-            throw new AppError(
-                "Name is must be at least 2 characters",
-                HTTP_STATUS.BAD_REQUEST,
-            );
-        }
-        if (!email || typeof email !== "string" || email.trim().length === 0) {
-            throw new AppError(
-                "Email is required and must be valid",
-                HTTP_STATUS.BAD_REQUEST,
-            );
-        }
-        if (
-            !password ||
-            typeof password !== "string" ||
-            password.trim().length < 6
-        ) {
-            throw new AppError(
-                "Password must be at least 6 characters",
-                HTTP_STATUS.BAD_REQUEST,
-            );
-        }
-        if (password !== confirm_password) {
-            throw new AppError(
-                "Passwords do not match",
-                HTTP_STATUS.BAD_REQUEST,
-            );
-        }
+
+        const { name, email, password } = result.data;
 
         const { user, token } = await authService.register(
             name,
             email,
             password,
         );
+
         return res.success({ user, token }, 201);
     }
     async login(req, res) {
-        const { email, password } = req.body;
-        if (!email || typeof email !== "string" || email.trim().length === 0) {
+        const result = loginSchema.safeParse(req.body);
+
+        if (!result.success) {
             throw new AppError(
-                "Email is required and must be valid",
+                result.error.errors[0].message,
                 HTTP_STATUS.BAD_REQUEST,
             );
         }
-        if (
-            !password ||
-            typeof password !== "string" ||
-            password.trim().length < 6
-        ) {
-            throw new AppError(
-                "Password must be at least 6 characters",
-                HTTP_STATUS.BAD_REQUEST,
-            );
-        }
+
+        const { email, password } = result.data;
+
         const { user, token } = await authService.login(email, password);
 
         return res.success({ user, token }, 200);
@@ -119,15 +95,19 @@ class AuthController {
         return res.success(user);
     }
     async refreshAccessToken(req, res) {
-        const { refresh_token } = req.body;
-        if (!refresh_token) {
+        const result = refreshTokenSchema.safeParse(req.body);
+
+        if (!result.success) {
             throw new AppError(
-                "MISSING_REFRESH_TOKEN",
+                result.error.errors[0].message,
                 HTTP_STATUS.BAD_REQUEST,
             );
         }
 
+        const { refresh_token } = result.data;
+
         const accessToken = await authService.refreshAccessToken(refresh_token);
+
         return res.success(
             {
                 access_token: accessToken.access_token,
@@ -137,24 +117,34 @@ class AuthController {
         );
     }
     async changePassword(req, res) {
-        const password = req.body.password;
-        const newPassword = req.body.new_password;
-        const confirmPassword = req.body.confirm_password;
+        const result = changePasswordSchema.safeParse(req.body);
         const user = req.user;
-        validateChangePassword({ password, newPassword, confirmPassword });
 
-        await authService.changePassword(user, password, newPassword);
+        if (!result.success) {
+            throw new AppError(
+                result.error.errors[0].message,
+                HTTP_STATUS.BAD_REQUEST,
+            );
+        }
+
+        const { password, new_password, confirm_password } = result.data;
+
+        await authService.changePassword(user, password, new_password);
 
         return res.success("PASSWORD_CHANGED");
     }
     async forgotPassword(req, res) {
-        const email = req.body.email;
-        if (!email || typeof email !== "string" || email.trim().length === 0) {
+        const result = forgotPasswordSchema.safeParse(req.body);
+
+        if (!result.success) {
             throw new AppError(
-                "Invalid or misssing email",
+                result.error.errors[0].message,
                 HTTP_STATUS.BAD_REQUEST,
             );
         }
+
+        const { email } = result.data;
+
         await authService.forgotPassword(email);
 
         return res.success(
@@ -163,43 +153,50 @@ class AuthController {
         );
     }
     async resetPassword(req, res) {
-        const password = req.body.password;
-        const newPassword = req.body.new_password;
-        const token = req.query.token;
-        if (!password || password.trim().length === 0) {
+        const result = resetPasswordSchema.safeParse(req.body);
+
+        if (!result.success) {
             throw new AppError(
-                "Missing password fields",
+                result.error.errors[0].message,
                 HTTP_STATUS.BAD_REQUEST,
             );
         }
-        if (newPassword.trim().length < 6) {
-            throw new AppError(
-                "Mật khẩu phải ít nhất 6 ký tự",
-                HTTP_STATUS.BAD_REQUEST,
-            );
-        }
-        if (password !== newPassword) {
-            throw new AppError("Mật khẩu Không khớp", HTTP_STATUS.BAD_REQUEST);
-        }
+
+        const token = req.query.token; // lấy riêng từ query
         if (!token) {
             throw new AppError(
-                "Invalit or missing token",
+                "Invalid or missing token",
                 HTTP_STATUS.BAD_REQUEST,
             );
         }
-        await authService.resetPassword(token, password, newPassword);
+
+        if (!result.success) {
+            throw new AppError(
+                result.error.errors[0].message,
+                HTTP_STATUS.BAD_REQUEST,
+            );
+        }
+
+        const { password, new_password } = result.data;
+
+        await authService.resetPassword(token, password, new_password);
 
         return res.success("Đổi mật khẩu thành công", 200);
     }
     async validateEmail(req, res) {
-        const { email } = req.body || null;
-        if (!email) {
-            throw new AppError("Email is required", 400);
+        const result = validateEmailSchema.safeParse(req.body);
+
+        if (!result.success) {
+            throw new AppError(
+                result.error.errors[0].message,
+                HTTP_STATUS.BAD_REQUEST,
+            );
         }
-        if (!validator.isEmail(email)) {
-            throw new AppError("Invalid email format", 400);
-        }
+
+        const { email } = result.data;
+
         const user = await authService.findUserByEmail(email);
+
         if (user) throw new AppError("Email already exists", 400);
         return res.success({
             available: !user,

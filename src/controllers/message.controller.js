@@ -1,55 +1,68 @@
 import { HTTP_STATUS } from "#config/constants.js";
+import {
+    getMessagesSchema,
+    sendMessageSchema,
+} from "#schemas/message.schema.js";
 import messageService from "#services/message.service.js";
 import { serializeBigInt } from "#utils/serialize.js";
 
 class MessageController {
     async sendMessage(req, res) {
-        const targetUserId = req.targetUserId;
-        const conversationId = req.conversationId || null;
-        const content = req.body.content?.trim();
-        const user = req.user;
+        const result = sendMessageSchema.safeParse(req.body);
 
-        if (
-            !content ||
-            typeof content !== "string" ||
-            content.trim().length === 0
-        ) {
-            return res.error("Message content is required");
+        if (!result.success) {
+            throw new AppError(
+                result.error.errors[0].message,
+                HTTP_STATUS.BAD_REQUEST,
+            );
         }
 
-        const result = await messageService.sendMessage(
+        const { content } = result.data;
+        const targetUserId = req.targetUserId;
+        const conversationId = req.conversationId || null;
+        const user = req.user;
+
+        const send = await messageService.sendMessage(
             conversationId,
             user,
             content,
             targetUserId,
         );
-        return res.success(result, HTTP_STATUS.CREATED);
+        return res.success(send, HTTP_STATUS.CREATED);
     }
     async sendBotMessage(req, res) {
-        const user = req.user;
-        const content = req.body.content?.trim();
-        const conversationId = req.conversationId;
-
-        if (
-            !content ||
-            typeof content !== "string" ||
-            content.trim().length === 0
-        ) {
-            return res.error("Message content is required");
+        const result = sendMessageSchema.safeParse(req.body);
+        if (!result.success) {
+            throw new AppError(
+                result.error.errors[0].message,
+                HTTP_STATUS.BAD_REQUEST,
+            );
         }
 
-        const result = await messageService.sendBotMessage(
+        const { content } = result.data;
+
+        const user = req.user;
+        const conversationId = req.conversationId;
+
+        const send = await messageService.sendBotMessage(
             user.id,
             conversationId,
             content,
         );
-        return res.success(result, HTTP_STATUS.CREATED);
+        return res.success(send, HTTP_STATUS.CREATED);
     }
     async getMessages(req, res) {
+        const result = getMessagesSchema.safeParse(req.query);
+        if (!result.success) {
+            throw new AppError(
+                result.error.errors[0].message,
+                HTTP_STATUS.BAD_REQUEST,
+            );
+        }
+
+        const { c: cursor, limit } = result.data;
         const user = req.user;
         const conversationId = req.conversationId;
-        const cursor = req.query.c;
-        const limit = Number(req.query.limit) || 10;
 
         const messages = await messageService.getMessage(
             user.id,
@@ -60,19 +73,25 @@ class MessageController {
         return res.success(messages, HTTP_STATUS.OK);
     }
     async editMessage(req, res) {
+        const result = sendMessageSchema.safeParse(req.body);
+
+        if (!result.success) {
+            throw new AppError(
+                result.error.errors[0].message,
+                HTTP_STATUS.BAD_REQUEST,
+            );
+        }
+
+        const { content } = result.data;
         const user = req.user;
-        const content = req.body.content;
         const messageId = req.messageId;
 
-        if (typeof content !== "string" || !content.trim()) {
-            return res.error("invalid or missing message");
-        }
-        const result = await messageService.editMessage(
+        const edit = await messageService.editMessage(
             user.id,
             messageId,
             content,
         );
-        return res.success(result, HTTP_STATUS.CREATED);
+        return res.success(edit, HTTP_STATUS.CREATED);
     }
     async deleteMessage(req, res) {
         const user = req.user;

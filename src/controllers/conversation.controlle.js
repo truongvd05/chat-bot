@@ -5,19 +5,33 @@ import AppError from "#utils/AppError.js";
 import jwt from "jsonwebtoken";
 import jwtconfig from "#config/jwt.js";
 import { addClient, emit } from "#SSE/sseManager.js";
+import {
+    createBotConversationSchema,
+    createGroupConversationSchema,
+    membersSchema,
+    renameConversationSchema,
+    searchSchema,
+} from "#schemas/conversation.schema.js";
 
 class ConversationController {
     async createBotConversation(req, res) {
-        const { title } = req.body;
-        if (!title)
-            throw new AppError("Title is required", HTTP_STATUS.BAD_REQUEST);
-        if (!title.trim())
-            throw new AppError("Invalid title", HTTP_STATUS.BAD_REQUEST);
+        const result = createBotConversationSchema.safeParse(req.body);
+
+        if (!result.success) {
+            throw new AppError(
+                result.error.errors[0].message,
+                HTTP_STATUS.BAD_REQUEST,
+            );
+        }
+        const { title } = result.data;
+
         const user = req.user;
+
         const newConversation = await conversationService.createBotConversation(
             user,
             title,
         );
+
         return res.success(newConversation, HTTP_STATUS.CREATED);
     }
     async getConversations(req, res) {
@@ -59,25 +73,16 @@ class ConversationController {
         return res.success(conversation, HTTP_STATUS.CREATED);
     }
     async createGroupConversation(req, res) {
-        const user = req.user;
-        const title = req.body.name;
-        const members = req.body.members;
-
-        if (!Array.isArray(members) || members.length === 0) {
+        const result = createGroupConversationSchema.safeParse(req.body);
+        if (!result.success) {
             throw new AppError(
-                "Group phải có ít nhất 1 member",
+                result.error.errors[0].message,
                 HTTP_STATUS.BAD_REQUEST,
             );
         }
+        const { name: title, members: memberIds } = result.data;
+        const user = req.user;
 
-        const memberIds = members.map((id) => BigInt(id));
-
-        if (!title || typeof title !== "string" || title.trim().length === 0) {
-            throw new AppError("INVALID_name", HTTP_STATUS.BAD_REQUEST);
-        }
-        if (title.length > 255) {
-            throw new AppError("TITLE_TOO_LONG", HTTP_STATUS.BAD_REQUEST);
-        }
         const conversation = await conversationService.createGroupConversation(
             user.id,
             title,
@@ -88,7 +93,6 @@ class ConversationController {
     }
     async getConversation(req, res) {
         const user = req.user;
-
         const conversationId = req.conversationId;
 
         const conversation = await conversationService.getConversation(
@@ -99,23 +103,24 @@ class ConversationController {
         return res.success(conversation, HTTP_STATUS.OK);
     }
     async renameConversation(req, res) {
-        const title = req.body?.title?.trim();
+        const result = renameConversationSchema.safeParse(req.body);
+
+        if (!result.success) {
+            throw new AppError(
+                result.error.errors[0].message,
+                HTTP_STATUS.BAD_REQUEST,
+            );
+        }
+        const { title } = result.data;
         const user = req.user;
-
         const conversationId = req.conversationId;
-
-        if (!title || typeof title !== "string" || title.trim().length === 0) {
-            throw new AppError("INVALID_TITLE", HTTP_STATUS.BAD_REQUEST);
-        }
-        if (title.length > 255) {
-            throw new AppError("TITLE_TOO_LONG", HTTP_STATUS.BAD_REQUEST);
-        }
 
         const newConversation = await conversationService.renameConversation(
             user.id,
             conversationId,
             title,
         );
+
         return res.success(newConversation, HTTP_STATUS.OK);
     }
     async deleteConversation(req, res) {
@@ -144,92 +149,104 @@ class ConversationController {
         res.write(`event: connected\ndata: "ok"\n\n`);
     }
     async searchConversation(req, res) {
+        const result = searchSchema.safeParse(req.query);
+        if (!result.success) {
+            throw new AppError(
+                result.error.errors[0].message,
+                HTTP_STATUS.BAD_REQUEST,
+            );
+        }
+        const { q } = result.data;
         const user = req.user;
-        const { q } = req.query;
-        if (!q) throw new AppError("INVALID_OR_MISSING_QERRY");
 
-        const result = await conversationService.searchConversation(user.id, q);
-        return res.success(result, HTTP_STATUS.OK);
+        const search = await conversationService.searchConversation(user.id, q);
+
+        return res.success(search, HTTP_STATUS.OK);
     }
     async addParticipant(req, res) {
-        const user = req.user;
-        const conversationId = req.conversationId;
-        const members = req.body.members;
+        const result = membersSchema.safeParse(req.body);
 
-        if (!Array.isArray(members) || members.length === 0) {
+        if (!result.success) {
             throw new AppError(
-                "Phải thêm ít nhất 1 thành viên",
+                result.error.errors[0].message,
                 HTTP_STATUS.BAD_REQUEST,
             );
         }
 
-        const memberIds = members.map((id) => BigInt(id));
+        const { members: memberIds } = result.data;
+        const user = req.user;
+        const conversationId = req.conversationId;
 
-        const result = await conversationService.addParticipant(
+        const addMembers = await conversationService.addParticipant(
             user.id,
             conversationId,
             memberIds,
         );
-        return res.success(result, HTTP_STATUS.CREATED);
+        return res.success(addMembers, HTTP_STATUS.CREATED);
     }
     async removeParticipant(req, res) {
-        const user = req.user;
-        const conversationId = req.conversationId;
-        const members = req.body.members;
-
-        if (!Array.isArray(members) || members.length === 0) {
+        const result = membersSchema.safeParse(req.body);
+        if (!result.success) {
             throw new AppError(
-                "Phải thêm ít nhất 1 thành viên",
+                result.error.errors[0].message,
                 HTTP_STATUS.BAD_REQUEST,
             );
         }
+        const { members: memberIds } = result.data;
+        const user = req.user;
+        const conversationId = req.conversationId;
 
-        const memberIds = members.map((id) => BigInt(id));
-
-        const result = await conversationService.removeParticipant(
+        const removeMembers = await conversationService.removeParticipant(
             user.id,
             conversationId,
             memberIds,
         );
 
-        return res.success(result, HTTP_STATUS.OK);
+        return res.success(removeMembers, HTTP_STATUS.OK);
     }
 
     async listParticipants(req, res) {}
     async searchAvailableUsers(req, res) {
-        const user = req.user;
-        const { q } = req.query;
-        const conversationId = req.conversationId;
-
-        if (!q.trim()) throw new AppError("Invalid or missing querry");
-        const result = await conversationService.searchAvailableUsers(
-            user.id,
-            conversationId,
-            q,
-        );
-        return res.success(result, HTTP_STATUS.CREATED);
-    }
-    async promoteToAdmin(req, res) {
-        const user = req.user;
-        const conversationId = req.conversationId;
-
-        const members = req.body.members;
-
-        if (!Array.isArray(members) || members.length === 0) {
+        const result = searchSchema.safeParse(req.query);
+        if (!result.success) {
             throw new AppError(
-                "Phải thêm ít nhất 1 thành viên",
+                result.error.errors[0].message,
                 HTTP_STATUS.BAD_REQUEST,
             );
         }
 
-        const memberIds = members.map((id) => BigInt(id));
+        const { q } = result.data;
+        const user = req.user;
+        const conversationId = req.conversationId;
 
-        const result = await conversationService.promoteToAdmin(
+        if (!q.trim()) throw new AppError("Invalid or missing querry");
+        const search = await conversationService.searchAvailableUsers(
+            user.id,
+            conversationId,
+            q,
+        );
+        return res.success(search, HTTP_STATUS.CREATED);
+    }
+    async promoteToAdmin(req, res) {
+        const result = membersSchema.safeParse(req.body);
+
+        if (!result.success) {
+            throw new AppError(
+                result.error.errors[0].message,
+                HTTP_STATUS.BAD_REQUEST,
+            );
+        }
+        const { members: memberIds } = result.data;
+        const conversationId = req.conversationId;
+        const user = req.user;
+
+        const promote = await conversationService.promoteToAdmin(
             user.id,
             conversationId,
             memberIds,
         );
-        return res.success(result, HTTP_STATUS.CREATED);
+
+        return res.success(promote, HTTP_STATUS.CREATED);
     }
     async leaveGroup(req, res) {
         const user = req.user;
