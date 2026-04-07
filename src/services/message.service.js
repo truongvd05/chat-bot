@@ -4,6 +4,8 @@ import AppError from "#utils/AppError.js";
 import { serializeBigInt } from "#utils/serialize.js";
 import chatBotService from "./chatBot.service.js";
 import conversationService from "./conversation.service.js";
+import path from "path";
+import fs from "fs/promises";
 
 class MessageService {
     // kiểm tra user có trong cuộc hội thoại hay không và cuộc hộc thoại đã bị xóa chưa
@@ -98,113 +100,120 @@ class MessageService {
         });
         return serializeBigInt(updated);
     }
-    async sendMessage(
-        conversationId,
-        user,
-        content,
-        targetUserId,
-        role = "user",
-    ) {
-        if (user.id === targetUserId) {
+    async uploadFile(file) {
+        const fileName = `${Date.now()}-${file.originalname}`;
+        const filePath = path.join("src/uploads", fileName);
+
+        await fs.writeFile(filePath, file.buffer);
+
+        return {
+            fileName: file.originalname,
+            fileUrl: `/src/uploads/${fileName}`,
+            fileType: file.mimetype,
+            fileSize: file.size,
+        };
+    }
+    async sendMessage(conversationId, user, content, files = [], targetUserId) {
+        // Lấy hoặc tạo conversation
+        const conversation = await this._getOrCreateConversation(
+            conversationId,
+            user.id,
+            targetUserId,
+        );
+
+        // Chỉ validate khi DIRECT
+        if (conversation.type === "DIRECT") {
+            await this._validateDirectMessage(user.id, targetUserId);
+        }
+
+        await this._userInConversation(conversation.id, user.id);
+
+        const attachments = await Promise.all(
+            files.map((f) => this.uploadFile(f)),
+        );
+
+        const message = await this._createMessage({
+            conversationId,
+            userId: user.id,
+            content,
+            attachments,
+        });
+
+        return serializeBigInt(message);
+    }
+
+    async _validateDirectMessage(userId, targetUserId) {
+        if (!targetUserId)
+            throw new AppError(
+                "targetUserId is required",
+                HTTP_STATUS.BAD_REQUEST,
+            );
+
+        if (userId === targetUserId) {
             throw new AppError(
                 "cannot send message yourself",
                 HTTP_STATUS.BAD_REQUEST,
             );
         }
+
         const targetUser = await prisma.user.findUnique({
             where: { id: targetUserId },
             select: { id: true },
         });
-        if (!targetUser) {
+        if (!targetUser)
             throw new AppError("target user not found", HTTP_STATUS.NOT_FOUND);
-        }
+
         const isBlock = await prisma.userBlock.findFirst({
             where: {
                 OR: [
-                    { blockerId: targetUserId, blockedId: user.id },
-                    { blockerId: user.id, blockedId: targetUserId },
+                    { blockerId: targetUserId, blockedId: userId },
+                    { blockerId: userId, blockedId: targetUserId },
                 ],
             },
         });
         if (isBlock) throw new AppError("user block", HTTP_STATUS.BAD_REQUEST);
+    }
 
-        // check có conversation chưa
-        let conversation = await prisma.conversation.findUnique({
-            where: { id: conversationId },
-            include: {
-                participants: true,
-            },
-        });
-        // chưa có thì tạo
-        if (!conversation) {
-            conversation = await conversationService.createDirectConversation(
-                user.id,
-                targetUserId,
+    async _getOrCreateConversation(conversationId, userId, targetUserId) {
+        if (conversationId) {
+            const conversation = await prisma.conversation.findUnique({
+                where: { id: conversationId },
+                include: { participants: true },
+            });
+            if (conversation) return conversation;
+        }
+        // Không tìm thấy → tạo mới DIRECT
+        if (!targetUserId) {
+            throw new AppError(
+                "targetUserId is required",
+                HTTP_STATUS.BAD_REQUEST,
             );
         }
-        await this._userInConversation(conversation.id, user.id);
-        await this._userInConversation(conversation.id, targetUserId);
-
-        const payload = {
-            conversation,
-            userId: user.id,
-            content,
-            role,
-        };
-        switch (conversation.type) {
-            case "DIRECT":
-            case "GROUP": {
-                const newMessage = await this.handleSendMessage(payload);
-                return serializeBigInt(newMessage);
-            }
-            case "BOT": {
-                const newMessage = await this.handleBotMessage(payload);
-                return serializeBigInt(newMessage);
-            }
-            default:
-                throw new AppError("Invalid conversation type", 400);
-        }
-    }
-
-    async handleSendMessage({ conversation, userId, content }) {
-        return await prisma.$transaction(async (tx) => {
-            const message = await tx.message.create({
-                data: {
-                    conversationId: conversation.id,
-                    userId,
-                    content,
-                    role: "user",
-                },
-            });
-
-            await tx.conversation.update({
-                where: { id: conversation.id },
-                data: {
-                    lastMessageId: message.id,
-                    lastMessageAt: message.createdAt,
-                },
-            });
-
-            return message;
-        });
-    }
-    async handleBotMessage({ conversation, userId, content, role }) {
-        return this._createMessage({
-            conversationId: conversation.id,
+        return conversationService.createDirectConversation(
             userId,
-            content,
-            role: role ?? "user",
-        });
+            targetUserId,
+        );
     }
-    async _createMessage({ conversationId, userId, content, role }) {
+
+    // Gộp _handleSendMessage + _createMessage thành 1
+    async _createMessage({
+        conversationId,
+        userId,
+        content,
+        attachments = [],
+    }) {
         return prisma.$transaction(async (tx) => {
             const message = await tx.message.create({
                 data: {
-                    userId: role === "user" ? userId : null,
                     conversationId,
+                    userId,
                     content,
-                    role,
+                    role: "user",
+                    attachments: {
+                        create: attachments,
+                    },
                 },
+                include: { attachments: true },
             });
 
             await tx.conversation.update({
@@ -222,15 +231,39 @@ class MessageService {
 
     async getMessage(userId, conversationId, cursor, limit) {
         await this._userInConversation(conversationId, userId);
+
         const messages = await prisma.message.findMany({
             where: {
                 conversationId,
                 deletedAt: null,
                 ...(cursor && {
-                    createdAt: {
-                        lt: new Date(cursor),
+                    id: {
+                        lt: BigInt(cursor),
                     },
                 }),
+            },
+            include: {
+                attachments: true,
+                user: {
+                    select: {
+                        id: true,
+                        name: true,
+                        avatarUrl: true,
+                    },
+                },
+                replies: {
+                    where: { deletedAt: null },
+                    include: {
+                        attachments: true,
+                        user: {
+                            select: {
+                                id: true,
+                                name: true,
+                                avatarUrl: true,
+                            },
+                        },
+                    },
+                },
             },
             orderBy: {
                 id: "desc",

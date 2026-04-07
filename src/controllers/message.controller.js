@@ -21,11 +21,13 @@ class MessageController {
         const targetUserId = req.targetUserId;
         const conversationId = req.conversationId || null;
         const user = req.user;
+        const files = req.files ?? [];
 
         const send = await messageService.sendMessage(
             conversationId,
             user,
             content,
+            files,
             targetUserId,
         );
         return res.success(send, HTTP_STATUS.CREATED);

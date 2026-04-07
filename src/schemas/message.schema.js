@@ -2,7 +2,7 @@
 import { z } from "zod";
 
 export const sendMessageSchema = z.object({
-    content: z.string().min(1, "Message content is required"),
+    content: z.string().optional().default(""),
 });
 
 export const getMessagesSchema = z.object({
