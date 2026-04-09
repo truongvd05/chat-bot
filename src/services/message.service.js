@@ -2,10 +2,9 @@ import { HTTP_STATUS } from "#config/constants.js";
 import prisma from "#libs/prisma.js";
 import AppError from "#utils/AppError.js";
 import { serializeBigInt } from "#utils/serialize.js";
+import uploadBuffer from "#utils/uploadCoud.js";
 import chatBotService from "./chatBot.service.js";
 import conversationService from "./conversation.service.js";
-import path from "path";
-import fs from "fs/promises";
 
 class MessageService {
     // kiểm tra user có trong cuộc hội thoại hay không và cuộc hộc thoại đã bị xóa chưa
@@ -101,14 +100,13 @@ class MessageService {
         return serializeBigInt(updated);
     }
     async uploadFile(file) {
-        const fileName = `${Date.now()}-${file.originalname}`;
-        const filePath = path.join("src/uploads", fileName);
-
-        await fs.writeFile(filePath, file.buffer);
+        const result = await uploadBuffer(file.buffer, {
+            public_id: `${Date.now()}-${file.originalname}`,
+        });
 
         return {
             fileName: file.originalname,
-            fileUrl: `/src/uploads/${fileName}`,
+            fileUrl: result.secure_url,
             fileType: file.mimetype,
             fileSize: file.size,
         };

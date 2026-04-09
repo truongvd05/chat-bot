@@ -3,6 +3,7 @@ import {
     getMessagesSchema,
     sendMessageSchema,
 } from "#schemas/message.schema.js";
+import conversationService from "#services/conversation.service.js";
 import messageService from "#services/message.service.js";
 import { serializeBigInt } from "#utils/serialize.js";
 
@@ -23,14 +24,24 @@ class MessageController {
         const user = req.user;
         const files = req.files ?? [];
 
-        const send = await messageService.sendMessage(
+        const message = await messageService.sendMessage(
             conversationId,
             user,
             content,
             files,
             targetUserId,
         );
-        return res.success(send, HTTP_STATUS.CREATED);
+        const io = req.app.get("io");
+
+        const participants = await conversationService.finDparticipants(
+            message.conversationId,
+        );
+
+        for (const p of participants) {
+            io.to(`user_${p.userId}`).emit("receive_message", message);
+        }
+
+        return res.success(message, HTTP_STATUS.CREATED);
     }
     async sendBotMessage(req, res) {
         const result = sendMessageSchema.safeParse(req.body);
@@ -72,6 +83,7 @@ class MessageController {
             cursor,
             limit,
         );
+
         return res.success(messages, HTTP_STATUS.OK);
     }
     async editMessage(req, res) {

@@ -11,11 +11,13 @@ import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import { initSocket } from "#config/socket.js";
 import http from "http";
+import path from "path";
 
 var app = express();
+
 const server = http.createServer(app);
 
-initSocket(server);
+initSocket(server, app);
 
 const port = process.env.PORT || 3000;
 
@@ -50,7 +52,7 @@ app.use(helmet());
 app.use(express.json());
 app.use(cookieParser());
 app.use(responseFormat);
-
+app.use("/uploads", express.static(path.join(process.cwd(), "src/uploads")));
 app.use("/docs", swaggerSetup.serve, swaggerSetup.setup);
 app.use("/api", router);
 app.get("/", (req, res) => {
