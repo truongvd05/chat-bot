@@ -4,7 +4,6 @@ import rateLimitServce from "#services/rateLimit.servce.js";
 import authMeRequired from "#middlewares/authRequired.js";
 import asyneHandle from "#middlewares/asyneHandle.js";
 import parseConversationId from "#middlewares/parseConversationId.js";
-import parseTargetId from "#middlewares/parseTargerId.js";
 import parseMessageId from "#middlewares/parseMessageId.js";
 import multer from "multer";
 
@@ -38,7 +37,6 @@ router.post(
     rateLimitServce.longMessage(),
     upload.array("files"),
     parseConversationId,
-    parseTargetId,
     asyneHandle(messageController.sendMessage),
 );
 

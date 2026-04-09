@@ -112,19 +112,7 @@ class MessageService {
         };
     }
     async sendMessage(conversationId, user, content, files = [], targetUserId) {
-        // Lấy hoặc tạo conversation
-        const conversation = await this._getOrCreateConversation(
-            conversationId,
-            user.id,
-            targetUserId,
-        );
-
-        // Chỉ validate khi DIRECT
-        if (conversation.type === "DIRECT") {
-            await this._validateDirectMessage(user.id, targetUserId);
-        }
-
-        await this._userInConversation(conversation.id, user.id);
+        await this._userInConversation(conversationId, user.id);
 
         const attachments = await Promise.all(
             files.map((f) => this.uploadFile(f)),
@@ -138,38 +126,6 @@ class MessageService {
         });
 
         return serializeBigInt(message);
-    }
-
-    async _validateDirectMessage(userId, targetUserId) {
-        if (!targetUserId)
-            throw new AppError(
-                "targetUserId is required",
-                HTTP_STATUS.BAD_REQUEST,
-            );
-
-        if (userId === targetUserId) {
-            throw new AppError(
-                "cannot send message yourself",
-                HTTP_STATUS.BAD_REQUEST,
-            );
-        }
-
-        const targetUser = await prisma.user.findUnique({
-            where: { id: targetUserId },
-            select: { id: true },
-        });
-        if (!targetUser)
-            throw new AppError("target user not found", HTTP_STATUS.NOT_FOUND);
-
-        const isBlock = await prisma.userBlock.findFirst({
-            where: {
-                OR: [
-                    { blockerId: targetUserId, blockedId: userId },
-                    { blockerId: userId, blockedId: targetUserId },
-                ],
-            },
-        });
-        if (isBlock) throw new AppError("user block", HTTP_STATUS.BAD_REQUEST);
     }
 
     async _getOrCreateConversation(conversationId, userId, targetUserId) {

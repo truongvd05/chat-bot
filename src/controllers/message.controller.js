@@ -19,7 +19,6 @@ class MessageController {
         }
 
         const { content } = result.data;
-        const targetUserId = req.targetUserId;
         const conversationId = req.conversationId || null;
         const user = req.user;
         const files = req.files ?? [];
@@ -29,7 +28,6 @@ class MessageController {
             user,
             content,
             files,
-            targetUserId,
         );
         const io = req.app.get("io");
 
