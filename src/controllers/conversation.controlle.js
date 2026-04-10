@@ -46,6 +46,7 @@ class ConversationController {
 
         const conversations =
             await conversationService.getMyBotConversations(user);
+
         return res.success(conversations, HTTP_STATUS.OK);
     }
     async getMyBotConversation(req, res) {
@@ -165,6 +166,7 @@ class ConversationController {
     }
     async addParticipant(req, res) {
         const result = membersSchema.safeParse(req.body);
+        const io = req.app.get("io");
 
         if (!result.success) {
             throw new AppError(
@@ -181,11 +183,15 @@ class ConversationController {
             user.id,
             conversationId,
             memberIds,
+            io,
         );
+
         return res.success(addMembers, HTTP_STATUS.CREATED);
     }
     async removeParticipant(req, res) {
         const result = membersSchema.safeParse(req.body);
+        const io = req.app.get("io");
+
         if (!result.success) {
             throw new AppError(
                 result.error.errors[0].message,
@@ -200,6 +206,7 @@ class ConversationController {
             user.id,
             conversationId,
             memberIds,
+            io,
         );
 
         return res.success(removeMembers, HTTP_STATUS.OK);
@@ -229,6 +236,7 @@ class ConversationController {
     }
     async promoteToAdmin(req, res) {
         const result = membersSchema.safeParse(req.body);
+        const io = req.app.get("io");
 
         if (!result.success) {
             throw new AppError(
@@ -244,6 +252,7 @@ class ConversationController {
             user.id,
             conversationId,
             memberIds,
+            io,
         );
 
         return res.success(promote, HTTP_STATUS.CREATED);
@@ -251,10 +260,12 @@ class ConversationController {
     async leaveGroup(req, res) {
         const user = req.user;
         const conversationId = req.conversationId;
+        const io = req.app.get("io");
 
         const result = await conversationService.leaveGroup(
             user.id,
             conversationId,
+            io,
         );
 
         return res.success(result, HTTP_STATUS.OK);

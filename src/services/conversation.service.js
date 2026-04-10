@@ -433,7 +433,7 @@ class ConversationService {
             }
         }
     }
-    async addParticipant(userId, conversationId, memberIds) {
+    async addParticipant(userId, conversationId, memberIds, io) {
         return await prisma.$transaction(async (tx) => {
             await this._requireRole(conversationId, userId);
             const uniqueMembers = this._filterMembers(memberIds, userId);
@@ -471,11 +471,27 @@ class ConversationService {
 
                 results.push(participant);
             }
+            // emit socket add user
+            const participants = serializeBigInt(
+                await this.finDparticipants(conversationId),
+            );
+
+            const payload = serializeBigInt({
+                conversationId,
+                addedBy: userId,
+                member: memberIds,
+                action: "add",
+            });
+
+            for (const p of participants) {
+                io.to(`user_${p.userId}`).emit("group_event", payload);
+            }
+
             return serializeBigInt(results);
         });
     }
 
-    async removeParticipant(userId, conversationId, memberIds) {
+    async removeParticipant(userId, conversationId, memberIds, io) {
         return await prisma.$transaction(async (tx) => {
             await this._requireRole(conversationId, userId);
             const uniqueMembers = this._filterMembers(memberIds, userId);
@@ -500,6 +516,7 @@ class ConversationService {
                         },
                     },
                     data: {
+                        role: "MEMBER",
                         leftAt: new Date(),
                     },
                 });
@@ -507,10 +524,24 @@ class ConversationService {
                 results.push(participant);
             }
 
+            // emit socket
+            const participants = await this.finDparticipants(conversationId);
+
+            const payload = serializeBigInt({
+                conversationId,
+                removedBy: userId,
+                member: memberIds,
+                action: "kick",
+            });
+
+            for (const p of participants) {
+                io.to(`user_${p.userId}`).emit("group_event", payload);
+            }
+
             return serializeBigInt(results);
         });
     }
-    async promoteToAdmin(userId, conversationId, memberIds) {
+    async promoteToAdmin(userId, conversationId, memberIds, io) {
         return await prisma.$transaction(async (tx) => {
             await this._requireRole(conversationId, userId);
             const uniqueMembers = this._filterMembers(memberIds, userId);
@@ -541,6 +572,20 @@ class ConversationService {
                 });
 
                 results.push(participant);
+            }
+            const participants = serializeBigInt(
+                await this.finDparticipants(conversationId),
+            );
+
+            const payload = serializeBigInt({
+                conversationId,
+                promotedBy: userId,
+                member: memberIds,
+                action: "promote",
+            });
+
+            for (const p of participants) {
+                io.to(`user_${p.userId}`).emit("group_event", payload);
             }
 
             return serializeBigInt(results);
@@ -615,7 +660,7 @@ class ConversationService {
         });
         return serializeBigInt(users);
     }
-    async leaveGroup(userId, conversationId) {
+    async leaveGroup(userId, conversationId, io) {
         const user = await this._userInConversation(conversationId, userId);
 
         const members = await prisma.conversationParticipant.findMany({
@@ -641,8 +686,23 @@ class ConversationService {
             },
             data: {
                 leftAt: new Date(),
+                role: "MEMBER",
             },
         });
+
+        const participants = serializeBigInt(
+            await this.finDparticipants(conversationId),
+        );
+
+        const payload = serializeBigInt({
+            conversationId,
+            member: [userId],
+            action: "leave",
+        });
+
+        for (const p of participants) {
+            io.to(`user_${p.userId}`).emit("group_event", payload);
+        }
 
         return serializeBigInt(leave);
     }
