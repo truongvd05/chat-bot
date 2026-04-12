@@ -4,94 +4,79 @@
 
 - Swagger UI: /docs
 
-## 1. Giới thiệu
+## Overview
 
-Đây là backend cho một hệ thống **chat bot / chat conversation** tương tự ChatGPT, được xây dựng bằng **Node.js + Express + Prisma**.
+This backend provides a complete system for:
+
+User authentication (JWT + Refresh Token Rotation)
+Chat conversation & messaging
+Real-time AI streaming using Server-Sent Events (SSE)
+Rate limiting (anti-spam)
+Scalable architecture with Redis & Prisma
 
 ## Architecture Overview
 
-Thiết kế và xây dựng hệ thống RESTful APIs sử dụng Node.js và Express:
-
-Triển khai cơ chế xác thực JWT với refresh token rotation, đảm bảo bảo mật và quản lý phiên đăng nhập hiệu quả
-Tích hợp Redis để thực hiện rate limiting và quản lý refresh token
-Xây dựng tính năng quên mật khẩu với hệ thống gửi email, sử dụng cơ chế hash token trước khi lưu vào cơ sở dữ liệu để tăng cường bảo mật
-Triển khai cron job tự động xoá các PasswordResetToken hết hạn nhằm tối ưu và làm sạch dữ liệu hệ thống
-Sử dụng SSE (Server-Sent Events) để xử lý streaming response theo thời gian thực cho tính năng chat/AI
+RESTful API design using Node.js + Express
+JWT authentication with refresh token rotation
+Redis integration for:
+rate limiting
+token storage
+Secure password reset flow:
+token hashing before storing in database
+Cron job:
+auto-delete expired reset tokens
+Real-time streaming via SSE for AI responses
 
 ## Token Strategy
 
-- Access token: short-lived(15m), dùng cho API & SSE
-- Refresh token: lưu trong database gắn với user
-- Khi logout, refresh token được xóa để chặn tái sử dụng
+-- Access Token
+Short-lived (15 minutes)
+Used for API & SSE requests
+Refresh Token
+Stored in database
+Rotated on each refresh
+Deleted on logout (prevent reuse)
 
-Dự án cung cấp:
+## Tech Stack
 
-- Xác thực người dùng (JWT + refresh token)
-- Quản lý conversation & message
-- Streaming phản hồi bằng **Server-Sent Events (SSE)**
-- Rate limiting chống spam
-- Prisma ORM + migration
+-- Backend
+Node.js
+Express
+-- Database & ORM
+Prisma ORM
+MySQL / PostgreSQL
 
-Phù hợp cho:
+-- Authentication
+JWT (Access + Refresh Token)
 
-- Frontend web / mobile
-- Project portfolio Fresher Backend
+-- Realtime & Performance
+Server-Sent Events (SSE)
+Redis (rate limit, token)
 
----
+## Getting Started
 
-## 2. Công nghệ sử dụng
+1. Clone repository
+   git clone https://github.com/truongvd05/chat-bot.git
+   cd chat-bot
+2. Install dependencies
+   npm install
 
-- **Node.js / Express**
-- **Prisma ORM**
-- **JWT (Access Token + Refresh Token)**
-- **SSE (Server-Sent Events)**
-- **Redis (rate limit, token)**
-- **PostgreSQL / MySQL** (tuỳ cấu hình Prisma)
+3. Environment variables
+   Create .env file:
+   DATABASE_URL=
+   JWT_SECRET=
+   JWT_REFRESH_SECRET=
+   ACCESS_TOKEN_EXPIRES_IN=15m
+   REFRESH_TOKEN_EXPIRES_IN=7d
+   REDIS_URL=
+   CLIENT_URL=http://localhost:5173
 
----
+4. Prisma setup
+   npx prisma generate
+   npx prisma migrate deploy
 
-## 3. Cài đặt & chạy project
-
-### 3.1 Clone repository
-
-```bash
-git clone https://github.com/truongvd05/chat-bot.git
-cd chat-bot
-```
-
-### 3.2 Cài dependencies
-
-```bash
-npm install
-```
-
-### 3.3 Environment variables
-
-Tạo file `.env`:
-
-```env
-DATABASE_URL=
-JWT_SECRET=
-JWT_REFRESH_SECRET=
-ACCESS_TOKEN_EXPIRES_IN=15m
-REFRESH_TOKEN_EXPIRES_IN=7d
-REDIS_URL=
-```
-
-### 3.4 Prisma
-
-```bash
-npx prisma migrate deploy
-npx prisma generate
-```
-
-### 3.5 Run server
-
-```bash
-npm run dev
-```
-
----
+5. Run server
+   npm run dev
 
 ## 4. Authentication API
 
@@ -435,19 +420,33 @@ src/
 
 ---
 
-## 9. Định hướng nâng cấp
+📌 Notes
+Ensure database & Redis are running before starting server
+Restart server after updating .env
+Use Swagger (/docs) for API testing
 
-- gửi được anh, emoji
-- Unit / integration test
-- Docker + CI/CD
+## 9. In Progress / Planned
+
+- Video upload support
+- Notification System
+- Unit & integration testing
+- Unit & integration testing
+- Logging & monitoring (Winston / Grafana)
+- CI/CD pipeline
+
+-- Potential Enhancements
+😊 Emoji & reactions
+📌 Message pinning
+🔍 Full-text search for messages
+👥 Group chat improvements (roles, permissions)
+📱 Mobile optimization (PWA / React Native)
 
 ---
 
-## 10. Mục tiêu project
+## 10 Project Goals
 
-Project được xây dựng nhằm:
-
-- Luyện tư duy backend
-- Áp dụng auth, rate limit, streaming
+Practice backend architecture
+Implement authentication & security
+Build real-time streaming system
 
 ✍️ Author: TruongVD

@@ -5,6 +5,7 @@ import AppError from "#utils/AppError.js";
 import jwt from "jsonwebtoken";
 import jwtconfig from "#config/jwt.js";
 import { addClient, emit } from "#SSE/sseManager.js";
+import redis from "#config/redis.js";
 import {
     createBotConversationSchema,
     createGroupConversationSchema,

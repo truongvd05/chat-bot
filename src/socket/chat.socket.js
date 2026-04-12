@@ -5,6 +5,7 @@ import messageService from "#services/message.service.js";
 import jwt from "jsonwebtoken";
 
 const onlineUsers = new Map();
+const typingUsers = new Map();
 
 export default function registerChatSocket(io, socket) {
     const token = socket.handshake.auth.token;
@@ -107,6 +108,57 @@ export default function registerChatSocket(io, socket) {
             socket.emit("error_message", "Không gửi được tin nhắn");
         }
     });
+    // typing
+    socket.on("typing_start", async ({ conversationId }) => {
+        try {
+            const senderId = socket.userId;
+            // Check quyền
+            const isParticipant =
+                await prisma.conversationParticipant.findFirst({
+                    where: { conversationId, userId: senderId, leftAt: null },
+                });
+            if (!isParticipant) return;
+
+            // Thêm vào Set
+            if (!typingUsers.has(conversationId)) {
+                typingUsers.set(conversationId, new Set());
+            }
+            typingUsers.get(conversationId).add(senderId);
+
+            // Emit mảng userId đang typing cho tất cả trong conversation
+            const typingArray = [...typingUsers.get(conversationId)];
+            const participants =
+                await conversationService.finDparticipants(conversationId);
+
+            for (const p of participants) {
+                io.to(`user_${p.userId}`).emit("typing_users", {
+                    conversationId,
+                    userIds: typingArray,
+                });
+            }
+        } catch (err) {
+            console.error("Typing start error:", err);
+        }
+    });
+
+    socket.on("typing_stop", async ({ conversationId }) => {
+        const senderId = socket.userId;
+
+        if (typingUsers.has(conversationId)) {
+            typingUsers.get(conversationId).delete(senderId);
+
+            const typingArray = [...typingUsers.get(conversationId)];
+            const participants =
+                await conversationService.finDparticipants(conversationId);
+
+            for (const p of participants) {
+                io.to(`user_${p.userId}`).emit("typing_users", {
+                    conversationId,
+                    userIds: typingArray,
+                });
+            }
+        }
+    });
 
     socket.on("disconnect", () => {
         const userId = socket.userId;
@@ -119,6 +171,17 @@ export default function registerChatSocket(io, socket) {
             io.emit("userOffline", userId);
         } else {
             onlineUsers.set(userId, count);
+        }
+        // Xóa khỏi tất cả typing khi disconnect
+        for (const [convId, users] of typingUsers.entries()) {
+            if (users.has(userId)) {
+                users.delete(userId);
+                const typingArray = [...users];
+                io.to(`conversation_${convId}`).emit("typing_users", {
+                    conversationId: convId,
+                    userIds: typingArray,
+                });
+            }
         }
     });
 }
