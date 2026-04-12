@@ -12,6 +12,7 @@ import cookieParser from "cookie-parser";
 import { initSocket } from "#config/socket.js";
 import http from "http";
 import path from "path";
+import "#config/redis.js";
 
 var app = express();
 
@@ -22,12 +23,12 @@ initSocket(server, app);
 const port = process.env.PORT || 3000;
 
 const ALLOWED_ORIGINS = [
-    "https://truongvd05.github.io",
     "http://103.195.239.195",
     "http://chatdemo.site",
     "https://chatdemo.site",
     "http://localhost:5173",
     "http://localhost:5174",
+    "http://localhost:8080",
     process.env.CLIENT_URL,
 ];
 

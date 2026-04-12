@@ -5,6 +5,7 @@ import rateLimitServce from "#services/rateLimit.servce.js";
 import asyneHandle from "#middlewares/asyneHandle.js";
 import parseConversationId from "#middlewares/parseConversationId.js";
 import parseTargetId from "#middlewares/parseTargerId.js";
+import { cacheMiddleware } from "#middlewares/cacheMiddleware.js";
 
 const router = express.Router();
 
@@ -47,6 +48,7 @@ router.get(
     "/bot/:conversationId",
     authMeRequired,
     parseConversationId,
+    cacheMiddleware((req) => `conv:${req.conversationId}`),
     rateLimitServce.defaultPerMinuteRateLimit(),
     asyneHandle(conversationController.getMyBotConversation),
 );
@@ -61,6 +63,7 @@ router.get(
     authMeRequired,
     rateLimitServce.defaultPerMinuteRateLimit(),
     parseConversationId,
+    cacheMiddleware((req) => `conv:${req.conversationId}`),
     asyneHandle(conversationController.getConversation),
 );
 

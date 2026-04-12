@@ -58,6 +58,9 @@ class ConversationController {
             user.id,
             conversationId,
         );
+
+        await res.setCache(botConversation);
+
         return res.success(botConversation, HTTP_STATUS.OK);
     }
 
@@ -100,6 +103,8 @@ class ConversationController {
             user.id,
             conversationId,
         );
+
+        await res.setCache(conversation);
 
         return res.success(conversation, HTTP_STATUS.OK);
     }
@@ -186,6 +191,8 @@ class ConversationController {
             io,
         );
 
+        await redis.del(`conv:${conversationId}`);
+
         return res.success(addMembers, HTTP_STATUS.CREATED);
     }
     async removeParticipant(req, res) {
@@ -208,6 +215,8 @@ class ConversationController {
             memberIds,
             io,
         );
+
+        await redis.del(`conv:${conversationId}`);
 
         return res.success(removeMembers, HTTP_STATUS.OK);
     }
@@ -255,6 +264,8 @@ class ConversationController {
             io,
         );
 
+        await redis.del(`conv:${conversationId}`);
+
         return res.success(promote, HTTP_STATUS.CREATED);
     }
     async leaveGroup(req, res) {
@@ -267,6 +278,8 @@ class ConversationController {
             conversationId,
             io,
         );
+
+        await redis.del(`conv:${conversationId}`);
 
         return res.success(result, HTTP_STATUS.OK);
     }
