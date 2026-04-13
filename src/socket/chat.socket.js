@@ -19,10 +19,11 @@ export default function registerChatSocket(io, socket) {
 
         if (!onlineUsers.has(userId)) {
             onlineUsers.set(userId, 0);
-            io.emit("userOnline", userId);
+            io.emit("user_online", userId);
         }
 
         onlineUsers.set(userId, onlineUsers.get(userId) + 1);
+        io.emit("online_users", Array.from(onlineUsers.keys()));
     } catch (err) {
         socket.disconnect();
         return;
@@ -168,10 +169,11 @@ export default function registerChatSocket(io, socket) {
 
         if (count <= 0) {
             onlineUsers.delete(userId);
-            io.emit("userOffline", userId);
         } else {
             onlineUsers.set(userId, count);
         }
+
+        io.emit("online_users", Array.from(onlineUsers.keys()));
         // Xóa khỏi tất cả typing khi disconnect
         for (const [convId, users] of typingUsers.entries()) {
             if (users.has(userId)) {
