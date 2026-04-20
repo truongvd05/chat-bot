@@ -13,7 +13,7 @@ class MessageController {
 
         if (!result.success) {
             throw new AppError(
-                result.error.errors[0].message,
+                result.error.issues[0].message || "lỗi",
                 HTTP_STATUS.BAD_REQUEST,
             );
         }
@@ -45,7 +45,7 @@ class MessageController {
         const result = sendMessageSchema.safeParse(req.body);
         if (!result.success) {
             throw new AppError(
-                result.error.errors[0].message,
+                result.error.issues[0].message || "lỗi",
                 HTTP_STATUS.BAD_REQUEST,
             );
         }
@@ -66,7 +66,7 @@ class MessageController {
         const result = getMessagesSchema.safeParse(req.query);
         if (!result.success) {
             throw new AppError(
-                result.error.errors[0].message,
+                result.error.issues[0].message || "lỗi",
                 HTTP_STATUS.BAD_REQUEST,
             );
         }
@@ -89,7 +89,7 @@ class MessageController {
 
         if (!result.success) {
             throw new AppError(
-                result.error.errors[0].message,
+                result.error.issues[0].message || "lỗi",
                 HTTP_STATUS.BAD_REQUEST,
             );
         }

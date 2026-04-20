@@ -20,7 +20,7 @@ class AuthController {
 
         if (!result.success) {
             throw new AppError(
-                result.error.errors[0].message,
+                result.error.issues[0].message || "lỗi",
                 HTTP_STATUS.BAD_REQUEST,
             );
         }
@@ -40,7 +40,7 @@ class AuthController {
 
         if (!result.success) {
             throw new AppError(
-                result.error.errors[0].message,
+                result.error.issues[0].message || "lỗi",
                 HTTP_STATUS.BAD_REQUEST,
             );
         }
@@ -100,7 +100,7 @@ class AuthController {
 
         if (!result.success) {
             throw new AppError(
-                result.error.errors[0].message,
+                result.error.issues[0].message || "lỗi",
                 HTTP_STATUS.BAD_REQUEST,
             );
         }
@@ -123,7 +123,7 @@ class AuthController {
 
         if (!result.success) {
             throw new AppError(
-                result.error.errors[0].message,
+                result.error.issues[0].message || "lỗi",
                 HTTP_STATUS.BAD_REQUEST,
             );
         }
@@ -139,7 +139,7 @@ class AuthController {
 
         if (!result.success) {
             throw new AppError(
-                result.error.errors[0].message,
+                result.error.issues[0].message || "lỗi",
                 HTTP_STATUS.BAD_REQUEST,
             );
         }
@@ -158,7 +158,7 @@ class AuthController {
 
         if (!result.success) {
             throw new AppError(
-                result.error.errors[0].message,
+                result.error.issues[0].message || "lỗi",
                 HTTP_STATUS.BAD_REQUEST,
             );
         }
@@ -173,7 +173,7 @@ class AuthController {
 
         if (!result.success) {
             throw new AppError(
-                result.error.errors[0].message,
+                result.error.issues[0].message || "lỗi",
                 HTTP_STATUS.BAD_REQUEST,
             );
         }
@@ -189,7 +189,7 @@ class AuthController {
 
         if (!result.success) {
             throw new AppError(
-                result.error.errors[0].message,
+                result.error.issues[0].message || "Invalid input",
                 HTTP_STATUS.BAD_REQUEST,
             );
         }
