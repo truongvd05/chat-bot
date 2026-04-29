@@ -5,7 +5,7 @@
     "scripts": {
         "queue": "node --watch queue.js",
         "start": "node server.js",
-        "dev": "node --watch server.js",
+        "dev": "nodemon server.js",
         "lint": "eslint src/**/*.{js,cjs,mjs}",
         "lint:fix": "eslint src/**/*.{js,cjs,mjs} --fix"
     },
@@ -39,5 +39,8 @@
     },
     "imports": {
         "#*": "./src/*"
+    },
+    "devDependencies": {
+        "nodemon": "^3.1.14"
     }
 }
