@@ -29,7 +29,7 @@ class EmailService {
             from: process.env.EMAIL_FROM || "thanh090800@gmail.com",
             to: payload.email,
             subject: "Quên mật khẩu",
-            html: `<p>Click vào đây để đổi lại mật khẩu mới <a href="${verifyUrl} <b>link hết hạn sau 15p</b>" target="_blank">${verifyUrl}</a></p>`,
+            html: `<p>Click vào đây để đổi lại mật khẩu mới <a href="${verifyUrl}" target="_blank">${verifyUrl}</a> <b>link hết hạn sau 15p</b></p>`,
         });
         console.log("Message sent: %s", info.messageId);
     }

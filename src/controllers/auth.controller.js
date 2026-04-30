@@ -171,13 +171,6 @@ class AuthController {
             );
         }
 
-        if (!result.success) {
-            throw new AppError(
-                result.error.issues[0].message || "lỗi",
-                HTTP_STATUS.BAD_REQUEST,
-            );
-        }
-
         const { password, new_password } = result.data;
 
         await authService.resetPassword(token, password, new_password);
