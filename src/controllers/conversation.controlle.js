@@ -4,7 +4,7 @@ import messageService from "#services/message.service.js";
 import AppError from "#utils/AppError.js";
 import jwt from "jsonwebtoken";
 import jwtconfig from "#config/jwt.js";
-import { addClient, emit } from "#SSE/sseManager.js";
+import { addClient, emit, removeClient } from "#SSE/sseManager.js";
 import redis from "#config/redis.js";
 import {
     createBotConversationSchema,
@@ -154,6 +154,17 @@ class ConversationController {
         addClient(conversationId, res);
         emit(conversationId, { test: "connected ok" });
         res.write(`event: connected\ndata: "ok"\n\n`);
+
+        // ping mỗi 30s để Nginx không cắt connection
+        const heartbeat = setInterval(() => {
+            res.write(`: ping\n\n`);
+        }, 30000);
+
+        // Cleanup khi client disconnect
+        req.on("close", () => {
+            clearInterval(heartbeat);
+            removeClient(conversationId, res); // xóa khỏi danh sách client
+        });
     }
     async searchConversation(req, res) {
         const result = searchSchema.safeParse(req.query);

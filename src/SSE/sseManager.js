@@ -11,6 +11,10 @@ export function addClient(conversationId, res) {
     });
 }
 
+export function removeClient(conversationId, res) {
+    clients.get(conversationId)?.delete(res);
+}
+
 export function emit(conversationId, data) {
     const subs = clients.get(conversationId);
     if (!subs) return;
