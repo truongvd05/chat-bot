@@ -59,18 +59,20 @@ router.get(
 );
 
 router.put(
-    "/:messageId",
+    "/:messageId/conversations/:conversationId",
     authMeRequired,
     rateLimitServce.defaultPerMinuteRateLimit(),
     parseMessageId,
+    parseConversationId,
     asyneHandle(messageController.editMessage),
 );
 
 router.delete(
-    "/:messageId",
+    "/:messageId/conversations/:conversationId",
     authMeRequired,
     rateLimitServce.defaultPerMinuteRateLimit(),
     parseMessageId,
+    parseConversationId,
     asyneHandle(messageController.deleteMessage),
 );
 

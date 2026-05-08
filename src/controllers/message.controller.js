@@ -1,10 +1,12 @@
 import { HTTP_STATUS } from "#config/constants.js";
+import { isStreaming } from "#config/streamState.js";
 import {
     getMessagesSchema,
     sendMessageSchema,
 } from "#schemas/message.schema.js";
 import conversationService from "#services/conversation.service.js";
 import messageService from "#services/message.service.js";
+import AppError from "#utils/AppError.js";
 import { serializeBigInt } from "#utils/serialize.js";
 
 class MessageController {
@@ -54,6 +56,13 @@ class MessageController {
 
         const user = req.user;
         const conversationId = req.conversationId;
+
+        if (isStreaming(conversationId)) {
+            throw new AppError(
+                "Bot đang trả lời, Vui lòng chờ",
+                HTTP_STATUS.CONFLICT,
+            );
+        }
 
         const send = await messageService.sendBotMessage(
             user.id,
