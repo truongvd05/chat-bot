@@ -1,0 +1,24 @@
+model Friend {
+    id          BigInt       @id @default(autoincrement())
+    requesterId BigInt       @map("requester_id")
+    addresseeId BigInt       @map("addressee_id")
+    status      FriendStatus @default(PENDING)
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    requester User @relation("FriendRequester", fields: [requesterId], references: [id], onDelete: Cascade)
+    addressee User @relation("FriendAddressee", fields: [addresseeId], references: [id], onDelete: Cascade)
+
+    @@unique([requesterId, addresseeId])
+    @@index([requesterId])
+    @@index([addresseeId])
+    @@map("friends")
+}
+
+enum FriendStatus {
+    PENDING
+    ACCEPTED
+    REJECTED
+    BLOCKED
+}

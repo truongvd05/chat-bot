@@ -14,12 +14,14 @@ router.post(
     rateLimitServce.defaultPerDayRateLimit(),
     asyneHandle(authController.refreshAccessToken),
 );
+
 router.post(
     "/register",
     rateLimitServce.login(),
     rateLimitServce.defaultPerDayRateLimit(),
     asyneHandle(authController.register),
 );
+
 router.post(
     "/login",
     rateLimitServce.login(),
@@ -31,6 +33,12 @@ router.post(
     rateLimitServce.defaultPerMinuteRateLimit(),
     rateLimitServce.defaultPerDayRateLimit(),
     asyneHandle(authController.forgotPassword),
+);
+router.post(
+    "/forgot-password-phone",
+    rateLimitServce.defaultPerMinuteRateLimit(),
+    rateLimitServce.defaultPerDayRateLimit(),
+    asyneHandle(authController.forgotPasswordByPhone),
 );
 router.post(
     "/reset-password",
@@ -72,6 +80,13 @@ router.post(
     rateLimitServce.validateEmailPerHour(),
     rateLimitServce.validateEmailPerDay(),
     asyneHandle(authController.validateEmail),
+);
+router.post(
+    "/validate/phone",
+    rateLimitServce.validateEmailPerMinute(),
+    rateLimitServce.validateEmailPerHour(),
+    rateLimitServce.validateEmailPerDay(),
+    asyneHandle(authController.validatePhone),
 );
 router.get("/me", asyneHandle(authController.getMe));
 

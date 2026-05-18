@@ -24,12 +24,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 7.6.0
- * Query Engine version: 75cbdc1eb7150937890ad5465d861175c6624711
+ * Prisma Client JS version: 7.8.0
+ * Query Engine version: 3c6e192761c0362d496ed980de936e2f3cebcd3a
  */
 Prisma.prismaVersion = {
-  client: "7.6.0",
-  engine: "75cbdc1eb7150937890ad5465d861175c6624711"
+  client: "7.8.0",
+  engine: "3c6e192761c0362d496ed980de936e2f3cebcd3a"
 }
 
 Prisma.PrismaClientKnownRequestError = () => {
@@ -120,18 +120,6 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
-exports.Prisma.UserScalarFieldEnum = {
-  id: 'id',
-  email: 'email',
-  name: 'name',
-  avatarUrl: 'avatarUrl',
-  password: 'password',
-  emailVerifiedAt: 'emailVerifiedAt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  activeConversationId: 'activeConversationId'
-};
-
 exports.Prisma.RefreshTokenScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -139,6 +127,15 @@ exports.Prisma.RefreshTokenScalarFieldEnum = {
   tokenExpiresAt: 'tokenExpiresAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PasswordResetTokenScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  tokenHash: 'tokenHash',
+  expiresAt: 'expiresAt',
+  usedAt: 'usedAt',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.ConversationScalarFieldEnum = {
@@ -166,6 +163,23 @@ exports.Prisma.ConversationParticipantScalarFieldEnum = {
   deletedAt: 'deletedAt'
 };
 
+exports.Prisma.ConversationLabelScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  conversationId: 'conversationId',
+  label: 'label',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.FriendScalarFieldEnum = {
+  id: 'id',
+  requesterId: 'requesterId',
+  addresseeId: 'addresseeId',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.MessageScalarFieldEnum = {
   id: 'id',
   conversationId: 'conversationId',
@@ -189,13 +203,82 @@ exports.Prisma.MessageAttachmentScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
-exports.Prisma.PasswordResetTokenScalarFieldEnum = {
+exports.Prisma.NotificationScalarFieldEnum = {
+  id: 'id',
+  receiverId: 'receiverId',
+  senderId: 'senderId',
+  conversationId: 'conversationId',
+  messageId: 'messageId',
+  postId: 'postId',
+  type: 'type',
+  isRead: 'isRead',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.PostScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  tokenHash: 'tokenHash',
-  expiresAt: 'expiresAt',
-  usedAt: 'usedAt',
+  content: 'content',
+  privacy: 'privacy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+};
+
+exports.Prisma.PostAttachmentScalarFieldEnum = {
+  id: 'id',
+  postId: 'postId',
+  fileUrl: 'fileUrl',
+  fileType: 'fileType',
+  fileSize: 'fileSize',
   createdAt: 'createdAt'
+};
+
+exports.Prisma.PostLikeScalarFieldEnum = {
+  id: 'id',
+  postId: 'postId',
+  userId: 'userId',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.PostCommentScalarFieldEnum = {
+  id: 'id',
+  postId: 'postId',
+  userId: 'userId',
+  parentCommentId: 'parentCommentId',
+  content: 'content',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+};
+
+exports.Prisma.PostSaveScalarFieldEnum = {
+  id: 'id',
+  postId: 'postId',
+  userId: 'userId',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.HashtagScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.PostHashtagScalarFieldEnum = {
+  postId: 'postId',
+  hashtagId: 'hashtagId'
+};
+
+exports.Prisma.ReportScalarFieldEnum = {
+  id: 'id',
+  reporterId: 'reporterId',
+  postId: 'postId',
+  reportedUserId: 'reportedUserId',
+  reason: 'reason',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.QueuesScalarFieldEnum = {
@@ -210,32 +293,29 @@ exports.Prisma.QueuesScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.UserScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  name: 'name',
+  phonenumber: 'phonenumber',
+  gender: 'gender',
+  bio: 'bio',
+  birthday: 'birthday',
+  avatarUrl: 'avatarUrl',
+  backgroundUrl: 'backgroundUrl',
+  password: 'password',
+  emailVerifiedAt: 'emailVerifiedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  activeConversationId: 'activeConversationId'
+};
+
 exports.Prisma.UserBlockScalarFieldEnum = {
   id: 'id',
   blockerId: 'blockerId',
   blockedId: 'blockedId',
   createdAt: 'createdAt',
   deletedAt: 'deletedAt'
-};
-
-exports.Prisma.FriendScalarFieldEnum = {
-  id: 'id',
-  requesterId: 'requesterId',
-  addresseeId: 'addresseeId',
-  status: 'status',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.NotificationScalarFieldEnum = {
-  id: 'id',
-  receiverId: 'receiverId',
-  senderId: 'senderId',
-  conversationId: 'conversationId',
-  messageId: 'messageId',
-  type: 'type',
-  isRead: 'isRead',
-  createdAt: 'createdAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -252,20 +332,21 @@ exports.Prisma.NullsOrder = {
   last: 'last'
 };
 
-exports.Prisma.UserOrderByRelevanceFieldEnum = {
-  email: 'email',
-  name: 'name',
-  avatarUrl: 'avatarUrl',
-  password: 'password'
-};
-
 exports.Prisma.RefreshTokenOrderByRelevanceFieldEnum = {
   token: 'token'
+};
+
+exports.Prisma.PasswordResetTokenOrderByRelevanceFieldEnum = {
+  tokenHash: 'tokenHash'
 };
 
 exports.Prisma.ConversationOrderByRelevanceFieldEnum = {
   title: 'title',
   systemPrompt: 'systemPrompt'
+};
+
+exports.Prisma.ConversationLabelOrderByRelevanceFieldEnum = {
+  label: 'label'
 };
 
 exports.Prisma.MessageOrderByRelevanceFieldEnum = {
@@ -278,8 +359,25 @@ exports.Prisma.MessageAttachmentOrderByRelevanceFieldEnum = {
   fileType: 'fileType'
 };
 
-exports.Prisma.PasswordResetTokenOrderByRelevanceFieldEnum = {
-  tokenHash: 'tokenHash'
+exports.Prisma.PostOrderByRelevanceFieldEnum = {
+  content: 'content'
+};
+
+exports.Prisma.PostAttachmentOrderByRelevanceFieldEnum = {
+  fileUrl: 'fileUrl',
+  fileType: 'fileType'
+};
+
+exports.Prisma.PostCommentOrderByRelevanceFieldEnum = {
+  content: 'content'
+};
+
+exports.Prisma.HashtagOrderByRelevanceFieldEnum = {
+  name: 'name'
+};
+
+exports.Prisma.ReportOrderByRelevanceFieldEnum = {
+  reason: 'reason'
 };
 
 exports.Prisma.JsonNullValueFilter = {
@@ -297,7 +395,20 @@ exports.Prisma.QueuesOrderByRelevanceFieldEnum = {
   type: 'type',
   lastError: 'lastError'
 };
+
+exports.Prisma.UserOrderByRelevanceFieldEnum = {
+  email: 'email',
+  name: 'name',
+  phonenumber: 'phonenumber',
+  gender: 'gender',
+  bio: 'bio',
+  birthday: 'birthday',
+  avatarUrl: 'avatarUrl',
+  backgroundUrl: 'backgroundUrl',
+  password: 'password'
+};
 exports.ConversationType = exports.$Enums.ConversationType = {
+  SELF: 'SELF',
   DIRECT: 'DIRECT',
   GROUP: 'GROUP',
   BOT: 'BOT'
@@ -310,9 +421,39 @@ exports.ParticipantRole = exports.$Enums.ParticipantRole = {
   BOT: 'BOT'
 };
 
+exports.FriendStatus = exports.$Enums.FriendStatus = {
+  PENDING: 'PENDING',
+  ACCEPTED: 'ACCEPTED',
+  REJECTED: 'REJECTED',
+  BLOCKED: 'BLOCKED'
+};
+
 exports.MessageRole = exports.$Enums.MessageRole = {
   user: 'user',
   bot: 'bot'
+};
+
+exports.NotificationType = exports.$Enums.NotificationType = {
+  NEW_MESSAGE: 'NEW_MESSAGE',
+  FRIEND_REQUEST: 'FRIEND_REQUEST',
+  FRIEND_ACCEPTED: 'FRIEND_ACCEPTED',
+  ADDED_TO_GROUP: 'ADDED_TO_GROUP',
+  KICKED_FROM_GROUP: 'KICKED_FROM_GROUP',
+  POST_LIKE: 'POST_LIKE',
+  POST_COMMENT: 'POST_COMMENT',
+  POST_MENTION: 'POST_MENTION'
+};
+
+exports.PostPrivacy = exports.$Enums.PostPrivacy = {
+  PUBLIC: 'PUBLIC',
+  FRIENDS: 'FRIENDS',
+  PRIVATE: 'PRIVATE'
+};
+
+exports.ReportStatus = exports.$Enums.ReportStatus = {
+  PENDING: 'PENDING',
+  RESOLVED: 'RESOLVED',
+  DISMISSED: 'DISMISSED'
 };
 
 exports.QueueStatus = exports.$Enums.QueueStatus = {
@@ -322,32 +463,27 @@ exports.QueueStatus = exports.$Enums.QueueStatus = {
   failed: 'failed'
 };
 
-exports.FriendStatus = exports.$Enums.FriendStatus = {
-  PENDING: 'PENDING',
-  ACCEPTED: 'ACCEPTED',
-  REJECTED: 'REJECTED',
-  BLOCKED: 'BLOCKED'
-};
-
-exports.NotificationType = exports.$Enums.NotificationType = {
-  NEW_MESSAGE: 'NEW_MESSAGE',
-  FRIEND_REQUEST: 'FRIEND_REQUEST',
-  FRIEND_ACCEPTED: 'FRIEND_ACCEPTED',
-  ADDED_TO_GROUP: 'ADDED_TO_GROUP'
-};
-
 exports.Prisma.ModelName = {
-  User: 'User',
   RefreshToken: 'RefreshToken',
+  PasswordResetToken: 'PasswordResetToken',
   Conversation: 'Conversation',
   ConversationParticipant: 'ConversationParticipant',
+  ConversationLabel: 'ConversationLabel',
+  Friend: 'Friend',
   Message: 'Message',
   MessageAttachment: 'MessageAttachment',
-  PasswordResetToken: 'PasswordResetToken',
+  Notification: 'Notification',
+  Post: 'Post',
+  PostAttachment: 'PostAttachment',
+  PostLike: 'PostLike',
+  PostComment: 'PostComment',
+  PostSave: 'PostSave',
+  Hashtag: 'Hashtag',
+  PostHashtag: 'PostHashtag',
+  Report: 'Report',
   Queues: 'Queues',
-  UserBlock: 'UserBlock',
-  Friend: 'Friend',
-  Notification: 'Notification'
+  User: 'User',
+  UserBlock: 'UserBlock'
 };
 
 /**

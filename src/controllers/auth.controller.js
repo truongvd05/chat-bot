@@ -6,16 +6,21 @@ import AppError from "#utils/AppError.js";
 import { extractAccessToken } from "#utils/extractAccessToken.js";
 import {
     changePasswordSchema,
+    forgotPasswordByPhoneSchema,
     forgotPasswordSchema,
     loginSchema,
     refreshTokenSchema,
     registerSchema,
     resetPasswordSchema,
     validateEmailSchema,
+    validatePhoneSchema,
 } from "#schemas/auth.schema.js";
+import admin from "#config/firebase-admin.js";
 
 class AuthController {
     async register(req, res) {
+        console.log(req.body);
+
         const result = registerSchema.safeParse(req.body);
 
         if (!result.success) {
@@ -24,13 +29,15 @@ class AuthController {
                 HTTP_STATUS.BAD_REQUEST,
             );
         }
+        console.log(result);
 
-        const { name, email, password } = result.data;
+        const { name, email, password, phonenumber } = result.data;
 
         const { user, token } = await authService.register(
             name,
             email,
             password,
+            phonenumber,
         );
 
         return res.success({ user, token }, 201);
@@ -153,6 +160,38 @@ class AuthController {
             200,
         );
     }
+    async forgotPasswordByPhone(req, res) {
+        const result = forgotPasswordByPhoneSchema.safeParse(req.body);
+
+        if (!result.success) {
+            throw new AppError(
+                result.error.issues[0].message || "lỗi",
+                HTTP_STATUS.BAD_REQUEST,
+            );
+        }
+
+        const { phonenumber, firebase_token } = result.data;
+
+        const decoded = await admin.auth().verifyIdToken(firebase_token);
+
+        const normalizedInput = phonenumber.startsWith("0")
+            ? "+84" + phonenumber.slice(1)
+            : phonenumber;
+
+        if (decoded.phonenumber !== normalizedInput) {
+            throw new AppError(
+                "Số điện thoại không khớp",
+                HTTP_STATUS.BAD_REQUEST,
+            );
+        }
+
+        const resetToken = await authService.forgotPasswordByPhone(phonenumber);
+
+        return res.success(
+            "Link đặt lại mật khẩu đã được gửi tới số điện thoại của bạn",
+            200,
+        );
+    }
     async resetPassword(req, res) {
         const result = resetPasswordSchema.safeParse(req.body);
 
@@ -192,6 +231,25 @@ class AuthController {
         const user = await authService.findUserByEmail(email);
 
         if (user) throw new AppError("Email already exists", 400);
+        return res.success({
+            available: !user,
+        });
+    }
+    async validatePhone(req, res) {
+        const result = validatePhoneSchema.safeParse(req.body);
+
+        if (!result.success) {
+            throw new AppError(
+                result.error.issues[0].message || "Invalid input",
+                HTTP_STATUS.BAD_REQUEST,
+            );
+        }
+
+        const { phonenumber } = result.data;
+
+        const user = await authService.findUserByPhoneNumber(phonenumber);
+
+        if (user) throw new AppError("Phone number already exists", 400);
         return res.success({
             available: !user,
         });

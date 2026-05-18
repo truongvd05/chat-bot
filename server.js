@@ -31,7 +31,7 @@ const ALLOWED_ORIGINS = [
     "http://localhost:8080",
     "http://localhost",
     process.env.CLIENT_URL,
-];
+].filter(Boolean);
 
 const allowMethods = ["GET", "POST", "PUT", "DELETE", "OPTIONS"];
 

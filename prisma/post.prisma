@@ -1,0 +1,140 @@
+model Post {
+    id        BigInt      @id @default(autoincrement())
+    userId    BigInt      @map("user_id")
+    content   String      @db.LongText
+    privacy   PostPrivacy @default(PUBLIC)
+    createdAt DateTime    @default(now()) @map("created_at")
+    updatedAt DateTime    @updatedAt @map("updated_at")
+    deletedAt DateTime?   @map("deleted_at")
+
+    user          User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+    attachments   PostAttachment[]
+    hashtags      PostHashtag[]
+    likes         PostLike[]
+    comments      PostComment[]
+    saves         PostSave[]
+    reports       Report[]
+    notifications Notification[]
+
+    @@index([userId])
+    @@index([deletedAt])
+    @@index([createdAt])
+    @@map("posts")
+}
+
+enum PostPrivacy {
+    PUBLIC
+    FRIENDS
+    PRIVATE
+}
+
+model PostAttachment {
+    id        BigInt   @id @default(autoincrement())
+    postId    BigInt   @map("post_id")
+    fileUrl   String   @map("file_url")
+    fileType  String   @map("file_type")
+    fileSize  Int      @map("file_size")
+    createdAt DateTime @default(now()) @map("created_at")
+
+    post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+    @@index([postId])
+    @@map("post_attachments")
+}
+
+model PostLike {
+    id        BigInt   @id @default(autoincrement())
+    postId    BigInt   @map("post_id")
+    userId    BigInt   @map("user_id")
+    createdAt DateTime @default(now()) @map("created_at")
+
+    post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@unique([postId, userId])
+    @@index([postId])
+    @@index([userId])
+    @@map("post_likes")
+}
+
+model PostComment {
+    id              BigInt    @id @default(autoincrement())
+    postId          BigInt    @map("post_id")
+    userId          BigInt    @map("user_id")
+    parentCommentId BigInt?   @map("parent_comment_id")
+    content         String    @db.Text
+    createdAt       DateTime  @default(now()) @map("created_at")
+    updatedAt       DateTime  @updatedAt @map("updated_at")
+    deletedAt       DateTime? @map("deleted_at")
+
+    post          Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
+    user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+    parentComment PostComment?  @relation("CommentReplies", fields: [parentCommentId], references: [id], onDelete: Cascade)
+    replies       PostComment[] @relation("CommentReplies")
+
+    @@index([postId])
+    @@index([userId])
+    @@index([parentCommentId])
+    @@map("post_comments")
+}
+
+model PostSave {
+    id        BigInt   @id @default(autoincrement())
+    postId    BigInt   @map("post_id")
+    userId    BigInt   @map("user_id")
+    createdAt DateTime @default(now()) @map("created_at")
+
+    post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@unique([postId, userId])
+    @@index([postId])
+    @@index([userId])
+    @@map("post_saves")
+}
+
+model Hashtag {
+    id        BigInt   @id @default(autoincrement())
+    name      String   @unique
+    createdAt DateTime @default(now()) @map("created_at")
+
+    posts PostHashtag[]
+
+    @@map("hashtags")
+}
+
+model PostHashtag {
+    postId    BigInt @map("post_id")
+    hashtagId BigInt @map("hashtag_id")
+
+    post    Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
+    hashtag Hashtag @relation(fields: [hashtagId], references: [id], onDelete: Cascade)
+
+    @@id([postId, hashtagId])
+    @@map("post_hashtags")
+}
+
+model Report {
+    id             BigInt       @id @default(autoincrement())
+    reporterId     BigInt       @map("reporter_id")
+    postId         BigInt?      @map("post_id")
+    reportedUserId BigInt?      @map("reported_user_id")
+    reason         String       @db.Text
+    status         ReportStatus @default(PENDING)
+    createdAt      DateTime     @default(now()) @map("created_at")
+    updatedAt      DateTime     @updatedAt @map("updated_at")
+
+    reporter User  @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+    post     Post? @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+    @@index([reporterId])
+    @@index([postId])
+    @@index([status])
+    @@map("reports")
+}
+
+enum ReportStatus {
+    PENDING
+    RESOLVED
+    DISMISSED
+}

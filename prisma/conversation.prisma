@@ -1,0 +1,74 @@
+model Conversation {
+    id            BigInt           @id @default(autoincrement())
+    title         String?
+    systemPrompt  String?          @map("system_prompt") @db.Text //dùng với bot
+    type          ConversationType @default(DIRECT)
+    ownerId       BigInt? //dùng với chat bot và GROUP (người đầu tiên tạo đoạn hột thoại)
+    lastMessageId BigInt?
+    lastMessageAt DateTime?        @map("last_message_at")
+    deletedAt     DateTime?        @map("deleted_at")
+    createdAt     DateTime         @default(now()) @map("created_at")
+    updatedAt     DateTime         @updatedAt @map("updated_at")
+
+    participants       ConversationParticipant[]
+    activeUsers        User[]                    @relation("ActiveConversation")
+    messages           Message[]
+    owner              User?                     @relation("ConversationOwner", fields: [ownerId], references: [id])
+    lastMessage        Message?                  @relation("LastMessage", fields: [lastMessageId], references: [id])
+    notifications      Notification[]
+    conversationLabels ConversationLabel[]
+
+    @@index([ownerId])
+    @@index([deletedAt])
+    @@index([lastMessageAt])
+    @@map("conversation")
+}
+
+enum ConversationType {
+    SELF
+    DIRECT
+    GROUP
+    BOT
+}
+
+model ConversationParticipant {
+    id             BigInt          @id @default(autoincrement())
+    conversationId BigInt          @map("conversation_id")
+    userId         BigInt          @map("user_id")
+    role           ParticipantRole @default(MEMBER)
+    joinedAt       DateTime        @default(now()) @map("joined_at")
+    leftAt         DateTime?       @map("left_at")
+    unreadCount    Int             @default(0) @map("unread_count")
+    lastReadAt     DateTime?       @map("last_read_at")
+    deletedAt      DateTime?       @map("deleted_at")
+
+    conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+    user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@unique([conversationId, userId])
+    @@index([userId])
+    @@index([conversationId])
+    @@map("conversation_participant")
+}
+
+enum ParticipantRole {
+    MEMBER
+    OWNER
+    ADMIN
+    BOT
+}
+
+model ConversationLabel {
+    id             BigInt   @id @default(autoincrement())
+    userId         BigInt   @map("user_id")
+    conversationId BigInt   @map("conversation_id")
+    label          String
+    createdAt      DateTime @default(now()) @map("created_at")
+
+    user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+    conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+    @@unique([userId, conversationId])
+    @@index([userId])
+    @@map("conversation_labels")
+}

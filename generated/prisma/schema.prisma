@@ -7,37 +7,10 @@ datasource db {
   provider = "mysql"
 }
 
-model User {
-  id                   BigInt    @id @default(autoincrement())
-  email                String    @unique
-  name                 String
-  avatarUrl            String?   @map("avatar_url")
-  password             String // @note: Hashed password using bcrypt
-  emailVerifiedAt      DateTime? @map("email_verified_at")
-  createdAt            DateTime  @default(now()) @map("created_at")
-  updatedAt            DateTime  @updatedAt @map("updated_at")
-  activeConversationId BigInt?   @map("active_conversation_id")
-
-  refreshTokens            RefreshToken[]
-  conversationParticipants ConversationParticipant[]
-  activeConversation       Conversation?             @relation("ActiveConversation", fields: [activeConversationId], references: [id], onDelete: SetNull)
-  messages                 Message[]
-  passwordResetTokens      PasswordResetToken[]
-  blockedUsers             UserBlock[]               @relation("Blocker")
-  blockedBy                UserBlock[]               @relation("Blocked")
-  ownedConversations       Conversation[]            @relation("ConversationOwner")
-  sentFriendRequests       Friend[]                  @relation("FriendRequester")
-  receivedFriendRequests   Friend[]                  @relation("FriendAddressee")
-  receivedNotifications    Notification[]            @relation("UserNotifications")
-  sentNotifications        Notification[]            @relation("SenderNotifications")
-
-  @@map("users")
-}
-
 model RefreshToken {
   id             BigInt   @id @default(autoincrement())
   userId         BigInt   @unique @map("user_id")
-  token          String?  @unique
+  token          String?
   tokenExpiresAt DateTime @map("token_expires_at")
   createdAt      DateTime @default(now()) @map("created_at")
   updatedAt      DateTime @updatedAt @map("updated_at")
@@ -47,6 +20,22 @@ model RefreshToken {
   @@index([userId])
   @@index([tokenExpiresAt])
   @@map("refresh_token")
+}
+
+model PasswordResetToken {
+  id        BigInt    @id @default(autoincrement())
+  userId    BigInt    @map("user_id")
+  tokenHash String    @map("token_hash")
+  expiresAt DateTime  @map("expires_at")
+  usedAt    DateTime? @map("used_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([tokenHash])
+  @@map("password_reset_tokens")
 }
 
 model Conversation {
@@ -61,12 +50,13 @@ model Conversation {
   createdAt     DateTime         @default(now()) @map("created_at")
   updatedAt     DateTime         @updatedAt @map("updated_at")
 
-  participants  ConversationParticipant[]
-  activeUsers   User[]                    @relation("ActiveConversation")
-  messages      Message[]
-  owner         User?                     @relation("ConversationOwner", fields: [ownerId], references: [id])
-  lastMessage   Message?                  @relation("LastMessage", fields: [lastMessageId], references: [id])
-  notifications Notification[]
+  participants       ConversationParticipant[]
+  activeUsers        User[]                    @relation("ActiveConversation")
+  messages           Message[]
+  owner              User?                     @relation("ConversationOwner", fields: [ownerId], references: [id])
+  lastMessage        Message?                  @relation("LastMessage", fields: [lastMessageId], references: [id])
+  notifications      Notification[]
+  conversationLabels ConversationLabel[]
 
   @@index([ownerId])
   @@index([deletedAt])
@@ -75,6 +65,7 @@ model Conversation {
 }
 
 enum ConversationType {
+  SELF
   DIRECT
   GROUP
   BOT
@@ -105,6 +96,46 @@ enum ParticipantRole {
   OWNER
   ADMIN
   BOT
+}
+
+model ConversationLabel {
+  id             BigInt   @id @default(autoincrement())
+  userId         BigInt   @map("user_id")
+  conversationId BigInt   @map("conversation_id")
+  label          String
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, conversationId])
+  @@index([userId])
+  @@map("conversation_labels")
+}
+
+model Friend {
+  id          BigInt       @id @default(autoincrement())
+  requesterId BigInt       @map("requester_id")
+  addresseeId BigInt       @map("addressee_id")
+  status      FriendStatus @default(PENDING)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  requester User @relation("FriendRequester", fields: [requesterId], references: [id], onDelete: Cascade)
+  addressee User @relation("FriendAddressee", fields: [addresseeId], references: [id], onDelete: Cascade)
+
+  @@unique([requesterId, addresseeId])
+  @@index([requesterId])
+  @@index([addresseeId])
+  @@map("friends")
+}
+
+enum FriendStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  BLOCKED
 }
 
 model Message {
@@ -154,20 +185,178 @@ model MessageAttachment {
   @@map("message_attachments")
 }
 
-model PasswordResetToken {
-  id        BigInt    @id @default(autoincrement())
-  userId    BigInt    @map("user_id")
-  tokenHash String    @map("token_hash")
-  expiresAt DateTime  @map("expires_at")
-  usedAt    DateTime? @map("used_at")
+model Notification {
+  id             BigInt           @id @default(autoincrement())
+  receiverId     BigInt
+  senderId       BigInt?
+  conversationId BigInt?
+  messageId      BigInt?
+  postId         BigInt?
+  type           NotificationType
+  isRead         Boolean          @default(false)
+  createdAt      DateTime         @default(now())
 
-  createdAt DateTime @default(now()) @map("created_at")
+  receiver     User          @relation("UserNotifications", fields: [receiverId], references: [id], onDelete: Cascade)
+  sender       User?         @relation("SenderNotifications", fields: [senderId], references: [id], onDelete: SetNull)
+  conversation Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  message      Message?      @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  post         Post?         @relation(fields: [postId], references: [id], onDelete: Cascade)
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([receiverId])
+  @@index([senderId])
+  @@map("notifications")
+}
+
+enum NotificationType {
+  NEW_MESSAGE
+  FRIEND_REQUEST
+  FRIEND_ACCEPTED
+  ADDED_TO_GROUP
+  KICKED_FROM_GROUP
+  POST_LIKE
+  POST_COMMENT
+  POST_MENTION
+}
+
+model Post {
+  id        BigInt      @id @default(autoincrement())
+  userId    BigInt      @map("user_id")
+  content   String      @db.LongText
+  privacy   PostPrivacy @default(PUBLIC)
+  createdAt DateTime    @default(now()) @map("created_at")
+  updatedAt DateTime    @updatedAt @map("updated_at")
+  deletedAt DateTime?   @map("deleted_at")
+
+  user          User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  attachments   PostAttachment[]
+  hashtags      PostHashtag[]
+  likes         PostLike[]
+  comments      PostComment[]
+  saves         PostSave[]
+  reports       Report[]
+  notifications Notification[]
 
   @@index([userId])
-  @@index([tokenHash])
-  @@map("password_reset_tokens")
+  @@index([deletedAt])
+  @@index([createdAt])
+  @@map("posts")
+}
+
+enum PostPrivacy {
+  PUBLIC
+  FRIENDS
+  PRIVATE
+}
+
+model PostAttachment {
+  id        BigInt   @id @default(autoincrement())
+  postId    BigInt   @map("post_id")
+  fileUrl   String   @map("file_url")
+  fileType  String   @map("file_type")
+  fileSize  Int      @map("file_size")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([postId])
+  @@map("post_attachments")
+}
+
+model PostLike {
+  id        BigInt   @id @default(autoincrement())
+  postId    BigInt   @map("post_id")
+  userId    BigInt   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId])
+  @@index([postId])
+  @@index([userId])
+  @@map("post_likes")
+}
+
+model PostComment {
+  id              BigInt    @id @default(autoincrement())
+  postId          BigInt    @map("post_id")
+  userId          BigInt    @map("user_id")
+  parentCommentId BigInt?   @map("parent_comment_id")
+  content         String    @db.Text
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+  deletedAt       DateTime? @map("deleted_at")
+
+  post          Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parentComment PostComment?  @relation("CommentReplies", fields: [parentCommentId], references: [id], onDelete: Cascade)
+  replies       PostComment[] @relation("CommentReplies")
+
+  @@index([postId])
+  @@index([userId])
+  @@index([parentCommentId])
+  @@map("post_comments")
+}
+
+model PostSave {
+  id        BigInt   @id @default(autoincrement())
+  postId    BigInt   @map("post_id")
+  userId    BigInt   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId])
+  @@index([postId])
+  @@index([userId])
+  @@map("post_saves")
+}
+
+model Hashtag {
+  id        BigInt   @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+
+  posts PostHashtag[]
+
+  @@map("hashtags")
+}
+
+model PostHashtag {
+  postId    BigInt @map("post_id")
+  hashtagId BigInt @map("hashtag_id")
+
+  post    Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  hashtag Hashtag @relation(fields: [hashtagId], references: [id], onDelete: Cascade)
+
+  @@id([postId, hashtagId])
+  @@map("post_hashtags")
+}
+
+model Report {
+  id             BigInt       @id @default(autoincrement())
+  reporterId     BigInt       @map("reporter_id")
+  postId         BigInt?      @map("post_id")
+  reportedUserId BigInt?      @map("reported_user_id")
+  reason         String       @db.Text
+  status         ReportStatus @default(PENDING)
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @updatedAt @map("updated_at")
+
+  reporter User  @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+  post     Post? @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([reporterId])
+  @@index([postId])
+  @@index([status])
+  @@map("reports")
+}
+
+enum ReportStatus {
+  PENDING
+  RESOLVED
+  DISMISSED
 }
 
 model Queues {
@@ -193,6 +382,44 @@ enum QueueStatus {
   failed
 }
 
+model User {
+  id                   BigInt    @id @default(autoincrement())
+  email                String    @unique
+  name                 String
+  phonenumber          String    @unique @map("phone_number")
+  gender               String?
+  bio                  String?
+  birthday             String?   @map("birthday")
+  avatarUrl            String?   @map("avatar_url")
+  backgroundUrl        String?   @map("background_url")
+  password             String // @note: Hashed password using bcrypt
+  emailVerifiedAt      DateTime? @map("email_verified_at")
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
+  activeConversationId BigInt?   @map("active_conversation_id")
+
+  refreshTokens            RefreshToken[]
+  conversationParticipants ConversationParticipant[]
+  activeConversation       Conversation?             @relation("ActiveConversation", fields: [activeConversationId], references: [id], onDelete: SetNull)
+  messages                 Message[]
+  passwordResetTokens      PasswordResetToken[]
+  blockedUsers             UserBlock[]               @relation("Blocker")
+  blockedBy                UserBlock[]               @relation("Blocked")
+  ownedConversations       Conversation[]            @relation("ConversationOwner")
+  sentFriendRequests       Friend[]                  @relation("FriendRequester")
+  receivedFriendRequests   Friend[]                  @relation("FriendAddressee")
+  receivedNotifications    Notification[]            @relation("UserNotifications")
+  sentNotifications        Notification[]            @relation("SenderNotifications")
+  posts                    Post[]
+  postLikes                PostLike[]
+  postSaves                PostSave[]
+  postComments             PostComment[]
+  reports                  Report[]
+  conversationLabels       ConversationLabel[]
+
+  @@map("users")
+}
+
 model UserBlock {
   id        BigInt @id @default(autoincrement())
   blockerId BigInt @map("blocker_id")
@@ -208,55 +435,4 @@ model UserBlock {
   @@index([blockerId])
   @@index([blockedId])
   @@map("user_blocks")
-}
-
-model Friend {
-  id          BigInt       @id @default(autoincrement())
-  requesterId BigInt       @map("requester_id")
-  addresseeId BigInt       @map("addressee_id")
-  status      FriendStatus @default(PENDING)
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  requester User @relation("FriendRequester", fields: [requesterId], references: [id], onDelete: Cascade)
-  addressee User @relation("FriendAddressee", fields: [addresseeId], references: [id], onDelete: Cascade)
-
-  @@unique([requesterId, addresseeId])
-  @@index([requesterId])
-  @@index([addresseeId])
-  @@map("friends")
-}
-
-enum FriendStatus {
-  PENDING
-  ACCEPTED
-  REJECTED
-  BLOCKED
-}
-
-model Notification {
-  id             BigInt           @id @default(autoincrement())
-  receiverId     BigInt
-  senderId       BigInt?
-  conversationId BigInt?
-  messageId      BigInt?
-  type           NotificationType
-  isRead         Boolean          @default(false)
-  createdAt      DateTime         @default(now())
-
-  receiver     User          @relation("UserNotifications", fields: [receiverId], references: [id], onDelete: Cascade)
-  sender       User?         @relation("SenderNotifications", fields: [senderId], references: [id], onDelete: SetNull)
-  conversation Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  message      Message?      @relation(fields: [messageId], references: [id], onDelete: Cascade)
-
-  @@index([receiverId])
-  @@index([senderId])
-}
-
-enum NotificationType {
-  NEW_MESSAGE
-  FRIEND_REQUEST
-  FRIEND_ACCEPTED
-  ADDED_TO_GROUP
 }

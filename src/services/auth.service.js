@@ -23,6 +23,18 @@ class AuthService {
             },
         });
     }
+    async findUserByPhoneNumber(phonenumber) {
+        return await prisma.user.findUnique({
+            where: { phonenumber },
+            select: {
+                id: true,
+                email: true,
+                password: true,
+                name: true,
+                createdAt: true,
+            },
+        });
+    }
     async _revokeAllRefreshTokens(userId) {
         const result = await prisma.refreshToken.delete({
             where: {
@@ -58,8 +70,13 @@ class AuthService {
         }
         return resetToken;
     }
-    async _updateUserRefreshToken(userId, newRefreshToken, tokenExpiresAt) {
-        await prisma.refreshToken.upsert({
+    async _updateUserRefreshToken(
+        userId,
+        newRefreshToken,
+        tokenExpiresAt,
+        tx = prisma,
+    ) {
+        await tx.refreshToken.upsert({
             where: { userId },
             update: {
                 token: newRefreshToken,
@@ -72,12 +89,21 @@ class AuthService {
             },
         });
     }
-    async _existedUser(email) {
-        const existed = await prisma.user.findUnique({
+    async _existedUser(email, phonenumber) {
+        const existedEmail = await prisma.user.findUnique({
             where: { email },
         });
-        if (existed) {
-            throw new AppError("email already exists", HTTP_STATUS.CONFLICT);
+
+        if (existedEmail) {
+            throw new AppError("Email already exists");
+        }
+
+        const existedPhone = await prisma.user.findUnique({
+            where: { phonenumber },
+        });
+
+        if (existedPhone) {
+            throw new AppError("Phone number already exists");
         }
     }
     async _markPasswordResetTokenUsed(tokenId) {
@@ -92,35 +118,61 @@ class AuthService {
         });
         return result;
     }
-    async register(name, email, password) {
-        await this._existedUser(email);
+    // tạo tài khoản, token, private conversation, queue email
+    async register(name, email, password, phonenumber) {
+        await this._existedUser(email, phonenumber);
         const hashPassword = await bcrypt.hash(password, 10);
+        let emailToken;
+        const result = await prisma.$transaction(async (tx) => {
+            const user = await tx.user.create({
+                data: {
+                    name,
+                    email,
+                    password: hashPassword,
+                    phonenumber,
+                },
+            });
 
-        const user = await prisma.user.create({
-            data: {
-                name,
-                email,
-                password: hashPassword,
-            },
+            const token = responseTokenService.loginAndRegister(user.id);
+
+            emailToken = jwtService(
+                user.id,
+                jwtconfig.emailSecret,
+                jwtconfig.emailTokenTTL,
+            );
+
+            await this._updateUserRefreshToken(
+                user.id,
+                token.refresh_token,
+                token.refresh_token_ttl,
+                tx,
+            );
+
+            // 2. Tạo SELF conversation
+            const conversation = await tx.conversation.create({
+                data: {
+                    type: "SELF",
+                    title: "My ZaloClone",
+                    ownerId: user.id,
+                },
+            });
+            await tx.conversationParticipant.create({
+                data: {
+                    conversationId: conversation.id,
+                    userId: user.id,
+                    role: "OWNER",
+                },
+            });
+            return { user: serializeBigInt(user), token };
         });
-        const token = responseTokenService.loginAndRegister(user.id);
-        const emailtoken = jwtService(
-            user.id,
-            jwtconfig.emailSecret,
-            jwtconfig.emailTokenTTL,
-        );
+        // chỉ gửi mail nếu tạo tài khoản thành công
+
         queueService.push("sendVerifyEmail", {
-            email: user.email,
-            token: emailtoken,
+            email,
+            token: emailToken,
         });
 
-        await this._updateUserRefreshToken(
-            user.id,
-            token.refresh_token,
-            token.refresh_token_ttl,
-        );
-
-        return { user: serializeBigInt(user), token };
+        return result;
     }
     async findUserById(id) {
         const user = await prisma.user.findUnique({
@@ -186,6 +238,35 @@ class AuthService {
             token: passwordResetToken,
         });
     }
+
+    async forgotPasswordByPhone(phonenumber) {
+        const user = await this.findUserByPhoneNumber(phonenumber);
+        if (!user) return;
+        const passwordResetToken = crypto.randomBytes(64).toString("hex");
+        const expiresAt = new Date(
+            Date.now() + jwtconfig.PasswordSecrectTTL * 1000,
+        );
+        const tokenHash = crypto
+            .createHash("sha256")
+            .update(passwordResetToken)
+            .digest("hex");
+
+        // xóa token hết cũ trước khi tạo token mới (log out mọi thiết bị)
+        await prisma.$transaction([
+            prisma.passwordResetToken.deleteMany({
+                where: { userId: user.id },
+            }),
+            prisma.passwordResetToken.create({
+                data: {
+                    userId: user.id,
+                    tokenHash,
+                    expiresAt,
+                },
+            }),
+        ]);
+        return passwordResetToken;
+    }
+
     async logout(userId) {
         return prisma.refreshToken.update({
             where: { userId },
@@ -202,8 +283,9 @@ class AuthService {
         return result;
     }
     async refreshAccessToken(refresh_token) {
-        const refreshToken = await prisma.refreshToken.findUnique({
+        const refreshToken = await prisma.refreshToken.findFirst({
             where: { token: refresh_token },
+            include: { user: true },
         });
 
         if (!refreshToken)
@@ -213,16 +295,11 @@ class AuthService {
             throw new AppError("refreshToken expired", HTTP_STATUS.BAD_REQUEST);
         }
 
-        const user = await prisma.user.findUnique({
-            where: { id: refreshToken.userId },
-        });
-
-        if (!user) {
+        if (!refreshToken.user)
             throw new AppError(
                 "user not own refreshToken",
                 HTTP_STATUS.BAD_REQUEST,
             );
-        }
 
         const accessToken = responseTokenService.refreshAccessToken(
             refreshToken.userId,

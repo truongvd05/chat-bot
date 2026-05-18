@@ -1,0 +1,32 @@
+model Notification {
+    id             BigInt           @id @default(autoincrement())
+    receiverId     BigInt
+    senderId       BigInt?
+    conversationId BigInt?
+    messageId      BigInt?
+    postId         BigInt?
+    type           NotificationType
+    isRead         Boolean          @default(false)
+    createdAt      DateTime         @default(now())
+
+    receiver     User          @relation("UserNotifications", fields: [receiverId], references: [id], onDelete: Cascade)
+    sender       User?         @relation("SenderNotifications", fields: [senderId], references: [id], onDelete: SetNull)
+    conversation Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+    message      Message?      @relation(fields: [messageId], references: [id], onDelete: Cascade)
+    post         Post?         @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+    @@index([receiverId])
+    @@index([senderId])
+    @@map("notifications")
+}
+
+enum NotificationType {
+    NEW_MESSAGE
+    FRIEND_REQUEST
+    FRIEND_ACCEPTED
+    ADDED_TO_GROUP
+    KICKED_FROM_GROUP
+    POST_LIKE
+    POST_COMMENT
+    POST_MENTION
+}

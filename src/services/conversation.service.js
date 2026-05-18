@@ -18,16 +18,20 @@ class ConversationService {
     }
     // check quyền
     async _requireRole(conversationId, userId) {
-        const user = await this._userInConversation(conversationId, userId);
-        if (!allowedRoles.includes(user.role)) {
-            throw new AppError("FORBIDDEN", HTTP_STATUS.FORBIDDEN);
-        }
         const conversation = await this._exitedConversation(conversationId);
         if (conversation.type === "DIRECT") {
             throw new AppError(
                 "NOT_ALLOWED_IN_DIRECT",
                 HTTP_STATUS.BAD_REQUEST,
             );
+        }
+        if (conversation.type === "BOT") {
+            throw new AppError("NOT_ALLOWED_IN_BOT", HTTP_STATUS.BAD_REQUEST);
+        }
+
+        const user = await this._userInConversation(conversationId, userId);
+        if (!allowedRoles.includes(user.role)) {
+            throw new AppError("FORBIDDEN", HTTP_STATUS.FORBIDDEN);
         }
         return { user, conversation };
     }
@@ -94,7 +98,7 @@ class ConversationService {
             where: {
                 userId,
                 conversation: {
-                    type: { in: ["DIRECT", "GROUP"] },
+                    type: { in: ["DIRECT", "GROUP", "SELF"] },
                     deletedAt: null,
                 },
                 leftAt: null,
@@ -594,7 +598,7 @@ class ConversationService {
 
     async finDparticipants(conversationId) {
         const result = await prisma.conversationParticipant.findMany({
-            where: { conversationId },
+            where: { conversationId, leftAt: null },
             select: { userId: true },
         });
         return serializeBigInt(result);
@@ -670,7 +674,7 @@ class ConversationService {
 
         const adminCount = members.filter((m) => m.role === "ADMIN").length;
 
-        if (user.role === "admin" && adminCount <= 1) {
+        if (user.role === "ADMIN" && adminCount <= 1) {
             throw new AppError(
                 "Bạn là admin duy nhất",
                 HTTP_STATUS.BAD_REQUEST,

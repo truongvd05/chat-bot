@@ -70,31 +70,26 @@ class UserService {
         return serializeBigInt(existing);
     }
     async searchUsers(userId, keyword) {
-        const result = await prisma.user.findMany({
-            where: {
-                OR: [
-                    {
-                        email: {
-                            contains: keyword,
-                        },
-                    },
-                    {
-                        name: {
-                            contains: keyword,
-                        },
-                    },
-                ],
-                id: { notIn: [userId] },
-            },
-            take: 20,
+        const user = await prisma.user.findUnique({
+            where: { phonenumber: keyword },
             select: {
                 id: true,
                 name: true,
-                email: true,
+                avatarUrl: true,
+                backgroundUrl: true,
+                birthday: true,
+                bio: true,
+                phonenumber: true,
+                gender: true,
+                emailVerifiedAt: true,
             },
         });
 
-        return serializeBigInt(result);
+        if (!user) {
+            throw new AppError("USER_NOT_FOUND", HTTP_STATUS.BAD_REQUEST);
+        }
+
+        return serializeBigInt(user);
     }
 }
 

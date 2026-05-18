@@ -1,4 +1,5 @@
 import { HTTP_STATUS } from "#config/constants.js";
+import { searchUsersSchema } from "#schemas/user.schema.js";
 import userService from "#services/user.service.js";
 import AppError from "#utils/AppError.js";
 
@@ -33,10 +34,19 @@ class UserController {
     }
     async searchUsers(req, res) {
         const user = req.user;
-        const { q } = req.query;
-        if (!q.trim()) throw new AppError("Invalid or missing querry");
-        const result = await userService.searchUsers(user.id, q);
-        return res.success(result, HTTP_STATUS.OK);
+
+        const result = searchUsersSchema.safeParse(req.query);
+        if (!result.success) {
+            throw new AppError(
+                result.error.issues[0].message || "lỗi",
+                HTTP_STATUS.BAD_REQUEST,
+            );
+        }
+
+        const { q } = result.data;
+
+        const search = await userService.searchUsers(user.id, q);
+        return res.success(search, HTTP_STATUS.OK);
     }
 }
 
