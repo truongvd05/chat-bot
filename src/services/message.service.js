@@ -3,10 +3,53 @@ import prisma from "#libs/prisma.js";
 import AppError from "#utils/AppError.js";
 import { serializeBigInt } from "#utils/serialize.js";
 import uploadBuffer from "#utils/uploadCoud.js";
+import { id } from "zod/v4/locales";
 import conversationService from "./conversation.service.js";
 
 class MessageService {
     // kiểm tra user có trong cuộc hội thoại hay không và cuộc hộc thoại đã bị xóa chưa
+    async getMessageById(messageId) {
+        const message = await prisma.message.findUnique({
+            where: {
+                id: messageId,
+            },
+            include: {
+                parentMessage: {
+                    select: {
+                        id: true,
+                        content: true,
+                        user: {
+                            select: {
+                                name: true,
+                            },
+                        },
+                    },
+                },
+                attachments: true,
+                user: {
+                    select: {
+                        id: true,
+                        name: true,
+                        avatarUrl: true,
+                    },
+                },
+                replies: {
+                    where: { deletedAt: null },
+                    include: {
+                        attachments: true,
+                        user: {
+                            select: {
+                                id: true,
+                                name: true,
+                                avatarUrl: true,
+                            },
+                        },
+                    },
+                },
+            },
+        });
+        return serializeBigInt(message);
+    }
     async _userInConversation(conversationId, userId) {
         // check nếu conversation là bot thì không có bảng quan hệ với conversationParticipant
         const conversation = await prisma.conversation.findUnique({
@@ -51,22 +94,6 @@ class MessageService {
             throw new AppError("MESSAGE_NOT_FOUND_OR_FORBIDDEN");
         }
     }
-    async getForAi(conversationId, limit = 10) {
-        const messages = await prisma.message.findMany({
-            where: {
-                conversationId,
-                deletedAt: null,
-            },
-            orderBy: {
-                createdAt: "asc",
-            },
-            take: -limit,
-        });
-        return messages.map((m) => ({
-            role: m.role === "user" ? "user" : "assistant",
-            content: m.content,
-        }));
-    }
     async verifyAccess(conversationId, userId) {
         await this._userInConversation(conversationId, userId);
         return true;
@@ -84,7 +111,7 @@ class MessageService {
         });
         return serializeBigInt(update);
     }
-    async editMessage(userId, messageId, content) {
+    async editMessage(userId, messageId, conversationId, content) {
         await this._assertUserOwnsActiveMessage(messageId, userId);
         const updated = await prisma.message.update({
             where: {
@@ -96,6 +123,7 @@ class MessageService {
                 updatedAt: new Date(),
             },
         });
+
         return serializeBigInt(updated);
     }
     async uploadFile(file) {
@@ -110,7 +138,14 @@ class MessageService {
             fileSize: file.size,
         };
     }
-    async sendMessage(conversationId, user, content, files = [], targetUserId) {
+    async sendMessage(
+        conversationId,
+        user,
+        content,
+        files = [],
+        parentMessageId,
+        targetUserId,
+    ) {
         await this._userInConversation(conversationId, user.id);
 
         const attachments = await Promise.all(
@@ -121,6 +156,7 @@ class MessageService {
             conversationId,
             userId: user.id,
             content,
+            parentMessageId,
             attachments,
         });
 
@@ -167,7 +203,19 @@ class MessageService {
                         create: attachments,
                     },
                 },
-                include: { attachments: true },
+                include: {
+                    attachments: true,
+                    user: { select: { id: true, name: true, avatarUrl: true } },
+                    parentMessage: {
+                        // ← include luôn
+                        select: {
+                            id: true,
+                            content: true,
+                            user: { select: { name: true } },
+                        },
+                    },
+                    replies: true,
+                },
             });
 
             await tx.conversation.update({
@@ -183,7 +231,7 @@ class MessageService {
         });
     }
 
-    async getMessage(userId, conversationId, cursor, limit) {
+    async getMessages(userId, conversationId, cursor, limit) {
         await this._userInConversation(conversationId, userId);
 
         const messages = await prisma.message.findMany({
@@ -235,7 +283,8 @@ class MessageService {
             },
             take: limit,
         });
-        return messages.reverse().map(serializeBigInt);
+
+        return serializeBigInt(messages.reverse());
     }
 
     async createBotMessage(conversationId, userId, content, role) {

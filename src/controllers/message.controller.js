@@ -56,7 +56,7 @@ class MessageController {
         const user = req.user;
         const conversationId = req.conversationId;
 
-        const messages = await messageService.getMessage(
+        const messages = await messageService.getMessages(
             user.id,
             conversationId,
             cursor,
@@ -67,6 +67,9 @@ class MessageController {
     }
     async editMessage(req, res) {
         const result = sendMessageSchema.safeParse(req.body);
+        const conversationId = req.conversationId;
+
+        const io = req.app.get("io");
 
         if (!result.success) {
             throw new AppError(
@@ -82,7 +85,9 @@ class MessageController {
         const edit = await messageService.editMessage(
             user.id,
             messageId,
+            conversationId,
             content,
+            io,
         );
         return res.success(edit, HTTP_STATUS.CREATED);
     }

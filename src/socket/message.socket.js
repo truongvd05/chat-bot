@@ -5,7 +5,7 @@ import messageService from "#services/message.service.js";
 export default function registerMessageSocket(io, socket) {
     socket.on(
         "send_message",
-        async ({ conversationId, content, replyToId }) => {
+        async ({ conversationId, content, replyToId, parentMessageId }) => {
             if (!content?.trim()) {
                 return socket.emit("error_message", "Tin nhắn không hợp lệ");
             }
@@ -26,6 +26,7 @@ export default function registerMessageSocket(io, socket) {
                         "Không có quyền gửi tin nhắn",
                     );
                 }
+
                 const message = await messageService._createMessage({
                     conversationId,
                     userId: senderId,
@@ -34,6 +35,7 @@ export default function registerMessageSocket(io, socket) {
                     role: "user",
                     parentMessageId: parentMessageId ?? null,
                 });
+
                 const conversation =
                     await conversationService.findConversationSocket(
                         conversationId,
@@ -92,9 +94,30 @@ export default function registerMessageSocket(io, socket) {
         },
     );
 
-    socket.on("edit_message", async ({ messageId, content }) => {
-        // ... logic edit
-    });
+    socket.on(
+        "edit_message",
+        async ({ messageId, conversationId, content }) => {
+            try {
+                const userId = socket.userId;
+                const edit = await messageService.editMessage(
+                    userId,
+                    messageId,
+                    conversationId,
+                    content,
+                    io,
+                );
+
+                const participants =
+                    await conversationService.finDparticipants(conversationId);
+                for (const p of participants) {
+                    io.to(`user_${p.userId}`).emit("message_edited", edit);
+                }
+            } catch (err) {
+                console.error("Edit message error:", err);
+                socket.emit("error_message", "Không sửa được tin nhắn");
+            }
+        },
+    );
 
     socket.on("delete_message", async ({ messageId }) => {
         // ... logic delete
