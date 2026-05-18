@@ -40,16 +40,6 @@ router.post(
     asyneHandle(messageController.sendMessage),
 );
 
-router.post(
-    "/bot/conversations/:conversationId",
-    authMeRequired,
-    rateLimitServce.shortMessage(),
-    rateLimitServce.burstMessage(),
-    rateLimitServce.longMessage(),
-    parseConversationId,
-    asyneHandle(messageController.sendBotMessage),
-);
-
 router.get(
     "/conversations/:conversationId",
     authMeRequired,

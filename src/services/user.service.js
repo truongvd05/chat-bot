@@ -48,7 +48,7 @@ class UserService {
 
         if (!target)
             throw new AppError("USER_NOT_FOUND", HTTP_STATUS.NOT_FOUND);
-        // đã block chưa
+        // đã unblock chưa
         const existing = await prisma.userBlock.findUnique({
             where: {
                 blockerId_blockedId: {
@@ -58,7 +58,7 @@ class UserService {
             },
         });
         if (!existing) return null;
-        // chưa thì block
+        // chưa thì unblock
         await prisma.userBlock.delete({
             where: {
                 blockerId_blockedId: {
@@ -86,7 +86,7 @@ class UserService {
         });
 
         if (!user) {
-            throw new AppError("USER_NOT_FOUND", HTTP_STATUS.BAD_REQUEST);
+            throw new AppError("USER_NOT_FOUND", HTTP_STATUS.NOT_FOUND);
         }
 
         return serializeBigInt(user);

@@ -4,10 +4,8 @@ import messageService from "#services/message.service.js";
 import AppError from "#utils/AppError.js";
 import jwt from "jsonwebtoken";
 import jwtconfig from "#config/jwt.js";
-import { addClient, emit, removeClient } from "#SSE/sseManager.js";
 import redis from "#config/redis.js";
 import {
-    createBotConversationSchema,
     createGroupConversationSchema,
     membersSchema,
     renameConversationSchema,
@@ -15,54 +13,12 @@ import {
 } from "#schemas/conversation.schema.js";
 
 class ConversationController {
-    async createBotConversation(req, res) {
-        const result = createBotConversationSchema.safeParse(req.body);
-
-        if (!result.success) {
-            throw new AppError(
-                result.error.issues[0].message || "lỗi",
-                HTTP_STATUS.BAD_REQUEST,
-            );
-        }
-        const { title } = result.data;
-
-        const user = req.user;
-
-        const newConversation = await conversationService.createBotConversation(
-            user,
-            title,
-        );
-
-        return res.success(newConversation, HTTP_STATUS.CREATED);
-    }
     async getConversations(req, res) {
         const user = req.user;
         const conversations = await conversationService.getConversations(
             user.id,
         );
         return res.success(conversations, HTTP_STATUS.OK);
-    }
-    async getMyBotConversations(req, res) {
-        const user = req.user;
-
-        const conversations =
-            await conversationService.getMyBotConversations(user);
-
-        return res.success(conversations, HTTP_STATUS.OK);
-    }
-    async getMyBotConversation(req, res) {
-        const user = req.user;
-
-        const conversationId = req.conversationId;
-
-        const botConversation = await conversationService.getMyBotConversation(
-            user.id,
-            conversationId,
-        );
-
-        await res.setCache(botConversation);
-
-        return res.success(botConversation, HTTP_STATUS.OK);
     }
 
     async createDirectConversation(req, res) {
@@ -139,33 +95,6 @@ class ConversationController {
         return res.success(null, 204);
     }
 
-    async stream(req, res) {
-        const token = req.query.token;
-        if (!token) throw new AppError("no token", HTTP_STATUS.BAD_REQUEST);
-        const payload = jwt.verify(token, jwtconfig.secret);
-        const user = payload;
-        const conversationId = req.conversationId;
-
-        await messageService.verifyAccess(conversationId, user.id);
-        res.setHeader("Content-Type", "text/event-stream");
-        res.setHeader("Cache-Control", "no-cache");
-        res.setHeader("Connection", "keep-alive");
-        res.flushHeaders();
-        addClient(conversationId, res);
-        emit(conversationId, { test: "connected ok" });
-        res.write(`event: connected\ndata: "ok"\n\n`);
-
-        // ping mỗi 30s để Nginx không cắt connection
-        const heartbeat = setInterval(() => {
-            res.write(`: ping\n\n`);
-        }, 30000);
-
-        // Cleanup khi client disconnect
-        req.on("close", () => {
-            clearInterval(heartbeat);
-            removeClient(conversationId, res); // xóa khỏi danh sách client
-        });
-    }
     async searchConversation(req, res) {
         const result = searchSchema.safeParse(req.query);
         if (!result.success) {

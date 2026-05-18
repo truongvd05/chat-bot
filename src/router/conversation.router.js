@@ -23,14 +23,6 @@ router.post(
     asyneHandle(conversationController.createGroupConversation),
 );
 
-router.post(
-    "/bot",
-    authMeRequired,
-    rateLimitServce.defaultPerMinuteRateLimit(),
-    rateLimitServce.defaultPerDayRateLimit(),
-    asyneHandle(conversationController.createBotConversation),
-);
-
 router.get(
     "/",
     authMeRequired,
@@ -39,25 +31,11 @@ router.get(
 );
 
 router.get(
-    "/bots",
-    authMeRequired,
-    rateLimitServce.defaultPerMinuteRateLimit(),
-    asyneHandle(conversationController.getMyBotConversations),
-);
-router.get(
-    "/bot/:conversationId",
-    authMeRequired,
-    parseConversationId,
-    cacheMiddleware((req) => `conv:${req.conversationId}`),
-    rateLimitServce.defaultPerMinuteRateLimit(),
-    asyneHandle(conversationController.getMyBotConversation),
-);
-
-router.get(
     "/search",
     authMeRequired,
     asyneHandle(conversationController.searchConversation),
 );
+
 router.get(
     "/:conversationId",
     authMeRequired,

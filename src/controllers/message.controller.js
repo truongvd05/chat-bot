@@ -1,5 +1,4 @@
 import { HTTP_STATUS } from "#config/constants.js";
-import { isStreaming } from "#config/streamState.js";
 import {
     getMessagesSchema,
     sendMessageSchema,
@@ -43,34 +42,7 @@ class MessageController {
 
         return res.success(message, HTTP_STATUS.CREATED);
     }
-    async sendBotMessage(req, res) {
-        const result = sendMessageSchema.safeParse(req.body);
-        if (!result.success) {
-            throw new AppError(
-                result.error.issues[0].message || "lỗi",
-                HTTP_STATUS.BAD_REQUEST,
-            );
-        }
 
-        const { content } = result.data;
-
-        const user = req.user;
-        const conversationId = req.conversationId;
-
-        if (isStreaming(conversationId)) {
-            throw new AppError(
-                "Bot đang trả lời, Vui lòng chờ",
-                HTTP_STATUS.CONFLICT,
-            );
-        }
-
-        const send = await messageService.sendBotMessage(
-            user.id,
-            conversationId,
-            content,
-        );
-        return res.success(send, HTTP_STATUS.CREATED);
-    }
     async getMessages(req, res) {
         const result = getMessagesSchema.safeParse(req.query);
         if (!result.success) {
