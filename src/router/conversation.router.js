@@ -37,6 +37,13 @@ router.get(
 );
 
 router.get(
+    "/groups",
+    authMeRequired,
+    rateLimitServce.defaultAuthRateLimit(),
+    asyneHandle(conversationController.getGroupConversation),
+);
+
+router.get(
     "/:conversationId",
     authMeRequired,
     rateLimitServce.defaultPerMinuteRateLimit(),

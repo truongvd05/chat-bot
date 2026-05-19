@@ -33,6 +33,12 @@ class ConversationController {
 
         return res.success(conversation, HTTP_STATUS.CREATED);
     }
+    async getGroupConversation(req, res) {
+        const user = req.user;
+        const groupConversation =
+            await conversationService.getGroupConversation(user.id);
+        return res.success(groupConversation, HTTP_STATUS.OK);
+    }
     async createGroupConversation(req, res) {
         const result = createGroupConversationSchema.safeParse(req.body);
         if (!result.success) {

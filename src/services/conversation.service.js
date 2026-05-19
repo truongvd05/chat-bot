@@ -495,6 +495,22 @@ class ConversationService {
         });
     }
 
+    async getGroupConversation(userId) {
+        const groupConversation = await prisma.conversation.findMany({
+            where: {
+                deletedAt: null,
+                type: "GROUP",
+                participants: {
+                    some: {
+                        userId,
+                        deletedAt: null,
+                    },
+                },
+            },
+        });
+        return serializeBigInt(groupConversation);
+    }
+
     async removeParticipant(userId, conversationId, memberIds, io) {
         return await prisma.$transaction(async (tx) => {
             await this._requireRole(conversationId, userId);

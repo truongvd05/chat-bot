@@ -7,6 +7,36 @@ import parseTargetId from "#middlewares/parseTargerId.js";
 
 const router = express.Router();
 
+router.get(
+    "/friends",
+    authMeRequired,
+    rateLimitServce.defaultAuthRateLimit(),
+    asyneHandle(userController.getFriend),
+);
+
+router.post(
+    "/add-friend",
+    authMeRequired,
+    rateLimitServce.defaultAuthRateLimit(),
+    parseTargetId,
+    asyneHandle(userController.addFriend),
+);
+
+router.post(
+    "/accept-friend",
+    authMeRequired,
+    rateLimitServce.defaultAuthRateLimit(),
+    parseTargetId,
+    asyneHandle(userController.acceptFriend),
+);
+
+router.get(
+    "/friend-request",
+    authMeRequired,
+    rateLimitServce.defaultAuthRateLimit(),
+    userController.getFriendRequest,
+);
+
 router.post(
     "/:id/block",
     authMeRequired,

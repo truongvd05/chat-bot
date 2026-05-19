@@ -4,6 +4,13 @@ import userService from "#services/user.service.js";
 import AppError from "#utils/AppError.js";
 
 class UserController {
+    async getFriend(req, res) {
+        const user = req.user;
+
+        const friends = await userService.getFriend(user.id);
+
+        return res.success(friends, HTTP_STATUS.OK);
+    }
     async blockUser(req, res) {
         const user = req.user;
         const targetUserId = req.targetUserId;
@@ -15,7 +22,7 @@ class UserController {
             );
         }
         const result = await userService.blockUser(user.id, targetUserId);
-        return res.success(result);
+        return res.success(result, HTTP_STATUS.OK);
     }
     async unblockUser(req, res) {
         const user = req.user;
@@ -47,6 +54,23 @@ class UserController {
 
         const search = await userService.searchUsers(user.id, q);
         return res.success(search, HTTP_STATUS.OK);
+    }
+    async getFriendRequest(req, res) {
+        const user = req.user;
+        const result = await userService.getFriendRequest(user.id);
+        return res.success(result, HTTP_STATUS.OK);
+    }
+    async addFriend(req, res) {
+        const user = req.user;
+        const targetUserId = req.targetUserId;
+        const add = await userService.addFriend(user.id, targetUserId);
+        return res.success(add, HTTP_STATUS.OK);
+    }
+    async acceptFriend(req, res) {
+        const user = req.user;
+        const targetUserId = req.targetUserId;
+        const add = await userService.acceptFriend(user.id, targetUserId);
+        return res.success(add, HTTP_STATUS.OK);
     }
 }
 

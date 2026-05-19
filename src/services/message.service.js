@@ -8,48 +8,6 @@ import conversationService from "./conversation.service.js";
 
 class MessageService {
     // kiểm tra user có trong cuộc hội thoại hay không và cuộc hộc thoại đã bị xóa chưa
-    async getMessageById(messageId) {
-        const message = await prisma.message.findUnique({
-            where: {
-                id: messageId,
-            },
-            include: {
-                parentMessage: {
-                    select: {
-                        id: true,
-                        content: true,
-                        user: {
-                            select: {
-                                name: true,
-                            },
-                        },
-                    },
-                },
-                attachments: true,
-                user: {
-                    select: {
-                        id: true,
-                        name: true,
-                        avatarUrl: true,
-                    },
-                },
-                replies: {
-                    where: { deletedAt: null },
-                    include: {
-                        attachments: true,
-                        user: {
-                            select: {
-                                id: true,
-                                name: true,
-                                avatarUrl: true,
-                            },
-                        },
-                    },
-                },
-            },
-        });
-        return serializeBigInt(message);
-    }
     async _userInConversation(conversationId, userId) {
         // check nếu conversation là bot thì không có bảng quan hệ với conversationParticipant
         const conversation = await prisma.conversation.findUnique({
@@ -60,7 +18,7 @@ class MessageService {
             throw new AppError("Conversation not found", HTTP_STATUS.NOT_FOUND);
         }
 
-        // ✅ Nếu là bot thì không cần check participant
+        // Nếu là bot thì không cần check participant
         if (conversation.type === "BOT") {
             return true;
         }
