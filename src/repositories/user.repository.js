@@ -1,9 +1,9 @@
 import prisma from "#libs/prisma.js";
 
-export function findUserById(id) {
+export function findUserById(userId) {
     return prisma.user.findUnique({
         where: {
-            id,
+            id: userId,
         },
     });
 }

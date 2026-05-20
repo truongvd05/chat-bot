@@ -9,6 +9,13 @@ class ConversationService {
     async _getExistingMembersMap(tx, conversationId, memberIds) {
         const existing = await tx.conversationParticipant.findMany({
             where: { conversationId, userId: { in: memberIds } },
+            include: {
+                user: {
+                    select: {
+                        emailVerifiedAt: true,
+                    },
+                },
+            },
         });
         return new Map(existing.map((m) => [m.userId, m]));
     }
@@ -160,8 +167,8 @@ class ConversationService {
         return serializeBigInt(conversation);
     }
     async createGroupConversation(userId, title, memberIds) {
+        await requireVerifiedUser(userId);
         const uniqueMembers = this._filterMembers(memberIds, userId);
-
         const newGroupConversation = await prisma.conversation.create({
             data: {
                 title,
@@ -427,6 +434,13 @@ class ConversationService {
                 // nếu đã là admin và rời nhóm rồi thì skip
                 if (!existing || existing.role === "ADMIN" || existing.leftAt)
                     continue;
+
+                if (!existing.user?.emailVerifiedAt) {
+                    throw new AppError(
+                        "Người dùng này chưa xác thực",
+                        HTTP_STATUS.FORBIDDEN,
+                    );
+                }
 
                 const participant = await tx.conversationParticipant.update({
                     where: {

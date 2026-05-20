@@ -52,14 +52,13 @@ class MessageService {
     }
     async sendMessage(
         conversationId,
-        user,
+        userId,
         content,
         files = [],
         parentMessageId,
-        targetUserId,
     ) {
-        await requireVerifiedUser(user.id);
-        await ensureConversationMember(conversationId, user.id);
+        await requireVerifiedUser(userId);
+        await ensureConversationMember(conversationId, userId);
 
         const attachments = await Promise.all(
             files.map((f) => this.uploadFile(f)),
@@ -67,7 +66,7 @@ class MessageService {
 
         const message = await this._createMessage({
             conversationId,
-            userId: user.id,
+            userId: userId,
             content,
             parentMessageId,
             attachments,
@@ -99,7 +98,6 @@ class MessageService {
                     attachments: true,
                     user: { select: { id: true, name: true, avatarUrl: true } },
                     parentMessage: {
-                        // ← include luôn
                         select: {
                             id: true,
                             content: true,

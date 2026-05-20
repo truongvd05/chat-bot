@@ -38,7 +38,8 @@ const errorHandle = (err, _, res, next) => {
     }
     if (err instanceof jwt.TokenExpiredError) {
         return res.error(
-            ERROR_MESSAGE.TOKEN_EXPIRED || "Verify link has expired",
+            ERROR_MESSAGE.TOKEN_EXPIRED ||
+                "Phiên đăng nhập hết hạn, vui lòng đăng nhập lại",
             HTTP_STATUS.UNAUTHORIZED,
         );
     }

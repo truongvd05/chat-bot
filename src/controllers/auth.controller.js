@@ -89,7 +89,10 @@ class AuthController {
         }
         await authService.resenVerifyEmail(user);
 
-        return res.success("Verification email has been resent");
+        return res.success(
+            "Verification email has been resent",
+            HTTP_STATUS.CREATED,
+        );
     }
     async getMe(req, res) {
         const authHeader = req.headers.authorization;

@@ -121,8 +121,7 @@ export namespace $Enums {
   export const ConversationType: {
   SELF: 'SELF',
   DIRECT: 'DIRECT',
-  GROUP: 'GROUP',
-  BOT: 'BOT'
+  GROUP: 'GROUP'
 };
 
 export type ConversationType = (typeof ConversationType)[keyof typeof ConversationType]
@@ -131,8 +130,7 @@ export type ConversationType = (typeof ConversationType)[keyof typeof Conversati
 export const ParticipantRole: {
   MEMBER: 'MEMBER',
   OWNER: 'OWNER',
-  ADMIN: 'ADMIN',
-  BOT: 'BOT'
+  ADMIN: 'ADMIN'
 };
 
 export type ParticipantRole = (typeof ParticipantRole)[keyof typeof ParticipantRole]
@@ -2553,7 +2551,6 @@ export namespace Prisma {
 
   export type ConversationCountOutputType = {
     participants: number
-    activeUsers: number
     messages: number
     notifications: number
     conversationLabels: number
@@ -2561,7 +2558,6 @@ export namespace Prisma {
 
   export type ConversationCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     participants?: boolean | ConversationCountOutputTypeCountParticipantsArgs
-    activeUsers?: boolean | ConversationCountOutputTypeCountActiveUsersArgs
     messages?: boolean | ConversationCountOutputTypeCountMessagesArgs
     notifications?: boolean | ConversationCountOutputTypeCountNotificationsArgs
     conversationLabels?: boolean | ConversationCountOutputTypeCountConversationLabelsArgs
@@ -2583,13 +2579,6 @@ export namespace Prisma {
    */
   export type ConversationCountOutputTypeCountParticipantsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ConversationParticipantWhereInput
-  }
-
-  /**
-   * ConversationCountOutputType without action
-   */
-  export type ConversationCountOutputTypeCountActiveUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: UserWhereInput
   }
 
   /**
@@ -5211,7 +5200,6 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     participants?: boolean | Conversation$participantsArgs<ExtArgs>
-    activeUsers?: boolean | Conversation$activeUsersArgs<ExtArgs>
     messages?: boolean | Conversation$messagesArgs<ExtArgs>
     owner?: boolean | Conversation$ownerArgs<ExtArgs>
     lastMessage?: boolean | Conversation$lastMessageArgs<ExtArgs>
@@ -5238,7 +5226,6 @@ export namespace Prisma {
   export type ConversationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "systemPrompt" | "type" | "ownerId" | "lastMessageId" | "lastMessageAt" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["conversation"]>
   export type ConversationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     participants?: boolean | Conversation$participantsArgs<ExtArgs>
-    activeUsers?: boolean | Conversation$activeUsersArgs<ExtArgs>
     messages?: boolean | Conversation$messagesArgs<ExtArgs>
     owner?: boolean | Conversation$ownerArgs<ExtArgs>
     lastMessage?: boolean | Conversation$lastMessageArgs<ExtArgs>
@@ -5251,7 +5238,6 @@ export namespace Prisma {
     name: "Conversation"
     objects: {
       participants: Prisma.$ConversationParticipantPayload<ExtArgs>[]
-      activeUsers: Prisma.$UserPayload<ExtArgs>[]
       messages: Prisma.$MessagePayload<ExtArgs>[]
       owner: Prisma.$UserPayload<ExtArgs> | null
       lastMessage: Prisma.$MessagePayload<ExtArgs> | null
@@ -5610,7 +5596,6 @@ export namespace Prisma {
   export interface Prisma__ConversationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     participants<T extends Conversation$participantsArgs<ExtArgs> = {}>(args?: Subset<T, Conversation$participantsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationParticipantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    activeUsers<T extends Conversation$activeUsersArgs<ExtArgs> = {}>(args?: Subset<T, Conversation$activeUsersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     messages<T extends Conversation$messagesArgs<ExtArgs> = {}>(args?: Subset<T, Conversation$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     owner<T extends Conversation$ownerArgs<ExtArgs> = {}>(args?: Subset<T, Conversation$ownerArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     lastMessage<T extends Conversation$lastMessageArgs<ExtArgs> = {}>(args?: Subset<T, Conversation$lastMessageArgs<ExtArgs>>): Prisma__MessageClient<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -6024,30 +6009,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ConversationParticipantScalarFieldEnum | ConversationParticipantScalarFieldEnum[]
-  }
-
-  /**
-   * Conversation.activeUsers
-   */
-  export type Conversation$activeUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the User
-     */
-    select?: UserSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the User
-     */
-    omit?: UserOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserInclude<ExtArgs> | null
-    where?: UserWhereInput
-    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
-    cursor?: UserWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
   }
 
   /**
@@ -21616,12 +21577,10 @@ export namespace Prisma {
 
   export type UserAvgAggregateOutputType = {
     id: number | null
-    activeConversationId: number | null
   }
 
   export type UserSumAggregateOutputType = {
     id: bigint | null
-    activeConversationId: bigint | null
   }
 
   export type UserMinAggregateOutputType = {
@@ -21638,7 +21597,6 @@ export namespace Prisma {
     emailVerifiedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
-    activeConversationId: bigint | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -21655,7 +21613,6 @@ export namespace Prisma {
     emailVerifiedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
-    activeConversationId: bigint | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -21672,19 +21629,16 @@ export namespace Prisma {
     emailVerifiedAt: number
     createdAt: number
     updatedAt: number
-    activeConversationId: number
     _all: number
   }
 
 
   export type UserAvgAggregateInputType = {
     id?: true
-    activeConversationId?: true
   }
 
   export type UserSumAggregateInputType = {
     id?: true
-    activeConversationId?: true
   }
 
   export type UserMinAggregateInputType = {
@@ -21701,7 +21655,6 @@ export namespace Prisma {
     emailVerifiedAt?: true
     createdAt?: true
     updatedAt?: true
-    activeConversationId?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -21718,7 +21671,6 @@ export namespace Prisma {
     emailVerifiedAt?: true
     createdAt?: true
     updatedAt?: true
-    activeConversationId?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -21735,7 +21687,6 @@ export namespace Prisma {
     emailVerifiedAt?: true
     createdAt?: true
     updatedAt?: true
-    activeConversationId?: true
     _all?: true
   }
 
@@ -21839,7 +21790,6 @@ export namespace Prisma {
     emailVerifiedAt: Date | null
     createdAt: Date
     updatedAt: Date
-    activeConversationId: bigint | null
     _count: UserCountAggregateOutputType | null
     _avg: UserAvgAggregateOutputType | null
     _sum: UserSumAggregateOutputType | null
@@ -21875,10 +21825,8 @@ export namespace Prisma {
     emailVerifiedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    activeConversationId?: boolean
     refreshTokens?: boolean | User$refreshTokensArgs<ExtArgs>
     conversationParticipants?: boolean | User$conversationParticipantsArgs<ExtArgs>
-    activeConversation?: boolean | User$activeConversationArgs<ExtArgs>
     messages?: boolean | User$messagesArgs<ExtArgs>
     passwordResetTokens?: boolean | User$passwordResetTokensArgs<ExtArgs>
     blockedUsers?: boolean | User$blockedUsersArgs<ExtArgs>
@@ -21913,14 +21861,12 @@ export namespace Prisma {
     emailVerifiedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    activeConversationId?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "name" | "phonenumber" | "gender" | "bio" | "birthday" | "avatarUrl" | "backgroundUrl" | "password" | "emailVerifiedAt" | "createdAt" | "updatedAt" | "activeConversationId", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "name" | "phonenumber" | "gender" | "bio" | "birthday" | "avatarUrl" | "backgroundUrl" | "password" | "emailVerifiedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     refreshTokens?: boolean | User$refreshTokensArgs<ExtArgs>
     conversationParticipants?: boolean | User$conversationParticipantsArgs<ExtArgs>
-    activeConversation?: boolean | User$activeConversationArgs<ExtArgs>
     messages?: boolean | User$messagesArgs<ExtArgs>
     passwordResetTokens?: boolean | User$passwordResetTokensArgs<ExtArgs>
     blockedUsers?: boolean | User$blockedUsersArgs<ExtArgs>
@@ -21944,7 +21890,6 @@ export namespace Prisma {
     objects: {
       refreshTokens: Prisma.$RefreshTokenPayload<ExtArgs>[]
       conversationParticipants: Prisma.$ConversationParticipantPayload<ExtArgs>[]
-      activeConversation: Prisma.$ConversationPayload<ExtArgs> | null
       messages: Prisma.$MessagePayload<ExtArgs>[]
       passwordResetTokens: Prisma.$PasswordResetTokenPayload<ExtArgs>[]
       blockedUsers: Prisma.$UserBlockPayload<ExtArgs>[]
@@ -21975,7 +21920,6 @@ export namespace Prisma {
       emailVerifiedAt: Date | null
       createdAt: Date
       updatedAt: Date
-      activeConversationId: bigint | null
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -22318,7 +22262,6 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     refreshTokens<T extends User$refreshTokensArgs<ExtArgs> = {}>(args?: Subset<T, User$refreshTokensArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RefreshTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     conversationParticipants<T extends User$conversationParticipantsArgs<ExtArgs> = {}>(args?: Subset<T, User$conversationParticipantsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationParticipantPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    activeConversation<T extends User$activeConversationArgs<ExtArgs> = {}>(args?: Subset<T, User$activeConversationArgs<ExtArgs>>): Prisma__ConversationClient<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     messages<T extends User$messagesArgs<ExtArgs> = {}>(args?: Subset<T, User$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     passwordResetTokens<T extends User$passwordResetTokensArgs<ExtArgs> = {}>(args?: Subset<T, User$passwordResetTokensArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PasswordResetTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     blockedUsers<T extends User$blockedUsersArgs<ExtArgs> = {}>(args?: Subset<T, User$blockedUsersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserBlockPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -22376,7 +22319,6 @@ export namespace Prisma {
     readonly emailVerifiedAt: FieldRef<"User", 'DateTime'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
-    readonly activeConversationId: FieldRef<"User", 'BigInt'>
   }
     
 
@@ -22770,25 +22712,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ConversationParticipantScalarFieldEnum | ConversationParticipantScalarFieldEnum[]
-  }
-
-  /**
-   * User.activeConversation
-   */
-  export type User$activeConversationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Conversation
-     */
-    select?: ConversationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Conversation
-     */
-    omit?: ConversationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ConversationInclude<ExtArgs> | null
-    where?: ConversationWhereInput
   }
 
   /**
@@ -24404,8 +24327,7 @@ export namespace Prisma {
     password: 'password',
     emailVerifiedAt: 'emailVerifiedAt',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
-    activeConversationId: 'activeConversationId'
+    updatedAt: 'updatedAt'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -24827,7 +24749,6 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Conversation"> | Date | string
     updatedAt?: DateTimeFilter<"Conversation"> | Date | string
     participants?: ConversationParticipantListRelationFilter
-    activeUsers?: UserListRelationFilter
     messages?: MessageListRelationFilter
     owner?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     lastMessage?: XOR<MessageNullableScalarRelationFilter, MessageWhereInput> | null
@@ -24847,7 +24768,6 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     participants?: ConversationParticipantOrderByRelationAggregateInput
-    activeUsers?: UserOrderByRelationAggregateInput
     messages?: MessageOrderByRelationAggregateInput
     owner?: UserOrderByWithRelationInput
     lastMessage?: MessageOrderByWithRelationInput
@@ -24871,7 +24791,6 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Conversation"> | Date | string
     updatedAt?: DateTimeFilter<"Conversation"> | Date | string
     participants?: ConversationParticipantListRelationFilter
-    activeUsers?: UserListRelationFilter
     messages?: MessageListRelationFilter
     owner?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     lastMessage?: XOR<MessageNullableScalarRelationFilter, MessageWhereInput> | null
@@ -25988,10 +25907,8 @@ export namespace Prisma {
     emailVerifiedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
-    activeConversationId?: BigIntNullableFilter<"User"> | bigint | number | null
     refreshTokens?: RefreshTokenListRelationFilter
     conversationParticipants?: ConversationParticipantListRelationFilter
-    activeConversation?: XOR<ConversationNullableScalarRelationFilter, ConversationWhereInput> | null
     messages?: MessageListRelationFilter
     passwordResetTokens?: PasswordResetTokenListRelationFilter
     blockedUsers?: UserBlockListRelationFilter
@@ -26023,10 +25940,8 @@ export namespace Prisma {
     emailVerifiedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    activeConversationId?: SortOrderInput | SortOrder
     refreshTokens?: RefreshTokenOrderByRelationAggregateInput
     conversationParticipants?: ConversationParticipantOrderByRelationAggregateInput
-    activeConversation?: ConversationOrderByWithRelationInput
     messages?: MessageOrderByRelationAggregateInput
     passwordResetTokens?: PasswordResetTokenOrderByRelationAggregateInput
     blockedUsers?: UserBlockOrderByRelationAggregateInput
@@ -26062,10 +25977,8 @@ export namespace Prisma {
     emailVerifiedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
-    activeConversationId?: BigIntNullableFilter<"User"> | bigint | number | null
     refreshTokens?: RefreshTokenListRelationFilter
     conversationParticipants?: ConversationParticipantListRelationFilter
-    activeConversation?: XOR<ConversationNullableScalarRelationFilter, ConversationWhereInput> | null
     messages?: MessageListRelationFilter
     passwordResetTokens?: PasswordResetTokenListRelationFilter
     blockedUsers?: UserBlockListRelationFilter
@@ -26097,7 +26010,6 @@ export namespace Prisma {
     emailVerifiedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    activeConversationId?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
     _avg?: UserAvgOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
@@ -26122,7 +26034,6 @@ export namespace Prisma {
     emailVerifiedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
-    activeConversationId?: BigIntNullableWithAggregatesFilter<"User"> | bigint | number | null
   }
 
   export type UserBlockWhereInput = {
@@ -26320,7 +26231,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     participants?: ConversationParticipantCreateNestedManyWithoutConversationInput
-    activeUsers?: UserCreateNestedManyWithoutActiveConversationInput
     messages?: MessageCreateNestedManyWithoutConversationInput
     owner?: UserCreateNestedOneWithoutOwnedConversationsInput
     lastMessage?: MessageCreateNestedOneWithoutLastMessageOfInput
@@ -26340,7 +26250,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     participants?: ConversationParticipantUncheckedCreateNestedManyWithoutConversationInput
-    activeUsers?: UserUncheckedCreateNestedManyWithoutActiveConversationInput
     messages?: MessageUncheckedCreateNestedManyWithoutConversationInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutConversationInput
     conversationLabels?: ConversationLabelUncheckedCreateNestedManyWithoutConversationInput
@@ -26356,7 +26265,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     participants?: ConversationParticipantUpdateManyWithoutConversationNestedInput
-    activeUsers?: UserUpdateManyWithoutActiveConversationNestedInput
     messages?: MessageUpdateManyWithoutConversationNestedInput
     owner?: UserUpdateOneWithoutOwnedConversationsNestedInput
     lastMessage?: MessageUpdateOneWithoutLastMessageOfNestedInput
@@ -26376,7 +26284,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     participants?: ConversationParticipantUncheckedUpdateManyWithoutConversationNestedInput
-    activeUsers?: UserUncheckedUpdateManyWithoutActiveConversationNestedInput
     messages?: MessageUncheckedUpdateManyWithoutConversationNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutConversationNestedInput
     conversationLabels?: ConversationLabelUncheckedUpdateManyWithoutConversationNestedInput
@@ -27454,7 +27361,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     conversationParticipants?: ConversationParticipantCreateNestedManyWithoutUserInput
-    activeConversation?: ConversationCreateNestedOneWithoutActiveUsersInput
     messages?: MessageCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
@@ -27486,7 +27392,6 @@ export namespace Prisma {
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    activeConversationId?: bigint | number | null
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     conversationParticipants?: ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
@@ -27522,7 +27427,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     conversationParticipants?: ConversationParticipantUpdateManyWithoutUserNestedInput
-    activeConversation?: ConversationUpdateOneWithoutActiveUsersNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
@@ -27554,7 +27458,6 @@ export namespace Prisma {
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    activeConversationId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     conversationParticipants?: ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
@@ -27588,7 +27491,6 @@ export namespace Prisma {
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    activeConversationId?: bigint | number | null
   }
 
   export type UserUpdateManyMutationInput = {
@@ -27621,7 +27523,6 @@ export namespace Prisma {
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    activeConversationId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type UserBlockCreateInput = {
@@ -27941,12 +27842,6 @@ export namespace Prisma {
     none?: ConversationParticipantWhereInput
   }
 
-  export type UserListRelationFilter = {
-    every?: UserWhereInput
-    some?: UserWhereInput
-    none?: UserWhereInput
-  }
-
   export type MessageListRelationFilter = {
     every?: MessageWhereInput
     some?: MessageWhereInput
@@ -27976,10 +27871,6 @@ export namespace Prisma {
   }
 
   export type ConversationParticipantOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type UserOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -29165,12 +29056,10 @@ export namespace Prisma {
     emailVerifiedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    activeConversationId?: SortOrder
   }
 
   export type UserAvgOrderByAggregateInput = {
     id?: SortOrder
-    activeConversationId?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -29187,7 +29076,6 @@ export namespace Prisma {
     emailVerifiedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    activeConversationId?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -29204,12 +29092,10 @@ export namespace Prisma {
     emailVerifiedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    activeConversationId?: SortOrder
   }
 
   export type UserSumOrderByAggregateInput = {
     id?: SortOrder
-    activeConversationId?: SortOrder
   }
 
   export type UserBlockBlockerIdBlockedIdCompoundUniqueInput = {
@@ -29312,13 +29198,6 @@ export namespace Prisma {
     connect?: ConversationParticipantWhereUniqueInput | ConversationParticipantWhereUniqueInput[]
   }
 
-  export type UserCreateNestedManyWithoutActiveConversationInput = {
-    create?: XOR<UserCreateWithoutActiveConversationInput, UserUncheckedCreateWithoutActiveConversationInput> | UserCreateWithoutActiveConversationInput[] | UserUncheckedCreateWithoutActiveConversationInput[]
-    connectOrCreate?: UserCreateOrConnectWithoutActiveConversationInput | UserCreateOrConnectWithoutActiveConversationInput[]
-    createMany?: UserCreateManyActiveConversationInputEnvelope
-    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
-  }
-
   export type MessageCreateNestedManyWithoutConversationInput = {
     create?: XOR<MessageCreateWithoutConversationInput, MessageUncheckedCreateWithoutConversationInput> | MessageCreateWithoutConversationInput[] | MessageUncheckedCreateWithoutConversationInput[]
     connectOrCreate?: MessageCreateOrConnectWithoutConversationInput | MessageCreateOrConnectWithoutConversationInput[]
@@ -29359,13 +29238,6 @@ export namespace Prisma {
     connect?: ConversationParticipantWhereUniqueInput | ConversationParticipantWhereUniqueInput[]
   }
 
-  export type UserUncheckedCreateNestedManyWithoutActiveConversationInput = {
-    create?: XOR<UserCreateWithoutActiveConversationInput, UserUncheckedCreateWithoutActiveConversationInput> | UserCreateWithoutActiveConversationInput[] | UserUncheckedCreateWithoutActiveConversationInput[]
-    connectOrCreate?: UserCreateOrConnectWithoutActiveConversationInput | UserCreateOrConnectWithoutActiveConversationInput[]
-    createMany?: UserCreateManyActiveConversationInputEnvelope
-    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
-  }
-
   export type MessageUncheckedCreateNestedManyWithoutConversationInput = {
     create?: XOR<MessageCreateWithoutConversationInput, MessageUncheckedCreateWithoutConversationInput> | MessageCreateWithoutConversationInput[] | MessageUncheckedCreateWithoutConversationInput[]
     connectOrCreate?: MessageCreateOrConnectWithoutConversationInput | MessageCreateOrConnectWithoutConversationInput[]
@@ -29403,20 +29275,6 @@ export namespace Prisma {
     update?: ConversationParticipantUpdateWithWhereUniqueWithoutConversationInput | ConversationParticipantUpdateWithWhereUniqueWithoutConversationInput[]
     updateMany?: ConversationParticipantUpdateManyWithWhereWithoutConversationInput | ConversationParticipantUpdateManyWithWhereWithoutConversationInput[]
     deleteMany?: ConversationParticipantScalarWhereInput | ConversationParticipantScalarWhereInput[]
-  }
-
-  export type UserUpdateManyWithoutActiveConversationNestedInput = {
-    create?: XOR<UserCreateWithoutActiveConversationInput, UserUncheckedCreateWithoutActiveConversationInput> | UserCreateWithoutActiveConversationInput[] | UserUncheckedCreateWithoutActiveConversationInput[]
-    connectOrCreate?: UserCreateOrConnectWithoutActiveConversationInput | UserCreateOrConnectWithoutActiveConversationInput[]
-    upsert?: UserUpsertWithWhereUniqueWithoutActiveConversationInput | UserUpsertWithWhereUniqueWithoutActiveConversationInput[]
-    createMany?: UserCreateManyActiveConversationInputEnvelope
-    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    update?: UserUpdateWithWhereUniqueWithoutActiveConversationInput | UserUpdateWithWhereUniqueWithoutActiveConversationInput[]
-    updateMany?: UserUpdateManyWithWhereWithoutActiveConversationInput | UserUpdateManyWithWhereWithoutActiveConversationInput[]
-    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
   }
 
   export type MessageUpdateManyWithoutConversationNestedInput = {
@@ -29501,20 +29359,6 @@ export namespace Prisma {
     update?: ConversationParticipantUpdateWithWhereUniqueWithoutConversationInput | ConversationParticipantUpdateWithWhereUniqueWithoutConversationInput[]
     updateMany?: ConversationParticipantUpdateManyWithWhereWithoutConversationInput | ConversationParticipantUpdateManyWithWhereWithoutConversationInput[]
     deleteMany?: ConversationParticipantScalarWhereInput | ConversationParticipantScalarWhereInput[]
-  }
-
-  export type UserUncheckedUpdateManyWithoutActiveConversationNestedInput = {
-    create?: XOR<UserCreateWithoutActiveConversationInput, UserUncheckedCreateWithoutActiveConversationInput> | UserCreateWithoutActiveConversationInput[] | UserUncheckedCreateWithoutActiveConversationInput[]
-    connectOrCreate?: UserCreateOrConnectWithoutActiveConversationInput | UserCreateOrConnectWithoutActiveConversationInput[]
-    upsert?: UserUpsertWithWhereUniqueWithoutActiveConversationInput | UserUpsertWithWhereUniqueWithoutActiveConversationInput[]
-    createMany?: UserCreateManyActiveConversationInputEnvelope
-    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
-    update?: UserUpdateWithWhereUniqueWithoutActiveConversationInput | UserUpdateWithWhereUniqueWithoutActiveConversationInput[]
-    updateMany?: UserUpdateManyWithWhereWithoutActiveConversationInput | UserUpdateManyWithWhereWithoutActiveConversationInput[]
-    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
   }
 
   export type MessageUncheckedUpdateManyWithoutConversationNestedInput = {
@@ -30567,12 +30411,6 @@ export namespace Prisma {
     connect?: ConversationParticipantWhereUniqueInput | ConversationParticipantWhereUniqueInput[]
   }
 
-  export type ConversationCreateNestedOneWithoutActiveUsersInput = {
-    create?: XOR<ConversationCreateWithoutActiveUsersInput, ConversationUncheckedCreateWithoutActiveUsersInput>
-    connectOrCreate?: ConversationCreateOrConnectWithoutActiveUsersInput
-    connect?: ConversationWhereUniqueInput
-  }
-
   export type MessageCreateNestedManyWithoutUserInput = {
     create?: XOR<MessageCreateWithoutUserInput, MessageUncheckedCreateWithoutUserInput> | MessageCreateWithoutUserInput[] | MessageUncheckedCreateWithoutUserInput[]
     connectOrCreate?: MessageCreateOrConnectWithoutUserInput | MessageCreateOrConnectWithoutUserInput[]
@@ -30823,16 +30661,6 @@ export namespace Prisma {
     update?: ConversationParticipantUpdateWithWhereUniqueWithoutUserInput | ConversationParticipantUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: ConversationParticipantUpdateManyWithWhereWithoutUserInput | ConversationParticipantUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: ConversationParticipantScalarWhereInput | ConversationParticipantScalarWhereInput[]
-  }
-
-  export type ConversationUpdateOneWithoutActiveUsersNestedInput = {
-    create?: XOR<ConversationCreateWithoutActiveUsersInput, ConversationUncheckedCreateWithoutActiveUsersInput>
-    connectOrCreate?: ConversationCreateOrConnectWithoutActiveUsersInput
-    upsert?: ConversationUpsertWithoutActiveUsersInput
-    disconnect?: ConversationWhereInput | boolean
-    delete?: ConversationWhereInput | boolean
-    connect?: ConversationWhereUniqueInput
-    update?: XOR<XOR<ConversationUpdateToOneWithWhereWithoutActiveUsersInput, ConversationUpdateWithoutActiveUsersInput>, ConversationUncheckedUpdateWithoutActiveUsersInput>
   }
 
   export type MessageUpdateManyWithoutUserNestedInput = {
@@ -31728,7 +31556,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     conversationParticipants?: ConversationParticipantCreateNestedManyWithoutUserInput
-    activeConversation?: ConversationCreateNestedOneWithoutActiveUsersInput
     messages?: MessageCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
@@ -31760,7 +31587,6 @@ export namespace Prisma {
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    activeConversationId?: bigint | number | null
     conversationParticipants?: ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
@@ -31810,7 +31636,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     conversationParticipants?: ConversationParticipantUpdateManyWithoutUserNestedInput
-    activeConversation?: ConversationUpdateOneWithoutActiveUsersNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
@@ -31842,7 +31667,6 @@ export namespace Prisma {
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    activeConversationId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     conversationParticipants?: ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
@@ -31877,7 +31701,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     conversationParticipants?: ConversationParticipantCreateNestedManyWithoutUserInput
-    activeConversation?: ConversationCreateNestedOneWithoutActiveUsersInput
     messages?: MessageCreateNestedManyWithoutUserInput
     blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
     blockedBy?: UserBlockCreateNestedManyWithoutBlockedInput
@@ -31908,7 +31731,6 @@ export namespace Prisma {
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    activeConversationId?: bigint | number | null
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     conversationParticipants?: ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
@@ -31959,7 +31781,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     conversationParticipants?: ConversationParticipantUpdateManyWithoutUserNestedInput
-    activeConversation?: ConversationUpdateOneWithoutActiveUsersNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
     blockedBy?: UserBlockUpdateManyWithoutBlockedNestedInput
@@ -31990,7 +31811,6 @@ export namespace Prisma {
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    activeConversationId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     conversationParticipants?: ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
@@ -32038,82 +31858,6 @@ export namespace Prisma {
 
   export type ConversationParticipantCreateManyConversationInputEnvelope = {
     data: ConversationParticipantCreateManyConversationInput | ConversationParticipantCreateManyConversationInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type UserCreateWithoutActiveConversationInput = {
-    id?: bigint | number
-    email: string
-    name: string
-    phonenumber: string
-    gender?: string | null
-    bio?: string | null
-    birthday?: string | null
-    avatarUrl?: string | null
-    backgroundUrl?: string | null
-    password: string
-    emailVerifiedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
-    conversationParticipants?: ConversationParticipantCreateNestedManyWithoutUserInput
-    messages?: MessageCreateNestedManyWithoutUserInput
-    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
-    blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
-    blockedBy?: UserBlockCreateNestedManyWithoutBlockedInput
-    ownedConversations?: ConversationCreateNestedManyWithoutOwnerInput
-    sentFriendRequests?: FriendCreateNestedManyWithoutRequesterInput
-    receivedFriendRequests?: FriendCreateNestedManyWithoutAddresseeInput
-    receivedNotifications?: NotificationCreateNestedManyWithoutReceiverInput
-    sentNotifications?: NotificationCreateNestedManyWithoutSenderInput
-    posts?: PostCreateNestedManyWithoutUserInput
-    postLikes?: PostLikeCreateNestedManyWithoutUserInput
-    postSaves?: PostSaveCreateNestedManyWithoutUserInput
-    postComments?: PostCommentCreateNestedManyWithoutUserInput
-    reports?: ReportCreateNestedManyWithoutReporterInput
-    conversationLabels?: ConversationLabelCreateNestedManyWithoutUserInput
-  }
-
-  export type UserUncheckedCreateWithoutActiveConversationInput = {
-    id?: bigint | number
-    email: string
-    name: string
-    phonenumber: string
-    gender?: string | null
-    bio?: string | null
-    birthday?: string | null
-    avatarUrl?: string | null
-    backgroundUrl?: string | null
-    password: string
-    emailVerifiedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
-    conversationParticipants?: ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
-    messages?: MessageUncheckedCreateNestedManyWithoutUserInput
-    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
-    blockedUsers?: UserBlockUncheckedCreateNestedManyWithoutBlockerInput
-    blockedBy?: UserBlockUncheckedCreateNestedManyWithoutBlockedInput
-    ownedConversations?: ConversationUncheckedCreateNestedManyWithoutOwnerInput
-    sentFriendRequests?: FriendUncheckedCreateNestedManyWithoutRequesterInput
-    receivedFriendRequests?: FriendUncheckedCreateNestedManyWithoutAddresseeInput
-    receivedNotifications?: NotificationUncheckedCreateNestedManyWithoutReceiverInput
-    sentNotifications?: NotificationUncheckedCreateNestedManyWithoutSenderInput
-    posts?: PostUncheckedCreateNestedManyWithoutUserInput
-    postLikes?: PostLikeUncheckedCreateNestedManyWithoutUserInput
-    postSaves?: PostSaveUncheckedCreateNestedManyWithoutUserInput
-    postComments?: PostCommentUncheckedCreateNestedManyWithoutUserInput
-    reports?: ReportUncheckedCreateNestedManyWithoutReporterInput
-    conversationLabels?: ConversationLabelUncheckedCreateNestedManyWithoutUserInput
-  }
-
-  export type UserCreateOrConnectWithoutActiveConversationInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutActiveConversationInput, UserUncheckedCreateWithoutActiveConversationInput>
-  }
-
-  export type UserCreateManyActiveConversationInputEnvelope = {
-    data: UserCreateManyActiveConversationInput | UserCreateManyActiveConversationInput[]
     skipDuplicates?: boolean
   }
 
@@ -32175,7 +31919,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     conversationParticipants?: ConversationParticipantCreateNestedManyWithoutUserInput
-    activeConversation?: ConversationCreateNestedOneWithoutActiveUsersInput
     messages?: MessageCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
@@ -32206,7 +31949,6 @@ export namespace Prisma {
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    activeConversationId?: bigint | number | null
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     conversationParticipants?: ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
@@ -32354,42 +32096,6 @@ export namespace Prisma {
     deletedAt?: DateTimeNullableFilter<"ConversationParticipant"> | Date | string | null
   }
 
-  export type UserUpsertWithWhereUniqueWithoutActiveConversationInput = {
-    where: UserWhereUniqueInput
-    update: XOR<UserUpdateWithoutActiveConversationInput, UserUncheckedUpdateWithoutActiveConversationInput>
-    create: XOR<UserCreateWithoutActiveConversationInput, UserUncheckedCreateWithoutActiveConversationInput>
-  }
-
-  export type UserUpdateWithWhereUniqueWithoutActiveConversationInput = {
-    where: UserWhereUniqueInput
-    data: XOR<UserUpdateWithoutActiveConversationInput, UserUncheckedUpdateWithoutActiveConversationInput>
-  }
-
-  export type UserUpdateManyWithWhereWithoutActiveConversationInput = {
-    where: UserScalarWhereInput
-    data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyWithoutActiveConversationInput>
-  }
-
-  export type UserScalarWhereInput = {
-    AND?: UserScalarWhereInput | UserScalarWhereInput[]
-    OR?: UserScalarWhereInput[]
-    NOT?: UserScalarWhereInput | UserScalarWhereInput[]
-    id?: BigIntFilter<"User"> | bigint | number
-    email?: StringFilter<"User"> | string
-    name?: StringFilter<"User"> | string
-    phonenumber?: StringFilter<"User"> | string
-    gender?: StringNullableFilter<"User"> | string | null
-    bio?: StringNullableFilter<"User"> | string | null
-    birthday?: StringNullableFilter<"User"> | string | null
-    avatarUrl?: StringNullableFilter<"User"> | string | null
-    backgroundUrl?: StringNullableFilter<"User"> | string | null
-    password?: StringFilter<"User"> | string
-    emailVerifiedAt?: DateTimeNullableFilter<"User"> | Date | string | null
-    createdAt?: DateTimeFilter<"User"> | Date | string
-    updatedAt?: DateTimeFilter<"User"> | Date | string
-    activeConversationId?: BigIntNullableFilter<"User"> | bigint | number | null
-  }
-
   export type MessageUpsertWithWhereUniqueWithoutConversationInput = {
     where: MessageWhereUniqueInput
     update: XOR<MessageUpdateWithoutConversationInput, MessageUncheckedUpdateWithoutConversationInput>
@@ -32449,7 +32155,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     conversationParticipants?: ConversationParticipantUpdateManyWithoutUserNestedInput
-    activeConversation?: ConversationUpdateOneWithoutActiveUsersNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
@@ -32480,7 +32185,6 @@ export namespace Prisma {
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    activeConversationId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     conversationParticipants?: ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
@@ -32609,7 +32313,6 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    activeUsers?: UserCreateNestedManyWithoutActiveConversationInput
     messages?: MessageCreateNestedManyWithoutConversationInput
     owner?: UserCreateNestedOneWithoutOwnedConversationsInput
     lastMessage?: MessageCreateNestedOneWithoutLastMessageOfInput
@@ -32628,7 +32331,6 @@ export namespace Prisma {
     deletedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    activeUsers?: UserUncheckedCreateNestedManyWithoutActiveConversationInput
     messages?: MessageUncheckedCreateNestedManyWithoutConversationInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutConversationInput
     conversationLabels?: ConversationLabelUncheckedCreateNestedManyWithoutConversationInput
@@ -32654,7 +32356,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
-    activeConversation?: ConversationCreateNestedOneWithoutActiveUsersInput
     messages?: MessageCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
@@ -32686,7 +32387,6 @@ export namespace Prisma {
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    activeConversationId?: bigint | number | null
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
@@ -32730,7 +32430,6 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    activeUsers?: UserUpdateManyWithoutActiveConversationNestedInput
     messages?: MessageUpdateManyWithoutConversationNestedInput
     owner?: UserUpdateOneWithoutOwnedConversationsNestedInput
     lastMessage?: MessageUpdateOneWithoutLastMessageOfNestedInput
@@ -32749,7 +32448,6 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    activeUsers?: UserUncheckedUpdateManyWithoutActiveConversationNestedInput
     messages?: MessageUncheckedUpdateManyWithoutConversationNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutConversationNestedInput
     conversationLabels?: ConversationLabelUncheckedUpdateManyWithoutConversationNestedInput
@@ -32781,7 +32479,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
-    activeConversation?: ConversationUpdateOneWithoutActiveUsersNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
@@ -32813,7 +32510,6 @@ export namespace Prisma {
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    activeConversationId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
@@ -32848,7 +32544,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     conversationParticipants?: ConversationParticipantCreateNestedManyWithoutUserInput
-    activeConversation?: ConversationCreateNestedOneWithoutActiveUsersInput
     messages?: MessageCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
@@ -32879,7 +32574,6 @@ export namespace Prisma {
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    activeConversationId?: bigint | number | null
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     conversationParticipants?: ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
@@ -32913,7 +32607,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     participants?: ConversationParticipantCreateNestedManyWithoutConversationInput
-    activeUsers?: UserCreateNestedManyWithoutActiveConversationInput
     messages?: MessageCreateNestedManyWithoutConversationInput
     owner?: UserCreateNestedOneWithoutOwnedConversationsInput
     lastMessage?: MessageCreateNestedOneWithoutLastMessageOfInput
@@ -32932,7 +32625,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     participants?: ConversationParticipantUncheckedCreateNestedManyWithoutConversationInput
-    activeUsers?: UserUncheckedCreateNestedManyWithoutActiveConversationInput
     messages?: MessageUncheckedCreateNestedManyWithoutConversationInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutConversationInput
   }
@@ -32969,7 +32661,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     conversationParticipants?: ConversationParticipantUpdateManyWithoutUserNestedInput
-    activeConversation?: ConversationUpdateOneWithoutActiveUsersNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
@@ -33000,7 +32691,6 @@ export namespace Prisma {
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    activeConversationId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     conversationParticipants?: ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
@@ -33040,7 +32730,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     participants?: ConversationParticipantUpdateManyWithoutConversationNestedInput
-    activeUsers?: UserUpdateManyWithoutActiveConversationNestedInput
     messages?: MessageUpdateManyWithoutConversationNestedInput
     owner?: UserUpdateOneWithoutOwnedConversationsNestedInput
     lastMessage?: MessageUpdateOneWithoutLastMessageOfNestedInput
@@ -33059,7 +32748,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     participants?: ConversationParticipantUncheckedUpdateManyWithoutConversationNestedInput
-    activeUsers?: UserUncheckedUpdateManyWithoutActiveConversationNestedInput
     messages?: MessageUncheckedUpdateManyWithoutConversationNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutConversationNestedInput
   }
@@ -33080,7 +32768,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     conversationParticipants?: ConversationParticipantCreateNestedManyWithoutUserInput
-    activeConversation?: ConversationCreateNestedOneWithoutActiveUsersInput
     messages?: MessageCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
@@ -33111,7 +32798,6 @@ export namespace Prisma {
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    activeConversationId?: bigint | number | null
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     conversationParticipants?: ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
@@ -33151,7 +32837,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     conversationParticipants?: ConversationParticipantCreateNestedManyWithoutUserInput
-    activeConversation?: ConversationCreateNestedOneWithoutActiveUsersInput
     messages?: MessageCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
@@ -33182,7 +32867,6 @@ export namespace Prisma {
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    activeConversationId?: bigint | number | null
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     conversationParticipants?: ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
@@ -33233,7 +32917,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     conversationParticipants?: ConversationParticipantUpdateManyWithoutUserNestedInput
-    activeConversation?: ConversationUpdateOneWithoutActiveUsersNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
@@ -33264,7 +32947,6 @@ export namespace Prisma {
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    activeConversationId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     conversationParticipants?: ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
@@ -33310,7 +32992,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     conversationParticipants?: ConversationParticipantUpdateManyWithoutUserNestedInput
-    activeConversation?: ConversationUpdateOneWithoutActiveUsersNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
@@ -33341,7 +33022,6 @@ export namespace Prisma {
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    activeConversationId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     conversationParticipants?: ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
@@ -33370,7 +33050,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     participants?: ConversationParticipantCreateNestedManyWithoutConversationInput
-    activeUsers?: UserCreateNestedManyWithoutActiveConversationInput
     owner?: UserCreateNestedOneWithoutOwnedConversationsInput
     lastMessage?: MessageCreateNestedOneWithoutLastMessageOfInput
     notifications?: NotificationCreateNestedManyWithoutConversationInput
@@ -33389,7 +33068,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     participants?: ConversationParticipantUncheckedCreateNestedManyWithoutConversationInput
-    activeUsers?: UserUncheckedCreateNestedManyWithoutActiveConversationInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutConversationInput
     conversationLabels?: ConversationLabelUncheckedCreateNestedManyWithoutConversationInput
   }
@@ -33415,7 +33093,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     conversationParticipants?: ConversationParticipantCreateNestedManyWithoutUserInput
-    activeConversation?: ConversationCreateNestedOneWithoutActiveUsersInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
     blockedBy?: UserBlockCreateNestedManyWithoutBlockedInput
@@ -33446,7 +33123,6 @@ export namespace Prisma {
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    activeConversationId?: bigint | number | null
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     conversationParticipants?: ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
@@ -33587,7 +33263,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     participants?: ConversationParticipantCreateNestedManyWithoutConversationInput
-    activeUsers?: UserCreateNestedManyWithoutActiveConversationInput
     messages?: MessageCreateNestedManyWithoutConversationInput
     owner?: UserCreateNestedOneWithoutOwnedConversationsInput
     notifications?: NotificationCreateNestedManyWithoutConversationInput
@@ -33605,7 +33280,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     participants?: ConversationParticipantUncheckedCreateNestedManyWithoutConversationInput
-    activeUsers?: UserUncheckedCreateNestedManyWithoutActiveConversationInput
     messages?: MessageUncheckedCreateNestedManyWithoutConversationInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutConversationInput
     conversationLabels?: ConversationLabelUncheckedCreateNestedManyWithoutConversationInput
@@ -33674,7 +33348,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     participants?: ConversationParticipantUpdateManyWithoutConversationNestedInput
-    activeUsers?: UserUpdateManyWithoutActiveConversationNestedInput
     owner?: UserUpdateOneWithoutOwnedConversationsNestedInput
     lastMessage?: MessageUpdateOneWithoutLastMessageOfNestedInput
     notifications?: NotificationUpdateManyWithoutConversationNestedInput
@@ -33693,7 +33366,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     participants?: ConversationParticipantUncheckedUpdateManyWithoutConversationNestedInput
-    activeUsers?: UserUncheckedUpdateManyWithoutActiveConversationNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutConversationNestedInput
     conversationLabels?: ConversationLabelUncheckedUpdateManyWithoutConversationNestedInput
   }
@@ -33725,7 +33397,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     conversationParticipants?: ConversationParticipantUpdateManyWithoutUserNestedInput
-    activeConversation?: ConversationUpdateOneWithoutActiveUsersNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
     blockedBy?: UserBlockUpdateManyWithoutBlockedNestedInput
@@ -33756,7 +33427,6 @@ export namespace Prisma {
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    activeConversationId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     conversationParticipants?: ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
@@ -34007,7 +33677,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     conversationParticipants?: ConversationParticipantCreateNestedManyWithoutUserInput
-    activeConversation?: ConversationCreateNestedOneWithoutActiveUsersInput
     messages?: MessageCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
@@ -34038,7 +33707,6 @@ export namespace Prisma {
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    activeConversationId?: bigint | number | null
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     conversationParticipants?: ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
@@ -34078,7 +33746,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     conversationParticipants?: ConversationParticipantCreateNestedManyWithoutUserInput
-    activeConversation?: ConversationCreateNestedOneWithoutActiveUsersInput
     messages?: MessageCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
@@ -34109,7 +33776,6 @@ export namespace Prisma {
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    activeConversationId?: bigint | number | null
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     conversationParticipants?: ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
@@ -34143,7 +33809,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     participants?: ConversationParticipantCreateNestedManyWithoutConversationInput
-    activeUsers?: UserCreateNestedManyWithoutActiveConversationInput
     messages?: MessageCreateNestedManyWithoutConversationInput
     owner?: UserCreateNestedOneWithoutOwnedConversationsInput
     lastMessage?: MessageCreateNestedOneWithoutLastMessageOfInput
@@ -34162,7 +33827,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     participants?: ConversationParticipantUncheckedCreateNestedManyWithoutConversationInput
-    activeUsers?: UserUncheckedCreateNestedManyWithoutActiveConversationInput
     messages?: MessageUncheckedCreateNestedManyWithoutConversationInput
     conversationLabels?: ConversationLabelUncheckedCreateNestedManyWithoutConversationInput
   }
@@ -34273,7 +33937,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     conversationParticipants?: ConversationParticipantUpdateManyWithoutUserNestedInput
-    activeConversation?: ConversationUpdateOneWithoutActiveUsersNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
@@ -34304,7 +33967,6 @@ export namespace Prisma {
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    activeConversationId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     conversationParticipants?: ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
@@ -34350,7 +34012,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     conversationParticipants?: ConversationParticipantUpdateManyWithoutUserNestedInput
-    activeConversation?: ConversationUpdateOneWithoutActiveUsersNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
@@ -34381,7 +34042,6 @@ export namespace Prisma {
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    activeConversationId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     conversationParticipants?: ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
@@ -34421,7 +34081,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     participants?: ConversationParticipantUpdateManyWithoutConversationNestedInput
-    activeUsers?: UserUpdateManyWithoutActiveConversationNestedInput
     messages?: MessageUpdateManyWithoutConversationNestedInput
     owner?: UserUpdateOneWithoutOwnedConversationsNestedInput
     lastMessage?: MessageUpdateOneWithoutLastMessageOfNestedInput
@@ -34440,7 +34099,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     participants?: ConversationParticipantUncheckedUpdateManyWithoutConversationNestedInput
-    activeUsers?: UserUncheckedUpdateManyWithoutActiveConversationNestedInput
     messages?: MessageUncheckedUpdateManyWithoutConversationNestedInput
     conversationLabels?: ConversationLabelUncheckedUpdateManyWithoutConversationNestedInput
   }
@@ -34547,7 +34205,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     conversationParticipants?: ConversationParticipantCreateNestedManyWithoutUserInput
-    activeConversation?: ConversationCreateNestedOneWithoutActiveUsersInput
     messages?: MessageCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
@@ -34578,7 +34235,6 @@ export namespace Prisma {
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    activeConversationId?: bigint | number | null
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     conversationParticipants?: ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
@@ -34811,7 +34467,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     conversationParticipants?: ConversationParticipantUpdateManyWithoutUserNestedInput
-    activeConversation?: ConversationUpdateOneWithoutActiveUsersNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
@@ -34842,7 +34497,6 @@ export namespace Prisma {
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    activeConversationId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     conversationParticipants?: ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
@@ -35174,7 +34828,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     conversationParticipants?: ConversationParticipantCreateNestedManyWithoutUserInput
-    activeConversation?: ConversationCreateNestedOneWithoutActiveUsersInput
     messages?: MessageCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
@@ -35205,7 +34858,6 @@ export namespace Prisma {
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    activeConversationId?: bigint | number | null
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     conversationParticipants?: ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
@@ -35299,7 +34951,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     conversationParticipants?: ConversationParticipantUpdateManyWithoutUserNestedInput
-    activeConversation?: ConversationUpdateOneWithoutActiveUsersNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
@@ -35330,7 +34981,6 @@ export namespace Prisma {
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    activeConversationId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     conversationParticipants?: ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
@@ -35402,7 +35052,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     conversationParticipants?: ConversationParticipantCreateNestedManyWithoutUserInput
-    activeConversation?: ConversationCreateNestedOneWithoutActiveUsersInput
     messages?: MessageCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
@@ -35433,7 +35082,6 @@ export namespace Prisma {
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    activeConversationId?: bigint | number | null
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     conversationParticipants?: ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
@@ -35586,7 +35234,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     conversationParticipants?: ConversationParticipantUpdateManyWithoutUserNestedInput
-    activeConversation?: ConversationUpdateOneWithoutActiveUsersNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
@@ -35617,7 +35264,6 @@ export namespace Prisma {
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    activeConversationId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     conversationParticipants?: ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
@@ -35738,7 +35384,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     conversationParticipants?: ConversationParticipantCreateNestedManyWithoutUserInput
-    activeConversation?: ConversationCreateNestedOneWithoutActiveUsersInput
     messages?: MessageCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
@@ -35769,7 +35414,6 @@ export namespace Prisma {
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    activeConversationId?: bigint | number | null
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     conversationParticipants?: ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
@@ -35863,7 +35507,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     conversationParticipants?: ConversationParticipantUpdateManyWithoutUserNestedInput
-    activeConversation?: ConversationUpdateOneWithoutActiveUsersNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
@@ -35894,7 +35537,6 @@ export namespace Prisma {
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    activeConversationId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     conversationParticipants?: ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
@@ -36083,7 +35725,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     conversationParticipants?: ConversationParticipantCreateNestedManyWithoutUserInput
-    activeConversation?: ConversationCreateNestedOneWithoutActiveUsersInput
     messages?: MessageCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
@@ -36114,7 +35755,6 @@ export namespace Prisma {
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    activeConversationId?: bigint | number | null
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     conversationParticipants?: ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
@@ -36202,7 +35842,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     conversationParticipants?: ConversationParticipantUpdateManyWithoutUserNestedInput
-    activeConversation?: ConversationUpdateOneWithoutActiveUsersNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
@@ -36233,7 +35872,6 @@ export namespace Prisma {
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    activeConversationId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     conversationParticipants?: ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
@@ -36351,45 +35989,6 @@ export namespace Prisma {
   export type ConversationParticipantCreateManyUserInputEnvelope = {
     data: ConversationParticipantCreateManyUserInput | ConversationParticipantCreateManyUserInput[]
     skipDuplicates?: boolean
-  }
-
-  export type ConversationCreateWithoutActiveUsersInput = {
-    id?: bigint | number
-    title?: string | null
-    systemPrompt?: string | null
-    type?: $Enums.ConversationType
-    lastMessageAt?: Date | string | null
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    participants?: ConversationParticipantCreateNestedManyWithoutConversationInput
-    messages?: MessageCreateNestedManyWithoutConversationInput
-    owner?: UserCreateNestedOneWithoutOwnedConversationsInput
-    lastMessage?: MessageCreateNestedOneWithoutLastMessageOfInput
-    notifications?: NotificationCreateNestedManyWithoutConversationInput
-    conversationLabels?: ConversationLabelCreateNestedManyWithoutConversationInput
-  }
-
-  export type ConversationUncheckedCreateWithoutActiveUsersInput = {
-    id?: bigint | number
-    title?: string | null
-    systemPrompt?: string | null
-    type?: $Enums.ConversationType
-    ownerId?: bigint | number | null
-    lastMessageId?: bigint | number | null
-    lastMessageAt?: Date | string | null
-    deletedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    participants?: ConversationParticipantUncheckedCreateNestedManyWithoutConversationInput
-    messages?: MessageUncheckedCreateNestedManyWithoutConversationInput
-    notifications?: NotificationUncheckedCreateNestedManyWithoutConversationInput
-    conversationLabels?: ConversationLabelUncheckedCreateNestedManyWithoutConversationInput
-  }
-
-  export type ConversationCreateOrConnectWithoutActiveUsersInput = {
-    where: ConversationWhereUniqueInput
-    create: XOR<ConversationCreateWithoutActiveUsersInput, ConversationUncheckedCreateWithoutActiveUsersInput>
   }
 
   export type MessageCreateWithoutUserInput = {
@@ -36518,7 +36117,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     participants?: ConversationParticipantCreateNestedManyWithoutConversationInput
-    activeUsers?: UserCreateNestedManyWithoutActiveConversationInput
     messages?: MessageCreateNestedManyWithoutConversationInput
     lastMessage?: MessageCreateNestedOneWithoutLastMessageOfInput
     notifications?: NotificationCreateNestedManyWithoutConversationInput
@@ -36536,7 +36134,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     participants?: ConversationParticipantUncheckedCreateNestedManyWithoutConversationInput
-    activeUsers?: UserUncheckedCreateNestedManyWithoutActiveConversationInput
     messages?: MessageUncheckedCreateNestedManyWithoutConversationInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutConversationInput
     conversationLabels?: ConversationLabelUncheckedCreateNestedManyWithoutConversationInput
@@ -36884,51 +36481,6 @@ export namespace Prisma {
     data: XOR<ConversationParticipantUpdateManyMutationInput, ConversationParticipantUncheckedUpdateManyWithoutUserInput>
   }
 
-  export type ConversationUpsertWithoutActiveUsersInput = {
-    update: XOR<ConversationUpdateWithoutActiveUsersInput, ConversationUncheckedUpdateWithoutActiveUsersInput>
-    create: XOR<ConversationCreateWithoutActiveUsersInput, ConversationUncheckedCreateWithoutActiveUsersInput>
-    where?: ConversationWhereInput
-  }
-
-  export type ConversationUpdateToOneWithWhereWithoutActiveUsersInput = {
-    where?: ConversationWhereInput
-    data: XOR<ConversationUpdateWithoutActiveUsersInput, ConversationUncheckedUpdateWithoutActiveUsersInput>
-  }
-
-  export type ConversationUpdateWithoutActiveUsersInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    title?: NullableStringFieldUpdateOperationsInput | string | null
-    systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
-    lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    participants?: ConversationParticipantUpdateManyWithoutConversationNestedInput
-    messages?: MessageUpdateManyWithoutConversationNestedInput
-    owner?: UserUpdateOneWithoutOwnedConversationsNestedInput
-    lastMessage?: MessageUpdateOneWithoutLastMessageOfNestedInput
-    notifications?: NotificationUpdateManyWithoutConversationNestedInput
-    conversationLabels?: ConversationLabelUpdateManyWithoutConversationNestedInput
-  }
-
-  export type ConversationUncheckedUpdateWithoutActiveUsersInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    title?: NullableStringFieldUpdateOperationsInput | string | null
-    systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
-    ownerId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    lastMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-    lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    participants?: ConversationParticipantUncheckedUpdateManyWithoutConversationNestedInput
-    messages?: MessageUncheckedUpdateManyWithoutConversationNestedInput
-    notifications?: NotificationUncheckedUpdateManyWithoutConversationNestedInput
-    conversationLabels?: ConversationLabelUncheckedUpdateManyWithoutConversationNestedInput
-  }
-
   export type MessageUpsertWithWhereUniqueWithoutUserInput = {
     where: MessageWhereUniqueInput
     update: XOR<MessageUpdateWithoutUserInput, MessageUncheckedUpdateWithoutUserInput>
@@ -37233,7 +36785,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     conversationParticipants?: ConversationParticipantCreateNestedManyWithoutUserInput
-    activeConversation?: ConversationCreateNestedOneWithoutActiveUsersInput
     messages?: MessageCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     blockedBy?: UserBlockCreateNestedManyWithoutBlockedInput
@@ -37264,7 +36815,6 @@ export namespace Prisma {
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    activeConversationId?: bigint | number | null
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     conversationParticipants?: ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
@@ -37304,7 +36854,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     refreshTokens?: RefreshTokenCreateNestedManyWithoutUserInput
     conversationParticipants?: ConversationParticipantCreateNestedManyWithoutUserInput
-    activeConversation?: ConversationCreateNestedOneWithoutActiveUsersInput
     messages?: MessageCreateNestedManyWithoutUserInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     blockedUsers?: UserBlockCreateNestedManyWithoutBlockerInput
@@ -37335,7 +36884,6 @@ export namespace Prisma {
     emailVerifiedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    activeConversationId?: bigint | number | null
     refreshTokens?: RefreshTokenUncheckedCreateNestedManyWithoutUserInput
     conversationParticipants?: ConversationParticipantUncheckedCreateNestedManyWithoutUserInput
     messages?: MessageUncheckedCreateNestedManyWithoutUserInput
@@ -37386,7 +36934,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     conversationParticipants?: ConversationParticipantUpdateManyWithoutUserNestedInput
-    activeConversation?: ConversationUpdateOneWithoutActiveUsersNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     blockedBy?: UserBlockUpdateManyWithoutBlockedNestedInput
@@ -37417,7 +36964,6 @@ export namespace Prisma {
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    activeConversationId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     conversationParticipants?: ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
@@ -37463,7 +37009,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
     conversationParticipants?: ConversationParticipantUpdateManyWithoutUserNestedInput
-    activeConversation?: ConversationUpdateOneWithoutActiveUsersNestedInput
     messages?: MessageUpdateManyWithoutUserNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
@@ -37494,7 +37039,6 @@ export namespace Prisma {
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    activeConversationId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
     conversationParticipants?: ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
     messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
@@ -37522,22 +37066,6 @@ export namespace Prisma {
     unreadCount?: number
     lastReadAt?: Date | string | null
     deletedAt?: Date | string | null
-  }
-
-  export type UserCreateManyActiveConversationInput = {
-    id?: bigint | number
-    email: string
-    name: string
-    phonenumber: string
-    gender?: string | null
-    bio?: string | null
-    birthday?: string | null
-    avatarUrl?: string | null
-    backgroundUrl?: string | null
-    password: string
-    emailVerifiedAt?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
   }
 
   export type MessageCreateManyConversationInput = {
@@ -37601,88 +37129,6 @@ export namespace Prisma {
     unreadCount?: IntFieldUpdateOperationsInput | number
     lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type UserUpdateWithoutActiveConversationInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    email?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
-    gender?: NullableStringFieldUpdateOperationsInput | string | null
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
-    birthday?: NullableStringFieldUpdateOperationsInput | string | null
-    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
-    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    refreshTokens?: RefreshTokenUpdateManyWithoutUserNestedInput
-    conversationParticipants?: ConversationParticipantUpdateManyWithoutUserNestedInput
-    messages?: MessageUpdateManyWithoutUserNestedInput
-    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
-    blockedUsers?: UserBlockUpdateManyWithoutBlockerNestedInput
-    blockedBy?: UserBlockUpdateManyWithoutBlockedNestedInput
-    ownedConversations?: ConversationUpdateManyWithoutOwnerNestedInput
-    sentFriendRequests?: FriendUpdateManyWithoutRequesterNestedInput
-    receivedFriendRequests?: FriendUpdateManyWithoutAddresseeNestedInput
-    receivedNotifications?: NotificationUpdateManyWithoutReceiverNestedInput
-    sentNotifications?: NotificationUpdateManyWithoutSenderNestedInput
-    posts?: PostUpdateManyWithoutUserNestedInput
-    postLikes?: PostLikeUpdateManyWithoutUserNestedInput
-    postSaves?: PostSaveUpdateManyWithoutUserNestedInput
-    postComments?: PostCommentUpdateManyWithoutUserNestedInput
-    reports?: ReportUpdateManyWithoutReporterNestedInput
-    conversationLabels?: ConversationLabelUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutActiveConversationInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    email?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
-    gender?: NullableStringFieldUpdateOperationsInput | string | null
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
-    birthday?: NullableStringFieldUpdateOperationsInput | string | null
-    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
-    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    refreshTokens?: RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
-    conversationParticipants?: ConversationParticipantUncheckedUpdateManyWithoutUserNestedInput
-    messages?: MessageUncheckedUpdateManyWithoutUserNestedInput
-    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
-    blockedUsers?: UserBlockUncheckedUpdateManyWithoutBlockerNestedInput
-    blockedBy?: UserBlockUncheckedUpdateManyWithoutBlockedNestedInput
-    ownedConversations?: ConversationUncheckedUpdateManyWithoutOwnerNestedInput
-    sentFriendRequests?: FriendUncheckedUpdateManyWithoutRequesterNestedInput
-    receivedFriendRequests?: FriendUncheckedUpdateManyWithoutAddresseeNestedInput
-    receivedNotifications?: NotificationUncheckedUpdateManyWithoutReceiverNestedInput
-    sentNotifications?: NotificationUncheckedUpdateManyWithoutSenderNestedInput
-    posts?: PostUncheckedUpdateManyWithoutUserNestedInput
-    postLikes?: PostLikeUncheckedUpdateManyWithoutUserNestedInput
-    postSaves?: PostSaveUncheckedUpdateManyWithoutUserNestedInput
-    postComments?: PostCommentUncheckedUpdateManyWithoutUserNestedInput
-    reports?: ReportUncheckedUpdateManyWithoutReporterNestedInput
-    conversationLabels?: ConversationLabelUncheckedUpdateManyWithoutUserNestedInput
-  }
-
-  export type UserUncheckedUpdateManyWithoutActiveConversationInput = {
-    id?: BigIntFieldUpdateOperationsInput | bigint | number
-    email?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
-    gender?: NullableStringFieldUpdateOperationsInput | string | null
-    bio?: NullableStringFieldUpdateOperationsInput | string | null
-    birthday?: NullableStringFieldUpdateOperationsInput | string | null
-    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    password?: StringFieldUpdateOperationsInput | string
-    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type MessageUpdateWithoutConversationInput = {
@@ -37908,7 +37354,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     participants?: ConversationParticipantUpdateManyWithoutConversationNestedInput
-    activeUsers?: UserUpdateManyWithoutActiveConversationNestedInput
     messages?: MessageUpdateManyWithoutConversationNestedInput
     owner?: UserUpdateOneWithoutOwnedConversationsNestedInput
     notifications?: NotificationUpdateManyWithoutConversationNestedInput
@@ -37926,7 +37371,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     participants?: ConversationParticipantUncheckedUpdateManyWithoutConversationNestedInput
-    activeUsers?: UserUncheckedUpdateManyWithoutActiveConversationNestedInput
     messages?: MessageUncheckedUpdateManyWithoutConversationNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutConversationNestedInput
     conversationLabels?: ConversationLabelUncheckedUpdateManyWithoutConversationNestedInput
@@ -38585,7 +38029,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     participants?: ConversationParticipantUpdateManyWithoutConversationNestedInput
-    activeUsers?: UserUpdateManyWithoutActiveConversationNestedInput
     messages?: MessageUpdateManyWithoutConversationNestedInput
     lastMessage?: MessageUpdateOneWithoutLastMessageOfNestedInput
     notifications?: NotificationUpdateManyWithoutConversationNestedInput
@@ -38603,7 +38046,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     participants?: ConversationParticipantUncheckedUpdateManyWithoutConversationNestedInput
-    activeUsers?: UserUncheckedUpdateManyWithoutActiveConversationNestedInput
     messages?: MessageUncheckedUpdateManyWithoutConversationNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutConversationNestedInput
     conversationLabels?: ConversationLabelUncheckedUpdateManyWithoutConversationNestedInput

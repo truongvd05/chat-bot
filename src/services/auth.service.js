@@ -370,7 +370,7 @@ class AuthService {
             email: user.email,
             token: emailtoken,
         });
-        return;
+        return true;
     }
     async getMe(userId) {
         return await prisma.user.findUnique({

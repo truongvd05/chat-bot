@@ -43,7 +43,7 @@ model Conversation {
   title         String?
   systemPrompt  String?          @map("system_prompt") @db.Text //dùng với bot
   type          ConversationType @default(DIRECT)
-  ownerId       BigInt? //dùng với chat bot và GROUP (người đầu tiên tạo đoạn hột thoại)
+  ownerId       BigInt? //dùng với GROUP (người đầu tiên tạo đoạn hột thoại)
   lastMessageId BigInt?
   lastMessageAt DateTime?        @map("last_message_at")
   deletedAt     DateTime?        @map("deleted_at")
@@ -51,7 +51,6 @@ model Conversation {
   updatedAt     DateTime         @updatedAt @map("updated_at")
 
   participants       ConversationParticipant[]
-  activeUsers        User[]                    @relation("ActiveConversation")
   messages           Message[]
   owner              User?                     @relation("ConversationOwner", fields: [ownerId], references: [id])
   lastMessage        Message?                  @relation("LastMessage", fields: [lastMessageId], references: [id])
@@ -68,7 +67,6 @@ enum ConversationType {
   SELF
   DIRECT
   GROUP
-  BOT
 }
 
 model ConversationParticipant {
@@ -95,7 +93,6 @@ enum ParticipantRole {
   MEMBER
   OWNER
   ADMIN
-  BOT
 }
 
 model ConversationLabel {
@@ -383,24 +380,22 @@ enum QueueStatus {
 }
 
 model User {
-  id                   BigInt    @id @default(autoincrement())
-  email                String    @unique
-  name                 String
-  phonenumber          String    @unique @map("phone_number")
-  gender               String?
-  bio                  String?
-  birthday             String?   @map("birthday")
-  avatarUrl            String?   @map("avatar_url")
-  backgroundUrl        String?   @map("background_url")
-  password             String // @note: Hashed password using bcrypt
-  emailVerifiedAt      DateTime? @map("email_verified_at")
-  createdAt            DateTime  @default(now()) @map("created_at")
-  updatedAt            DateTime  @updatedAt @map("updated_at")
-  activeConversationId BigInt?   @map("active_conversation_id")
+  id              BigInt    @id @default(autoincrement())
+  email           String    @unique
+  name            String
+  phonenumber     String    @unique @map("phone_number")
+  gender          String?
+  bio             String?
+  birthday        String?   @map("birthday")
+  avatarUrl       String?   @map("avatar_url")
+  backgroundUrl   String?   @map("background_url")
+  password        String // @note: Hashed password using bcrypt
+  emailVerifiedAt DateTime? @map("email_verified_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
 
   refreshTokens            RefreshToken[]
   conversationParticipants ConversationParticipant[]
-  activeConversation       Conversation?             @relation("ActiveConversation", fields: [activeConversationId], references: [id], onDelete: SetNull)
   messages                 Message[]
   passwordResetTokens      PasswordResetToken[]
   blockedUsers             UserBlock[]               @relation("Blocker")

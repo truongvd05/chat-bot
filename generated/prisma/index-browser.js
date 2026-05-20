@@ -306,8 +306,7 @@ exports.Prisma.UserScalarFieldEnum = {
   password: 'password',
   emailVerifiedAt: 'emailVerifiedAt',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  activeConversationId: 'activeConversationId'
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.UserBlockScalarFieldEnum = {
@@ -410,15 +409,13 @@ exports.Prisma.UserOrderByRelevanceFieldEnum = {
 exports.ConversationType = exports.$Enums.ConversationType = {
   SELF: 'SELF',
   DIRECT: 'DIRECT',
-  GROUP: 'GROUP',
-  BOT: 'BOT'
+  GROUP: 'GROUP'
 };
 
 exports.ParticipantRole = exports.$Enums.ParticipantRole = {
   MEMBER: 'MEMBER',
   OWNER: 'OWNER',
-  ADMIN: 'ADMIN',
-  BOT: 'BOT'
+  ADMIN: 'ADMIN'
 };
 
 exports.FriendStatus = exports.$Enums.FriendStatus = {

@@ -1,3 +1,5 @@
+import prisma from "#libs/prisma.js";
+
 export async function ensureConversationMember(
     conversationId,
     userId,

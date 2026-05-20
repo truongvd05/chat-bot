@@ -1,57 +1,31 @@
 import prisma from "#libs/prisma.js";
 import conversationService from "#services/conversation.service.js";
 import messageService from "#services/message.service.js";
+import AppError from "#utils/AppError.js";
 
 export default function registerMessageSocket(io, socket) {
     socket.on(
         "send_message",
-        async ({ conversationId, content, replyToId, parentMessageId }) => {
+        async ({ conversationId, content, parentMessageId }) => {
             if (!content?.trim()) {
                 return socket.emit("error_message", "Tin nhắn không hợp lệ");
             }
             try {
                 const senderId = socket.userId;
-                // check quyền
-                const isParticipant =
-                    await prisma.conversationParticipant.findFirst({
-                        where: {
-                            conversationId,
-                            userId: senderId,
-                            leftAt: null,
-                        },
-                    });
-                if (!isParticipant) {
-                    return socket.emit(
-                        "error_message",
-                        "Không có quyền gửi tin nhắn",
-                    );
-                }
-
-                const message = await messageService._createMessage({
+                const message = await messageService.sendMessage(
                     conversationId,
-                    userId: senderId,
+                    senderId,
                     content,
-                    replyToId,
-                    role: "user",
-                    parentMessageId: parentMessageId ?? null,
-                });
+                    [],
+                    parentMessageId ?? null,
+                );
 
-                const conversation =
-                    await conversationService.findConversationSocket(
-                        conversationId,
-                    );
-
-                // update lassmessage
-                await prisma.conversation.update({
-                    where: { id: conversationId },
-                    data: {
-                        lastMessageId: message.id,
-                        lastMessageAt: message.createdAt,
-                    },
-                });
                 // lây thành viên
                 const participants =
                     await conversationService.finDparticipants(conversationId);
+
+                const conversation =
+                    await conversationService.findById(conversationId);
 
                 // tăng unread cho người KHÔNG phải sender
                 await prisma.conversationParticipant.updateMany({
@@ -89,7 +63,11 @@ export default function registerMessageSocket(io, socket) {
                 }
             } catch (err) {
                 console.error("Send message error:", err);
-                socket.emit("error_message", "Không gửi được tin nhắn");
+                socket.emit("error_message", {
+                    message:
+                        err instanceof AppError ? err.message : "Lỗi hệ thống",
+                    statusCode: err instanceof AppError ? err.statusCode : 500,
+                });
             }
         },
     );
