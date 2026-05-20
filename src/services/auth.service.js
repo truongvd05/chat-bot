@@ -19,6 +19,7 @@ class AuthService {
                 email: true,
                 password: true,
                 name: true,
+                emailVerifiedAt: true,
                 createdAt: true,
             },
         });

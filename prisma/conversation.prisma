@@ -3,7 +3,7 @@ model Conversation {
     title         String?
     systemPrompt  String?          @map("system_prompt") @db.Text //dùng với bot
     type          ConversationType @default(DIRECT)
-    ownerId       BigInt? //dùng với chat bot và GROUP (người đầu tiên tạo đoạn hột thoại)
+    ownerId       BigInt? //dùng với GROUP (người đầu tiên tạo đoạn hột thoại)
     lastMessageId BigInt?
     lastMessageAt DateTime?        @map("last_message_at")
     deletedAt     DateTime?        @map("deleted_at")
@@ -11,7 +11,6 @@ model Conversation {
     updatedAt     DateTime         @updatedAt @map("updated_at")
 
     participants       ConversationParticipant[]
-    activeUsers        User[]                    @relation("ActiveConversation")
     messages           Message[]
     owner              User?                     @relation("ConversationOwner", fields: [ownerId], references: [id])
     lastMessage        Message?                  @relation("LastMessage", fields: [lastMessageId], references: [id])
@@ -28,7 +27,6 @@ enum ConversationType {
     SELF
     DIRECT
     GROUP
-    BOT
 }
 
 model ConversationParticipant {
@@ -55,7 +53,6 @@ enum ParticipantRole {
     MEMBER
     OWNER
     ADMIN
-    BOT
 }
 
 model ConversationLabel {

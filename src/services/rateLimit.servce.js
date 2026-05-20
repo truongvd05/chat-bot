@@ -41,14 +41,6 @@ class RateLimit {
             keyGenerator: (req) => req.user?.email?.toLowerCase() || req.ip,
         });
     }
-    botMessage() {
-        return this._create({
-            time: 1,
-            limit: 10,
-            message: "Bạn nhắn quá nhanh",
-            keyGenerator: (req) => req.user?.email?.toLowerCase() || req.ip,
-        });
-    }
     login() {
         return this._create({
             time: 1 * 60,

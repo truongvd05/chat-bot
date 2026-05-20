@@ -1,9 +1,9 @@
 import { HTTP_STATUS } from "#config/constants.js";
 import prisma from "#libs/prisma.js";
+import { requireVerifiedUser } from "#permissions/user.permission.js";
 import AppError from "#utils/AppError.js";
 import { serializeBigInt } from "#utils/serialize.js";
-
-const allowedRoles = ["OWNER", "ADMIN"];
+import { ensureConversationMember } from "#permissions/conversation.permission.js";
 
 class ConversationService {
     async _getExistingMembersMap(tx, conversationId, memberIds) {
@@ -16,81 +16,32 @@ class ConversationService {
     _filterMembers(memberIds, excludeId) {
         return [...new Set(memberIds)].filter((id) => id !== excludeId);
     }
-    // check quyền
-    async _requireRole(conversationId, userId) {
-        const conversation = await this._exitedConversation(conversationId);
+    // check quyền OWNER Và ADMIN
+    async _requireRole(
+        conversationId,
+        userId,
+        allowedRoles = ["OWNER", "ADMIN"],
+    ) {
+        const { conversation, participant } = await ensureConversationMember(
+            conversationId,
+            userId,
+        );
+
         if (conversation.type === "DIRECT") {
             throw new AppError(
                 "NOT_ALLOWED_IN_DIRECT",
                 HTTP_STATUS.BAD_REQUEST,
             );
         }
-        if (conversation.type === "BOT") {
-            throw new AppError("NOT_ALLOWED_IN_BOT", HTTP_STATUS.BAD_REQUEST);
-        }
 
-        const user = await this._userInConversation(conversationId, userId);
-        if (!allowedRoles.includes(user.role)) {
+        if (!allowedRoles.includes(participant.role)) {
             throw new AppError("FORBIDDEN", HTTP_STATUS.FORBIDDEN);
         }
-        return { user, conversation };
-    }
-    // kiểm tra user có trong cuộc hội thoại hay không
-    async _userInConversation(conversationId, userId) {
-        // check nếu conversation là bot thì không có bảng quan hệ với conversationParticipant
-        const conversation = await prisma.conversation.findUnique({
-            where: { id: conversationId },
-            select: { id: true, type: true },
-        });
 
-        if (!conversation) {
-            throw new AppError("Conversation not found", HTTP_STATUS.NOT_FOUND);
-        }
-
-        // Nếu là bot thì không cần check participant
-        if (conversation.type === "BOT") {
-            return true;
-        }
-        // còn lại thì check
-        const participant = await prisma.conversationParticipant.findUnique({
-            where: {
-                conversationId_userId: { conversationId, userId },
-            },
-        });
-        if (!participant || participant.leftAt) {
-            throw new AppError(
-                "User not found in conversation",
-                HTTP_STATUS.NOT_FOUND,
-            );
-        }
-
-        return participant;
-    }
-    // kiểm tra conversation có tồn tại hay đã xóa chưa
-    async _exitedConversation(conversationId) {
-        const conversation = await prisma.conversation.findFirst({
-            where: {
-                id: conversationId,
-                deletedAt: null,
-            },
-            include: {
-                lastMessage: true,
-            },
-        });
-        if (!conversation) {
-            throw new AppError("CONVERSATION_NOT_FOUND", HTTP_STATUS.NOT_FOUND);
-        }
-        return conversation;
-    }
-    async createBotConversation(user, title) {
-        const conversation = await prisma.conversation.create({
-            data: {
-                ownerId: user.id,
-                title,
-                type: "BOT",
-            },
-        });
-        return serializeBigInt(conversation);
+        return {
+            conversation,
+            participant,
+        };
     }
 
     async getConversations(userId) {
@@ -145,7 +96,7 @@ class ConversationService {
         return result;
     }
     async getConversation(userId, conversationId) {
-        await this._userInConversation(conversationId, userId);
+        await ensureConversationMember(conversationId, userId);
         const conversation = await prisma.conversation.findFirst({
             where: {
                 id: conversationId,
@@ -233,6 +184,7 @@ class ConversationService {
         return serializeBigInt(newGroupConversation);
     }
     async createDirectConversation(userId, targetUserId) {
+        await requireVerifiedUser(userId);
         if (userId === targetUserId) {
             throw new AppError(
                 "CANNOT_CHAT_WITH_YOURSELF",
@@ -289,23 +241,10 @@ class ConversationService {
     }
 
     async renameConversation(userId, conversationId, title) {
-        const user = await this._userInConversation(conversationId, userId);
-
-        const conversation = await this._exitedConversation(conversationId);
-
-        if (conversation.type === "BOT") {
-            if (conversation.ownerId !== userId) {
-                throw new AppError("FORBIDDEN", HTTP_STATUS.FORBIDDEN);
-            }
-        }
-        if (conversation.type === "DIRECT") {
-            throw new AppError(
-                "DIRECT_CANNOT_BE_RENAMED",
-                HTTP_STATUS.BAD_REQUEST,
-            );
-        }
-        if (!allowedRoles.includes(user.role))
-            throw new AppError("FORBIDDEN", HTTP_STATUS.FORBIDDEN);
+        const { conversation } = await this._requireRole(
+            conversationId,
+            userId,
+        );
 
         const result = await prisma.conversation.update({
             where: {
@@ -315,39 +254,9 @@ class ConversationService {
         });
         return serializeBigInt(result);
     }
-    async getMyBotConversations(user) {
-        const rows = await prisma.conversation.findMany({
-            where: {
-                ownerId: user.id,
-                deletedAt: null,
-                type: "BOT",
-            },
-            orderBy: {
-                updatedAt: "desc",
-            },
-            include: {
-                lastMessage: true,
-            },
-        });
-        return serializeBigInt(rows);
-    }
-    async getMyBotConversation(userId, conversationId) {
-        const conversation = await prisma.conversation.findFirst({
-            where: {
-                id: conversationId,
-                ownerId: userId,
-                deletedAt: null,
-                type: "BOT",
-            },
-        });
-        if (!conversation) {
-            throw new AppError("CONVERSATION_NOT_FOUND", HTTP_STATUS.NOT_FOUND);
-        }
-        return serializeBigInt(conversation);
-    }
 
     async searchConversation(userId, keyword) {
-        return prisma.conversation.findMany({
+        const result = await prisma.conversation.findMany({
             where: {
                 deletedAt: null,
                 type: {
@@ -367,75 +276,15 @@ class ConversationService {
             orderBy: { createdAt: "desc" },
             take: 20,
         });
+        serializeBigInt(result);
     }
 
     async deleteConversation(userId, conversationId) {
-        const conversation = await this._exitedConversation(conversationId);
-
-        if (conversation.type === "BOT") {
-            if (conversation.ownerId !== userId) {
-                throw new AppError("FORBIDDEN", HTTP_STATUS.FORBIDDEN);
-            }
-            const deleted = await prisma.conversation.update({
-                where: { id: conversationId },
-                data: {
-                    deletedAt: new Date(),
-                },
-            });
-            return serializeBigInt(deleted);
-        }
-        if (conversation.type === "GROUP") {
-            const user = await prisma.conversationParticipant.findFirst({
-                where: {
-                    conversationId: conversation.id,
-                    userId,
-                },
-                select: {
-                    leftAt: true,
-                    role: true,
-                },
-            });
-            if (!user) {
-                throw new AppError("NOT_MEMBER", HTTP_STATUS.FORBIDDEN);
-            }
-            if (user.leftAt) {
-                throw new AppError(
-                    "ALREADY_LEFT_GROUP",
-                    HTTP_STATUS.BAD_REQUEST,
-                );
-            }
-            if (allowedRoles.includes(user.role)) {
-                // chỉ được xóa (rời nhóm) nếu có 2 owner trở lên
-                const otherOwners = await prisma.conversationParticipant.count({
-                    where: {
-                        conversationId: conversation.id,
-                        role: "OWNER",
-                        leftAt: null,
-                        NOT: {
-                            userId,
-                        },
-                    },
-                });
-
-                if (otherOwners === 0) {
-                    throw new AppError(
-                        "OWNER_MUST_TRANSFER_BEFORE_LEAVE",
-                        HTTP_STATUS.FORBIDDEN,
-                    );
-                }
-                return await prisma.conversationParticipant.update({
-                    where: {
-                        conversationId_userId: {
-                            conversationId: conversation.id,
-                            userId,
-                        },
-                    },
-                    data: {
-                        leftAt: new Date(),
-                    },
-                });
-            }
-        }
+        const { conversation } = await ensureConversationMember(
+            conversationId,
+            userId,
+        );
+        // logic delete
     }
     async addParticipant(userId, conversationId, memberIds, io) {
         return await prisma.$transaction(async (tx) => {
@@ -483,7 +332,7 @@ class ConversationService {
             const payload = serializeBigInt({
                 conversationId,
                 addedBy: userId,
-                member: memberIds,
+                member: uniqueMembers,
                 action: "add",
             });
 
@@ -503,7 +352,7 @@ class ConversationService {
                 participants: {
                     some: {
                         userId,
-                        deletedAt: null,
+                        leftAt: null,
                     },
                 },
             },
@@ -656,7 +505,7 @@ class ConversationService {
     }
 
     async searchAvailableUsers(userId, conversationId, q) {
-        await this._userInConversation(conversationId, userId);
+        await ensureConversationMember(conversationId, userId);
 
         // Lấy tất cả member đang còn trong nhóm (leftAt = null)
         const members = await prisma.conversationParticipant.findMany({
@@ -681,7 +530,10 @@ class ConversationService {
         return serializeBigInt(users);
     }
     async leaveGroup(userId, conversationId, io) {
-        const user = await this._userInConversation(conversationId, userId);
+        const { participant } = await ensureConversationMember(
+            conversationId,
+            userId,
+        );
 
         const members = await prisma.conversationParticipant.findMany({
             where: { conversationId, leftAt: null },
@@ -690,7 +542,7 @@ class ConversationService {
 
         const adminCount = members.filter((m) => m.role === "ADMIN").length;
 
-        if (user.role === "ADMIN" && adminCount <= 1) {
+        if (participant.role === "ADMIN" && adminCount <= 1) {
             throw new AppError(
                 "Bạn là admin duy nhất",
                 HTTP_STATUS.BAD_REQUEST,

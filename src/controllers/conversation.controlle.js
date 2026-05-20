@@ -168,7 +168,6 @@ class ConversationController {
         return res.success(removeMembers, HTTP_STATUS.OK);
     }
 
-    async listParticipants(req, res) {}
     async searchAvailableUsers(req, res) {
         const result = searchSchema.safeParse(req.query);
         if (!result.success) {
