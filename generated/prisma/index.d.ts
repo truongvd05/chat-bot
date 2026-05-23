@@ -127,6 +127,14 @@ export namespace $Enums {
 export type ConversationType = (typeof ConversationType)[keyof typeof ConversationType]
 
 
+export const ConversationStatus: {
+  ACTIVE: 'ACTIVE',
+  LOCKED: 'LOCKED'
+};
+
+export type ConversationStatus = (typeof ConversationStatus)[keyof typeof ConversationStatus]
+
+
 export const ParticipantRole: {
   MEMBER: 'MEMBER',
   OWNER: 'OWNER',
@@ -216,6 +224,10 @@ export type UserStatus = (typeof UserStatus)[keyof typeof UserStatus]
 export type ConversationType = $Enums.ConversationType
 
 export const ConversationType: typeof $Enums.ConversationType
+
+export type ConversationStatus = $Enums.ConversationStatus
+
+export const ConversationStatus: typeof $Enums.ConversationStatus
 
 export type ParticipantRole = $Enums.ParticipantRole
 
@@ -5008,6 +5020,7 @@ export namespace Prisma {
     type: $Enums.ConversationType | null
     ownerId: bigint | null
     lastMessageId: bigint | null
+    status: $Enums.ConversationStatus | null
     lastMessageAt: Date | null
     deletedAt: Date | null
     createdAt: Date | null
@@ -5021,6 +5034,7 @@ export namespace Prisma {
     type: $Enums.ConversationType | null
     ownerId: bigint | null
     lastMessageId: bigint | null
+    status: $Enums.ConversationStatus | null
     lastMessageAt: Date | null
     deletedAt: Date | null
     createdAt: Date | null
@@ -5034,6 +5048,7 @@ export namespace Prisma {
     type: number
     ownerId: number
     lastMessageId: number
+    status: number
     lastMessageAt: number
     deletedAt: number
     createdAt: number
@@ -5061,6 +5076,7 @@ export namespace Prisma {
     type?: true
     ownerId?: true
     lastMessageId?: true
+    status?: true
     lastMessageAt?: true
     deletedAt?: true
     createdAt?: true
@@ -5074,6 +5090,7 @@ export namespace Prisma {
     type?: true
     ownerId?: true
     lastMessageId?: true
+    status?: true
     lastMessageAt?: true
     deletedAt?: true
     createdAt?: true
@@ -5087,6 +5104,7 @@ export namespace Prisma {
     type?: true
     ownerId?: true
     lastMessageId?: true
+    status?: true
     lastMessageAt?: true
     deletedAt?: true
     createdAt?: true
@@ -5187,6 +5205,7 @@ export namespace Prisma {
     type: $Enums.ConversationType
     ownerId: bigint | null
     lastMessageId: bigint | null
+    status: $Enums.ConversationStatus
     lastMessageAt: Date | null
     deletedAt: Date | null
     createdAt: Date
@@ -5219,6 +5238,7 @@ export namespace Prisma {
     type?: boolean
     ownerId?: boolean
     lastMessageId?: boolean
+    status?: boolean
     lastMessageAt?: boolean
     deletedAt?: boolean
     createdAt?: boolean
@@ -5241,13 +5261,14 @@ export namespace Prisma {
     type?: boolean
     ownerId?: boolean
     lastMessageId?: boolean
+    status?: boolean
     lastMessageAt?: boolean
     deletedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ConversationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "systemPrompt" | "type" | "ownerId" | "lastMessageId" | "lastMessageAt" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["conversation"]>
+  export type ConversationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "systemPrompt" | "type" | "ownerId" | "lastMessageId" | "status" | "lastMessageAt" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["conversation"]>
   export type ConversationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     participants?: boolean | Conversation$participantsArgs<ExtArgs>
     messages?: boolean | Conversation$messagesArgs<ExtArgs>
@@ -5275,6 +5296,7 @@ export namespace Prisma {
       type: $Enums.ConversationType
       ownerId: bigint | null
       lastMessageId: bigint | null
+      status: $Enums.ConversationStatus
       lastMessageAt: Date | null
       deletedAt: Date | null
       createdAt: Date
@@ -5660,6 +5682,7 @@ export namespace Prisma {
     readonly type: FieldRef<"Conversation", 'ConversationType'>
     readonly ownerId: FieldRef<"Conversation", 'BigInt'>
     readonly lastMessageId: FieldRef<"Conversation", 'BigInt'>
+    readonly status: FieldRef<"Conversation", 'ConversationStatus'>
     readonly lastMessageAt: FieldRef<"Conversation", 'DateTime'>
     readonly deletedAt: FieldRef<"Conversation", 'DateTime'>
     readonly createdAt: FieldRef<"Conversation", 'DateTime'>
@@ -24164,6 +24187,7 @@ export namespace Prisma {
     type: 'type',
     ownerId: 'ownerId',
     lastMessageId: 'lastMessageId',
+    status: 'status',
     lastMessageAt: 'lastMessageAt',
     deletedAt: 'deletedAt',
     createdAt: 'createdAt',
@@ -24570,6 +24594,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'ConversationStatus'
+   */
+  export type EnumConversationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ConversationStatus'>
+    
+
+
+  /**
    * Reference to a field of type 'ParticipantRole'
    */
   export type EnumParticipantRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ParticipantRole'>
@@ -24806,6 +24837,7 @@ export namespace Prisma {
     type?: EnumConversationTypeFilter<"Conversation"> | $Enums.ConversationType
     ownerId?: BigIntNullableFilter<"Conversation"> | bigint | number | null
     lastMessageId?: BigIntNullableFilter<"Conversation"> | bigint | number | null
+    status?: EnumConversationStatusFilter<"Conversation"> | $Enums.ConversationStatus
     lastMessageAt?: DateTimeNullableFilter<"Conversation"> | Date | string | null
     deletedAt?: DateTimeNullableFilter<"Conversation"> | Date | string | null
     createdAt?: DateTimeFilter<"Conversation"> | Date | string
@@ -24825,6 +24857,7 @@ export namespace Prisma {
     type?: SortOrder
     ownerId?: SortOrderInput | SortOrder
     lastMessageId?: SortOrderInput | SortOrder
+    status?: SortOrder
     lastMessageAt?: SortOrderInput | SortOrder
     deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -24848,6 +24881,7 @@ export namespace Prisma {
     type?: EnumConversationTypeFilter<"Conversation"> | $Enums.ConversationType
     ownerId?: BigIntNullableFilter<"Conversation"> | bigint | number | null
     lastMessageId?: BigIntNullableFilter<"Conversation"> | bigint | number | null
+    status?: EnumConversationStatusFilter<"Conversation"> | $Enums.ConversationStatus
     lastMessageAt?: DateTimeNullableFilter<"Conversation"> | Date | string | null
     deletedAt?: DateTimeNullableFilter<"Conversation"> | Date | string | null
     createdAt?: DateTimeFilter<"Conversation"> | Date | string
@@ -24867,6 +24901,7 @@ export namespace Prisma {
     type?: SortOrder
     ownerId?: SortOrderInput | SortOrder
     lastMessageId?: SortOrderInput | SortOrder
+    status?: SortOrder
     lastMessageAt?: SortOrderInput | SortOrder
     deletedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -24888,6 +24923,7 @@ export namespace Prisma {
     type?: EnumConversationTypeWithAggregatesFilter<"Conversation"> | $Enums.ConversationType
     ownerId?: BigIntNullableWithAggregatesFilter<"Conversation"> | bigint | number | null
     lastMessageId?: BigIntNullableWithAggregatesFilter<"Conversation"> | bigint | number | null
+    status?: EnumConversationStatusWithAggregatesFilter<"Conversation"> | $Enums.ConversationStatus
     lastMessageAt?: DateTimeNullableWithAggregatesFilter<"Conversation"> | Date | string | null
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Conversation"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Conversation"> | Date | string
@@ -26298,6 +26334,7 @@ export namespace Prisma {
     title?: string | null
     systemPrompt?: string | null
     type?: $Enums.ConversationType
+    status?: $Enums.ConversationStatus
     lastMessageAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -26317,6 +26354,7 @@ export namespace Prisma {
     type?: $Enums.ConversationType
     ownerId?: bigint | number | null
     lastMessageId?: bigint | number | null
+    status?: $Enums.ConversationStatus
     lastMessageAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -26332,6 +26370,7 @@ export namespace Prisma {
     title?: NullableStringFieldUpdateOperationsInput | string | null
     systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
+    status?: EnumConversationStatusFieldUpdateOperationsInput | $Enums.ConversationStatus
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26351,6 +26390,7 @@ export namespace Prisma {
     type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
     ownerId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     lastMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    status?: EnumConversationStatusFieldUpdateOperationsInput | $Enums.ConversationStatus
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26368,6 +26408,7 @@ export namespace Prisma {
     type?: $Enums.ConversationType
     ownerId?: bigint | number | null
     lastMessageId?: bigint | number | null
+    status?: $Enums.ConversationStatus
     lastMessageAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -26379,6 +26420,7 @@ export namespace Prisma {
     title?: NullableStringFieldUpdateOperationsInput | string | null
     systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
+    status?: EnumConversationStatusFieldUpdateOperationsInput | $Enums.ConversationStatus
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26392,6 +26434,7 @@ export namespace Prisma {
     type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
     ownerId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     lastMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    status?: EnumConversationStatusFieldUpdateOperationsInput | $Enums.ConversationStatus
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -27922,6 +27965,13 @@ export namespace Prisma {
     not?: NestedBigIntNullableFilter<$PrismaModel> | bigint | number | null
   }
 
+  export type EnumConversationStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ConversationStatus | EnumConversationStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ConversationStatus[]
+    notIn?: $Enums.ConversationStatus[]
+    not?: NestedEnumConversationStatusFilter<$PrismaModel> | $Enums.ConversationStatus
+  }
+
   export type ConversationParticipantListRelationFilter = {
     every?: ConversationParticipantWhereInput
     some?: ConversationParticipantWhereInput
@@ -27985,6 +28035,7 @@ export namespace Prisma {
     type?: SortOrder
     ownerId?: SortOrder
     lastMessageId?: SortOrder
+    status?: SortOrder
     lastMessageAt?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
@@ -28004,6 +28055,7 @@ export namespace Prisma {
     type?: SortOrder
     ownerId?: SortOrder
     lastMessageId?: SortOrder
+    status?: SortOrder
     lastMessageAt?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
@@ -28017,6 +28069,7 @@ export namespace Prisma {
     type?: SortOrder
     ownerId?: SortOrder
     lastMessageId?: SortOrder
+    status?: SortOrder
     lastMessageAt?: SortOrder
     deletedAt?: SortOrder
     createdAt?: SortOrder
@@ -28053,6 +28106,16 @@ export namespace Prisma {
     _sum?: NestedBigIntNullableFilter<$PrismaModel>
     _min?: NestedBigIntNullableFilter<$PrismaModel>
     _max?: NestedBigIntNullableFilter<$PrismaModel>
+  }
+
+  export type EnumConversationStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ConversationStatus | EnumConversationStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ConversationStatus[]
+    notIn?: $Enums.ConversationStatus[]
+    not?: NestedEnumConversationStatusWithAggregatesFilter<$PrismaModel> | $Enums.ConversationStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumConversationStatusFilter<$PrismaModel>
+    _max?: NestedEnumConversationStatusFilter<$PrismaModel>
   }
 
   export type EnumParticipantRoleFilter<$PrismaModel = never> = {
@@ -29387,6 +29450,10 @@ export namespace Prisma {
 
   export type EnumConversationTypeFieldUpdateOperationsInput = {
     set?: $Enums.ConversationType
+  }
+
+  export type EnumConversationStatusFieldUpdateOperationsInput = {
+    set?: $Enums.ConversationStatus
   }
 
   export type ConversationParticipantUpdateManyWithoutConversationNestedInput = {
@@ -31467,6 +31534,13 @@ export namespace Prisma {
     not?: NestedBigIntNullableFilter<$PrismaModel> | bigint | number | null
   }
 
+  export type NestedEnumConversationStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.ConversationStatus | EnumConversationStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ConversationStatus[]
+    notIn?: $Enums.ConversationStatus[]
+    not?: NestedEnumConversationStatusFilter<$PrismaModel> | $Enums.ConversationStatus
+  }
+
   export type NestedEnumConversationTypeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.ConversationType | EnumConversationTypeFieldRefInput<$PrismaModel>
     in?: $Enums.ConversationType[]
@@ -31502,6 +31576,16 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedEnumConversationStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ConversationStatus | EnumConversationStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.ConversationStatus[]
+    notIn?: $Enums.ConversationStatus[]
+    not?: NestedEnumConversationStatusWithAggregatesFilter<$PrismaModel> | $Enums.ConversationStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumConversationStatusFilter<$PrismaModel>
+    _max?: NestedEnumConversationStatusFilter<$PrismaModel>
   }
 
   export type NestedEnumParticipantRoleFilter<$PrismaModel = never> = {
@@ -32501,6 +32585,7 @@ export namespace Prisma {
     title?: string | null
     systemPrompt?: string | null
     type?: $Enums.ConversationType
+    status?: $Enums.ConversationStatus
     lastMessageAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -32519,6 +32604,7 @@ export namespace Prisma {
     type?: $Enums.ConversationType
     ownerId?: bigint | number | null
     lastMessageId?: bigint | number | null
+    status?: $Enums.ConversationStatus
     lastMessageAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -32622,6 +32708,7 @@ export namespace Prisma {
     title?: NullableStringFieldUpdateOperationsInput | string | null
     systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
+    status?: EnumConversationStatusFieldUpdateOperationsInput | $Enums.ConversationStatus
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32640,6 +32727,7 @@ export namespace Prisma {
     type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
     ownerId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     lastMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    status?: EnumConversationStatusFieldUpdateOperationsInput | $Enums.ConversationStatus
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32806,6 +32894,7 @@ export namespace Prisma {
     title?: string | null
     systemPrompt?: string | null
     type?: $Enums.ConversationType
+    status?: $Enums.ConversationStatus
     lastMessageAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -32824,6 +32913,7 @@ export namespace Prisma {
     type?: $Enums.ConversationType
     ownerId?: bigint | number | null
     lastMessageId?: bigint | number | null
+    status?: $Enums.ConversationStatus
     lastMessageAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -32933,6 +33023,7 @@ export namespace Prisma {
     title?: NullableStringFieldUpdateOperationsInput | string | null
     systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
+    status?: EnumConversationStatusFieldUpdateOperationsInput | $Enums.ConversationStatus
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32951,6 +33042,7 @@ export namespace Prisma {
     type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
     ownerId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     lastMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    status?: EnumConversationStatusFieldUpdateOperationsInput | $Enums.ConversationStatus
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33269,6 +33361,7 @@ export namespace Prisma {
     title?: string | null
     systemPrompt?: string | null
     type?: $Enums.ConversationType
+    status?: $Enums.ConversationStatus
     lastMessageAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -33287,6 +33380,7 @@ export namespace Prisma {
     type?: $Enums.ConversationType
     ownerId?: bigint | number | null
     lastMessageId?: bigint | number | null
+    status?: $Enums.ConversationStatus
     lastMessageAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -33486,6 +33580,7 @@ export namespace Prisma {
     title?: string | null
     systemPrompt?: string | null
     type?: $Enums.ConversationType
+    status?: $Enums.ConversationStatus
     lastMessageAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -33503,6 +33598,7 @@ export namespace Prisma {
     systemPrompt?: string | null
     type?: $Enums.ConversationType
     ownerId?: bigint | number | null
+    status?: $Enums.ConversationStatus
     lastMessageAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -33571,6 +33667,7 @@ export namespace Prisma {
     title?: NullableStringFieldUpdateOperationsInput | string | null
     systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
+    status?: EnumConversationStatusFieldUpdateOperationsInput | $Enums.ConversationStatus
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33589,6 +33686,7 @@ export namespace Prisma {
     type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
     ownerId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     lastMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    status?: EnumConversationStatusFieldUpdateOperationsInput | $Enums.ConversationStatus
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33791,6 +33889,7 @@ export namespace Prisma {
     type?: EnumConversationTypeFilter<"Conversation"> | $Enums.ConversationType
     ownerId?: BigIntNullableFilter<"Conversation"> | bigint | number | null
     lastMessageId?: BigIntNullableFilter<"Conversation"> | bigint | number | null
+    status?: EnumConversationStatusFilter<"Conversation"> | $Enums.ConversationStatus
     lastMessageAt?: DateTimeNullableFilter<"Conversation"> | Date | string | null
     deletedAt?: DateTimeNullableFilter<"Conversation"> | Date | string | null
     createdAt?: DateTimeFilter<"Conversation"> | Date | string
@@ -34044,6 +34143,7 @@ export namespace Prisma {
     title?: string | null
     systemPrompt?: string | null
     type?: $Enums.ConversationType
+    status?: $Enums.ConversationStatus
     lastMessageAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -34062,6 +34162,7 @@ export namespace Prisma {
     type?: $Enums.ConversationType
     ownerId?: bigint | number | null
     lastMessageId?: bigint | number | null
+    status?: $Enums.ConversationStatus
     lastMessageAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -34324,6 +34425,7 @@ export namespace Prisma {
     title?: NullableStringFieldUpdateOperationsInput | string | null
     systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
+    status?: EnumConversationStatusFieldUpdateOperationsInput | $Enums.ConversationStatus
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34342,6 +34444,7 @@ export namespace Prisma {
     type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
     ownerId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     lastMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    status?: EnumConversationStatusFieldUpdateOperationsInput | $Enums.ConversationStatus
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -36400,6 +36503,7 @@ export namespace Prisma {
     title?: string | null
     systemPrompt?: string | null
     type?: $Enums.ConversationType
+    status?: $Enums.ConversationStatus
     lastMessageAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -36417,6 +36521,7 @@ export namespace Prisma {
     systemPrompt?: string | null
     type?: $Enums.ConversationType
     lastMessageId?: bigint | number | null
+    status?: $Enums.ConversationStatus
     lastMessageAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -37560,6 +37665,7 @@ export namespace Prisma {
     systemPrompt?: string | null
     type?: $Enums.ConversationType
     ownerId?: bigint | number | null
+    status?: $Enums.ConversationStatus
     lastMessageAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -37653,6 +37759,7 @@ export namespace Prisma {
     title?: NullableStringFieldUpdateOperationsInput | string | null
     systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
+    status?: EnumConversationStatusFieldUpdateOperationsInput | $Enums.ConversationStatus
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -37670,6 +37777,7 @@ export namespace Prisma {
     systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
     ownerId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    status?: EnumConversationStatusFieldUpdateOperationsInput | $Enums.ConversationStatus
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -37686,6 +37794,7 @@ export namespace Prisma {
     systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
     ownerId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    status?: EnumConversationStatusFieldUpdateOperationsInput | $Enums.ConversationStatus
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -38064,6 +38173,7 @@ export namespace Prisma {
     systemPrompt?: string | null
     type?: $Enums.ConversationType
     lastMessageId?: bigint | number | null
+    status?: $Enums.ConversationStatus
     lastMessageAt?: Date | string | null
     deletedAt?: Date | string | null
     createdAt?: Date | string
@@ -38328,6 +38438,7 @@ export namespace Prisma {
     title?: NullableStringFieldUpdateOperationsInput | string | null
     systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
+    status?: EnumConversationStatusFieldUpdateOperationsInput | $Enums.ConversationStatus
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -38345,6 +38456,7 @@ export namespace Prisma {
     systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
     lastMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    status?: EnumConversationStatusFieldUpdateOperationsInput | $Enums.ConversationStatus
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -38361,6 +38473,7 @@ export namespace Prisma {
     systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumConversationTypeFieldUpdateOperationsInput | $Enums.ConversationType
     lastMessageId?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    status?: EnumConversationStatusFieldUpdateOperationsInput | $Enums.ConversationStatus
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

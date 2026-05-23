@@ -21,7 +21,7 @@ class RateLimit {
         return this._create({
             time: 1,
             limit: 1,
-            message: "Bạn nhắn quá nhanh",
+            message: "Quá nhiều yêu cầu, thử lại sau",
             keyGenerator: (req) => req.user?.email?.toLowerCase() || req.ip,
         });
     }
@@ -29,7 +29,7 @@ class RateLimit {
         return this._create({
             time: 10,
             limit: 15,
-            message: "Bạn nhắn quá nhanh",
+            message: "Quá nhiều yêu cầu, thử lại sau",
             keyGenerator: (req) => req.user?.email?.toLowerCase() || req.ip,
         });
     }
@@ -37,7 +37,7 @@ class RateLimit {
         return this._create({
             time: 5 * 60,
             limit: 100,
-            message: "Bạn nhắn quá nhanh",
+            message: "Quá nhiều yêu cầu, thử lại sau",
             keyGenerator: (req) => req.user?.email?.toLowerCase() || req.ip,
         });
     }
@@ -45,7 +45,7 @@ class RateLimit {
         return this._create({
             time: 1 * 60,
             limit: 5,
-            message: "Đăng nhập quá nhiều lần",
+            message: "Quá nhiều yêu cầu, thử lại sau",
             keyGenerator: (req) => {
                 return req.user?.email?.toLowerCase() || req.ip;
             },
@@ -55,7 +55,7 @@ class RateLimit {
         return this._create({
             time: 60 * 60,
             limit: 5,
-            message: "Bạn gửi quá nhiều Email",
+            message: "Quá nhiều yêu cầu, thử lại sau",
             keyGenerator: (req) => req.user?.email?.toLowerCase() || req.ip,
         });
     }
@@ -63,7 +63,7 @@ class RateLimit {
         return this._create({
             time: 24 * 60 * 60,
             limit: 5,
-            message: "Bạn gửi quá nhiều Email",
+            message: "Quá nhiều yêu cầu, thử lại sau",
             keyGenerator: (req) => req.user?.email?.toLowerCase() || req.ip,
         });
     }
@@ -71,7 +71,7 @@ class RateLimit {
         return this._create({
             time: 1,
             limit: 5,
-            message: "bạn verify quá nhiều",
+            message: "Quá nhiều yêu cầu, thử lại sau",
             keyGenerator: (req) => req.user?.email?.toLowerCase() || req.ip,
         });
     }
@@ -79,7 +79,7 @@ class RateLimit {
         return this._create({
             time: 24 * 60 * 60,
             limit: 20,
-            message: "bạn verify quá nhiều trong ngày",
+            message: "Quá nhiều yêu cầu, thử lại sau",
             keyGenerator: (req) => req.user?.email?.toLowerCase() || req.ip,
         });
     }
@@ -87,7 +87,7 @@ class RateLimit {
         return this._create({
             time: 1 * 60,
             limit: 15,
-            message: "bạn validate quá nhiều ",
+            message: "Quá nhiều yêu cầu, thử lại sau",
             keyGenerator: (req) => req.user?.email?.toLowerCase() || req.ip,
         });
     }
@@ -95,7 +95,7 @@ class RateLimit {
         return this._create({
             time: 1 * 60 * 60,
             limit: 50,
-            message: "bạn validate quá nhiều",
+            message: "Quá nhiều yêu cầu, thử lại sau",
             keyGenerator: (req) => req.user?.email?.toLowerCase() || req.ip,
         });
     }
@@ -103,7 +103,7 @@ class RateLimit {
         return this._create({
             time: 24 * 60 * 60,
             limit: 100,
-            message: "bạn validate quá nhiều trong ngày",
+            message: "Quá nhiều yêu cầu, thử lại sau",
             keyGenerator: (req) => req.user?.email?.toLowerCase() || req.ip,
         });
     }
@@ -111,7 +111,7 @@ class RateLimit {
         return this._create({
             time: 1 * 60 * 60,
             limit: 5,
-            message: "bạn spam quá nhiều",
+            message: "Quá nhiều yêu cầu, thử lại sau",
             keyGenerator: (req) => req.user?.email?.toLowerCase() || req.ip,
         });
     }
@@ -119,7 +119,7 @@ class RateLimit {
         return this._create({
             time: 1 * 60,
             limit: 30,
-            message: "bạn spam quá nhiều",
+            message: "Quá nhiều yêu cầu, thử lại sau",
             keyGenerator: (req) => req.user?.email?.toLowerCase() || req.ip,
         });
     }
@@ -127,7 +127,7 @@ class RateLimit {
         return this._create({
             time: 24 * 60 * 60,
             limit: 200,
-            message: "bạn spam quá nhiều",
+            message: "Quá nhiều yêu cầu, thử lại sau",
             keyGenerator: (req) => req.user?.email?.toLowerCase() || req.ip,
         });
     }

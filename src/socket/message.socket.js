@@ -24,9 +24,6 @@ export default function registerMessageSocket(io, socket) {
                 const participants =
                     await conversationService.finDparticipants(conversationId);
 
-                const conversation =
-                    await conversationService.findById(conversationId);
-
                 // tăng unread cho người KHÔNG phải sender
                 await prisma.conversationParticipant.updateMany({
                     where: {
@@ -39,6 +36,9 @@ export default function registerMessageSocket(io, socket) {
                         unreadCount: { increment: 1 },
                     },
                 });
+
+                const conversation =
+                    await conversationService.findById(conversationId);
 
                 for (const p of participants) {
                     // emit cho từng thành viên

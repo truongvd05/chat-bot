@@ -29,11 +29,15 @@ const ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://localhost:5174",
     "http://localhost:8080",
+    "http://localhost:8181",
+    "http://localhost:80",
+    "http://localhost:81",
+    "http://localhost:3000",
     "http://localhost",
     process.env.CLIENT_URL,
 ].filter(Boolean);
 
-const allowMethods = ["GET", "POST", "PUT", "DELETE", "OPTIONS"];
+const allowMethods = ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"];
 
 const corsOptions = {
     origin: function (origin, callback) {

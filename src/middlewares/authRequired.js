@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import jwtconfig from "#config/jwt.js";
 import authService from "#services/auth.service.js";
 import { extractAccessToken } from "#utils/extractAccessToken.js";
+import { HTTP_STATUS } from "#config/constants.js";
 
 const authMeRequired = async (req, res, next) => {
     try {
@@ -12,6 +13,8 @@ const authMeRequired = async (req, res, next) => {
         if (!currentUser) {
             return res.error({ message: "User not found" }, 401);
         }
+        if (currentUser.status === "BAN")
+            return res.error("Tài khoản đã bị khóa", HTTP_STATUS.FORBIDDEN);
         req.user = currentUser;
 
         req.auth = {

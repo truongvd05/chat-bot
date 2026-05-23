@@ -13,6 +13,8 @@ export function initSocket(server, app) {
                 "http://localhost:5173",
                 "http://localhost:5174",
                 "http://localhost:8080",
+                "http://localhost:8181",
+                "http://localhost:81",
                 "http://localhost",
                 process.env.CLIENT_URL,
             ],

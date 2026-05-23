@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `conversation` ADD COLUMN `status` ENUM('ACTIVE', 'LOCKED') NOT NULL DEFAULT 'ACTIVE';

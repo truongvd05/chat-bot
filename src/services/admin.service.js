@@ -1,4 +1,6 @@
+import { HTTP_STATUS } from "#config/constants.js";
 import prisma from "#libs/prisma.js";
+import AppError from "#utils/AppError.js";
 import { serializeBigInt } from "#utils/serialize.js";
 
 class AdminService {
@@ -10,19 +12,16 @@ class AdminService {
                     {
                         name: {
                             contains: search,
-                            mode: "insensitive",
                         },
                     },
                     {
                         email: {
                             contains: search,
-                            mode: "insensitive",
                         },
                     },
                     {
                         phonenumber: {
                             contains: search,
-                            mode: "insensitive",
                         },
                     },
                 ],
@@ -110,9 +109,20 @@ class AdminService {
         };
     }
 
-    async banUser(id) {
+    async banUser(targetId) {
+        const target = await prisma.user.findUnique({
+            where: { id: targetId },
+        });
+        if (!target)
+            throw new AppError(
+                "Người dùng không tồn tại",
+                HTTP_STATUS.NOT_FOUND,
+            );
+        if (target.role === "ADMIN")
+            throw new AppError("Không thể ban admin", HTTP_STATUS.FORBIDDEN);
+
         const result = await prisma.user.update({
-            where: { id },
+            where: { id: targetId },
             data: {
                 status: "BAN",
             },
@@ -120,11 +130,25 @@ class AdminService {
         return serializeBigInt(result);
     }
 
-    async unbanUser(id) {
+    async unbanUser(targetId) {
+        const user = await prisma.user.findUnique({ where: { id: targetId } });
+        if (!user)
+            throw new AppError(
+                "Người dùng không tồn tại",
+                HTTP_STATUS.NOT_FOUND,
+            );
+
+        if (user.status !== "BAN")
+            throw new AppError(
+                "Người dùng chưa bị khóa",
+                HTTP_STATUS.BAD_REQUEST,
+            );
+
         const result = await prisma.user.update({
-            where: { id: BigInt(id) },
+            where: { id: BigInt(targetId) },
             data: { status: "ACTIVE" },
         });
+
         return serializeBigInt(result);
     }
 
@@ -165,6 +189,40 @@ class AdminService {
             messagesToday,
             groupsToday,
         };
+    }
+    async editUser(targetId, data) {
+        const user = await prisma.user.findUnique({ where: { id: targetId } });
+        if (!user)
+            throw new AppError(
+                "Người dùng không tồn tại",
+                HTTP_STATUS.NOT_FOUND,
+            );
+
+        // lọc giá trị undefined
+        const updateData = Object.fromEntries(
+            Object.entries(data).filter(([_, v]) => v !== undefined),
+        );
+
+        const edit = await prisma.user.update({
+            where: { id: targetId },
+            data: updateData,
+        });
+
+        return serializeBigInt(edit);
+    }
+
+    async deleteGroup(id) {
+        const group = await prisma.conversation.findUnique({ where: { id } });
+
+        if (!group)
+            throw new AppError("Nhóm không tồn tại", HTTP_STATUS.NOT_FOUND);
+
+        const result = await prisma.conversation.update({
+            where: { id },
+            data: { deletedAt: new Date() },
+        });
+
+        return serializeBigInt(result);
     }
 }
 

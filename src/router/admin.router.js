@@ -47,13 +47,25 @@ router.get(
 );
 
 router.patch(
-    `users/:id/ban`,
+    `/users/:id`,
+    rateLimitServce.defaultPerMinuteRateLimit(),
+    asyneHandle(adminController.editUser),
+);
+
+router.patch(
+    `/users/:id/ban`,
     rateLimitServce.defaultPerMinuteRateLimit(),
     asyneHandle(adminController.banUser),
 );
 
 router.patch(
-    `users/:id/unban`,
+    `/groups/:id`,
+    rateLimitServce.defaultPerMinuteRateLimit(),
+    asyneHandle(adminController.statusGroup),
+);
+
+router.patch(
+    `/users/:id/unban`,
     rateLimitServce.defaultPerMinuteRateLimit(),
     asyneHandle(adminController.unbanUser),
 );

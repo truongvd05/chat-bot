@@ -6,6 +6,35 @@ import { serializeBigInt } from "#utils/serialize.js";
 import { ensureConversationMember } from "#permissions/conversation.permission.js";
 
 class ConversationService {
+    async findById(id, userId) {
+        const result = await prisma.conversation.findUnique({
+            where: { id },
+            include: {
+                participants: {
+                    where: { deletedAt: null, leftAt: null },
+                    select: {
+                        userId: true,
+                        unreadCount: true,
+                        user: {
+                            select: {
+                                id: true,
+                                name: true,
+                                avatarUrl: true,
+                            },
+                        },
+                    },
+                },
+                owner: {
+                    select: {
+                        id: true,
+                        name: true,
+                        avatarUrl: true,
+                    },
+                },
+            },
+        });
+        return serializeBigInt(result);
+    }
     async _getExistingMembersMap(tx, conversationId, memberIds) {
         const existing = await tx.conversationParticipant.findMany({
             where: { conversationId, userId: { in: memberIds } },
@@ -50,7 +79,12 @@ class ConversationService {
             participant,
         };
     }
-
+    async markAsRead(conversationId, userId) {
+        await prisma.conversationParticipant.updateMany({
+            where: { conversationId, userId },
+            data: { unreadCount: 0 },
+        });
+    }
     async getConversations(userId) {
         const rows = await prisma.conversationParticipant.findMany({
             where: {

@@ -62,6 +62,7 @@ class ConversationController {
         const user = req.user;
         const conversationId = req.conversationId;
 
+        await conversationService.markAsRead(conversationId, user.id);
         const conversation = await conversationService.getConversation(
             user.id,
             conversationId,

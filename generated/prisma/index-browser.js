@@ -145,6 +145,7 @@ exports.Prisma.ConversationScalarFieldEnum = {
   type: 'type',
   ownerId: 'ownerId',
   lastMessageId: 'lastMessageId',
+  status: 'status',
   lastMessageAt: 'lastMessageAt',
   deletedAt: 'deletedAt',
   createdAt: 'createdAt',
@@ -412,6 +413,11 @@ exports.ConversationType = exports.$Enums.ConversationType = {
   SELF: 'SELF',
   DIRECT: 'DIRECT',
   GROUP: 'GROUP'
+};
+
+exports.ConversationStatus = exports.$Enums.ConversationStatus = {
+  ACTIVE: 'ACTIVE',
+  LOCKED: 'LOCKED'
 };
 
 exports.ParticipantRole = exports.$Enums.ParticipantRole = {
