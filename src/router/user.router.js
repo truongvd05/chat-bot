@@ -7,16 +7,17 @@ import parseTargetId from "#middlewares/parseTargerId.js";
 
 const router = express.Router();
 
+// tất cả router càn authMeRequired
+router.use(authMeRequired);
+
 router.get(
     "/friends",
-    authMeRequired,
     rateLimitServce.defaultAuthRateLimit(),
     asyneHandle(userController.getFriend),
 );
 
 router.post(
     "/add-friend",
-    authMeRequired,
     rateLimitServce.defaultAuthRateLimit(),
     parseTargetId,
     asyneHandle(userController.addFriend),
@@ -24,7 +25,6 @@ router.post(
 
 router.post(
     "/accept-friend",
-    authMeRequired,
     rateLimitServce.defaultAuthRateLimit(),
     parseTargetId,
     asyneHandle(userController.acceptFriend),
@@ -32,26 +32,23 @@ router.post(
 
 router.get(
     "/friend-request",
-    authMeRequired,
     rateLimitServce.defaultAuthRateLimit(),
     userController.getFriendRequest,
 );
 
 router.post(
     "/:id/block",
-    authMeRequired,
     rateLimitServce.defaultPerMinuteRateLimit(),
     parseTargetId,
     asyneHandle(userController.blockUser),
 );
 router.delete(
     "/:id/block",
-    authMeRequired,
     rateLimitServce.defaultPerMinuteRateLimit(),
     parseTargetId,
     asyneHandle(userController.unblockUser),
 );
 
-router.get("/search", authMeRequired, asyneHandle(userController.searchUsers));
+router.get("/search", asyneHandle(userController.searchUsers));
 
 export default router;

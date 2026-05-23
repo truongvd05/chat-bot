@@ -6,9 +6,10 @@ import asyneHandle from "#middlewares/asyneHandle.js";
 
 const router = express.Router();
 
+router.use(authMeRequired);
+
 router.get(
     "/",
-    authMeRequired,
     rateLimitServce.defaultPerMinuteRateLimit(),
     asyneHandle(blockController.getAllBlock),
 );

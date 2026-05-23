@@ -13,6 +13,7 @@ const authMeRequired = async (req, res, next) => {
             return res.error({ message: "User not found" }, 401);
         }
         req.user = currentUser;
+
         req.auth = {
             token: access_token,
             jti: payload.jti,

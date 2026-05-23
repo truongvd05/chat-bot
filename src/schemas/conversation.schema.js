@@ -1,4 +1,3 @@
-// schemas/conversation.schema.js
 import { z } from "zod";
 
 const bigIntIdSchema = z

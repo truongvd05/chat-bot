@@ -21,6 +21,7 @@ class AuthService {
                 name: true,
                 emailVerifiedAt: true,
                 createdAt: true,
+                status: true,
             },
         });
     }
@@ -183,6 +184,11 @@ class AuthService {
     }
     async login(email, password) {
         const user = await this.findUserByEmail(email);
+        if (user.status === "BAN")
+            throw new AppError(
+                "Account has been banned",
+                HTTP_STATUS.FORBIDDEN,
+            );
         if (!user)
             throw new AppError(
                 "sai tài khoản hoặc mật khẩu",

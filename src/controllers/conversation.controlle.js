@@ -98,7 +98,7 @@ class ConversationController {
         const conversationId = req.conversationId;
 
         await conversationService.deleteConversation(user.id, conversationId);
-        return res.success(null, 204);
+        return res.success(null, HTTP_STATUS.NO_CONTENT);
     }
 
     async searchConversation(req, res) {

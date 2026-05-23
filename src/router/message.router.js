@@ -6,6 +6,7 @@ import asyneHandle from "#middlewares/asyneHandle.js";
 import parseConversationId from "#middlewares/parseConversationId.js";
 import parseMessageId from "#middlewares/parseMessageId.js";
 import multer from "multer";
+import AppError from "#utils/AppError.js";
 
 const upload = multer({
     storage: multer.memoryStorage(),
@@ -29,20 +30,20 @@ const upload = multer({
 
 const router = express.Router();
 
+router.use(authMeRequired);
+
 router.post(
     "/conversations/:conversationId",
-    authMeRequired,
     rateLimitServce.shortMessage(),
     rateLimitServce.burstMessage(),
     rateLimitServce.longMessage(),
-    upload.array("files"),
+    upload.array("files", 5),
     parseConversationId,
     asyneHandle(messageController.sendMessage),
 );
 
 router.get(
     "/conversations/:conversationId",
-    authMeRequired,
     rateLimitServce.defaultPerMinuteRateLimit(),
     parseConversationId,
     asyneHandle(messageController.getMessages),
@@ -50,7 +51,6 @@ router.get(
 
 router.put(
     "/:messageId/conversations/:conversationId",
-    authMeRequired,
     rateLimitServce.defaultPerMinuteRateLimit(),
     parseMessageId,
     parseConversationId,
@@ -59,7 +59,6 @@ router.put(
 
 router.delete(
     "/:messageId/conversations/:conversationId",
-    authMeRequired,
     rateLimitServce.defaultPerMinuteRateLimit(),
     parseMessageId,
     parseConversationId,

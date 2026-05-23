@@ -9,43 +9,37 @@ import { cacheMiddleware } from "#middlewares/cacheMiddleware.js";
 
 const router = express.Router();
 
+// mọi router cần authMeRequired
+router.use(authMeRequired);
+
 router.post(
     "/direct",
-    authMeRequired,
     rateLimitServce.defaultPerMinuteRateLimit(),
     parseTargetId,
     asyneHandle(conversationController.createDirectConversation),
 );
 router.post(
     "/group",
-    authMeRequired,
     rateLimitServce.defaultPerMinuteRateLimit(),
     asyneHandle(conversationController.createGroupConversation),
 );
 
 router.get(
     "/",
-    authMeRequired,
     rateLimitServce.defaultPerMinuteRateLimit(),
     asyneHandle(conversationController.getConversations),
 );
 
-router.get(
-    "/search",
-    authMeRequired,
-    asyneHandle(conversationController.searchConversation),
-);
+router.get("/search", asyneHandle(conversationController.searchConversation));
 
 router.get(
     "/groups",
-    authMeRequired,
     rateLimitServce.defaultAuthRateLimit(),
     asyneHandle(conversationController.getGroupConversation),
 );
 
 router.get(
     "/:conversationId",
-    authMeRequired,
     rateLimitServce.defaultPerMinuteRateLimit(),
     parseConversationId,
     cacheMiddleware((req) => `conv:${req.conversationId}`),
@@ -54,7 +48,6 @@ router.get(
 
 router.put(
     "/:conversationId",
-    authMeRequired,
     rateLimitServce.defaultPerMinuteRateLimit(),
     parseConversationId,
     asyneHandle(conversationController.renameConversation),
@@ -62,22 +55,14 @@ router.put(
 
 router.delete(
     "/:conversationId",
-    authMeRequired,
     rateLimitServce.defaultPerMinuteRateLimit(),
     parseConversationId,
     asyneHandle(conversationController.deleteConversation),
-);
-router.get(
-    "/:conversationId/stream",
-    rateLimitServce.defaultPerMinuteRateLimit(),
-    parseConversationId,
-    asyneHandle(conversationController.stream),
 );
 
 router.get(
     "/:conversationId/available-users",
     rateLimitServce.defaultPerMinuteRateLimit(),
-    authMeRequired,
     parseConversationId,
     asyneHandle(conversationController.searchAvailableUsers),
 );
@@ -85,7 +70,6 @@ router.get(
 router.post(
     "/:conversationId/promoteToAdmin",
     rateLimitServce.defaultPerMinuteRateLimit(),
-    authMeRequired,
     parseConversationId,
     asyneHandle(conversationController.promoteToAdmin),
 );
@@ -93,7 +77,6 @@ router.post(
 router.post(
     "/:conversationId/leaveGroup",
     rateLimitServce.defaultPerMinuteRateLimit(),
-    authMeRequired,
     parseConversationId,
     asyneHandle(conversationController.leaveGroup),
 );

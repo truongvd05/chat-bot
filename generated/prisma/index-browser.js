@@ -300,6 +300,8 @@ exports.Prisma.UserScalarFieldEnum = {
   phonenumber: 'phonenumber',
   gender: 'gender',
   bio: 'bio',
+  role: 'role',
+  status: 'status',
   birthday: 'birthday',
   avatarUrl: 'avatarUrl',
   backgroundUrl: 'backgroundUrl',
@@ -458,6 +460,16 @@ exports.QueueStatus = exports.$Enums.QueueStatus = {
   inprogress: 'inprogress',
   completed: 'completed',
   failed: 'failed'
+};
+
+exports.UserRole = exports.$Enums.UserRole = {
+  USER: 'USER',
+  ADMIN: 'ADMIN'
+};
+
+exports.UserStatus = exports.$Enums.UserStatus = {
+  ACTIVE: 'ACTIVE',
+  BAN: 'BAN'
 };
 
 exports.Prisma.ModelName = {

@@ -1,4 +1,3 @@
-// schemas/message.schema.js
 import { z } from "zod";
 
 export const sendMessageSchema = z.object({

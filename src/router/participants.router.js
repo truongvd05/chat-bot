@@ -8,9 +8,10 @@ import parseTargetId from "#middlewares/parseTargerId.js";
 
 const router = express.Router();
 
+router.use(authMeRequired);
+
 router.post(
     "/:conversationId",
-    authMeRequired,
     rateLimitServce.defaultPerMinuteRateLimit(),
     parseConversationId,
     asyneHandle(conversationController.addParticipant),
@@ -18,14 +19,12 @@ router.post(
 
 router.delete(
     "/:conversationId/",
-    authMeRequired,
     parseConversationId,
     asyneHandle(conversationController.removeParticipant),
 );
 
 router.get(
     "/:conversationId",
-    authMeRequired,
     asyneHandle(conversationController.listParticipants),
 );
 

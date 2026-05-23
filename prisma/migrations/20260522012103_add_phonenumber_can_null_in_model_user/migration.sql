@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE `users` ADD COLUMN `role` ENUM('USER', 'ADMIN') NOT NULL DEFAULT 'USER',
+    ADD COLUMN `status` ENUM('ACTIVE', 'BAN') NOT NULL DEFAULT 'ACTIVE',
+    MODIFY `phone_number` VARCHAR(191) NULL;

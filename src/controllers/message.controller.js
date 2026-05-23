@@ -96,7 +96,7 @@ class MessageController {
         const messageId = req.messageId;
 
         await messageService.deleteMessage(user.id, messageId);
-        return res.success(null, 204);
+        return res.success(null, HTTP_STATUS.NO_CONTENT);
     }
     async unreadCount(userId, conversationId) {
         const count = await prisma.message.count({

@@ -7,7 +7,7 @@ import asyneHandle from "#middlewares/asyneHandle.js";
 const router = express.Router();
 
 // mọi router đếu có asyneHandle để xứ lí try catch
-
+// PUBLIC router
 router.post(
     "/refresh",
     rateLimitServce.defaultPerMinuteRateLimit(),
@@ -48,39 +48,12 @@ router.post(
 );
 
 router.post(
-    "/logout",
-    authMeRequired,
-    rateLimitServce.defaultPerMinuteRateLimit(),
-    rateLimitServce.defaultPerDayRateLimit(),
-    asyneHandle(authController.logout),
-);
-router.post(
-    "/change-password",
-    authMeRequired,
-    rateLimitServce.defaultPerMinuteRateLimit(),
-    rateLimitServce.defaultPerDayRateLimit(),
-    asyneHandle(authController.changePassword),
-);
-router.post(
     "/verify-email",
     rateLimitServce.verifyEmailPerMinute(),
     rateLimitServce.verifyEmailPreDay(),
     asyneHandle(authController.verifyEmail),
 );
-router.post(
-    "/resen-verify-email",
-    rateLimitServce.senVerifyEmailPerMinute(),
-    rateLimitServce.senVerifyEmailPerDay(),
-    authMeRequired,
-    asyneHandle(authController.resenVerifyEmail),
-);
-router.post(
-    "/validate/email",
-    rateLimitServce.validateEmailPerMinute(),
-    rateLimitServce.validateEmailPerHour(),
-    rateLimitServce.validateEmailPerDay(),
-    asyneHandle(authController.validateEmail),
-);
+
 router.post(
     "/validate/phone",
     rateLimitServce.validateEmailPerMinute(),
@@ -88,6 +61,38 @@ router.post(
     rateLimitServce.validateEmailPerDay(),
     asyneHandle(authController.validatePhone),
 );
+
+router.post(
+    "/validate/email",
+    rateLimitServce.validateEmailPerMinute(),
+    rateLimitServce.validateEmailPerHour(),
+    rateLimitServce.validateEmailPerDay(),
+    asyneHandle(authController.validateEmail),
+);
+
+router.use(authMeRequired);
+
+// PRIVATE Router
+router.post(
+    "/logout",
+    rateLimitServce.defaultPerMinuteRateLimit(),
+    rateLimitServce.defaultPerDayRateLimit(),
+    asyneHandle(authController.logout),
+);
+router.post(
+    "/change-password",
+    rateLimitServce.defaultPerMinuteRateLimit(),
+    rateLimitServce.defaultPerDayRateLimit(),
+    asyneHandle(authController.changePassword),
+);
+
+router.post(
+    "/resen-verify-email",
+    rateLimitServce.senVerifyEmailPerMinute(),
+    rateLimitServce.senVerifyEmailPerDay(),
+    asyneHandle(authController.resenVerifyEmail),
+);
+
 router.get("/me", asyneHandle(authController.getMe));
 
 export default router;

@@ -1,4 +1,3 @@
-// schemas/auth.schema.js
 import { z } from "zod";
 
 export const registerSchema = z

@@ -195,6 +195,22 @@ export const QueueStatus: {
 
 export type QueueStatus = (typeof QueueStatus)[keyof typeof QueueStatus]
 
+
+export const UserRole: {
+  USER: 'USER',
+  ADMIN: 'ADMIN'
+};
+
+export type UserRole = (typeof UserRole)[keyof typeof UserRole]
+
+
+export const UserStatus: {
+  ACTIVE: 'ACTIVE',
+  BAN: 'BAN'
+};
+
+export type UserStatus = (typeof UserStatus)[keyof typeof UserStatus]
+
 }
 
 export type ConversationType = $Enums.ConversationType
@@ -228,6 +244,14 @@ export const ReportStatus: typeof $Enums.ReportStatus
 export type QueueStatus = $Enums.QueueStatus
 
 export const QueueStatus: typeof $Enums.QueueStatus
+
+export type UserRole = $Enums.UserRole
+
+export const UserRole: typeof $Enums.UserRole
+
+export type UserStatus = $Enums.UserStatus
+
+export const UserStatus: typeof $Enums.UserStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -21590,6 +21614,8 @@ export namespace Prisma {
     phonenumber: string | null
     gender: string | null
     bio: string | null
+    role: $Enums.UserRole | null
+    status: $Enums.UserStatus | null
     birthday: string | null
     avatarUrl: string | null
     backgroundUrl: string | null
@@ -21606,6 +21632,8 @@ export namespace Prisma {
     phonenumber: string | null
     gender: string | null
     bio: string | null
+    role: $Enums.UserRole | null
+    status: $Enums.UserStatus | null
     birthday: string | null
     avatarUrl: string | null
     backgroundUrl: string | null
@@ -21622,6 +21650,8 @@ export namespace Prisma {
     phonenumber: number
     gender: number
     bio: number
+    role: number
+    status: number
     birthday: number
     avatarUrl: number
     backgroundUrl: number
@@ -21648,6 +21678,8 @@ export namespace Prisma {
     phonenumber?: true
     gender?: true
     bio?: true
+    role?: true
+    status?: true
     birthday?: true
     avatarUrl?: true
     backgroundUrl?: true
@@ -21664,6 +21696,8 @@ export namespace Prisma {
     phonenumber?: true
     gender?: true
     bio?: true
+    role?: true
+    status?: true
     birthday?: true
     avatarUrl?: true
     backgroundUrl?: true
@@ -21680,6 +21714,8 @@ export namespace Prisma {
     phonenumber?: true
     gender?: true
     bio?: true
+    role?: true
+    status?: true
     birthday?: true
     avatarUrl?: true
     backgroundUrl?: true
@@ -21780,9 +21816,11 @@ export namespace Prisma {
     id: bigint
     email: string
     name: string
-    phonenumber: string
+    phonenumber: string | null
     gender: string | null
     bio: string | null
+    role: $Enums.UserRole
+    status: $Enums.UserStatus
     birthday: string | null
     avatarUrl: string | null
     backgroundUrl: string | null
@@ -21818,6 +21856,8 @@ export namespace Prisma {
     phonenumber?: boolean
     gender?: boolean
     bio?: boolean
+    role?: boolean
+    status?: boolean
     birthday?: boolean
     avatarUrl?: boolean
     backgroundUrl?: boolean
@@ -21854,6 +21894,8 @@ export namespace Prisma {
     phonenumber?: boolean
     gender?: boolean
     bio?: boolean
+    role?: boolean
+    status?: boolean
     birthday?: boolean
     avatarUrl?: boolean
     backgroundUrl?: boolean
@@ -21863,7 +21905,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "name" | "phonenumber" | "gender" | "bio" | "birthday" | "avatarUrl" | "backgroundUrl" | "password" | "emailVerifiedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "name" | "phonenumber" | "gender" | "bio" | "role" | "status" | "birthday" | "avatarUrl" | "backgroundUrl" | "password" | "emailVerifiedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     refreshTokens?: boolean | User$refreshTokensArgs<ExtArgs>
     conversationParticipants?: boolean | User$conversationParticipantsArgs<ExtArgs>
@@ -21910,9 +21952,11 @@ export namespace Prisma {
       id: bigint
       email: string
       name: string
-      phonenumber: string
+      phonenumber: string | null
       gender: string | null
       bio: string | null
+      role: $Enums.UserRole
+      status: $Enums.UserStatus
       birthday: string | null
       avatarUrl: string | null
       backgroundUrl: string | null
@@ -22312,6 +22356,8 @@ export namespace Prisma {
     readonly phonenumber: FieldRef<"User", 'String'>
     readonly gender: FieldRef<"User", 'String'>
     readonly bio: FieldRef<"User", 'String'>
+    readonly role: FieldRef<"User", 'UserRole'>
+    readonly status: FieldRef<"User", 'UserStatus'>
     readonly birthday: FieldRef<"User", 'String'>
     readonly avatarUrl: FieldRef<"User", 'String'>
     readonly backgroundUrl: FieldRef<"User", 'String'>
@@ -24321,6 +24367,8 @@ export namespace Prisma {
     phonenumber: 'phonenumber',
     gender: 'gender',
     bio: 'bio',
+    role: 'role',
+    status: 'status',
     birthday: 'birthday',
     avatarUrl: 'avatarUrl',
     backgroundUrl: 'backgroundUrl',
@@ -24595,6 +24643,20 @@ export namespace Prisma {
    * Reference to a field of type 'QueueStatus'
    */
   export type EnumQueueStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueueStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'UserRole'
+   */
+  export type EnumUserRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserRole'>
+    
+
+
+  /**
+   * Reference to a field of type 'UserStatus'
+   */
+  export type EnumUserStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserStatus'>
     
 
 
@@ -25897,9 +25959,11 @@ export namespace Prisma {
     id?: BigIntFilter<"User"> | bigint | number
     email?: StringFilter<"User"> | string
     name?: StringFilter<"User"> | string
-    phonenumber?: StringFilter<"User"> | string
+    phonenumber?: StringNullableFilter<"User"> | string | null
     gender?: StringNullableFilter<"User"> | string | null
     bio?: StringNullableFilter<"User"> | string | null
+    role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
+    status?: EnumUserStatusFilter<"User"> | $Enums.UserStatus
     birthday?: StringNullableFilter<"User"> | string | null
     avatarUrl?: StringNullableFilter<"User"> | string | null
     backgroundUrl?: StringNullableFilter<"User"> | string | null
@@ -25930,9 +25994,11 @@ export namespace Prisma {
     id?: SortOrder
     email?: SortOrder
     name?: SortOrder
-    phonenumber?: SortOrder
+    phonenumber?: SortOrderInput | SortOrder
     gender?: SortOrderInput | SortOrder
     bio?: SortOrderInput | SortOrder
+    role?: SortOrder
+    status?: SortOrder
     birthday?: SortOrderInput | SortOrder
     avatarUrl?: SortOrderInput | SortOrder
     backgroundUrl?: SortOrderInput | SortOrder
@@ -25970,6 +26036,8 @@ export namespace Prisma {
     name?: StringFilter<"User"> | string
     gender?: StringNullableFilter<"User"> | string | null
     bio?: StringNullableFilter<"User"> | string | null
+    role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
+    status?: EnumUserStatusFilter<"User"> | $Enums.UserStatus
     birthday?: StringNullableFilter<"User"> | string | null
     avatarUrl?: StringNullableFilter<"User"> | string | null
     backgroundUrl?: StringNullableFilter<"User"> | string | null
@@ -26000,9 +26068,11 @@ export namespace Prisma {
     id?: SortOrder
     email?: SortOrder
     name?: SortOrder
-    phonenumber?: SortOrder
+    phonenumber?: SortOrderInput | SortOrder
     gender?: SortOrderInput | SortOrder
     bio?: SortOrderInput | SortOrder
+    role?: SortOrder
+    status?: SortOrder
     birthday?: SortOrderInput | SortOrder
     avatarUrl?: SortOrderInput | SortOrder
     backgroundUrl?: SortOrderInput | SortOrder
@@ -26024,9 +26094,11 @@ export namespace Prisma {
     id?: BigIntWithAggregatesFilter<"User"> | bigint | number
     email?: StringWithAggregatesFilter<"User"> | string
     name?: StringWithAggregatesFilter<"User"> | string
-    phonenumber?: StringWithAggregatesFilter<"User"> | string
+    phonenumber?: StringNullableWithAggregatesFilter<"User"> | string | null
     gender?: StringNullableWithAggregatesFilter<"User"> | string | null
     bio?: StringNullableWithAggregatesFilter<"User"> | string | null
+    role?: EnumUserRoleWithAggregatesFilter<"User"> | $Enums.UserRole
+    status?: EnumUserStatusWithAggregatesFilter<"User"> | $Enums.UserStatus
     birthday?: StringNullableWithAggregatesFilter<"User"> | string | null
     avatarUrl?: StringNullableWithAggregatesFilter<"User"> | string | null
     backgroundUrl?: StringNullableWithAggregatesFilter<"User"> | string | null
@@ -27349,9 +27421,11 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name: string
-    phonenumber: string
+    phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
     birthday?: string | null
     avatarUrl?: string | null
     backgroundUrl?: string | null
@@ -27382,9 +27456,11 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name: string
-    phonenumber: string
+    phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
     birthday?: string | null
     avatarUrl?: string | null
     backgroundUrl?: string | null
@@ -27415,9 +27491,11 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
+    phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27448,9 +27526,11 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
+    phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27481,9 +27561,11 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name: string
-    phonenumber: string
+    phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
     birthday?: string | null
     avatarUrl?: string | null
     backgroundUrl?: string | null
@@ -27497,9 +27579,11 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
+    phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27513,9 +27597,11 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
+    phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -28986,6 +29072,20 @@ export namespace Prisma {
     _max?: NestedEnumQueueStatusFilter<$PrismaModel>
   }
 
+  export type EnumUserRoleFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserRole | EnumUserRoleFieldRefInput<$PrismaModel>
+    in?: $Enums.UserRole[]
+    notIn?: $Enums.UserRole[]
+    not?: NestedEnumUserRoleFilter<$PrismaModel> | $Enums.UserRole
+  }
+
+  export type EnumUserStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserStatus | EnumUserStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.UserStatus[]
+    notIn?: $Enums.UserStatus[]
+    not?: NestedEnumUserStatusFilter<$PrismaModel> | $Enums.UserStatus
+  }
+
   export type RefreshTokenListRelationFilter = {
     every?: RefreshTokenWhereInput
     some?: RefreshTokenWhereInput
@@ -29049,6 +29149,8 @@ export namespace Prisma {
     phonenumber?: SortOrder
     gender?: SortOrder
     bio?: SortOrder
+    role?: SortOrder
+    status?: SortOrder
     birthday?: SortOrder
     avatarUrl?: SortOrder
     backgroundUrl?: SortOrder
@@ -29069,6 +29171,8 @@ export namespace Prisma {
     phonenumber?: SortOrder
     gender?: SortOrder
     bio?: SortOrder
+    role?: SortOrder
+    status?: SortOrder
     birthday?: SortOrder
     avatarUrl?: SortOrder
     backgroundUrl?: SortOrder
@@ -29085,6 +29189,8 @@ export namespace Prisma {
     phonenumber?: SortOrder
     gender?: SortOrder
     bio?: SortOrder
+    role?: SortOrder
+    status?: SortOrder
     birthday?: SortOrder
     avatarUrl?: SortOrder
     backgroundUrl?: SortOrder
@@ -29096,6 +29202,26 @@ export namespace Prisma {
 
   export type UserSumOrderByAggregateInput = {
     id?: SortOrder
+  }
+
+  export type EnumUserRoleWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserRole | EnumUserRoleFieldRefInput<$PrismaModel>
+    in?: $Enums.UserRole[]
+    notIn?: $Enums.UserRole[]
+    not?: NestedEnumUserRoleWithAggregatesFilter<$PrismaModel> | $Enums.UserRole
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumUserRoleFilter<$PrismaModel>
+    _max?: NestedEnumUserRoleFilter<$PrismaModel>
+  }
+
+  export type EnumUserStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserStatus | EnumUserStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.UserStatus[]
+    notIn?: $Enums.UserStatus[]
+    not?: NestedEnumUserStatusWithAggregatesFilter<$PrismaModel> | $Enums.UserStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumUserStatusFilter<$PrismaModel>
+    _max?: NestedEnumUserStatusFilter<$PrismaModel>
   }
 
   export type UserBlockBlockerIdBlockedIdCompoundUniqueInput = {
@@ -30635,6 +30761,14 @@ export namespace Prisma {
     connect?: ConversationLabelWhereUniqueInput | ConversationLabelWhereUniqueInput[]
   }
 
+  export type EnumUserRoleFieldUpdateOperationsInput = {
+    set?: $Enums.UserRole
+  }
+
+  export type EnumUserStatusFieldUpdateOperationsInput = {
+    set?: $Enums.UserStatus
+  }
+
   export type RefreshTokenUpdateManyWithoutUserNestedInput = {
     create?: XOR<RefreshTokenCreateWithoutUserInput, RefreshTokenUncheckedCreateWithoutUserInput> | RefreshTokenCreateWithoutUserInput[] | RefreshTokenUncheckedCreateWithoutUserInput[]
     connectOrCreate?: RefreshTokenCreateOrConnectWithoutUserInput | RefreshTokenCreateOrConnectWithoutUserInput[]
@@ -31541,13 +31675,49 @@ export namespace Prisma {
     _max?: NestedEnumQueueStatusFilter<$PrismaModel>
   }
 
+  export type NestedEnumUserRoleFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserRole | EnumUserRoleFieldRefInput<$PrismaModel>
+    in?: $Enums.UserRole[]
+    notIn?: $Enums.UserRole[]
+    not?: NestedEnumUserRoleFilter<$PrismaModel> | $Enums.UserRole
+  }
+
+  export type NestedEnumUserStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserStatus | EnumUserStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.UserStatus[]
+    notIn?: $Enums.UserStatus[]
+    not?: NestedEnumUserStatusFilter<$PrismaModel> | $Enums.UserStatus
+  }
+
+  export type NestedEnumUserRoleWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserRole | EnumUserRoleFieldRefInput<$PrismaModel>
+    in?: $Enums.UserRole[]
+    notIn?: $Enums.UserRole[]
+    not?: NestedEnumUserRoleWithAggregatesFilter<$PrismaModel> | $Enums.UserRole
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumUserRoleFilter<$PrismaModel>
+    _max?: NestedEnumUserRoleFilter<$PrismaModel>
+  }
+
+  export type NestedEnumUserStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserStatus | EnumUserStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.UserStatus[]
+    notIn?: $Enums.UserStatus[]
+    not?: NestedEnumUserStatusWithAggregatesFilter<$PrismaModel> | $Enums.UserStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumUserStatusFilter<$PrismaModel>
+    _max?: NestedEnumUserStatusFilter<$PrismaModel>
+  }
+
   export type UserCreateWithoutRefreshTokensInput = {
     id?: bigint | number
     email: string
     name: string
-    phonenumber: string
+    phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
     birthday?: string | null
     avatarUrl?: string | null
     backgroundUrl?: string | null
@@ -31577,9 +31747,11 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name: string
-    phonenumber: string
+    phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
     birthday?: string | null
     avatarUrl?: string | null
     backgroundUrl?: string | null
@@ -31625,9 +31797,11 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
+    phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31657,9 +31831,11 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
+    phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31689,9 +31865,11 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name: string
-    phonenumber: string
+    phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
     birthday?: string | null
     avatarUrl?: string | null
     backgroundUrl?: string | null
@@ -31721,9 +31899,11 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name: string
-    phonenumber: string
+    phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
     birthday?: string | null
     avatarUrl?: string | null
     backgroundUrl?: string | null
@@ -31769,9 +31949,11 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
+    phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31801,9 +31983,11 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
+    phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31907,9 +32091,11 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name: string
-    phonenumber: string
+    phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
     birthday?: string | null
     avatarUrl?: string | null
     backgroundUrl?: string | null
@@ -31939,9 +32125,11 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name: string
-    phonenumber: string
+    phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
     birthday?: string | null
     avatarUrl?: string | null
     backgroundUrl?: string | null
@@ -32143,9 +32331,11 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
+    phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32175,9 +32365,11 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
+    phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32345,9 +32537,11 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name: string
-    phonenumber: string
+    phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
     birthday?: string | null
     avatarUrl?: string | null
     backgroundUrl?: string | null
@@ -32377,9 +32571,11 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name: string
-    phonenumber: string
+    phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
     birthday?: string | null
     avatarUrl?: string | null
     backgroundUrl?: string | null
@@ -32468,9 +32664,11 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
+    phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32500,9 +32698,11 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
+    phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32532,9 +32732,11 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name: string
-    phonenumber: string
+    phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
     birthday?: string | null
     avatarUrl?: string | null
     backgroundUrl?: string | null
@@ -32564,9 +32766,11 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name: string
-    phonenumber: string
+    phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
     birthday?: string | null
     avatarUrl?: string | null
     backgroundUrl?: string | null
@@ -32649,9 +32853,11 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
+    phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32681,9 +32887,11 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
+    phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32756,9 +32964,11 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name: string
-    phonenumber: string
+    phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
     birthday?: string | null
     avatarUrl?: string | null
     backgroundUrl?: string | null
@@ -32788,9 +32998,11 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name: string
-    phonenumber: string
+    phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
     birthday?: string | null
     avatarUrl?: string | null
     backgroundUrl?: string | null
@@ -32825,9 +33037,11 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name: string
-    phonenumber: string
+    phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
     birthday?: string | null
     avatarUrl?: string | null
     backgroundUrl?: string | null
@@ -32857,9 +33071,11 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name: string
-    phonenumber: string
+    phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
     birthday?: string | null
     avatarUrl?: string | null
     backgroundUrl?: string | null
@@ -32905,9 +33121,11 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
+    phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32937,9 +33155,11 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
+    phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32980,9 +33200,11 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
+    phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33012,9 +33234,11 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
+    phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33081,9 +33305,11 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name: string
-    phonenumber: string
+    phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
     birthday?: string | null
     avatarUrl?: string | null
     backgroundUrl?: string | null
@@ -33113,9 +33339,11 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name: string
-    phonenumber: string
+    phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
     birthday?: string | null
     avatarUrl?: string | null
     backgroundUrl?: string | null
@@ -33385,9 +33613,11 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
+    phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33417,9 +33647,11 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
+    phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33665,9 +33897,11 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name: string
-    phonenumber: string
+    phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
     birthday?: string | null
     avatarUrl?: string | null
     backgroundUrl?: string | null
@@ -33697,9 +33931,11 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name: string
-    phonenumber: string
+    phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
     birthday?: string | null
     avatarUrl?: string | null
     backgroundUrl?: string | null
@@ -33734,9 +33970,11 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name: string
-    phonenumber: string
+    phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
     birthday?: string | null
     avatarUrl?: string | null
     backgroundUrl?: string | null
@@ -33766,9 +34004,11 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name: string
-    phonenumber: string
+    phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
     birthday?: string | null
     avatarUrl?: string | null
     backgroundUrl?: string | null
@@ -33925,9 +34165,11 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
+    phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33957,9 +34199,11 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
+    phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -34000,9 +34244,11 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
+    phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -34032,9 +34278,11 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
+    phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -34193,9 +34441,11 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name: string
-    phonenumber: string
+    phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
     birthday?: string | null
     avatarUrl?: string | null
     backgroundUrl?: string | null
@@ -34225,9 +34475,11 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name: string
-    phonenumber: string
+    phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
     birthday?: string | null
     avatarUrl?: string | null
     backgroundUrl?: string | null
@@ -34455,9 +34707,11 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
+    phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -34487,9 +34741,11 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
+    phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -34816,9 +35072,11 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name: string
-    phonenumber: string
+    phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
     birthday?: string | null
     avatarUrl?: string | null
     backgroundUrl?: string | null
@@ -34848,9 +35106,11 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name: string
-    phonenumber: string
+    phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
     birthday?: string | null
     avatarUrl?: string | null
     backgroundUrl?: string | null
@@ -34939,9 +35199,11 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
+    phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -34971,9 +35233,11 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
+    phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -35040,9 +35304,11 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name: string
-    phonenumber: string
+    phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
     birthday?: string | null
     avatarUrl?: string | null
     backgroundUrl?: string | null
@@ -35072,9 +35338,11 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name: string
-    phonenumber: string
+    phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
     birthday?: string | null
     avatarUrl?: string | null
     backgroundUrl?: string | null
@@ -35222,9 +35490,11 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
+    phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -35254,9 +35524,11 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
+    phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -35372,9 +35644,11 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name: string
-    phonenumber: string
+    phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
     birthday?: string | null
     avatarUrl?: string | null
     backgroundUrl?: string | null
@@ -35404,9 +35678,11 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name: string
-    phonenumber: string
+    phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
     birthday?: string | null
     avatarUrl?: string | null
     backgroundUrl?: string | null
@@ -35495,9 +35771,11 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
+    phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -35527,9 +35805,11 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
+    phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -35713,9 +35993,11 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name: string
-    phonenumber: string
+    phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
     birthday?: string | null
     avatarUrl?: string | null
     backgroundUrl?: string | null
@@ -35745,9 +36027,11 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name: string
-    phonenumber: string
+    phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
     birthday?: string | null
     avatarUrl?: string | null
     backgroundUrl?: string | null
@@ -35830,9 +36114,11 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
+    phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -35862,9 +36148,11 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
+    phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -36773,9 +37061,11 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name: string
-    phonenumber: string
+    phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
     birthday?: string | null
     avatarUrl?: string | null
     backgroundUrl?: string | null
@@ -36805,9 +37095,11 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name: string
-    phonenumber: string
+    phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
     birthday?: string | null
     avatarUrl?: string | null
     backgroundUrl?: string | null
@@ -36842,9 +37134,11 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name: string
-    phonenumber: string
+    phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
     birthday?: string | null
     avatarUrl?: string | null
     backgroundUrl?: string | null
@@ -36874,9 +37168,11 @@ export namespace Prisma {
     id?: bigint | number
     email: string
     name: string
-    phonenumber: string
+    phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    role?: $Enums.UserRole
+    status?: $Enums.UserStatus
     birthday?: string | null
     avatarUrl?: string | null
     backgroundUrl?: string | null
@@ -36922,9 +37218,11 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
+    phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -36954,9 +37252,11 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
+    phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -36997,9 +37297,11 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
+    phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -37029,9 +37331,11 @@ export namespace Prisma {
     id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    phonenumber?: StringFieldUpdateOperationsInput | string
+    phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     backgroundUrl?: NullableStringFieldUpdateOperationsInput | string | null
