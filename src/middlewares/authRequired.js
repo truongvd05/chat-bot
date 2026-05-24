@@ -15,6 +15,7 @@ const authMeRequired = async (req, res, next) => {
         }
         if (currentUser.status === "BAN")
             return res.error("Tài khoản đã bị khóa", HTTP_STATUS.FORBIDDEN);
+
         req.user = currentUser;
 
         req.auth = {
