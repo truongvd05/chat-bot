@@ -2,8 +2,47 @@ import { HTTP_STATUS } from "#config/constants.js";
 import prisma from "#libs/prisma.js";
 import AppError from "#utils/AppError.js";
 import { serializeBigInt } from "#utils/serialize.js";
+import bcrypt from "bcrypt";
+import responseTokenService from "./responseToken.service.js";
+import authService from "./auth.service.js";
 
 class AdminService {
+    async login(email, password) {
+        const user = await prisma.user.findUnique({
+            where: {
+                email,
+            },
+        });
+
+        if (!user)
+            throw new AppError(
+                "sai tài khoản hoặc mật khẩu",
+                HTTP_STATUS.UNAUTHORIZED,
+            );
+
+        if (user.role === "USER")
+            throw new AppError("FORBIDDEN", HTTP_STATUS.FORBIDDEN);
+
+        const isValid = await bcrypt.compare(password, user.password);
+
+        if (!isValid) {
+            throw new AppError(
+                "sai tài khoản hoặc mật khẩu",
+                HTTP_STATUS.UNAUTHORIZED,
+            );
+        }
+
+        const token = responseTokenService.loginAndRegister(user.id);
+
+        await authService._updateUserRefreshToken(
+            user.id,
+            token.refresh_token,
+            token.refresh_token_ttl,
+        );
+        const { password: _, ...saveUser } = user;
+
+        return { user: serializeBigInt(saveUser), token };
+    }
     async getUsers(page, limit, search) {
         const skip = (page - 1) * limit;
         const where = {

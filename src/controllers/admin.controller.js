@@ -6,10 +6,27 @@ import {
     getGroupsSchema,
     getUsersSchema,
 } from "#schemas/admin.schema.js";
+import { loginSchema } from "#schemas/auth.schema.js";
 import adminService from "#services/admin.service.js";
 import AppError from "#utils/AppError.js";
 
 class AdminController {
+    async login(req, res) {
+        const result = loginSchema.safeParse(req.body);
+
+        if (!result.success) {
+            throw new AppError(
+                result.error.issues[0].message || "lỗi",
+                HTTP_STATUS.BAD_REQUEST,
+            );
+        }
+
+        const { email, password } = result.data;
+
+        const { user, token } = await adminService.login(email, password);
+
+        return res.success({ user, token }, 200);
+    }
     async getUsers(req, res) {
         const result = getUsersSchema.safeParse(req.query);
         if (!result.success) {

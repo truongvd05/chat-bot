@@ -28,6 +28,7 @@ const ALLOWED_ORIGINS = [
     "https://chatdemo.site",
     "http://localhost:5173",
     "http://localhost:5174",
+    "https://admin.chatdemo.site",
     "http://localhost:8080",
     "http://localhost:8181",
     "http://localhost:80",

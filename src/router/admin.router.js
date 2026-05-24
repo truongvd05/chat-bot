@@ -13,7 +13,7 @@ router.post(
     "/login",
     rateLimitServce.login(),
     rateLimitServce.defaultPerDayRateLimit(),
-    asyneHandle(authController.login),
+    asyneHandle(adminController.login),
 );
 
 router.post(
