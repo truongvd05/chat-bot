@@ -118,6 +118,8 @@ class AdminService {
                     title: true,
                     createdAt: true,
                     lastMessageAt: true,
+                    type: true,
+                    status: true,
                     owner: {
                         select: {
                             id: true,
@@ -261,6 +263,13 @@ class AdminService {
             data: { deletedAt: new Date() },
         });
 
+        return serializeBigInt(result);
+    }
+    async editGroup(id, data) {
+        const result = await prisma.conversation.update({
+            where: { id },
+            data,
+        });
         return serializeBigInt(result);
     }
 }

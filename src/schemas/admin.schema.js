@@ -10,6 +10,10 @@ export const getUsersSchema = z.object({
     status: z.enum(["ACTIVE", "BAN"]).optional(),
 });
 
+export const statusGroupSchema = z.object({
+    status: z.enum(["LOCKED", "ACTIVE"]),
+});
+
 export const banUserSchema = z.object({
     id: z.coerce.number().int().positive(),
 });
@@ -17,6 +21,15 @@ export const banUserSchema = z.object({
 export const deleteGroupSchema = z.object({
     id: z.coerce.number().int().positive(),
 });
+
+export const editGroupSchema = z
+    .object({
+        status: z.enum(["LOCKED", "ACTIVE"]).optional(),
+        title: z.string().min(1).optional(),
+    })
+    .refine((data) => data.status || data.title, {
+        message: "Phải có status hoặc title",
+    });
 
 export const getGroupsSchema = z.object({
     page: z.coerce.number().int().min(1).default(1),

@@ -1,6 +1,8 @@
 import { HTTP_STATUS } from "#config/constants.js";
 import {
     banUserSchema,
+    deleteGroupSchema,
+    editGroupSchema,
     editUserBodySchema,
     editUserParamsSchema,
     getGroupsSchema,
@@ -22,6 +24,8 @@ class AdminController {
         }
 
         const { email, password } = result.data;
+
+        console.log(email, password);
 
         const { user, token } = await adminService.login(email, password);
 
@@ -126,6 +130,29 @@ class AdminController {
         const editUser = await adminService.editUser(id, bodyResult.data);
 
         return res.success(editUser, HTTP_STATUS.NO_CONTENT);
+    }
+    async editGroup(req, res) {
+        const paramsResult = deleteGroupSchema.safeParse(req.params);
+
+        if (!paramsResult.success) {
+            throw new AppError(
+                paramsResult.error.issues[0].message || "lỗi",
+                HTTP_STATUS.BAD_REQUEST,
+            );
+        }
+        const bodyResult = editGroupSchema.safeParse(req.body);
+        if (!bodyResult.success) {
+            throw new AppError(
+                bodyResult.error.issues[0].message || "lỗi",
+                HTTP_STATUS.BAD_REQUEST,
+            );
+        }
+
+        const { id } = paramsResult.data;
+
+        const result = await adminService.editGroup(id, bodyResult.data);
+
+        return res.success(result, HTTP_STATUS.OK);
     }
 }
 

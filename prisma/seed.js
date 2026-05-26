@@ -1,7 +1,16 @@
-import { PrismaClient } from "../generated/prisma";
+import "dotenv/config";
+import { PrismaClient } from "../generated/prisma/index.js";
+import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 import bcrypt from "bcrypt";
 
-const prisma = new PrismaClient();
+const adapter = new PrismaMariaDb({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    database: process.env.DB_NAME,
+});
+
+const prisma = new PrismaClient({ adapter });
 
 async function main() {
     const hashedPassword = await bcrypt.hash("Admin@123456", 10);
@@ -19,7 +28,7 @@ async function main() {
         },
     });
 
-    console.log(" Admin created:", admin.email);
+    console.log("Admin created:", admin.email);
 }
 
 main()

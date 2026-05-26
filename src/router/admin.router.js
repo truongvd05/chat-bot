@@ -61,7 +61,7 @@ router.patch(
 router.patch(
     `/groups/:id`,
     rateLimitServce.defaultPerMinuteRateLimit(),
-    asyneHandle(adminController.statusGroup),
+    asyneHandle(adminController.editGroup),
 );
 
 router.patch(
