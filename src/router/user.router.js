@@ -4,6 +4,7 @@ import authMeRequired from "#middlewares/authRequired.js";
 import rateLimitServce from "#services/rateLimit.servce.js";
 import asyneHandle from "#middlewares/asyneHandle.js";
 import parseTargetId from "#middlewares/parseTargerId.js";
+import upload from "#middlewares/upload.js";
 
 const router = express.Router();
 
@@ -14,6 +15,20 @@ router.get(
     "/friends",
     rateLimitServce.defaultAuthRateLimit(),
     asyneHandle(userController.getFriend),
+);
+
+router.put(
+    "/",
+    rateLimitServce.defaultEditUserPerMinuteRateLimit(),
+    rateLimitServce.defaultEditUserPerDayRateLimit(),
+    asyneHandle(userController.editUser),
+);
+
+router.patch(
+    "/avatar",
+    rateLimitServce.defaultAuthRateLimit(),
+    upload.single("avatar"),
+    asyneHandle(userController.updateAvatar),
 );
 
 router.post(
@@ -48,6 +63,8 @@ router.delete(
     parseTargetId,
     asyneHandle(userController.unblockUser),
 );
+
+router.get("/me", asyneHandle(userController.getMe));
 
 router.get("/search", asyneHandle(userController.searchUsers));
 

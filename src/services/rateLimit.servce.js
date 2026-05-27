@@ -123,6 +123,22 @@ class RateLimit {
             keyGenerator: (req) => req.user?.email?.toLowerCase() || req.ip,
         });
     }
+    defaultEditUserPerMinuteRateLimit() {
+        return this._create({
+            time: 1 * 60,
+            limit: 5,
+            message: "Quá nhiều yêu cầu, thử lại sau",
+            keyGenerator: (req) => req.user?.email?.toLowerCase() || req.ip,
+        });
+    }
+    defaultEditUserPerDayRateLimit() {
+        return this._create({
+            time: 1 * 60,
+            limit: 50,
+            message: "Quá nhiều yêu cầu, thử lại sau",
+            keyGenerator: (req) => req.user?.email?.toLowerCase() || req.ip,
+        });
+    }
     defaultPerDayRateLimit() {
         return this._create({
             time: 24 * 60 * 60,

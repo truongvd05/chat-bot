@@ -26,7 +26,7 @@ class MessageController {
 
         const message = await messageService.sendMessage(
             conversationId,
-            user,
+            user.id,
             content,
             files,
         );

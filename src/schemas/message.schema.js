@@ -5,6 +5,6 @@ export const sendMessageSchema = z.object({
 });
 
 export const getMessagesSchema = z.object({
-    c: z.string().optional(),
+    c: z.string().regex(/^\d+$/, "Invalid cursor").optional(),
     limit: z.coerce.number().int().positive().default(10),
 });

@@ -2,12 +2,12 @@ import { HTTP_STATUS } from "#config/constants.js";
 import prisma from "#libs/prisma.js";
 import AppError from "#utils/AppError.js";
 import { serializeBigInt } from "#utils/serialize.js";
-import uploadBuffer from "#utils/uploadCoud.js";
 import { id } from "zod/v4/locales";
 import conversationService from "./conversation.service.js";
 import { requireVerifiedUser } from "#permissions/user.permission.js";
 import { ensureMessageOwner } from "#permissions/message.permission.js";
 import { ensureConversationMember } from "#permissions/conversation.permission.js";
+import uploadFile from "#utils/uploadFile.js";
 
 class MessageService {
     async deleteMessage(userId, messageId) {
@@ -38,18 +38,6 @@ class MessageService {
 
         return serializeBigInt(updated);
     }
-    async uploadFile(file) {
-        const result = await uploadBuffer(file.buffer, {
-            public_id: `${Date.now()}-${file.originalname}`,
-        });
-
-        return {
-            fileName: file.originalname,
-            fileUrl: result.secure_url,
-            fileType: file.mimetype,
-            fileSize: file.size,
-        };
-    }
     async sendMessage(
         conversationId,
         userId,
@@ -60,9 +48,7 @@ class MessageService {
         await requireVerifiedUser(userId);
         await ensureConversationMember(conversationId, userId);
 
-        const attachments = await Promise.all(
-            files.map((f) => this.uploadFile(f)),
-        );
+        const attachments = await Promise.all(files.map((f) => uploadFile(f)));
 
         const message = await this._createMessage({
             conversationId,

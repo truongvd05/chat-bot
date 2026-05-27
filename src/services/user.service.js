@@ -2,6 +2,7 @@ import { HTTP_STATUS } from "#config/constants.js";
 import prisma from "#libs/prisma.js";
 import AppError from "#utils/AppError.js";
 import { serializeBigInt } from "#utils/serialize.js";
+import uploadFile from "#utils/uploadFile.js";
 
 class UserService {
     async getFriend(userId) {
@@ -262,6 +263,90 @@ class UserService {
             }),
         ]);
         return serializeBigInt(accept);
+    }
+    async updateAvatar(userId, file) {
+        // . Lấy avatar cũ để xóa sau
+        const user = await prisma.user.findUnique({
+            where: { id: userId },
+            select: { avatarUrl: true },
+        });
+
+        // Upload file mới lên Cloudinary
+        const attachment = await uploadFile(file, {
+            folder: "chat-app/avatars",
+            transformation: [
+                { width: 400, height: 400, crop: "fill", gravity: "face" },
+            ],
+        });
+
+        // Cập nhật URL vào DB
+        const updated = await prisma.user.update({
+            where: { id: userId },
+            data: { avatarUrl: attachment.fileUrl },
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                avatarUrl: true,
+            },
+        });
+
+        // 4. Xóa ảnh cũ trên Cloudinary (nếu có)
+        if (user.avatarUrl) {
+            const publicId = user.avatarUrl
+                .split("/upload/")[1] // lấy phần sau /upload/
+                ?.replace(/^v\d+\//, "") // bỏ version vd: v1234567890/
+                ?.replace(/\.[^.]+$/, ""); // bỏ extension
+
+            if (publicId) {
+                await cloudinary.uploader.destroy(publicId).catch(() => {
+                    console.warn("Failed to delete old avatar:", publicId);
+                });
+            }
+        }
+
+        return serializeBigInt(updated);
+    }
+    async editUser(userId, data) {
+        const update = await prisma.user.update({
+            where: { id: userId },
+            data: {
+                name: data.name,
+                birthday: data.birthday,
+                gender: data.gender,
+                bio: data.bio,
+            },
+            select: {
+                id: true,
+                name: true,
+                bio: true,
+                birthday: true,
+                gender: true,
+                avatarUrl: true,
+            },
+        });
+
+        return serializeBigInt(update);
+    }
+    async getMe(id) {
+        const me = await prisma.user.findUnique({
+            where: { id },
+            select: {
+                id: true,
+                email: true,
+                password: true,
+                name: true,
+                bio: true,
+                gender: true,
+                birthday: true,
+                emailVerifiedAt: true,
+                createdAt: true,
+                status: true,
+                avatarUrl: true,
+                backgroundUrl: true,
+            },
+        });
+        return serializeBigInt(me);
     }
 }
 

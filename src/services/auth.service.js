@@ -19,9 +19,14 @@ class AuthService {
                 email: true,
                 password: true,
                 name: true,
+                bio: true,
+                gender: true,
+                birthday: true,
                 emailVerifiedAt: true,
                 createdAt: true,
                 status: true,
+                avatarUrl: true,
+                backgroundUrl: true,
             },
         });
     }

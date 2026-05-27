@@ -5,28 +5,8 @@ import authMeRequired from "#middlewares/authRequired.js";
 import asyneHandle from "#middlewares/asyneHandle.js";
 import parseConversationId from "#middlewares/parseConversationId.js";
 import parseMessageId from "#middlewares/parseMessageId.js";
-import multer from "multer";
 import AppError from "#utils/AppError.js";
-
-const upload = multer({
-    storage: multer.memoryStorage(),
-    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
-    fileFilter: (req, file, cb) => {
-        const allowed = [
-            "image/jpeg",
-            "image/png",
-            "image/gif",
-            "video/mp4",
-            "application/pdf",
-        ];
-        if (!allowed.includes(file.mimetype)) {
-            return cb(
-                new AppError("File type not allowed", HTTP_STATUS.BAD_REQUEST),
-            );
-        }
-        cb(null, true);
-    },
-});
+import upload from "#middlewares/upload.js";
 
 const router = express.Router();
 
@@ -37,8 +17,8 @@ router.post(
     rateLimitServce.shortMessage(),
     rateLimitServce.burstMessage(),
     rateLimitServce.longMessage(),
-    upload.array("files", 5),
     parseConversationId,
+    upload.array("files", 5),
     asyneHandle(messageController.sendMessage),
 );
 

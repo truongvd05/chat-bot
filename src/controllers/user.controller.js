@@ -1,5 +1,5 @@
 import { HTTP_STATUS } from "#config/constants.js";
-import { searchUsersSchema } from "#schemas/user.schema.js";
+import { editUserSchema, searchUsersSchema } from "#schemas/user.schema.js";
 import userService from "#services/user.service.js";
 import AppError from "#utils/AppError.js";
 
@@ -71,6 +71,45 @@ class UserController {
         const targetUserId = req.targetUserId;
         const add = await userService.acceptFriend(user.id, targetUserId);
         return res.success(add, HTTP_STATUS.OK);
+    }
+    async updateAvatar(req, res) {
+        const user = req.user;
+        const file = req.file;
+        if (!file) {
+            throw new AppError("No file uploaded", HTTP_STATUS.BAD_REQUEST);
+        }
+
+        const upload = await userService.updateAvatar(user.id, file);
+
+        return res.success(upload, HTTP_STATUS.OK);
+    }
+    async editUser(req, res) {
+        const result = editUserSchema.safeParse(req.body);
+
+        if (!result.success) {
+            throw new AppError(
+                result.error.issues[0].message || "lỗi",
+                HTTP_STATUS.BAD_REQUEST,
+            );
+        }
+
+        const user = req.user;
+
+        const { name, bio, birthday, gender } = result.data;
+
+        const updatedUser = await userService.editUser(user.id, {
+            name,
+            bio,
+            birthday,
+            gender,
+        });
+
+        return res.success(updatedUser, HTTP_STATUS.OK);
+    }
+    async getMe(req, res) {
+        const user = req.user;
+        const me = userService.getMe(user.id);
+        return res.success(me, HTTP_STATUS.OK);
     }
 }
 
