@@ -1,452 +1,256 @@
-# Chat Bot Backend API Documentation
+# 🛠️ ChatDemo — Backend API
 
-## API Documentation
+Backend for a real-time chat application inspired by Zalo.  
+Built with Node.js + Express, featuring JWT authentication, real-time messaging via Socket.IO, Redis caching, and an admin role system.
 
-- Swagger UI: /docs
+📦 **Repo:** [github.com/truongvd05/chatdemo](https://github.com/truongvd05/chatdemo) &nbsp;|&nbsp; 📖 **Swagger:** `/docs`
 
-## Overview
+---
 
-This backend provides a complete system for:
+## ✨ Features
 
-User authentication (JWT + Refresh Token Rotation)
-Chat conversation & messaging
-Real-time AI streaming using Server-Sent Events (SSE)
-Rate limiting (anti-spam)
-Scalable architecture with Redis & Prisma
+- **JWT Authentication** — Access Token + Refresh Token rotation
+- **Real-time messaging** — Socket.IO (WebSocket)
+- **Group & direct chat** — conversation management
+- **Admin system** — role-based access control
+- **Redis** — rate limiting & token storage
+- **Rate limiting** — anti-spam on message endpoints
+- **Secure password reset** — token hashed before storing in DB
+- **Cron job** — auto-delete expired reset tokens
 
-## Architecture Overview
+---
 
-RESTful API design using Node.js + Express
-JWT authentication with refresh token rotation
-Redis integration for:
-rate limiting
-token storage
-Secure password reset flow:
-token hashing before storing in database
-Cron job:
-auto-delete expired reset tokens
-Real-time streaming via SSE for AI responses
+## 🧰 Tech Stack
 
-## Token Strategy
+| Layer              | Technology                   |
+| ------------------ | ---------------------------- |
+| Runtime            | Node.js                      |
+| Framework          | Express                      |
+| ORM                | Prisma                       |
+| Database           | MySQL                        |
+| Cache & Rate limit | Redis                        |
+| Real-time          | Socket.IO                    |
+| Auth               | JWT (Access + Refresh Token) |
+| API Docs           | Swagger (`/docs`)            |
 
--- Access Token
-Short-lived (15 minutes)
-Used for API & SSE requests
-Refresh Token
-Stored in database
-Rotated on each refresh
-Deleted on logout (prevent reuse)
+---
 
-## Tech Stack
-
--- Backend
-Node.js
-Express
--- Database & ORM
-Prisma ORM
-MySQL / PostgreSQL
-
--- Authentication
-JWT (Access + Refresh Token)
-
--- Realtime & Performance
-Server-Sent Events (SSE)
-Redis (rate limit, token)
-
-## Getting Started
-
-1. Clone repository
-   git clone https://github.com/truongvd05/chat-bot.git
-   cd chat-bot
-2. Install dependencies
-   npm install
-
-3. Environment variables
-   Create .env file:
-   DATABASE_URL=
-   JWT_SECRET=
-   JWT_REFRESH_SECRET=
-   ACCESS_TOKEN_EXPIRES_IN=15m
-   REFRESH_TOKEN_EXPIRES_IN=7d
-   REDIS_URL=
-   CLIENT_URL=http://localhost:5173
-
-4. Prisma setup
-   npx prisma generate
-   npx prisma migrate deploy
-
-5. Run server
-   npm run dev
-
-## 4. Authentication API
-
-Base path:
+## 📁 Project Structure
 
 ```
-/api/auth
-```
-
-### 4.1 Register
-
-`POST /api/auth/register`
-
-```json
-{
-    "name": "yourname",
-    "email": "user@gmail.com",
-    "password": "123456",
-    "confirm_password": "123456"
-}
+src/
+├── controllers/    # Nhận request, validate, trả response
+├── services/       # Business logic
+├── middlewares/    # Auth, role check, rate limit
+├── routes/         # Định nghĩa API routes
+├── schemas/        # Validate input (Zod / Joi)
+├── utils/          # Helper functions
+└── schedules/      # Cron jobs (vd: xóa token hết hạn)
 ```
 
 ---
 
-### 4.2 Login
+## 🚀 Getting Started
 
-`POST /api/auth/login`
+### Prerequisites
 
-```json
-{
-    "email": "user@gmail.com",
-    "password": "123456"
-}
-```
+- Node.js >= 18
+- MySQL đang chạy
+- Redis đang chạy
 
-Response:
+### Installation
 
-```json
-{
-    "accessToken": "...",
-    "refreshToken": "..."
-}
+```bash
+# 1. Clone repository
+git clone https://github.com/truongvd05/chatdemo.git
+cd chatdemo
+
+# 2. Install dependencies
+npm install
+
+# 3. Cấu hình environment
+cp .env.example .env
+# Chỉnh sửa .env theo hướng dẫn bên dưới
+
+# 4. Prisma setup
+npx prisma generate
+npx prisma migrate deploy
+
+# 5. Chạy server
+npm run dev
 ```
 
 ---
 
-### 4.3 Refresh access token
+## ⚙️ Environment Variables
 
-`POST /api/auth/refresh`
+```env
+DATABASE_URL=mysql://user:password@localhost:3306/chatdemo
 
-```json
-{
-    "refresh_token": "..."
-}
+JWT_SECRET=your_jwt_secret
+JWT_REFRESH_SECRET=your_refresh_secret
+ACCESS_TOKEN_EXPIRES_IN=15m
+REFRESH_TOKEN_EXPIRES_IN=7d
+
+REDIS_URL=redis://localhost:6379
+
+CLIENT_URL=http://localhost:5173
+```
+
+> ⚠️ Restart server sau khi thay đổi `.env`.
+
+---
+
+## 🔐 Token Strategy
+
+| Token         | TTL     | Lưu ở đâu       | Ghi chú                                |
+| ------------- | ------- | --------------- | -------------------------------------- |
+| Access Token  | 15 phút | Memory (client) | Dùng cho mọi API request               |
+| Refresh Token | 7 ngày  | Database        | Rotate mỗi lần refresh, xóa khi logout |
+
+---
+
+## 🔑 Authentication Flow
+
+```
+Login
+  │
+  ▼
+Access Token (15m) + Refresh Token (7d)
+  │
+  ├─ Request succeeds ───────────────► Response
+  │
+  └─ 401 Unauthorized
+         │
+         ▼
+  POST /api/auth/refresh
+         │
+         ├─ Valid ──► New Access Token + New Refresh Token
+         │
+         └─ Invalid ──► 401 → Client redirects to Login
 ```
 
 ---
 
-### 4.4 Logout
+## 👑 Admin Role System
 
-`POST /api/auth/logout`
-
-Header:
+Các endpoint admin yêu cầu header:
 
 ```
 Authorization: Bearer <access_token>
 ```
 
-### 4.5 reset-password
+Middleware kiểm tra `role` trong JWT payload. Nếu không phải admin → `403 Forbidden`.
 
-`POST /api/auth/reset-password`
+---
+
+## 📡 API Reference
+
+### Auth — `/api/auth`
+
+| Method | Endpoint               | Mô tả                       | Auth |
+| ------ | ---------------------- | --------------------------- | ---- |
+| POST   | `/register`            | Đăng ký tài khoản           | ✗    |
+| POST   | `/login`               | Đăng nhập                   | ✗    |
+| POST   | `/refresh`             | Lấy access token mới        | ✗    |
+| POST   | `/logout`              | Đăng xuất                   | ✓    |
+| GET    | `/me`                  | Lấy thông tin user hiện tại | ✓    |
+| POST   | `/forgot-password`     | Gửi email reset password    | ✗    |
+| POST   | `/reset-password`      | Đặt lại mật khẩu            | ✓    |
+| POST   | `/change-password`     | Đổi mật khẩu                | ✓    |
+| POST   | `/verify-email`        | Xác thực email              | ✓    |
+| POST   | `/resend-verify-email` | Gửi lại email xác thực      | ✓    |
+
+---
+
+### Conversations — `/api/conversations`
+
+> Tất cả endpoint yêu cầu `Authorization: Bearer <access_token>`
+
+| Method | Endpoint           | Mô tả                                     |
+| ------ | ------------------ | ----------------------------------------- |
+| POST   | `/direct`          | Tạo cuộc trò chuyện trực tiếp (user–user) |
+| GET    | `/`                | Lấy tất cả conversations (DIRECT, GROUP)  |
+| GET    | `/:conversationId` | Lấy chi tiết 1 conversation               |
+| PUT    | `/:conversationId` | Đổi tên conversation                      |
+| DELETE | `/:conversationId` | Xóa conversation                          |
+
+---
+
+### Messages — `/api/message`
+
+> Tất cả endpoint yêu cầu `Authorization: Bearer <access_token>`
+
+| Method | Endpoint                         | Mô tả                  | Ghi chú      |
+| ------ | -------------------------------- | ---------------------- | ------------ |
+| GET    | `/conversation/:conversationId`  | Lấy danh sách tin nhắn |              |
+| POST   | `/conversations/:conversationId` | Gửi tin nhắn           | Rate limited |
+| PUT    | `/:conversationId`               | Chỉnh sửa tin nhắn     | User–user    |
+| DELETE | `/:conversationId`               | Xóa tin nhắn           | User–user    |
+
+**Body gửi tin nhắn:**
 
 ```json
 {
-    "password": "...",
-    "new-password": "..."
-}
-```
-
-Header:
-
-```
-Authorization: Bearer <access_token>
-```
-
----
-
-### 4.6 Get current user
-
-`GET /api/auth/me`
-
----
-
-### 4.7 forgot password
-
-`POST /api/auth/forgot-password`
-
-```json
-{
-    "email": "..."
-}
-```
-
-### 4.8 change password
-
-`POST /api/auth/change-password`
-
-```json
-{
-    "password": "...",
-    "new-password": "...",
-    "confirm_password": "..."
-}
-```
-
-Header:
-
-```
-Authorization: Bearer <access_token>
-```
-
-### 4.9 verify email
-
-`POST /api/auth/verify-email`
-
-```json
-{
-    "token": "..."
-}
-```
-
-Header:
-
-```
-Authorization: Bearer <access_token>
-```
-
-### 4.10 resen verify email
-
-`POST /api/auth/resen-verify-email`
-
-```
-
-Header:
-
-```
-
-Authorization: Bearer <access_token>
-
-```
-
-## 5. Conversation API
-
-Base path:
-
-```
-
-/api/conversations
-
-```
-
-> Tất cả endpoint yêu cầu header:
-
-```
-
-Authorization: Bearer <access_token>
-
----
-
-## 5.1 Create conversation
-
-`POST /direct` tạo chat user-user
-`POST /bot` tạo chat user-bot
-
----
-
-### 5.2 Rename conversation
-
-<!-- đổi tên conversation với bot -->
-
-`put /:conversationId`
-
-```json
-{
-    "title": "Chat with AI"
-}
-```
-
----
-
-### 5.3 Get all conversations
-
-<!-- lấy conversation type DIRECT, GOURP -->
-
-`GET /`
-
-<!-- lấy conversation với type = BOT -->
-
-`GET /bots`
-
----
-
-### 5.4 Get one conversation
-
-<!-- lấy 1 conversation với type DIRECT, GROUP -->
-
-`GET /:conversationId`
-
-<!-- lấy 1 conversation với type BOT -->
-
-`GET /bot/:conversationId`
-
----
-
-### 5.5 Delete conversation
-
-`DELETE /:conversationId`
-
----
-
-## 6. Message API
-
-Base path:
-
-`/api/message`
-
-```
-
-> Tất cả endpoint yêu cầu header:
-
-```
-
-Authorization: Bearer <access_token>
-
-````
-
----
-
-### 6.1 Get messages
-
-`GET /conversation/:conversationId`
-
----
-
-### 6.2 Send message
-
-`POST /conversations/:conversationId`
-
-<!-- send với bot -->
-
-```json
-{
-    "message": "Hello AI"
-}
-````
-
-<!-- send với user -->
-
-```json
-{
-    "message": "Hello AI",
+    "message": "Xin chào!",
     "targetUserId": "1"
 }
 ```
 
-> Có rate limit để chống spam
+---
+
+### Admin — `/api/admin`
+
+> Yêu cầu `Authorization: Bearer <access_token>` + role `admin`
+
+| Method | Endpoint                  | Mô tả                                     |
+| ------ | ------------------------- | ----------------------------------------- |
+| GET    | `/users`                  | Lấy danh sách user                        |
+| PUT    | `/users/:userId/ban`      | Ban user                                  |
+| PUT    | `/users/:userId/unban`    | Unban user                                |
+| PUT    | `/users/:userId/rename`   | Đổi tên user                              |
+| GET    | `/groups`                 | Lấy danh sách group                       |
+| PUT    | `/groups/:groupId/ban`    | Ban group                                 |
+| PUT    | `/groups/:groupId/unban`  | Unban group                               |
+| PUT    | `/groups/:groupId/rename` | Đổi tên group                             |
+| GET    | `/stats/daily`            | Thống kê người dùng hằng ngày (real-time) |
 
 ---
 
-### 6.3 Edit message
+## 🔌 Real-time — Socket.IO
 
-`PUT /:conversationId`
-
-```json
-{
-    "messageId": 10,
-    "content": "Updated content"
-}
-```
-
-## dùng với chat user-user
-
-### 6.4 Delete message
-
-`DELETE /:conversationId`
-
-```json
-{
-    "messageId": 10
-}
-```
-
-## dùng với chat user-user
+| Event                | Mô tả                                 |
+| -------------------- | ------------------------------------- |
+| `message`            | Nhận/gửi tin nhắn mới                 |
+| `typing`             | Typing indicator                      |
+| `online` / `offline` | Trạng thái online                     |
+| `admin:stats`        | Cập nhật thống kê real-time cho admin |
 
 ---
 
-## 7. Streaming (SSE)
+## 🗺️ Roadmap
 
-### Stream AI response
-
-`GET /stream/:conversationId`
-
-Response headers:
-
-```
-Content-Type: text/event-stream
-Cache-Control: no-cache
-Connection: keep-alive
-```
-
-Event example:
-
-```
-data: {"content": "AI response chunk"}
-```
+- [ ] Logging & monitoring (Winston / Grafana)
+- [ ] Unit & integration testing
+- [ ] CI/CD pipeline
+- [ ] Notification system
+- [ ] Full-text search cho tin nhắn
+- [ ] Emoji & reactions
+- [ ] Message pinning
+- [ ] Group roles & permissions
 
 ---
 
-## 8. Kiến trúc thư mục
+## 📌 Notes
 
-```
-src/
- ├─ controllers/
- ├─ services/
- ├─ middlewares/
- ├─ routes/
- ├─ utils/
- └─ schedules/
- └─ service/
- └─ utils/
- └─ schemas/
-
-
-```
-
-- **controllers**: nhận request, sử lí validate / response
-- **services**: xử lý business logic
-- **middlewares**: auth, rate limit
-- **utils**: helper functions
-- **schema**: validate input
+- Đảm bảo MySQL và Redis đang chạy trước khi start server
+- Dùng Swagger tại `/docs` để test API
+- Restart server sau khi thay đổi `.env`
 
 ---
 
-📌 Notes
-Ensure database & Redis are running before starting server
-Restart server after updating .env
-Use Swagger (/docs) for API testing
+## 👤 Author
 
-## 9. In Progress / Planned
-
-- Video upload support
-- Notification System
-- Unit & integration testing
-- Unit & integration testing
-- Logging & monitoring (Winston / Grafana)
-- CI/CD pipeline
-
--- Potential Enhancements
-😊 Emoji & reactions
-📌 Message pinning
-🔍 Full-text search for messages
-👥 Group chat improvements (roles, permissions)
-📱 Mobile optimization (PWA / React Native)
-
----
-
-## 10 Project Goals
-
-Practice backend architecture
-Implement authentication & security
-Build real-time streaming system
-
-✍️ Author: TruongVD
+**Vũ Đình Trường**  
+📧 truongbk444@gmail.com  
+🐙 [github.com/truongvd05](https://github.com/truongvd05)
