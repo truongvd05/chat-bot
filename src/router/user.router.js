@@ -14,7 +14,8 @@ router.use(authMeRequired);
 
 router.get(
     "/friends",
-    rateLimitServce.defaultAuthRateLimit(),
+    rateLimitServce.defaultPerMinuteRateLimit(),
+    rateLimitServce.defaultPerDayRateLimit(),
     asyneHandle(userController.getFriend),
 );
 
@@ -44,6 +45,13 @@ router.post(
     rateLimitServce.defaultAuthRateLimit(),
     parseRequestId,
     asyneHandle(userController.acceptFriend),
+);
+
+router.post(
+    "/unfriend",
+    rateLimitServce.defaultAuthRateLimit(),
+    parseTargetId,
+    asyneHandle(userController.unFriend),
 );
 
 router.post(

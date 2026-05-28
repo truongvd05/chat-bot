@@ -24,11 +24,23 @@ class UserController {
         const result = await userService.blockUser(user.id, targetUserId);
         return res.success(result, HTTP_STATUS.OK);
     }
+    async unFriend(req, res) {
+        const user = req.user;
+        const targetUserId = req.targetUserId;
+
+        if (targetUserId === user.id) {
+            throw new AppError(
+                "CANNOT_UNFRIEND_YOURSELF",
+                HTTP_STATUS.BAD_REQUEST,
+            );
+        }
+
+        const result = await userService.unFriend(user.id, targetUserId);
+        return res.success(result, HTTP_STATUS.NO_CONTENT);
+    }
     async unblockUser(req, res) {
         const user = req.user;
-        if (!user) return res.unauthorized();
-
-        const targetUserId = req.id;
+        const targetUserId = req.targetUserId;
 
         if (targetUserId === user.id) {
             throw new AppError(
@@ -37,7 +49,7 @@ class UserController {
             );
         }
         const result = await userService.unblockUser(user.id, targetUserId);
-        return res.success(result);
+        return res.success(result, HTTP_STATUS.OK);
     }
     async searchUsers(req, res) {
         const user = req.user;

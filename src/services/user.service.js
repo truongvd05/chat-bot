@@ -17,6 +17,9 @@ class UserService {
                         id: true,
                         name: true,
                         avatarUrl: true,
+                        bio: true,
+                        gender: true,
+                        birthday: true,
                     },
                 },
                 addressee: {
@@ -24,6 +27,9 @@ class UserService {
                         id: true,
                         name: true,
                         avatarUrl: true,
+                        bio: true,
+                        gender: true,
+                        birthday: true,
                     },
                 },
             },
@@ -366,6 +372,23 @@ class UserService {
         }
 
         return serializeBigInt(updated);
+    }
+    async unFriend(userId, targetUserId) {
+        const result = await prisma.friend.deleteMany({
+            where: {
+                OR: [
+                    { requesterId: userId, addresseeId: targetUserId },
+                    { requesterId: targetUserId, addresseeId: userId },
+                ],
+                status: "ACCEPTED",
+            },
+        });
+
+        if (result.count === 0) {
+            throw new Error("Friendship not found");
+        }
+
+        return true;
     }
     async editUser(userId, data) {
         const update = await prisma.user.update({
