@@ -5,6 +5,7 @@ import rateLimitServce from "#services/rateLimit.servce.js";
 import asyneHandle from "#middlewares/asyneHandle.js";
 import parseTargetId from "#middlewares/parseTargerId.js";
 import upload from "#middlewares/upload.js";
+import parseRequestId from "#middlewares/parseRequestId.js";
 
 const router = express.Router();
 
@@ -41,8 +42,15 @@ router.post(
 router.post(
     "/accept-friend",
     rateLimitServce.defaultAuthRateLimit(),
-    parseTargetId,
+    parseRequestId,
     asyneHandle(userController.acceptFriend),
+);
+
+router.post(
+    "/reject-friend",
+    rateLimitServce.defaultAuthRateLimit(),
+    parseRequestId,
+    asyneHandle(userController.rejectFriend),
 );
 
 router.get(

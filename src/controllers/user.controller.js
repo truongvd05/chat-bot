@@ -64,12 +64,18 @@ class UserController {
         const user = req.user;
         const targetUserId = req.targetUserId;
         const add = await userService.addFriend(user.id, targetUserId);
-        return res.success(add, HTTP_STATUS.OK);
+        return res.success(add, HTTP_STATUS.CREATED);
     }
     async acceptFriend(req, res) {
         const user = req.user;
-        const targetUserId = req.targetUserId;
-        const add = await userService.acceptFriend(user.id, targetUserId);
+        const requestId = req.requestId;
+        const add = await userService.acceptFriend(user.id, requestId);
+        return res.success(add, HTTP_STATUS.OK);
+    }
+    async rejectFriend(req, res) {
+        const user = req.user;
+        const requestId = req.requestId;
+        const add = await userService.rejectFriend(user.id, requestId);
         return res.success(add, HTTP_STATUS.OK);
     }
     async updateAvatar(req, res) {
@@ -83,6 +89,7 @@ class UserController {
 
         return res.success(upload, HTTP_STATUS.OK);
     }
+
     async editUser(req, res) {
         const result = editUserSchema.safeParse(req.body);
 

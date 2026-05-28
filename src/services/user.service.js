@@ -147,7 +147,7 @@ class UserService {
         });
         if (!existing) return true;
         // chưa thì unblock
-        const unblocked = await prisma.userBlock.delete({
+        const unblocked = await prisma.userBlock.update({
             where: {
                 blockerId_blockedId: {
                     blockerId: userId,
@@ -197,17 +197,45 @@ class UserService {
             );
         }
 
-        // check xem đã gửi lời mời chưa
-        const existing = await prisma.friend.findUnique({
+        // check xem đã gửi lời mời chưa (check 2 chiều )
+        const existing = await prisma.friend.findFirst({
             where: {
-                requesterId_addresseeId: {
-                    requesterId: userId,
-                    addresseeId: targetUserId,
-                },
+                OR: [
+                    { requesterId: userId, addresseeId: targetUserId },
+                    { requesterId: targetUserId, addresseeId: userId },
+                ],
             },
         });
         // gửi rồi thì
-        if (existing) return true;
+        if (existing) {
+            if (existing.status === "PENDING") {
+                // người kia đã gửi mình trước → tự động accept luôn
+                if (existing.requesterId === targetUserId) {
+                    return this.acceptFriend(userId, targetUserId);
+                }
+                throw new AppError(
+                    "Đã gửi lời mời kết bạn rồi",
+                    HTTP_STATUS.CONFLICT,
+                );
+            }
+            if (existing.status === "ACCEPTED") {
+                throw new AppError(
+                    "Hai người đã là bạn bè",
+                    HTTP_STATUS.CONFLICT,
+                );
+            }
+            // bị từ chối thì cho gửi lại
+            if (existing.status === "REJECTED") {
+                await prisma.friend.delete({
+                    where: {
+                        requesterId_addresseeId: {
+                            requesterId: existing.requesterId,
+                            addresseeId: existing.addresseeId,
+                        },
+                    },
+                });
+            }
+        }
 
         const [add] = await prisma.$transaction([
             prisma.friend.create({
@@ -228,17 +256,17 @@ class UserService {
 
         return serializeBigInt(add);
     }
-    async acceptFriend(userId, targetUserId) {
+    async acceptFriend(userId, requestId) {
         const request = await prisma.friend.findUnique({
             where: {
                 requesterId_addresseeId: {
-                    requesterId: targetUserId,
+                    requesterId: requestId,
                     addresseeId: userId,
                 },
-                status: "PENDING",
             },
         });
-        if (!request) {
+
+        if (!request || request.status !== "PENDING") {
             throw new AppError(
                 "Không tìm thấy lời mời kết bạn",
                 HTTP_STATUS.NOT_FOUND,
@@ -248,7 +276,7 @@ class UserService {
             prisma.friend.update({
                 where: {
                     requesterId_addresseeId: {
-                        requesterId: targetUserId,
+                        requesterId: requestId,
                         addresseeId: userId,
                     },
                 },
@@ -256,13 +284,45 @@ class UserService {
             }),
             prisma.notification.create({
                 data: {
-                    receiverId: targetUserId, // người gửi lời mời nhận thông báo
+                    receiverId: requestId, // người gửi lời mời nhận thông báo
                     senderId: userId, // người chấp nhận
                     type: "FRIEND_ACCEPTED",
                 },
             }),
         ]);
         return serializeBigInt(accept);
+    }
+
+    async rejectFriend(userId, requestId) {
+        console.log(userId, requestId);
+
+        const request = await prisma.friend.findFirst({
+            where: {
+                OR: [
+                    { requesterId: requestId, addresseeId: userId },
+                    { requesterId: userId, addresseeId: requestId },
+                ],
+                status: "PENDING",
+            },
+        });
+
+        console.log(request);
+
+        if (!request) {
+            throw new AppError(
+                "Không tìm thấy lời mời kết bạn",
+                HTTP_STATUS.NOT_FOUND,
+            );
+        }
+        const reject = await prisma.friend.delete({
+            where: {
+                requesterId_addresseeId: {
+                    requesterId: request.requesterId,
+                    addresseeId: request.addresseeId,
+                },
+            },
+        });
+        return serializeBigInt(reject);
     }
     async updateAvatar(userId, file) {
         // . Lấy avatar cũ để xóa sau

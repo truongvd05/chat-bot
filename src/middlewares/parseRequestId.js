@@ -7,15 +7,15 @@ const targetUserIdSchema = z
     .regex(/^\d+$/)
     .transform((val) => BigInt(val));
 
-function parseTargetId(req, _, next) {
-    const result = targetUserIdSchema.safeParse(req.body.targetUserId);
+function parseRequestId(req, _, next) {
+    const result = targetUserIdSchema.safeParse(req.body.requestId);
 
     if (!result.success) {
-        throw new AppError("Invalid targetUser id", HTTP_STATUS.BAD_REQUEST);
+        throw new AppError("Invalid requestId id", HTTP_STATUS.BAD_REQUEST);
     }
 
-    req.targetUserId = result.data;
+    req.requestId = result.data;
     next();
 }
 
-export default parseTargetId;
+export default parseRequestId;
