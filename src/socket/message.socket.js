@@ -1,4 +1,5 @@
 import prisma from "#libs/prisma.js";
+import aiService from "#services/ai.service.js";
 import conversationService from "#services/conversation.service.js";
 import messageService from "#services/message.service.js";
 import AppError from "#utils/AppError.js";
@@ -59,6 +60,16 @@ export default function registerMessageSocket(io, socket) {
                             conversationId,
                             fromUserId: senderId,
                         });
+                    }
+                    // Chỉ suggest cho DIRECT conversation
+                    if (conversation.type === "DIRECT") {
+                        if (p.userId !== senderId) {
+                            aiService
+                                .suggest(content, conversationId, p.userId, io)
+                                .catch((err) =>
+                                    console.error("AI suggest error:", err),
+                                );
+                        }
                     }
                 }
             } catch (err) {

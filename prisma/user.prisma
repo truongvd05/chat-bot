@@ -5,6 +5,7 @@ model User {
   phonenumber     String?    @unique @map("phone_number")
   gender          String?
   bio             String?
+  aiSuggest       Boolean    @default(true) @map("ai_suggest")
   role            UserRole   @default(USER)
   status          UserStatus @default(ACTIVE)
   birthday        String?    @map("birthday")

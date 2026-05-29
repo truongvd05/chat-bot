@@ -21637,6 +21637,7 @@ export namespace Prisma {
     phonenumber: string | null
     gender: string | null
     bio: string | null
+    aiSuggest: boolean | null
     role: $Enums.UserRole | null
     status: $Enums.UserStatus | null
     birthday: string | null
@@ -21655,6 +21656,7 @@ export namespace Prisma {
     phonenumber: string | null
     gender: string | null
     bio: string | null
+    aiSuggest: boolean | null
     role: $Enums.UserRole | null
     status: $Enums.UserStatus | null
     birthday: string | null
@@ -21673,6 +21675,7 @@ export namespace Prisma {
     phonenumber: number
     gender: number
     bio: number
+    aiSuggest: number
     role: number
     status: number
     birthday: number
@@ -21701,6 +21704,7 @@ export namespace Prisma {
     phonenumber?: true
     gender?: true
     bio?: true
+    aiSuggest?: true
     role?: true
     status?: true
     birthday?: true
@@ -21719,6 +21723,7 @@ export namespace Prisma {
     phonenumber?: true
     gender?: true
     bio?: true
+    aiSuggest?: true
     role?: true
     status?: true
     birthday?: true
@@ -21737,6 +21742,7 @@ export namespace Prisma {
     phonenumber?: true
     gender?: true
     bio?: true
+    aiSuggest?: true
     role?: true
     status?: true
     birthday?: true
@@ -21842,6 +21848,7 @@ export namespace Prisma {
     phonenumber: string | null
     gender: string | null
     bio: string | null
+    aiSuggest: boolean
     role: $Enums.UserRole
     status: $Enums.UserStatus
     birthday: string | null
@@ -21879,6 +21886,7 @@ export namespace Prisma {
     phonenumber?: boolean
     gender?: boolean
     bio?: boolean
+    aiSuggest?: boolean
     role?: boolean
     status?: boolean
     birthday?: boolean
@@ -21917,6 +21925,7 @@ export namespace Prisma {
     phonenumber?: boolean
     gender?: boolean
     bio?: boolean
+    aiSuggest?: boolean
     role?: boolean
     status?: boolean
     birthday?: boolean
@@ -21928,7 +21937,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "name" | "phonenumber" | "gender" | "bio" | "role" | "status" | "birthday" | "avatarUrl" | "backgroundUrl" | "password" | "emailVerifiedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "name" | "phonenumber" | "gender" | "bio" | "aiSuggest" | "role" | "status" | "birthday" | "avatarUrl" | "backgroundUrl" | "password" | "emailVerifiedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     refreshTokens?: boolean | User$refreshTokensArgs<ExtArgs>
     conversationParticipants?: boolean | User$conversationParticipantsArgs<ExtArgs>
@@ -21978,6 +21987,7 @@ export namespace Prisma {
       phonenumber: string | null
       gender: string | null
       bio: string | null
+      aiSuggest: boolean
       role: $Enums.UserRole
       status: $Enums.UserStatus
       birthday: string | null
@@ -22379,6 +22389,7 @@ export namespace Prisma {
     readonly phonenumber: FieldRef<"User", 'String'>
     readonly gender: FieldRef<"User", 'String'>
     readonly bio: FieldRef<"User", 'String'>
+    readonly aiSuggest: FieldRef<"User", 'Boolean'>
     readonly role: FieldRef<"User", 'UserRole'>
     readonly status: FieldRef<"User", 'UserStatus'>
     readonly birthday: FieldRef<"User", 'String'>
@@ -24391,6 +24402,7 @@ export namespace Prisma {
     phonenumber: 'phonenumber',
     gender: 'gender',
     bio: 'bio',
+    aiSuggest: 'aiSuggest',
     role: 'role',
     status: 'status',
     birthday: 'birthday',
@@ -25998,6 +26010,7 @@ export namespace Prisma {
     phonenumber?: StringNullableFilter<"User"> | string | null
     gender?: StringNullableFilter<"User"> | string | null
     bio?: StringNullableFilter<"User"> | string | null
+    aiSuggest?: BoolFilter<"User"> | boolean
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
     status?: EnumUserStatusFilter<"User"> | $Enums.UserStatus
     birthday?: StringNullableFilter<"User"> | string | null
@@ -26033,6 +26046,7 @@ export namespace Prisma {
     phonenumber?: SortOrderInput | SortOrder
     gender?: SortOrderInput | SortOrder
     bio?: SortOrderInput | SortOrder
+    aiSuggest?: SortOrder
     role?: SortOrder
     status?: SortOrder
     birthday?: SortOrderInput | SortOrder
@@ -26072,6 +26086,7 @@ export namespace Prisma {
     name?: StringFilter<"User"> | string
     gender?: StringNullableFilter<"User"> | string | null
     bio?: StringNullableFilter<"User"> | string | null
+    aiSuggest?: BoolFilter<"User"> | boolean
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
     status?: EnumUserStatusFilter<"User"> | $Enums.UserStatus
     birthday?: StringNullableFilter<"User"> | string | null
@@ -26107,6 +26122,7 @@ export namespace Prisma {
     phonenumber?: SortOrderInput | SortOrder
     gender?: SortOrderInput | SortOrder
     bio?: SortOrderInput | SortOrder
+    aiSuggest?: SortOrder
     role?: SortOrder
     status?: SortOrder
     birthday?: SortOrderInput | SortOrder
@@ -26133,6 +26149,7 @@ export namespace Prisma {
     phonenumber?: StringNullableWithAggregatesFilter<"User"> | string | null
     gender?: StringNullableWithAggregatesFilter<"User"> | string | null
     bio?: StringNullableWithAggregatesFilter<"User"> | string | null
+    aiSuggest?: BoolWithAggregatesFilter<"User"> | boolean
     role?: EnumUserRoleWithAggregatesFilter<"User"> | $Enums.UserRole
     status?: EnumUserStatusWithAggregatesFilter<"User"> | $Enums.UserStatus
     birthday?: StringNullableWithAggregatesFilter<"User"> | string | null
@@ -27467,6 +27484,7 @@ export namespace Prisma {
     phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    aiSuggest?: boolean
     role?: $Enums.UserRole
     status?: $Enums.UserStatus
     birthday?: string | null
@@ -27502,6 +27520,7 @@ export namespace Prisma {
     phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    aiSuggest?: boolean
     role?: $Enums.UserRole
     status?: $Enums.UserStatus
     birthday?: string | null
@@ -27537,6 +27556,7 @@ export namespace Prisma {
     phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSuggest?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27572,6 +27592,7 @@ export namespace Prisma {
     phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSuggest?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27607,6 +27628,7 @@ export namespace Prisma {
     phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    aiSuggest?: boolean
     role?: $Enums.UserRole
     status?: $Enums.UserStatus
     birthday?: string | null
@@ -27625,6 +27647,7 @@ export namespace Prisma {
     phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSuggest?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27643,6 +27666,7 @@ export namespace Prisma {
     phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSuggest?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29212,6 +29236,7 @@ export namespace Prisma {
     phonenumber?: SortOrder
     gender?: SortOrder
     bio?: SortOrder
+    aiSuggest?: SortOrder
     role?: SortOrder
     status?: SortOrder
     birthday?: SortOrder
@@ -29234,6 +29259,7 @@ export namespace Prisma {
     phonenumber?: SortOrder
     gender?: SortOrder
     bio?: SortOrder
+    aiSuggest?: SortOrder
     role?: SortOrder
     status?: SortOrder
     birthday?: SortOrder
@@ -29252,6 +29278,7 @@ export namespace Prisma {
     phonenumber?: SortOrder
     gender?: SortOrder
     bio?: SortOrder
+    aiSuggest?: SortOrder
     role?: SortOrder
     status?: SortOrder
     birthday?: SortOrder
@@ -31800,6 +31827,7 @@ export namespace Prisma {
     phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    aiSuggest?: boolean
     role?: $Enums.UserRole
     status?: $Enums.UserStatus
     birthday?: string | null
@@ -31834,6 +31862,7 @@ export namespace Prisma {
     phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    aiSuggest?: boolean
     role?: $Enums.UserRole
     status?: $Enums.UserStatus
     birthday?: string | null
@@ -31884,6 +31913,7 @@ export namespace Prisma {
     phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSuggest?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31918,6 +31948,7 @@ export namespace Prisma {
     phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSuggest?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31952,6 +31983,7 @@ export namespace Prisma {
     phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    aiSuggest?: boolean
     role?: $Enums.UserRole
     status?: $Enums.UserStatus
     birthday?: string | null
@@ -31986,6 +32018,7 @@ export namespace Prisma {
     phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    aiSuggest?: boolean
     role?: $Enums.UserRole
     status?: $Enums.UserStatus
     birthday?: string | null
@@ -32036,6 +32069,7 @@ export namespace Prisma {
     phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSuggest?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32070,6 +32104,7 @@ export namespace Prisma {
     phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSuggest?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32178,6 +32213,7 @@ export namespace Prisma {
     phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    aiSuggest?: boolean
     role?: $Enums.UserRole
     status?: $Enums.UserStatus
     birthday?: string | null
@@ -32212,6 +32248,7 @@ export namespace Prisma {
     phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    aiSuggest?: boolean
     role?: $Enums.UserRole
     status?: $Enums.UserStatus
     birthday?: string | null
@@ -32418,6 +32455,7 @@ export namespace Prisma {
     phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSuggest?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32452,6 +32490,7 @@ export namespace Prisma {
     phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSuggest?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32626,6 +32665,7 @@ export namespace Prisma {
     phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    aiSuggest?: boolean
     role?: $Enums.UserRole
     status?: $Enums.UserStatus
     birthday?: string | null
@@ -32660,6 +32700,7 @@ export namespace Prisma {
     phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    aiSuggest?: boolean
     role?: $Enums.UserRole
     status?: $Enums.UserStatus
     birthday?: string | null
@@ -32755,6 +32796,7 @@ export namespace Prisma {
     phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSuggest?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32789,6 +32831,7 @@ export namespace Prisma {
     phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSuggest?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32823,6 +32866,7 @@ export namespace Prisma {
     phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    aiSuggest?: boolean
     role?: $Enums.UserRole
     status?: $Enums.UserStatus
     birthday?: string | null
@@ -32857,6 +32901,7 @@ export namespace Prisma {
     phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    aiSuggest?: boolean
     role?: $Enums.UserRole
     status?: $Enums.UserStatus
     birthday?: string | null
@@ -32946,6 +32991,7 @@ export namespace Prisma {
     phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSuggest?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32980,6 +33026,7 @@ export namespace Prisma {
     phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSuggest?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33059,6 +33106,7 @@ export namespace Prisma {
     phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    aiSuggest?: boolean
     role?: $Enums.UserRole
     status?: $Enums.UserStatus
     birthday?: string | null
@@ -33093,6 +33141,7 @@ export namespace Prisma {
     phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    aiSuggest?: boolean
     role?: $Enums.UserRole
     status?: $Enums.UserStatus
     birthday?: string | null
@@ -33132,6 +33181,7 @@ export namespace Prisma {
     phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    aiSuggest?: boolean
     role?: $Enums.UserRole
     status?: $Enums.UserStatus
     birthday?: string | null
@@ -33166,6 +33216,7 @@ export namespace Prisma {
     phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    aiSuggest?: boolean
     role?: $Enums.UserRole
     status?: $Enums.UserStatus
     birthday?: string | null
@@ -33216,6 +33267,7 @@ export namespace Prisma {
     phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSuggest?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33250,6 +33302,7 @@ export namespace Prisma {
     phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSuggest?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33295,6 +33348,7 @@ export namespace Prisma {
     phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSuggest?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33329,6 +33383,7 @@ export namespace Prisma {
     phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSuggest?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33402,6 +33457,7 @@ export namespace Prisma {
     phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    aiSuggest?: boolean
     role?: $Enums.UserRole
     status?: $Enums.UserStatus
     birthday?: string | null
@@ -33436,6 +33492,7 @@ export namespace Prisma {
     phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    aiSuggest?: boolean
     role?: $Enums.UserRole
     status?: $Enums.UserStatus
     birthday?: string | null
@@ -33714,6 +33771,7 @@ export namespace Prisma {
     phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSuggest?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33748,6 +33806,7 @@ export namespace Prisma {
     phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSuggest?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33999,6 +34058,7 @@ export namespace Prisma {
     phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    aiSuggest?: boolean
     role?: $Enums.UserRole
     status?: $Enums.UserStatus
     birthday?: string | null
@@ -34033,6 +34093,7 @@ export namespace Prisma {
     phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    aiSuggest?: boolean
     role?: $Enums.UserRole
     status?: $Enums.UserStatus
     birthday?: string | null
@@ -34072,6 +34133,7 @@ export namespace Prisma {
     phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    aiSuggest?: boolean
     role?: $Enums.UserRole
     status?: $Enums.UserStatus
     birthday?: string | null
@@ -34106,6 +34168,7 @@ export namespace Prisma {
     phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    aiSuggest?: boolean
     role?: $Enums.UserRole
     status?: $Enums.UserStatus
     birthday?: string | null
@@ -34269,6 +34332,7 @@ export namespace Prisma {
     phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSuggest?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
@@ -34303,6 +34367,7 @@ export namespace Prisma {
     phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSuggest?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
@@ -34348,6 +34413,7 @@ export namespace Prisma {
     phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSuggest?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
@@ -34382,6 +34448,7 @@ export namespace Prisma {
     phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSuggest?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
@@ -34547,6 +34614,7 @@ export namespace Prisma {
     phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    aiSuggest?: boolean
     role?: $Enums.UserRole
     status?: $Enums.UserStatus
     birthday?: string | null
@@ -34581,6 +34649,7 @@ export namespace Prisma {
     phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    aiSuggest?: boolean
     role?: $Enums.UserRole
     status?: $Enums.UserStatus
     birthday?: string | null
@@ -34813,6 +34882,7 @@ export namespace Prisma {
     phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSuggest?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
@@ -34847,6 +34917,7 @@ export namespace Prisma {
     phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSuggest?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
@@ -35178,6 +35249,7 @@ export namespace Prisma {
     phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    aiSuggest?: boolean
     role?: $Enums.UserRole
     status?: $Enums.UserStatus
     birthday?: string | null
@@ -35212,6 +35284,7 @@ export namespace Prisma {
     phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    aiSuggest?: boolean
     role?: $Enums.UserRole
     status?: $Enums.UserStatus
     birthday?: string | null
@@ -35305,6 +35378,7 @@ export namespace Prisma {
     phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSuggest?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
@@ -35339,6 +35413,7 @@ export namespace Prisma {
     phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSuggest?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
@@ -35410,6 +35485,7 @@ export namespace Prisma {
     phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    aiSuggest?: boolean
     role?: $Enums.UserRole
     status?: $Enums.UserStatus
     birthday?: string | null
@@ -35444,6 +35520,7 @@ export namespace Prisma {
     phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    aiSuggest?: boolean
     role?: $Enums.UserRole
     status?: $Enums.UserStatus
     birthday?: string | null
@@ -35596,6 +35673,7 @@ export namespace Prisma {
     phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSuggest?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
@@ -35630,6 +35708,7 @@ export namespace Prisma {
     phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSuggest?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
@@ -35750,6 +35829,7 @@ export namespace Prisma {
     phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    aiSuggest?: boolean
     role?: $Enums.UserRole
     status?: $Enums.UserStatus
     birthday?: string | null
@@ -35784,6 +35864,7 @@ export namespace Prisma {
     phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    aiSuggest?: boolean
     role?: $Enums.UserRole
     status?: $Enums.UserStatus
     birthday?: string | null
@@ -35877,6 +35958,7 @@ export namespace Prisma {
     phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSuggest?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
@@ -35911,6 +35993,7 @@ export namespace Prisma {
     phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSuggest?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
@@ -36099,6 +36182,7 @@ export namespace Prisma {
     phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    aiSuggest?: boolean
     role?: $Enums.UserRole
     status?: $Enums.UserStatus
     birthday?: string | null
@@ -36133,6 +36217,7 @@ export namespace Prisma {
     phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    aiSuggest?: boolean
     role?: $Enums.UserRole
     status?: $Enums.UserStatus
     birthday?: string | null
@@ -36220,6 +36305,7 @@ export namespace Prisma {
     phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSuggest?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
@@ -36254,6 +36340,7 @@ export namespace Prisma {
     phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSuggest?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
@@ -37169,6 +37256,7 @@ export namespace Prisma {
     phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    aiSuggest?: boolean
     role?: $Enums.UserRole
     status?: $Enums.UserStatus
     birthday?: string | null
@@ -37203,6 +37291,7 @@ export namespace Prisma {
     phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    aiSuggest?: boolean
     role?: $Enums.UserRole
     status?: $Enums.UserStatus
     birthday?: string | null
@@ -37242,6 +37331,7 @@ export namespace Prisma {
     phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    aiSuggest?: boolean
     role?: $Enums.UserRole
     status?: $Enums.UserStatus
     birthday?: string | null
@@ -37276,6 +37366,7 @@ export namespace Prisma {
     phonenumber?: string | null
     gender?: string | null
     bio?: string | null
+    aiSuggest?: boolean
     role?: $Enums.UserRole
     status?: $Enums.UserStatus
     birthday?: string | null
@@ -37326,6 +37417,7 @@ export namespace Prisma {
     phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSuggest?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
@@ -37360,6 +37452,7 @@ export namespace Prisma {
     phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSuggest?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
@@ -37405,6 +37498,7 @@ export namespace Prisma {
     phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSuggest?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null
@@ -37439,6 +37533,7 @@ export namespace Prisma {
     phonenumber?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
+    aiSuggest?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     birthday?: NullableStringFieldUpdateOperationsInput | string | null

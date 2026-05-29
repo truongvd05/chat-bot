@@ -301,6 +301,7 @@ exports.Prisma.UserScalarFieldEnum = {
   phonenumber: 'phonenumber',
   gender: 'gender',
   bio: 'bio',
+  aiSuggest: 'aiSuggest',
   role: 'role',
   status: 'status',
   birthday: 'birthday',

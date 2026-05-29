@@ -161,6 +161,22 @@ class MessageService {
 
         return serializeBigInt(messages.reverse());
     }
+    async getRecentMessages(conversationId, limit = 10) {
+        const history = await prisma.message.findMany({
+            where: {
+                conversationId,
+                deletedAt: null,
+                content: { not: "" },
+            },
+            orderBy: { createdAt: "desc" },
+            take: limit,
+            select: {
+                content: true,
+                user: { select: { name: true } },
+            },
+        });
+        return serializeBigInt(history);
+    }
 }
 
 export default new MessageService();

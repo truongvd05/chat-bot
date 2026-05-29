@@ -54,6 +54,13 @@ router.post(
     asyneHandle(userController.unFriend),
 );
 
+router.patch(
+    "/ai-suggest",
+    rateLimitServce.defaultPerMinuteRateLimit(),
+    rateLimitServce.defaultPerDayRateLimit(),
+    asyneHandle(userController.toggleAiSuggest),
+);
+
 router.post(
     "/reject-friend",
     rateLimitServce.defaultAuthRateLimit(),

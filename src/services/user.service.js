@@ -431,6 +431,14 @@ class UserService {
         });
         return serializeBigInt(me);
     }
+    async toggleAiSuggest(userId, aiSuggest) {
+        const update = await prisma.user.update({
+            where: { id: userId },
+            data: { aiSuggest },
+            select: { aiSuggest: true },
+        });
+        return serializeBigInt(update);
+    }
 }
 
 export default new UserService();

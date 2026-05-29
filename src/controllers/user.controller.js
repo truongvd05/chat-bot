@@ -130,6 +130,21 @@ class UserController {
         const me = userService.getMe(user.id);
         return res.success(me, HTTP_STATUS.OK);
     }
+    async toggleAiSuggest(req, res) {
+        const user = req.user;
+        const { aiSuggest } = req.body;
+
+        if (typeof aiSuggest !== "boolean") {
+            return res.error(
+                "aiSuggest phải là boolean",
+                HTTP_STATUS.BAD_REQUEST,
+            );
+        }
+
+        const updated = await userService.toggleAiSuggest(user.id, aiSuggest);
+
+        res.success(updated, HTTP_STATUS.OK);
+    }
 }
 
 export default new UserController();

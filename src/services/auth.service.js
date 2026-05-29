@@ -21,6 +21,7 @@ class AuthService {
                 name: true,
                 bio: true,
                 gender: true,
+                aiSuggest: true,
                 birthday: true,
                 emailVerifiedAt: true,
                 createdAt: true,
