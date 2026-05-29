@@ -93,7 +93,6 @@ export default function registerMessageSocket(io, socket) {
                     messageId,
                     conversationId,
                     content,
-                    io,
                 );
 
                 const participants =
@@ -108,7 +107,26 @@ export default function registerMessageSocket(io, socket) {
         },
     );
 
-    socket.on("delete_message", async ({ messageId }) => {
-        // ... logic delete
+    socket.on("delete_message", async ({ messageId, conversationId }) => {
+        try {
+            const userId = socket.userId;
+            const message = await messageService.deleteMessage(
+                userId,
+                messageId,
+                conversationId,
+            );
+
+            console.log(message);
+
+            const participants =
+                await conversationService.finDparticipants(conversationId);
+
+            for (const p of participants) {
+                io.to(`user_${p.userId}`).emit("message_deleted", message);
+            }
+        } catch (err) {
+            console.error("Edit message error:", err);
+            socket.emit("error_message", "Không xóa được tin nhắn");
+        }
     });
 }

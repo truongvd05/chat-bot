@@ -165,8 +165,11 @@ class UserService {
         return serializeBigInt(unblocked);
     }
     async searchUsers(userId, keyword) {
-        const user = await prisma.user.findUnique({
-            where: { phonenumber: keyword },
+        const user = await prisma.user.findFirst({
+            where: {
+                id: { not: userId },
+                OR: [{ phonenumber: keyword }, { email: keyword }],
+            },
             select: {
                 id: true,
                 name: true,

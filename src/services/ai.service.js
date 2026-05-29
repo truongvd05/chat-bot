@@ -60,9 +60,8 @@ class AiService {
         } catch (err) {
             if (err?.statusCode === 429) {
                 console.warn("AI rate limit exceeded, skipping suggest");
-                return; // im lặng, không throw lỗi
+                return; // im lặng, không throw lỗigit
             }
-            console.log(err);
         } finally {
             io.to(`user_${userId}`).emit("bot_thinking", {
                 conversationId,
@@ -76,11 +75,18 @@ class AiService {
             10,
         );
 
-        const { text } = await generateText({
-            model: agent(process.env.AI_MODEL),
-            prompt: this.#buildPrompt(history, lastMessage),
-        });
-        return this.#parseJson(text);
+        try {
+            const { text } = await generateText({
+                model: agent(process.env.AI_MODEL),
+                prompt: this.#buildPrompt(history, lastMessage),
+            });
+            return this.#parseJson(text);
+        } catch (err) {
+            if (err?.statusCode === 429) {
+                console.warn("AI rate limit exceeded, skipping suggest");
+                return; // im lặng, không throw lỗigit
+            }
+        }
     }
 }
 

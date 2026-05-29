@@ -10,7 +10,7 @@ import { ensureConversationMember } from "#permissions/conversation.permission.j
 import uploadFile from "#utils/uploadFile.js";
 
 class MessageService {
-    async deleteMessage(userId, messageId) {
+    async deleteMessage(userId, messageId, io) {
         await ensureMessageOwner(messageId, userId);
 
         const update = await prisma.message.update({
