@@ -9,6 +9,7 @@ class AiController {
         if (!lastMessage?.trim()) {
             return res.success([], HTTP_STATUS.OK);
         }
+
         if (!user.aiSuggest) return res.success([], HTTP_STATUS.OK);
 
         const userId = req.user.id;

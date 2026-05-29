@@ -58,8 +58,11 @@ class AiService {
             });
             console.log(suggestions);
         } catch (err) {
+            if (err?.statusCode === 429) {
+                console.warn("AI rate limit exceeded, skipping suggest");
+                return; // im lặng, không throw lỗi
+            }
             console.log(err);
-            throw new AppError("cannot connected");
         } finally {
             io.to(`user_${userId}`).emit("bot_thinking", {
                 conversationId,
