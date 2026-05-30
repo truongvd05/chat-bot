@@ -116,8 +116,6 @@ export default function registerMessageSocket(io, socket) {
                 conversationId,
             );
 
-            console.log(message);
-
             const participants =
                 await conversationService.finDparticipants(conversationId);
 

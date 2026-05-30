@@ -563,19 +563,24 @@ class ConversationService {
 
         const memberIds = members.map((m) => m.userId);
 
-        const users = await prisma.user.findMany({
+        const user = await prisma.user.findFirst({
             where: {
-                OR: [{ name: { contains: q } }, { email: { contains: q } }],
+                OR: [
+                    { phonenumber: { contains: q } },
+                    { email: { contains: q } },
+                ],
                 id: { notIn: [...memberIds, userId] },
             },
-            take: 20,
             select: {
                 id: true,
                 name: true,
                 email: true,
             },
         });
-        return serializeBigInt(users);
+
+        if (!user)
+            throw new AppError("user not found", HTTP_STATUS.BAD_REQUEST);
+        return serializeBigInt(user);
     }
     async leaveGroup(userId, conversationId, io) {
         const { participant } = await ensureConversationMember(

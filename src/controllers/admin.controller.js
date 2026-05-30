@@ -25,8 +25,6 @@ class AdminController {
 
         const { email, password } = result.data;
 
-        console.log(email, password);
-
         const { user, token } = await adminService.login(email, password);
 
         return res.success({ user, token }, 200);

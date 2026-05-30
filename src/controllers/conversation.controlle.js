@@ -15,9 +15,11 @@ import {
 class ConversationController {
     async getConversations(req, res) {
         const user = req.user;
+
         const conversations = await conversationService.getConversations(
             user.id,
         );
+
         return res.success(conversations, HTTP_STATUS.OK);
     }
 
@@ -188,6 +190,7 @@ class ConversationController {
             conversationId,
             q,
         );
+
         return res.success(search, HTTP_STATUS.CREATED);
     }
     async promoteToAdmin(req, res) {

@@ -19,8 +19,6 @@ import admin from "#config/firebase-admin.js";
 
 class AuthController {
     async register(req, res) {
-        console.log(req.body);
-
         const result = registerSchema.safeParse(req.body);
 
         if (!result.success) {
@@ -29,7 +27,6 @@ class AuthController {
                 HTTP_STATUS.BAD_REQUEST,
             );
         }
-        console.log(result);
 
         const { name, email, password, phonenumber } = result.data;
 

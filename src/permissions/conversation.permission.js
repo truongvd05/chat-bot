@@ -1,4 +1,6 @@
+import { HTTP_STATUS } from "#config/constants.js";
 import prisma from "#libs/prisma.js";
+import AppError from "#utils/AppError.js";
 
 export async function ensureConversationMember(
     conversationId,
@@ -21,6 +23,7 @@ export async function ensureConversationMember(
             conversationId_userId: { conversationId, userId },
         },
     });
+
     if (!participant || participant.leftAt) {
         throw new AppError(
             "User not found in conversation",
