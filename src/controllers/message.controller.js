@@ -94,8 +94,9 @@ class MessageController {
     async deleteMessage(req, res) {
         const user = req.user;
         const messageId = req.messageId;
+        const conversationId = req.conversationId;
 
-        await messageService.deleteMessage(user.id, messageId);
+        await messageService.deleteMessage(user.id, messageId, conversationId);
         return res.success(null, HTTP_STATUS.NO_CONTENT);
     }
     async unreadCount(userId, conversationId) {

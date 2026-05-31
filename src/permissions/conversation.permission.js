@@ -33,3 +33,24 @@ export async function ensureConversationMember(
 
     return { conversation, participant };
 }
+
+export async function ensureConversationNotLocked(conversationId) {
+    const conversation = await prisma.conversation.findUnique({
+        where: { id: BigInt(conversationId) },
+        select: { status: true },
+    });
+
+    if (!conversation) {
+        throw new AppError(
+            "Cuộc trò chuyện không tồn tại",
+            HTTP_STATUS.NOT_FOUND,
+        );
+    }
+
+    if (conversation.status === "LOCKED") {
+        throw new AppError(
+            "Cuộc trò chuyện đã bị khóa bởi quản trị viên",
+            HTTP_STATUS.FORBIDDEN,
+        );
+    }
+}

@@ -6,12 +6,16 @@ import { id } from "zod/v4/locales";
 import conversationService from "./conversation.service.js";
 import { requireVerifiedUser } from "#permissions/user.permission.js";
 import { ensureMessageOwner } from "#permissions/message.permission.js";
-import { ensureConversationMember } from "#permissions/conversation.permission.js";
+import {
+    ensureConversationMember,
+    ensureConversationNotLocked,
+} from "#permissions/conversation.permission.js";
 import uploadFile from "#utils/uploadFile.js";
 
 class MessageService {
-    async deleteMessage(userId, messageId, io) {
+    async deleteMessage(userId, messageId, conversationId) {
         await ensureMessageOwner(messageId, userId);
+        await ensureConversationNotLocked(conversationId);
 
         const update = await prisma.message.update({
             where: {
@@ -25,6 +29,7 @@ class MessageService {
     }
     async editMessage(userId, messageId, conversationId, content) {
         await ensureMessageOwner(messageId, userId);
+        await ensureConversationNotLocked(conversationId);
         const updated = await prisma.message.update({
             where: {
                 id: messageId,
@@ -47,6 +52,7 @@ class MessageService {
     ) {
         await requireVerifiedUser(userId);
         await ensureConversationMember(conversationId, userId);
+        await ensureConversationNotLocked(conversationId);
 
         const attachments = await Promise.all(files.map((f) => uploadFile(f)));
 
