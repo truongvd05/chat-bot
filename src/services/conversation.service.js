@@ -4,6 +4,8 @@ import { requireVerifiedUser } from "#permissions/user.permission.js";
 import AppError from "#utils/AppError.js";
 import { serializeBigInt } from "#utils/serialize.js";
 import { ensureConversationMember } from "#permissions/conversation.permission.js";
+import { emitStatsUpdate } from "#socket/admin.socket.js";
+import { getIO } from "#libs/socket.instance.js";
 
 class ConversationService {
     async findById(id, userId) {
@@ -222,6 +224,8 @@ class ConversationService {
                 },
             },
         });
+
+        emitStatsUpdate(getIO()).catch(console.error);
         return serializeBigInt(newGroupConversation);
     }
     async createDirectConversation(userId, targetUserId) {

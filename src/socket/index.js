@@ -2,6 +2,10 @@ import registerMessageSocket from "./message.socket.js";
 import registerTypingSocket from "./typing.socket.js";
 import registerUserSocket from "./user.socket.js";
 
+import jwtconfig from "#config/jwt.js";
+import jwt from "jsonwebtoken";
+import registerAdminSocket from "./admin.socket.js";
+
 const onlineUsers = new Map();
 const typingUsers = new Map();
 
@@ -27,7 +31,8 @@ export default function registerChatSocket(io, socket) {
     }
 
     // đăng ký từng nhóm, truyền shared state nếu cần
-    registerMessageSocket(io, socket);
+    registerAdminSocket(io, socket);
+    registerMessageSocket(io, socket, onlineUsers);
     registerTypingSocket(io, socket, typingUsers);
     registerUserSocket(io, socket, onlineUsers, typingUsers);
 }

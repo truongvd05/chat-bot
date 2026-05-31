@@ -60,7 +60,7 @@ class AiService {
         } catch (err) {
             if (err?.statusCode === 429) {
                 console.warn("AI rate limit exceeded, skipping suggest");
-                return; // im lặng, không throw lỗigit
+                return; // im lặng, không throw lỗi gì
             }
         } finally {
             io.to(`user_${userId}`).emit("bot_thinking", {

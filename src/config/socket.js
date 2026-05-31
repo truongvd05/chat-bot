@@ -1,5 +1,6 @@
 import { Server } from "socket.io";
-import registerChatSocket from "#socket/chat.socket.js";
+import { setIO } from "#libs/socket.instance.js";
+import registerChatSocket from "#socket/index.js";
 
 export function initSocket(server, app) {
     const io = new Server(server, {
@@ -22,6 +23,7 @@ export function initSocket(server, app) {
             credentials: true,
         },
     });
+    setIO(io);
     app.set("io", io);
     io.on("connection", (socket) => {
         console.log("User connected:", socket.id);

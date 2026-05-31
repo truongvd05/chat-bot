@@ -3,8 +3,9 @@ import aiService from "#services/ai.service.js";
 import conversationService from "#services/conversation.service.js";
 import messageService from "#services/message.service.js";
 import AppError from "#utils/AppError.js";
+import { emitStatsUpdate } from "./admin.socket.js";
 
-export default function registerMessageSocket(io, socket) {
+export default function registerMessageSocket(io, socket, onlineUsers) {
     socket.on(
         "send_message",
         async ({ conversationId, content, parentMessageId }) => {
@@ -63,15 +64,25 @@ export default function registerMessageSocket(io, socket) {
                     }
                     // Chỉ suggest cho DIRECT conversation
                     if (conversation.type === "DIRECT") {
-                        if (p.userId !== senderId) {
-                            aiService
-                                .suggest(content, conversationId, p.userId, io)
-                                .catch((err) =>
-                                    console.error("AI suggest error:", err),
-                                );
-                        }
+                        // Check online qua onlineUsers Map
+                        if (!onlineUsers?.has(String(p.userId))) continue;
+
+                        // Check setting tắt/bật gợi ý
+                        const setting = await prisma.user.findUnique({
+                            where: { id: BigInt(p.userId) },
+                            select: { aiSuggest: true },
+                        });
+                        if (!setting?.aiSuggest) continue;
+                        aiService
+                            .suggest(content, conversationId, p.userId, io)
+                            .catch((err) =>
+                                console.error("AI suggest error:", err),
+                            );
                     }
                 }
+                emitStatsUpdate(io).catch((err) =>
+                    console.error("emitStatsUpdate error:", err),
+                );
             } catch (err) {
                 console.error("Send message error:", err);
                 socket.emit("error_message", {

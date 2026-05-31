@@ -9,6 +9,8 @@ import jwtconfig from "../config/jwt.js";
 import jwtService from "./jwtService.js";
 import queueService from "./queue.service.js";
 import crypto from "crypto";
+import { emitStatsUpdate } from "#socket/admin.socket.js";
+import { getIO } from "#libs/socket.instance.js";
 
 class AuthService {
     async findUserByEmail(email) {
@@ -173,8 +175,10 @@ class AuthService {
             });
             return { user: serializeBigInt(user), token };
         });
-        // chỉ gửi mail nếu tạo tài khoản thành công
 
+        // emit admin nếu có người dùng mới
+        emitStatsUpdate(getIO()).catch(console.error);
+        // chỉ gửi mail nếu tạo tài khoản thành công
         queueService.push("sendVerifyEmail", {
             email,
             token: emailToken,
