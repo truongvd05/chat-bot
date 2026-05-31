@@ -13,13 +13,13 @@ const adapter = new PrismaMariaDb({
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-    const hashedPassword = await bcrypt.hash("Admin@123456", 10);
+    const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD, 10);
 
     const admin = await prisma.user.upsert({
         where: { email: "admin@chatdemo.site" },
         update: {},
         create: {
-            email: "admin@chatdemo.site",
+            email: process.env.ADMIN_EMAIL,
             name: "Super Admin",
             password: hashedPassword,
             role: "ADMIN",
