@@ -1,3 +1,4 @@
+import cloudinary from "#config/cloudinary.js";
 import { HTTP_STATUS } from "#config/constants.js";
 import prisma from "#libs/prisma.js";
 import AppError from "#utils/AppError.js";
