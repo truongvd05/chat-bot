@@ -33,6 +33,24 @@ class ConversationService {
                         avatarUrl: true,
                     },
                 },
+                lastMessage: {
+                    select: {
+                        id: true,
+                        conversationId: true,
+                        parentMessageId: true,
+                        userId: true,
+                        content: true,
+                        role: true,
+                        createdAt: true,
+                        user: {
+                            select: {
+                                id: true,
+                                name: true,
+                                avatarUrl: true,
+                            },
+                        },
+                    },
+                },
             },
         });
         return serializeBigInt(result);

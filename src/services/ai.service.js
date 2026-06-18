@@ -51,7 +51,11 @@ class AiService {
                 conversationId,
                 thinking: true,
             });
-            const suggestions = await this.getSuggestions(lastMessage);
+            const suggestions = await this.getSuggestions(
+                lastMessage,
+                conversationId,
+            );
+            // check cancel requset chưa
             io.to(`user_${userId}`).emit("bot_suggest", {
                 conversationId,
                 suggestions,
@@ -70,10 +74,7 @@ class AiService {
         }
     }
     async getSuggestions(lastMessage, conversationId) {
-        const history = await messageService.getRecentMessages(
-            conversationId,
-            10,
-        );
+        const history = await messageService.getRecentMessages(conversationId);
 
         try {
             const { text } = await generateText({
@@ -86,6 +87,7 @@ class AiService {
                 console.warn("AI rate limit exceeded, skipping suggest");
                 return; // im lặng, không throw lỗigit
             }
+            if (err?.name === "AbortError") return;
         }
     }
 }

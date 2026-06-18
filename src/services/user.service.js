@@ -21,6 +21,10 @@ class UserService {
                         bio: true,
                         gender: true,
                         birthday: true,
+                        blockedBy: {
+                            where: { blockerId: userId, deletedAt: null },
+                            select: { id: true },
+                        },
                     },
                 },
                 addressee: {
@@ -31,13 +35,25 @@ class UserService {
                         bio: true,
                         gender: true,
                         birthday: true,
+                        blockedBy: {
+                            where: { blockedId: userId, deletedAt: null },
+                            select: { id: true },
+                        },
                     },
                 },
             },
         });
-        const result = friends.map((f) =>
-            f.requester.id === userId ? f.addressee : f.requester,
-        );
+        console.log(friends);
+        const result = friends.map((f) => {
+            const friend =
+                f.requester.id === userId ? f.addressee : f.requester;
+            const { blockedBy, ...rest } = friend;
+            return {
+                ...rest,
+                isBlocked: !!blockedBy?.length,
+            };
+        });
+
         return serializeBigInt(result);
     }
 
@@ -90,7 +106,7 @@ class UserService {
             throw new AppError("USER_NOT_FOUND", HTTP_STATUS.NOT_FOUND);
         return prisma.$transaction(async (tx) => {
             // check đã block chưa
-            const existing = await tx.userBlock.findUnique({
+            const existing = await tx.userBlock.findFirst({
                 where: {
                     blockerId_blockedId: {
                         blockerId: userId,

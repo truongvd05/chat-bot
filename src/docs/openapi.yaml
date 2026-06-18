@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
     title: Chat Bot API
     version: 1.0.0
-    description: Backend API cho hệ thống chat bot tương tự ChatGPT
+    description: Backend API cho hệ thống zalo clone tương tự zalo
     contact:
         name: thanh090800@gmail.com
 
@@ -75,7 +75,6 @@ components:
                     type: string
                     format: int64
                     nullable: true
-                    description: ID của owner (dùng với chat bot)
                 lastMessageAt:
                     type: string
                     format: date-time
@@ -119,7 +118,7 @@ components:
                     format: int64
                 role:
                     type: string
-                    enum: [MEMBER, OWNER, BOT]
+                    enum: [MEMBER, OWNER, ADMIN, BOT]
                     example: MEMBER
                 joinedAt:
                     type: string
@@ -210,6 +209,61 @@ components:
                     type: string
                     format: date-time
 
+        FriendRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                    format: int64
+                    example: "1"
+                senderId:
+                    type: string
+                    format: int64
+                receiverId:
+                    type: string
+                    format: int64
+                status:
+                    type: string
+                    enum: [PENDING, ACCEPTED, REJECTED]
+                createdAt:
+                    type: string
+                    format: date-time
+                sender:
+                    $ref: "#/components/schemas/User"
+
+        AdminUser:
+            type: object
+            properties:
+                id:
+                    type: string
+                    format: int64
+                email:
+                    type: string
+                name:
+                    type: string
+                    nullable: true
+                isBanned:
+                    type: boolean
+                createdAt:
+                    type: string
+                    format: date-time
+
+        TodayStats:
+            type: object
+            properties:
+                newUsers:
+                    type: integer
+                    example: 42
+                newMessages:
+                    type: integer
+                    example: 310
+                activeUsers:
+                    type: integer
+                    example: 128
+                newGroups:
+                    type: integer
+                    example: 5
+
         AuthResponse:
             type: object
             properties:
@@ -291,12 +345,23 @@ components:
                         message: Đã có lỗi xảy ra, vui lòng thử lại
                         statusCode: 500
 
+        Forbidden:
+            description: Forbidden - Không có quyền truy cập
+            content:
+                application/json:
+                    schema:
+                        $ref: "#/components/schemas/Error"
+                    example:
+                        error: Forbidden
+                        message: Bạn không có quyền thực hiện hành động này
+                        statusCode: 403
+
 paths:
+    # ==================== AUTH ====================
     /auth/register:
         post:
             tags: [Auth]
             summary: Đăng ký tài khoản mới
-            description: Tạo tài khoản người dùng mới
             requestBody:
                 required: true
                 content:
@@ -332,7 +397,6 @@ paths:
         post:
             tags: [Auth]
             summary: Đăng nhập
-            description: Đăng nhập và nhận access token + refresh token
             requestBody:
                 required: true
                 content:
@@ -358,15 +422,11 @@ paths:
                 400:
                     $ref: "#/components/responses/BadRequest"
                 401:
-                    description: Unauthorized
+                    description: Sai email hoặc password
                     content:
                         application/json:
                             schema:
                                 $ref: "#/components/schemas/Error"
-                            example:
-                                error: Invalid credentials
-                                message: Email hoặc password không đúng
-                                statusCode: 401
                 500:
                     $ref: "#/components/responses/InternalServerError"
 
@@ -374,7 +434,6 @@ paths:
         post:
             tags: [Auth]
             summary: Refresh access token
-            description: Lấy access token mới bằng refresh token
             requestBody:
                 required: true
                 content:
@@ -407,7 +466,6 @@ paths:
         post:
             tags: [Auth]
             summary: Đăng xuất
-            description: Đăng xuất và vô hiệu hóa token
             security:
                 - bearerAuth: []
             responses:
@@ -430,7 +488,6 @@ paths:
         get:
             tags: [Auth]
             summary: Lấy thông tin user hiện tại
-            description: Lấy thông tin user từ access token
             security:
                 - bearerAuth: []
             responses:
@@ -445,13 +502,278 @@ paths:
                 500:
                     $ref: "#/components/responses/InternalServerError"
 
+    /auth/forgot-password:
+        post:
+            tags: [Auth]
+            summary: Quên mật khẩu qua email
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required: [email]
+                            properties:
+                                email:
+                                    type: string
+                                    format: email
+                                    example: user@gmail.com
+            responses:
+                200:
+                    description: Đã gửi email reset password
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: Email reset password đã được gửi
+                400:
+                    $ref: "#/components/responses/BadRequest"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /auth/forgot-password-phone:
+        post:
+            tags: [Auth]
+            summary: Quên mật khẩu qua số điện thoại
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required: [phone]
+                            properties:
+                                phone:
+                                    type: string
+                                    example: "0988755951"
+            responses:
+                200:
+                    description: Đã gửi OTP qua SMS
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: OTP đã được gửi qua SMS
+                400:
+                    $ref: "#/components/responses/BadRequest"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /auth/reset-password:
+        post:
+            tags: [Auth]
+            summary: Đặt lại mật khẩu
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required: [token, newPassword]
+                            properties:
+                                token:
+                                    type: string
+                                    example: "reset-token-abc123"
+                                newPassword:
+                                    type: string
+                                    minLength: 6
+                                    example: "newpassword123"
+            responses:
+                200:
+                    description: Đặt lại mật khẩu thành công
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: Mật khẩu đã được đặt lại
+                400:
+                    $ref: "#/components/responses/BadRequest"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /auth/verify-email:
+        post:
+            tags: [Auth]
+            summary: Xác thực email
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required: [token]
+                            properties:
+                                token:
+                                    type: string
+                                    example: "verify-token-abc123"
+            responses:
+                200:
+                    description: Xác thực email thành công
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: Email đã được xác thực
+                400:
+                    $ref: "#/components/responses/BadRequest"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /auth/validate/email:
+        post:
+            tags: [Auth]
+            summary: Kiểm tra email có tồn tại không
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required: [email]
+                            properties:
+                                email:
+                                    type: string
+                                    format: email
+                                    example: user@gmail.com
+            responses:
+                200:
+                    description: Kết quả kiểm tra email
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    exists:
+                                        type: boolean
+                400:
+                    $ref: "#/components/responses/BadRequest"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /auth/validate/phone:
+        post:
+            tags: [Auth]
+            summary: Kiểm tra số điện thoại có tồn tại không
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required: [phone]
+                            properties:
+                                phone:
+                                    type: string
+                                    example: "0988755951"
+            responses:
+                200:
+                    description: Kết quả kiểm tra số điện thoại
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    exists:
+                                        type: boolean
+                400:
+                    $ref: "#/components/responses/BadRequest"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /auth/change-password:
+        post:
+            tags: [Auth]
+            summary: Đổi mật khẩu
+            security:
+                - bearerAuth: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required: [oldPassword, newPassword]
+                            properties:
+                                oldPassword:
+                                    type: string
+                                    example: "oldpassword123"
+                                newPassword:
+                                    type: string
+                                    minLength: 6
+                                    example: "newpassword123"
+            responses:
+                200:
+                    description: Đổi mật khẩu thành công
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: Đổi mật khẩu thành công
+                400:
+                    $ref: "#/components/responses/BadRequest"
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /auth/resen-verify-email:
+        post:
+            tags: [Auth]
+            summary: Gửi lại email xác thực
+            security:
+                - bearerAuth: []
+            responses:
+                200:
+                    description: Đã gửi lại email xác thực
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: Email xác thực đã được gửi lại
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    # ==================== CONVERSATION ====================
     /conversation/direct:
         post:
             tags: [Conversation]
             summary: Tạo cuộc hội thoại trực tiếp (DIRECT)
-            description: |
-                Tạo một cuộc hội thoại trực tiếp 1-1 giữa user hiện tại và user khác.
-                Type: DIRECT
             security:
                 - bearerAuth: []
             requestBody:
@@ -465,12 +787,7 @@ paths:
                                 participantId:
                                     type: string
                                     format: int64
-                                    description: ID của user để chat
                                     example: "2"
-                                title:
-                                    type: string
-                                    description: Tiêu đề (tùy chọn)
-                                    example: "Chat với John"
             responses:
                 201:
                     description: Tạo conversation thành công
@@ -487,42 +804,42 @@ paths:
                 500:
                     $ref: "#/components/responses/InternalServerError"
 
-    /conversation/bot:
+    /conversation/group:
         post:
-            tags: [Bot Conversations]
-            summary: Tạo cuộc hội thoại với bot (BOT)
-            description: |
-                Tạo một cuộc hội thoại mới với AI bot.
-                Type: BOT
-                Owner: User hiện tại
+            tags: [Conversation]
+            summary: Tạo nhóm chat (GROUP)
             security:
                 - bearerAuth: []
             requestBody:
-                required: false
+                required: true
                 content:
                     application/json:
                         schema:
                             type: object
+                            required: [title, participantIds]
                             properties:
                                 title:
                                     type: string
-                                    description: Tiêu đề cuộc hội thoại
-                                    example: "Chat với AI Assistant"
-                                systemPrompt:
-                                    type: string
-                                    description: System prompt tùy chỉnh cho bot
-                                    example: "You are a helpful coding assistant"
+                                    example: "Nhóm dự án ABC"
+                                participantIds:
+                                    type: array
+                                    items:
+                                        type: string
+                                        format: int64
+                                    example: ["2", "3", "4"]
             responses:
                 201:
-                    description: Tạo bot conversation thành công
+                    description: Tạo nhóm thành công
                     content:
                         application/json:
                             schema:
-                                $ref: "#/components/schemas/Conversation"
+                                $ref: "#/components/schemas/ConversationWithParticipants"
                 400:
                     $ref: "#/components/responses/BadRequest"
                 401:
                     $ref: "#/components/responses/Unauthorized"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
                 500:
                     $ref: "#/components/responses/InternalServerError"
 
@@ -530,9 +847,6 @@ paths:
         get:
             tags: [Conversation]
             summary: Lấy tất cả conversations
-            description: |
-                Lấy danh sách tất cả conversations của user (DIRECT, GROUP, BOT).
-                Bao gồm thông tin participants và unread count.
             security:
                 - bearerAuth: []
             parameters:
@@ -541,19 +855,16 @@ paths:
                   schema:
                       type: integer
                       default: 1
-                  description: Số trang
                 - name: limit
                   in: query
                   schema:
                       type: integer
                       default: 20
-                  description: Số lượng items mỗi trang
                 - name: type
                   in: query
                   schema:
                       type: string
                       enum: [DIRECT, GROUP, BOT]
-                  description: Lọc theo loại conversation
             responses:
                 200:
                     description: Danh sách conversations
@@ -585,11 +896,38 @@ paths:
                 500:
                     $ref: "#/components/responses/InternalServerError"
 
-    /conversation/bots:
+    /conversation/search:
         get:
-            tags: [Bot Conversations]
-            summary: Lấy danh sách bot conversations
-            description: Lấy tất cả conversations có type = BOT của user hiện tại
+            tags: [Conversation]
+            summary: Tìm kiếm conversation
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: q
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                  description: Từ khóa tìm kiếm
+                  example: "nhóm dự án"
+            responses:
+                200:
+                    description: Kết quả tìm kiếm
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/ConversationWithParticipants"
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /conversation/groups:
+        get:
+            tags: [Conversation]
+            summary: Lấy danh sách nhóm chat
             security:
                 - bearerAuth: []
             parameters:
@@ -605,7 +943,7 @@ paths:
                       default: 20
             responses:
                 200:
-                    description: Danh sách bot conversations
+                    description: Danh sách nhóm chat
                     content:
                         application/json:
                             schema:
@@ -614,7 +952,7 @@ paths:
                                     conversations:
                                         type: array
                                         items:
-                                            $ref: "#/components/schemas/Conversation"
+                                            $ref: "#/components/schemas/ConversationWithParticipants"
                                     total:
                                         type: integer
                                     page:
@@ -630,41 +968,10 @@ paths:
                 500:
                     $ref: "#/components/responses/InternalServerError"
 
-    /conversation/bots/{conversationId}:
-        get:
-            tags: [Bot Conversations]
-            summary: Lấy chi tiết bot conversation
-            description: Lấy thông tin chi tiết của một bot conversation
-            security:
-                - bearerAuth: []
-            parameters:
-                - name: conversationId
-                  in: path
-                  required: true
-                  schema:
-                      type: string
-                      format: int64
-                  example: "1"
-            responses:
-                200:
-                    description: Thông tin bot conversation
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/Conversation"
-                401:
-                    $ref: "#/components/responses/Unauthorized"
-                404:
-                    $ref: "#/components/responses/NotFound"
-                429:
-                    $ref: "#/components/responses/TooManyRequests"
-                500:
-                    $ref: "#/components/responses/InternalServerError"
     /conversation/{conversationId}:
         get:
             tags: [Conversation]
             summary: Lấy chi tiết conversation
-            description: Lấy thông tin chi tiết của một conversation bao gồm participants
             security:
                 - bearerAuth: []
             parameters:
@@ -693,8 +1000,7 @@ paths:
 
         put:
             tags: [Conversation]
-            summary: Cập nhật conversation
-            description: Đổi tên hoặc cập nhật system prompt của conversation
+            summary: Đổi tên conversation
             security:
                 - bearerAuth: []
             parameters:
@@ -714,12 +1020,7 @@ paths:
                             properties:
                                 title:
                                     type: string
-                                    description: Tên mới cho conversation
-                                    example: "Chat về Deep Learning"
-                                systemPrompt:
-                                    type: string
-                                    description: System prompt mới (chỉ cho BOT conversation)
-                                    example: "You are an expert in deep learning"
+                                    example: "Tên mới cho conversation"
             responses:
                 200:
                     description: Cập nhật thành công
@@ -741,7 +1042,6 @@ paths:
         delete:
             tags: [Conversation]
             summary: Xóa conversation (soft delete)
-            description: Soft delete conversation (set deletedAt)
             security:
                 - bearerAuth: []
             parameters:
@@ -772,23 +1072,10 @@ paths:
                 500:
                     $ref: "#/components/responses/InternalServerError"
 
-    /conversation/{conversationId}/stream:
+    /conversation/{conversationId}/available-users:
         get:
-            tags: [Message]
-            summary: Stream AI response (SSE)
-            description: |
-                Server-Sent Events endpoint để stream AI response real-time.
-                Chỉ hoạt động với BOT conversations.
-
-                **Cách sử dụng:**
-                1. Tạo EventSource với Authorization header
-                2. Listen event 'message'
-                3. Parse JSON từ event.data
-                4. Khi nhận [DONE], đóng connection
-
-                **Event format:**
-                data: {"content": "text chunk"}
-                data: [DONE]
+            tags: [Conversation]
+            summary: Tìm kiếm user có thể thêm vào nhóm
             security:
                 - bearerAuth: []
             parameters:
@@ -799,30 +1086,21 @@ paths:
                       type: string
                       format: int64
                   example: "1"
-                - name: message
+                - name: q
                   in: query
-                  required: true
-                  description: User message content
                   schema:
                       type: string
-                  example: "Giải thích về machine learning"
+                  description: Từ khóa tìm kiếm tên hoặc email
+                  example: "nguyen"
             responses:
                 200:
-                    description: Event stream
+                    description: Danh sách user có thể thêm
                     content:
-                        text/event-stream:
+                        application/json:
                             schema:
-                                type: string
-                            example: |
-                                data: {"content": "Machine learning"}
-
-                                data: {"content": " là"}
-
-                                data: {"content": " một nhánh"}
-
-                                data: [DONE]
-                400:
-                    $ref: "#/components/responses/BadRequest"
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/User"
                 401:
                     $ref: "#/components/responses/Unauthorized"
                 404:
@@ -832,11 +1110,214 @@ paths:
                 500:
                     $ref: "#/components/responses/InternalServerError"
 
-    /messages/conversation/{conversationId}:
+    /conversation/{conversationId}/promoteToAdmin:
+        post:
+            tags: [Conversation]
+            summary: Thăng cấp thành viên lên Admin trong nhóm
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: conversationId
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                      format: int64
+                  example: "1"
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required: [userId]
+                            properties:
+                                userId:
+                                    type: string
+                                    format: int64
+                                    example: "3"
+            responses:
+                200:
+                    description: Thăng cấp thành công
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: Đã thăng cấp thành viên lên Admin
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                403:
+                    $ref: "#/components/responses/Forbidden"
+                404:
+                    $ref: "#/components/responses/NotFound"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /conversation/{conversationId}/leaveGroup:
+        post:
+            tags: [Conversation]
+            summary: Rời khỏi nhóm
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: conversationId
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                      format: int64
+                  example: "1"
+            responses:
+                200:
+                    description: Rời nhóm thành công
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: Đã rời khỏi nhóm
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                404:
+                    $ref: "#/components/responses/NotFound"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    # ==================== PARTICIPANTS ====================
+    /participants/{conversationId}:
+        post:
+            tags: [Participants]
+            summary: Thêm thành viên vào nhóm
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: conversationId
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                      format: int64
+                  example: "1"
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required: [userId]
+                            properties:
+                                userId:
+                                    type: string
+                                    format: int64
+                                    example: "5"
+            responses:
+                200:
+                    description: Thêm thành viên thành công
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ConversationParticipant"
+                400:
+                    $ref: "#/components/responses/BadRequest"
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                403:
+                    $ref: "#/components/responses/Forbidden"
+                404:
+                    $ref: "#/components/responses/NotFound"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+        delete:
+            tags: [Participants]
+            summary: Xóa thành viên khỏi nhóm (kick)
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: conversationId
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                      format: int64
+                  example: "1"
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required: [userId]
+                            properties:
+                                userId:
+                                    type: string
+                                    format: int64
+                                    example: "5"
+            responses:
+                200:
+                    description: Xóa thành viên thành công
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: Đã xóa thành viên khỏi nhóm
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                403:
+                    $ref: "#/components/responses/Forbidden"
+                404:
+                    $ref: "#/components/responses/NotFound"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+        get:
+            tags: [Participants]
+            summary: Lấy danh sách thành viên trong nhóm
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: conversationId
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                      format: int64
+                  example: "1"
+            responses:
+                200:
+                    description: Danh sách thành viên
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/ConversationParticipant"
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                404:
+                    $ref: "#/components/responses/NotFound"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    # ==================== MESSAGE ====================
+    /messages/conversations/{conversationId}:
         get:
             tags: [Message]
             summary: Lấy messages trong conversation
-            description: Lấy danh sách messages với pagination, bao gồm attachments và user info
             security:
                 - bearerAuth: []
             parameters:
@@ -859,7 +1340,7 @@ paths:
                       default: 50
                 - name: before
                   in: query
-                  description: Lấy messages trước message ID này (cursor pagination)
+                  description: Cursor pagination - lấy messages trước message ID này
                   schema:
                       type: string
                       format: int64
@@ -890,17 +1371,77 @@ paths:
                 500:
                     $ref: "#/components/responses/InternalServerError"
 
-    /message/conversation/{conversationId}:
+    /messages/conversations/{conversationId}/send:
         post:
             tags: [Message]
-            summary: Gửi message mới
+            summary: Gửi message (hỗ trợ file upload)
             description: |
-                Gửi message và nhận response từ AI (không streaming).
-                Tự động tạo message với role 'user' và AI response với role 'bot'.
-                Cập nhật lastMessageAt và lastReadAt.
+                Gửi message text hoặc kèm file (tối đa 5 files).
+                Dùng multipart/form-data khi gửi kèm file.
             security:
                 - bearerAuth: []
             parameters:
+                - name: conversationId
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                      format: int64
+                  example: "1"
+            requestBody:
+                required: true
+                content:
+                    multipart/form-data:
+                        schema:
+                            type: object
+                            properties:
+                                content:
+                                    type: string
+                                    example: "Xin chào mọi người"
+                                parentMessageId:
+                                    type: string
+                                    format: int64
+                                    nullable: true
+                                    description: ID message cha nếu là reply
+                                files:
+                                    type: array
+                                    items:
+                                        type: string
+                                        format: binary
+                                    maxItems: 5
+                                    description: Tối đa 5 files
+            responses:
+                200:
+                    description: Gửi message thành công
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Message"
+                400:
+                    $ref: "#/components/responses/BadRequest"
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                404:
+                    $ref: "#/components/responses/NotFound"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /messages/{messageId}/conversations/{conversationId}:
+        put:
+            tags: [Message]
+            summary: Sửa message
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: messageId
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                      format: int64
+                  example: "10"
                 - name: conversationId
                   in: path
                   required: true
@@ -918,66 +1459,10 @@ paths:
                             properties:
                                 content:
                                     type: string
-                                    example: "Giải thích về AI cho tôi"
-                                parentMessageId:
-                                    type: string
-                                    format: int64
-                                    description: ID của message cha (để reply)
-                                    nullable: true
-            responses:
-                200:
-                    description: Message đã tạo và AI response
-                    content:
-                        application/json:
-                            schema:
-                                type: object
-                                properties:
-                                    userMessage:
-                                        $ref: "#/components/schemas/Message"
-                                    aiMessage:
-                                        $ref: "#/components/schemas/Message"
-                400:
-                    $ref: "#/components/responses/BadRequest"
-                401:
-                    $ref: "#/components/responses/Unauthorized"
-                404:
-                    $ref: "#/components/responses/NotFound"
-                429:
-                    $ref: "#/components/responses/TooManyRequests"
-                500:
-                    $ref: "#/components/responses/InternalServerError"
-
-        put:
-            tags: [Message]
-            summary: Sửa message
-            description: Chỉnh sửa nội dung message (set isEdited = true)
-            security:
-                - bearerAuth: []
-            parameters:
-                - name: conversationId
-                  in: path
-                  required: true
-                  schema:
-                      type: string
-                      format: int64
-            requestBody:
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            type: object
-                            required: [messageId, content]
-                            properties:
-                                messageId:
-                                    type: string
-                                    format: int64
-                                    example: "10"
-                                content:
-                                    type: string
                                     example: "Nội dung đã chỉnh sửa"
             responses:
                 200:
-                    description: Message đã sửa
+                    description: Sửa message thành công
                     content:
                         application/json:
                             schema:
@@ -994,28 +1479,23 @@ paths:
         delete:
             tags: [Message]
             summary: Xóa message (soft delete)
-            description: Soft delete message (set deletedAt)
             security:
                 - bearerAuth: []
             parameters:
+                - name: messageId
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                      format: int64
+                  example: "10"
                 - name: conversationId
                   in: path
                   required: true
                   schema:
                       type: string
                       format: int64
-            requestBody:
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            type: object
-                            required: [messageId]
-                            properties:
-                                messageId:
-                                    type: string
-                                    format: int64
-                                    example: "10"
+                  example: "1"
             responses:
                 200:
                     description: Xóa message thành công
@@ -1027,20 +1507,864 @@ paths:
                                     message:
                                         type: string
                                         example: Message đã được xóa
-                400:
-                    $ref: "#/components/responses/BadRequest"
                 401:
                     $ref: "#/components/responses/Unauthorized"
                 404:
                     $ref: "#/components/responses/NotFound"
                 500:
                     $ref: "#/components/responses/InternalServerError"
+
+    # ==================== USER ====================
+    /users/me:
+        get:
+            tags: [User]
+            summary: Lấy thông tin user hiện tại
+            security:
+                - bearerAuth: []
+            responses:
+                200:
+                    description: Thông tin user
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/User"
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /users:
+        put:
+            tags: [User]
+            summary: Cập nhật thông tin user
+            security:
+                - bearerAuth: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                name:
+                                    type: string
+                                    example: "Nguyen Van B"
+                                phone:
+                                    type: string
+                                    example: "0988755951"
+            responses:
+                200:
+                    description: Cập nhật thành công
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/User"
+                400:
+                    $ref: "#/components/responses/BadRequest"
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /users/avatar:
+        patch:
+            tags: [User]
+            summary: Cập nhật avatar
+            security:
+                - bearerAuth: []
+            requestBody:
+                required: true
+                content:
+                    multipart/form-data:
+                        schema:
+                            type: object
+                            required: [avatar]
+                            properties:
+                                avatar:
+                                    type: string
+                                    format: binary
+            responses:
+                200:
+                    description: Cập nhật avatar thành công
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/User"
+                400:
+                    $ref: "#/components/responses/BadRequest"
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /users/search:
+        get:
+            tags: [User]
+            summary: Tìm kiếm user
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: q
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                  example: "nguyen"
+            responses:
+                200:
+                    description: Kết quả tìm kiếm
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/User"
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /users/friends:
+        get:
+            tags: [User]
+            summary: Lấy danh sách bạn bè
+            security:
+                - bearerAuth: []
+            responses:
+                200:
+                    description: Danh sách bạn bè
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/User"
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /users/add-friend:
+        post:
+            tags: [User]
+            summary: Gửi lời mời kết bạn
+            security:
+                - bearerAuth: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required: [targetId]
+                            properties:
+                                targetId:
+                                    type: string
+                                    format: int64
+                                    example: "5"
+            responses:
+                200:
+                    description: Gửi lời mời thành công
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/FriendRequest"
+                400:
+                    $ref: "#/components/responses/BadRequest"
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /users/accept-friend:
+        post:
+            tags: [User]
+            summary: Chấp nhận lời mời kết bạn
+            security:
+                - bearerAuth: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required: [requestId]
+                            properties:
+                                requestId:
+                                    type: string
+                                    format: int64
+                                    example: "10"
+            responses:
+                200:
+                    description: Chấp nhận kết bạn thành công
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: Đã chấp nhận lời mời kết bạn
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                404:
+                    $ref: "#/components/responses/NotFound"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /users/reject-friend:
+        post:
+            tags: [User]
+            summary: Từ chối lời mời kết bạn
+            security:
+                - bearerAuth: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required: [requestId]
+                            properties:
+                                requestId:
+                                    type: string
+                                    format: int64
+                                    example: "10"
+            responses:
+                200:
+                    description: Từ chối thành công
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: Đã từ chối lời mời kết bạn
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                404:
+                    $ref: "#/components/responses/NotFound"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /users/unfriend:
+        post:
+            tags: [User]
+            summary: Hủy kết bạn
+            security:
+                - bearerAuth: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required: [targetId]
+                            properties:
+                                targetId:
+                                    type: string
+                                    format: int64
+                                    example: "5"
+            responses:
+                200:
+                    description: Hủy kết bạn thành công
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: Đã hủy kết bạn
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /users/friend-request:
+        get:
+            tags: [User]
+            summary: Lấy danh sách lời mời kết bạn
+            security:
+                - bearerAuth: []
+            responses:
+                200:
+                    description: Danh sách lời mời kết bạn đang chờ
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/FriendRequest"
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /users/{id}/block:
+        post:
+            tags: [User]
+            summary: Chặn user
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                      format: int64
+                  example: "5"
+            responses:
+                200:
+                    description: Chặn thành công
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: Đã chặn user
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                404:
+                    $ref: "#/components/responses/NotFound"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+        delete:
+            tags: [User]
+            summary: Bỏ chặn user
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                      format: int64
+                  example: "5"
+            responses:
+                200:
+                    description: Bỏ chặn thành công
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: Đã bỏ chặn user
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                404:
+                    $ref: "#/components/responses/NotFound"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /users/ai-suggest:
+        patch:
+            tags: [User]
+            summary: Bật/tắt tính năng AI suggest
+            security:
+                - bearerAuth: []
+            responses:
+                200:
+                    description: Cập nhật thành công
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    aiSuggest:
+                                        type: boolean
+                                        example: true
+                                    message:
+                                        type: string
+                                        example: Đã bật AI suggest
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    # ==================== AI ====================
+    /ai/suggest/{conversationId}:
+        post:
+            tags: [AI]
+            summary: Gợi ý reply bằng AI
+            description: |
+                Dựa vào lịch sử conversation để gợi ý câu trả lời phù hợp.
+                Yêu cầu user đã bật tính năng AI suggest.
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: conversationId
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                      format: int64
+                  example: "1"
+            responses:
+                200:
+                    description: Gợi ý reply từ AI
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    suggestion:
+                                        type: string
+                                        example: "Cảm ơn bạn đã chia sẻ! Tôi hoàn toàn đồng ý với quan điểm đó."
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                404:
+                    $ref: "#/components/responses/NotFound"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    # ==================== ADMIN ====================
+    /admin/login:
+        post:
+            tags: [Admin]
+            summary: Đăng nhập admin
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required: [email, password]
+                            properties:
+                                email:
+                                    type: string
+                                    format: email
+                                    example: admin@gmail.com
+                                password:
+                                    type: string
+                                    example: "admin123"
+            responses:
+                200:
+                    description: Đăng nhập thành công
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/AuthResponse"
+                401:
+                    description: Sai thông tin đăng nhập hoặc không phải admin
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Error"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /admin/refresh:
+        post:
+            tags: [Admin]
+            summary: Refresh token admin
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required: [refreshToken]
+                            properties:
+                                refreshToken:
+                                    type: string
+                                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+            responses:
+                200:
+                    description: Token mới
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    accessToken:
+                                        type: string
+                                    refreshToken:
+                                        type: string
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /admin/logout:
+        post:
+            tags: [Admin]
+            summary: Đăng xuất admin
+            security:
+                - bearerAuth: []
+            responses:
+                200:
+                    description: Đăng xuất thành công
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: Logout thành công
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                403:
+                    $ref: "#/components/responses/Forbidden"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /admin/users:
+        get:
+            tags: [Admin]
+            summary: Lấy danh sách tất cả user
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                      type: integer
+                      default: 1
+                - name: limit
+                  in: query
+                  schema:
+                      type: integer
+                      default: 20
+                - name: q
+                  in: query
+                  schema:
+                      type: string
+                  description: Tìm kiếm theo tên hoặc email
+            responses:
+                200:
+                    description: Danh sách user
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    users:
+                                        type: array
+                                        items:
+                                            $ref: "#/components/schemas/AdminUser"
+                                    total:
+                                        type: integer
+                                    page:
+                                        type: integer
+                                    totalPages:
+                                        type: integer
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                403:
+                    $ref: "#/components/responses/Forbidden"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /admin/groups:
+        get:
+            tags: [Admin]
+            summary: Lấy danh sách tất cả nhóm
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                      type: integer
+                      default: 1
+                - name: limit
+                  in: query
+                  schema:
+                      type: integer
+                      default: 20
+            responses:
+                200:
+                    description: Danh sách nhóm
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    groups:
+                                        type: array
+                                        items:
+                                            $ref: "#/components/schemas/ConversationWithParticipants"
+                                    total:
+                                        type: integer
+                                    page:
+                                        type: integer
+                                    totalPages:
+                                        type: integer
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                403:
+                    $ref: "#/components/responses/Forbidden"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /admin/users/{id}:
+        patch:
+            tags: [Admin]
+            summary: Chỉnh sửa thông tin user
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                      format: int64
+                  example: "5"
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                name:
+                                    type: string
+                                    example: "Tên mới"
+                                email:
+                                    type: string
+                                    format: email
+            responses:
+                200:
+                    description: Cập nhật thành công
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/AdminUser"
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                403:
+                    $ref: "#/components/responses/Forbidden"
+                404:
+                    $ref: "#/components/responses/NotFound"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /admin/users/{id}/ban:
+        patch:
+            tags: [Admin]
+            summary: Ban user
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                      format: int64
+                  example: "5"
+            responses:
+                200:
+                    description: Ban thành công
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: Đã ban user
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                403:
+                    $ref: "#/components/responses/Forbidden"
+                404:
+                    $ref: "#/components/responses/NotFound"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /admin/users/{id}/unban:
+        patch:
+            tags: [Admin]
+            summary: Unban user
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                      format: int64
+                  example: "5"
+            responses:
+                200:
+                    description: Unban thành công
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: Đã unban user
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                403:
+                    $ref: "#/components/responses/Forbidden"
+                404:
+                    $ref: "#/components/responses/NotFound"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /admin/groups/{id}:
+        patch:
+            tags: [Admin]
+            summary: Chỉnh sửa thông tin nhóm
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                      format: int64
+                  example: "1"
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                title:
+                                    type: string
+                                    example: "Tên nhóm mới"
+            responses:
+                200:
+                    description: Cập nhật thành công
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Conversation"
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                403:
+                    $ref: "#/components/responses/Forbidden"
+                404:
+                    $ref: "#/components/responses/NotFound"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+        delete:
+            tags: [Admin]
+            summary: Xóa nhóm
+            security:
+                - bearerAuth: []
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                      type: string
+                      format: int64
+                  example: "1"
+            responses:
+                200:
+                    description: Xóa thành công
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: Đã xóa nhóm
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                403:
+                    $ref: "#/components/responses/Forbidden"
+                404:
+                    $ref: "#/components/responses/NotFound"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
+    /admin/stats/today:
+        get:
+            tags: [Admin]
+            summary: Thống kê hôm nay
+            security:
+                - bearerAuth: []
+            responses:
+                200:
+                    description: Thống kê trong ngày
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/TodayStats"
+                401:
+                    $ref: "#/components/responses/Unauthorized"
+                403:
+                    $ref: "#/components/responses/Forbidden"
+                429:
+                    $ref: "#/components/responses/TooManyRequests"
+                500:
+                    $ref: "#/components/responses/InternalServerError"
+
 tags:
     - name: Auth
       description: Authentication và user management
     - name: Conversation
-      description: Quản lý conversations (DIRECT, GROUP, BOT)
-    - name: Bot Conversations
-      description: Chuyên biệt cho BOT conversations
+      description: Quản lý conversations (DIRECT, GROUP)
+    - name: Participants
+      description: Quản lý thành viên trong nhóm
     - name: Message
-      description: Message operations và streaming
+      description: Gửi và quản lý messages
+    - name: User
+      description: Quản lý thông tin user, bạn bè, block
+    - name: AI
+      description: AI suggest reply
+    - name: Admin
+      description: Quản trị hệ thống

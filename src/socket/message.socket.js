@@ -73,6 +73,7 @@ export default function registerMessageSocket(io, socket, onlineUsers) {
                             select: { aiSuggest: true },
                         });
                         if (!setting?.aiSuggest) continue;
+
                         aiService
                             .suggest(content, conversationId, p.userId, io)
                             .catch((err) =>

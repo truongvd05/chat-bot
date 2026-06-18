@@ -6,6 +6,7 @@ import asyneHandle from "#middlewares/asyneHandle.js";
 import parseTargetId from "#middlewares/parseTargerId.js";
 import upload from "#middlewares/upload.js";
 import parseRequestId from "#middlewares/parseRequestId.js";
+import parseParamId from "#middlewares/parseParamId.js";
 
 const router = express.Router();
 
@@ -77,13 +78,13 @@ router.get(
 router.post(
     "/:id/block",
     rateLimitServce.defaultPerMinuteRateLimit(),
-    parseTargetId,
+    parseParamId,
     asyneHandle(userController.blockUser),
 );
 router.delete(
     "/:id/block",
     rateLimitServce.defaultPerMinuteRateLimit(),
-    parseTargetId,
+    parseParamId,
     asyneHandle(userController.unblockUser),
 );
 
